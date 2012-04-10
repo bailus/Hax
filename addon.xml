@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<addon
+  id="webinterface.sam"
+  version="0.0.0"
+  name="Default"
+  provider-name="bailey.geek.nz">
+  <requires>
+    <import addon="xbmc.gui" version="3.00"/>
+    <import addon="xbmc.json" version="4.00"/>
+  </requires>
+  <extension
+    point="xbmc.gui.webinterface"/>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">Sam's Web Interface</summary>
+    <platform>all</platform>
+  </extension>
+</addon>
