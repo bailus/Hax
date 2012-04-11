@@ -113,6 +113,21 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 		},
 		'headerButton': function (page, src) {
 			return $('<a class="headerButton" href="#page='+page+'"><img alt="'+page+'" src="'+src+'"></img></span>');
+		},
+		'listDetails': function (data, output) {
+			if (data.thumbnail) {
+				output.append( html.headerThumbnail(data.thumbnail) );
+			}
+			if (data.title) {
+				if (data.banner) output.append( html.banner(data.banner, data.title) );
+				else output.append( html.pageTitle(data.title) );
+			}
+			if (data.subtitle) html.h2(data.subtitle).appendTo(output);
+			if (data.description)  html.p(data.description).appendTo(output);
+			if (data.formed) html.p('Formed: '+data.formed).appendTo(output);
+			if (data.disbanded) html.p('Disbanded: '+data.disbanded).appendTo(output);
+			if (data.died) html.p('Died: '+data.died).appendTo(output);
+			if (data.directory) output.append( html.p(data.directory) );
 		}
 	};
 	
@@ -296,7 +311,7 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			'icon': '/img/Music.png',
 			'data': function (callback) {
 				xbmc.GetArtists(function (data) {
-					$.each(data.artists, function (i, artist) {
+					if (data.artists) $.each(data.artists, function (i, artist) {
 						artist.link = '#page=Artist&artistid='+artist.artistid;
 						artist.thumbnail = artist.thumbnail ? xbmc.vfs2uri(artist.thumbnail) : '/img/DefaultArtist.png';
 						artist.width = 50;
@@ -311,49 +326,54 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			}
 		},
 		'Artist': {
-			'view': 'list2',
+			'view': 'list',
 			'data': function (callback) {
-				xbmc.GetSongs({ 'artistid': +getHash('artistid') }, function (data) {
-					xbmc.GetMusicVideos({ 'artistid': +getHash('artistid') }, function (musicvideos) {
-						xbmc.GetArtistDetails({ 'artistid': +getHash('artistid') }, function (artist) {
-							var page = artist.artistdetails;
-							page.items = [];
-							if (musicvideos) page.items.push({
-									'label': 'Videos',
-									'items': musicvideos.musicvideos
-							});
-							if (page.thumbnail) page.thumbnail = xbmc.vfs2uri(page.thumbnail);
-							if (page.fanart) page.fanart = xbmc.vfs2uri(page.fanart);
-							if (page.label) page.title = page.label;
-							if (data.songs) {
-								$.each(data.songs, function (i, song) {
-									song.play = function () {
-										xbmc.Play(song.file, 1)
-									};
-									song.add = function () {
-										xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': song.file } })
-									};
-									if (song.year) song.album = '('+song.year+') '+song.album;
-									song.thumbnail = song.thumbnail ? xbmc.vfs2uri(song.thumbnail) : '/img/DefaultAudio.png';
-									if (song.track) song.label = song.track+'. '+song.label;
-									song.width = 50;
-									//if (song.thumbnail) { song.albumthumbnail = song.thumbnail; delete song.thumbnail; } //one thumbnail per album
-								});
-								var albums = {};
-								$.each(data.songs, function (i, song) { //sort the songs into an array of albums containing arrays of songs
-									if (!albums[song.album]) albums[song.album] = [];
-									albums[song.album].push(song);
-								});
-								$.each(albums, function (album, items) {
-									page.items.push({
-										'label': album,
-										'items': items,
-										'thumbnail': items[0].albumthumbnail
-									});
-								});
-							};
-							callback(page);
+				xbmc.GetAlbums({ 'artistid': +getHash('artistid') }, function (data) {
+					xbmc.GetArtistDetails({ 'artistid': +getHash('artistid') }, function (artist) {
+						var page = artist.artistdetails || {};
+						if (page.thumbnail) page.thumbnail = xbmc.vfs2uri(page.thumbnail);
+						if (page.fanart) page.fanart = xbmc.vfs2uri(page.fanart);
+						page.title = page.label || '';
+						page.items = data.albums || [];
+						page.genre = undefined;
+						if (page.description === 'Fetching artist biography from allmusic.com is not possible due to copyright reasons.') page.description = undefined;
+						$.each(page.items, function (i, album) {
+							album.link = '#page=Album&albumid='+album.albumid;
+							album.thumbnail = album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : '/img/DefaultAudio.png';
+							album.width = 50;
 						});
+						
+						callback(page);
+					});
+				});
+			}
+		},
+		'Album': {
+			'view': 'list',
+			'data': function (callback) {
+				xbmc.GetSongs({ 'albumid': +getHash('albumid') }, function (data) {
+					xbmc.GetAlbumDetails({ 'albumid': +getHash('albumid') }, function (album) {
+						var page = album.albumdetails || {};
+						if (page.thumbnail) page.thumbnail = xbmc.vfs2uri(page.thumbnail);
+						if (page.fanart) page.fanart = xbmc.vfs2uri(page.fanart);
+						page.title = page.artist || '';
+						page.subtitle = page.label || '';
+						if (page.year) page.subtitle = '('+page.year+') '+page.subtitle;
+						if (page.description === 'Fetching album review from allmusic.com is not possible due to copyright reasons.') page.description = undefined;
+						page.items = data.songs || [];
+						$.each(page.items, function (i, song) {
+							song.thumbnail = undefined;
+							song.width = 50;
+							if (song.file) {
+								song.play = function () {
+									xbmc.Play(song.file, 1)
+								};
+								song.add = function () {
+									xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': song.file } })
+								};
+							}
+						});
+						callback(page);
 					});
 				});
 			}
@@ -386,7 +406,7 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			'view': 'list',
 			'data': function (callback) {
 				xbmc.GetSources({ 'media': getHash('media') }, function (data) {
-					$.each(data.sources, function (i, source) {
+					if (data.sources) $.each(data.sources, function (i, source) {
 						source.link = '#page=Directory&directory='+source.file+'&media='+getHash('media');
 						source.thumbnail = '/img/DefaultFolder.png';
 						source.width = 50;
@@ -458,7 +478,7 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			'icon': '/img/Playlist.png',
 			'data': function (callback) {
 				xbmc.GetPlaylistItems({'playlistid':1}, function (data) {
-					$.each(data.items, function (i, item) {
+					if (data.items) $.each(data.items, function (i, item) {
 						if (item.file) {
 							item.play = function () {
 								xbmc.Play(item.file, 1);
@@ -499,26 +519,12 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			'render': function (data) {
 				//console.log('rendering list view');
 				var output = $('<div class="list"></div>');
+				html.listDetails(data, output);
 				var list = html.list().appendTo(output);
-				//if (data.title) list.append( html.pageTitle(data.title) );
-				if (data.directory) list.append( html.directory(data.directory) );
-				$.each(data.items, function (index, item) {
+				if (data.items) $.each(data.items, function (index, item) {
 					list.append( html.listItem(item) );
 				});
 				if (data.fanart) html.fanart(data.fanart).appendTo(output);
-				return output;
-			}
-		},
-		'movielist': {
-			'render': function (data) {
-				//console.log('rendering list view');
-				var output = $('<div class="movielist"></div>');
-				var list = html.list().appendTo(output);
-				//if (data.title) list.append( html.pageTitle(data.title) );
-				if (data.directory) list.append( html.directory(data.directory) );
-				$.each(data.items, function (index, item) {
-					list.append( html.listItem(item) );
-				});
 				return output;
 			}
 		},
@@ -527,7 +533,7 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 				//console.log('rendering banner view');
 				var list = html.list();
 				//if (data.title) list.append( html.pageTitle(data.title) );
-				$.each(data.items, function (index, item) {
+				if (data.items) $.each(data.items, function (index, item) {
 					list.append( html.bannerItem(item) );
 				});
 				return list;
@@ -551,12 +557,12 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 				if (data.died) html.p('Died: '+data.died).appendTo(output);
 				
 				var list = html.list().appendTo(output);
-				$.each(data.items, function (i, item) {
+				if (data.items) $.each(data.items, function (i, item) {
 					var listitem = html.li().addClass('superListItem').appendTo(list);
 					if (item.thumbnail) html.listThumbnail(item.thumbnail).appendTo(listitem);
 					var title = html.h3(item.label).appendTo(listitem);
 					var l = html.list().appendTo(listitem);
-					$.each(item.items, function (index, item) {
+					if (item.items) $.each(item.items, function (index, item) {
 						l.append( html.listItem(item) );
 					});
 					

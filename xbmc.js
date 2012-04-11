@@ -126,6 +126,14 @@ xbmc = xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			'params': { 'properties': [ 'artist', 'album', 'albumid', 'year', 'thumbnail', 'file', 'title', 'track', 'duration' ] },
 			'method': 'AudioLibrary.GetSongs'
 		},
+		'GetAlbums': {
+			'params': { 'properties': [ 'title', 'description', 'artist', 'type', 'albumlabel', 'year', 'thumbnail' ] },
+			'method': 'AudioLibrary.GetAlbums'
+		},
+		'GetAlbumDetails': {
+			'params': { 'properties': [ 'title', 'description', 'artist', 'genre', 'type', 'albumlabel', 'rating', 'year', 'fanart', 'thumbnail', 'artistid' ] },
+			'method': 'AudioLibrary.GetAlbumDetails'
+		},
 		'GetMusicVideos': {
 			'params': { 'properties': [ 'title', 'runtime', 'year', 'album', 'artist', 'track', 'thumbnail', 'file' ] },
 			'method': 'VideoLibrary.GetMusicVideos'
