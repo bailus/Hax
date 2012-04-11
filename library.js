@@ -338,11 +338,11 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 						page.genre = undefined;
 						if (page.description === 'Fetching artist biography from allmusic.com is not possible due to copyright reasons.') page.description = undefined;
 						$.each(page.items, function (i, album) {
+							if (album.year) album.label = '('+album.year+') '+album.label;
 							album.link = '#page=Album&albumid='+album.albumid;
 							album.thumbnail = album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : '/img/DefaultAudio.png';
 							album.width = 50;
-						});
-						
+						});						
 						callback(page);
 					});
 				});
@@ -362,6 +362,7 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 						if (page.description === 'Fetching album review from allmusic.com is not possible due to copyright reasons.') page.description = undefined;
 						page.items = data.songs || [];
 						$.each(page.items, function (i, song) {
+							if (song.track) song.label = song.track+'. '+song.label
 							song.thumbnail = undefined;
 							song.width = 50;
 							if (song.file) {
@@ -609,15 +610,17 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 		}
 	};
 	
+	var history = [];
 	var renderPage = function (title) {
 		if (DEBUG) console.log('Rendering page: '+title);
-		if (!title) title = 'TV Shows';
+		if (!title) title = 'Remote';
 		var page = pages[title];
 		if (page) page.data(function (data) {
 			if (page.view) {
 				var p = html.page();
 				var v = views[page.view].render(data).appendTo(p);
 				$('#content').empty().append(p);
+				$('body').scrollTop(0);
 				v.find('img').filter('[data-original]').lazyload(LAZYLOAD_OPTIONS);   //initialize the lazyload plugin after the page is added to the DOM
 			}
 			$('#loading').hide();

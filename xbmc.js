@@ -1,4 +1,4 @@
-xbmc = xbmcLibrary = (function ($) { //create the xbmcLibrary global object
+xbmc = (function ($) { //create the xbmc global object
 
 	//constants
 	var DEBUG = true;
@@ -127,7 +127,10 @@ xbmc = xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			'method': 'AudioLibrary.GetSongs'
 		},
 		'GetAlbums': {
-			'params': { 'properties': [ 'title', 'description', 'artist', 'type', 'albumlabel', 'year', 'thumbnail' ] },
+			'params': {
+				'properties': [ 'title', 'description', 'artist', 'type', 'albumlabel', 'year', 'thumbnail' ],
+				'sort': { 'method': 'year', 'order': 'ascending' }
+			},
 			'method': 'AudioLibrary.GetAlbums'
 		},
 		'GetAlbumDetails': {
