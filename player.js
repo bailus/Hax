@@ -84,6 +84,7 @@ xbmcPlayer = (function ($) { //create the xbmcPlayer global object
 			xbmc.GetActivePlayerProperties(function (player) {
 				if (!player) {
 					body.attr('data-status','stopped');
+					progress.slider('value',0);
 				} else {
 					if (player.speed) body.attr('data-status','playing');
 					else body.attr('data-status','paused');
