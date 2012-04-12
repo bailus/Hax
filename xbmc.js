@@ -55,7 +55,7 @@ xbmc = (function ($) { //create the xbmc global object
 		'GetActivePlayer': {
 			'method': 'Player.GetActivePlayers',
 			'wrapper': function (players, callback) {
-				if (!players.length) callback();
+				if (!players.length) { callback(); return; };
 				callback(players[0]); //run callback with the active player
 			}
 		},
@@ -73,7 +73,7 @@ xbmc = (function ($) { //create the xbmc global object
 		'GetActivePlayerProperties': function (callback) {
 			pub.GetActivePlayer(function (player) {
 				if (!player) { callback(); if (DEBUG) console.log('xbmc: No Active Players'); return; }
-				pub.GetPlayerProperties({ 'playerid': player.playerid },
+				else pub.GetPlayerProperties({ 'playerid': player.playerid },
 					function (properties) {
 						callback(properties);
 					}
@@ -192,12 +192,15 @@ xbmc = (function ($) { //create the xbmc global object
 			  	if (DEBUG) console.log('ERROR: '+result.error.message+' '+dataString);
 			  	result.result = result.error;
 			  	//return;
-		  	}
+		  	};
 		  	if (callback) {
 			  	//if (DEBUG) console.log('data received');
 		  		if (rpc[name].wrapper) rpc[name].wrapper( result.result, callback );
 		  		else callback(result.result);
-		  	}
+		  	};
+		};
+		var error = function (result) {
+			callback();
 		};
 		var ajax = {
 			'type': 'POST',
@@ -205,7 +208,8 @@ xbmc = (function ($) { //create the xbmc global object
 			'contentType': 'application/json',
 			'url': '/jsonrpc?'+name,
 			'data': dataString,
-			'success': success
+			'success': success,
+			'error': error
 		};
 		return $.ajax(ajax);
 	};

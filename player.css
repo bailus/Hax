@@ -86,3 +86,4 @@ body[data-status=playing] #player .PlayPause { background-image:url('/img/Pause.
 #player .GoPrevious { background-image:url('/img/GoPrevious.png'); }
 #player .Volume { background-image:url('/img/Volume.png'); }
 #player .Remote { background-image:url('/img/Remote.png'); }
+#player .Playlist { background-image:url('/img/Playlist.png'); }

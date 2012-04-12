@@ -431,7 +431,7 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			'view': 'list',
 			'data': function (callback) {
 				xbmc.GetDirectory({ 'directory': getHash('directory'), 'media': getHash('media') }, function (data) {
-				console.dir(data)
+				//console.dir(data)
 					if (!data.files) data.files = [];
 					$.each(data.files, function (i, file) {
 						if (file.filetype === 'directory') {
@@ -475,8 +475,6 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 		},
 		'Playlist': {
 			'view': 'list',
-			'home': true,
-			'icon': '/img/Playlist.png',
 			'data': function (callback) {
 				xbmc.GetPlaylistItems({'playlistid':1}, function (data) {
 					if (data.items) $.each(data.items, function (i, item) {
@@ -603,7 +601,7 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 		},
 		'svg': {
 			'render': function (data) {
-				console.dir(data)
+				//console.dir(data)
 				var svg = document.adoptNode(data.svg.documentElement);
 				return $('<div class="svg"></div>').append(svg);
 			}

@@ -334,7 +334,7 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 						if (page.thumbnail) page.thumbnail = xbmc.vfs2uri(page.thumbnail);
 						if (page.fanart) page.fanart = xbmc.vfs2uri(page.fanart);
 						page.title = page.label || '';
-						var page.items = data.albums || [];
+						page.items = data.albums || [];
 						page.genre = undefined;
 						if (page.description === 'Fetching artist biography from allmusic.com is not possible due to copyright reasons.') page.description = undefined;
 						$.each(page.items, function (i, album) {
@@ -475,8 +475,6 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 		},
 		'Playlist': {
 			'view': 'list',
-			'home': true,
-			'icon': '/img/Playlist.png',
 			'data': function (callback) {
 				xbmc.GetPlaylistItems({'playlistid':1}, function (data) {
 					if (data.items) $.each(data.items, function (i, item) {
