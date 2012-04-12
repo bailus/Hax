@@ -55,6 +55,7 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			if (item.rotatethumbnail) c += 'rotatethumbnail';
 			if (item.thumbnail) {
 				var img = $('<img alt="" class="'+c+'"></img>');
+				console.log(item.thumbnail.slice(0,4))
 				if (item.thumbnail.slice(0,4) === '/vfs/') { //only lazyload thumbnails that come from the xbmc virtual file system
 					img.attr('src', '/img/Transparent.png');
 					img.attr('data-original', item.thumbnail);
@@ -503,7 +504,6 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			'data': function (callback) {
 				$.ajax('/img/remote.svg').
 				  done(function (data) {
-				  console.log(data)
 				  	callback({
 				  		'svg': data
 				  	});
@@ -533,7 +533,7 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 				var list = html.list();
 				//if (data.title) list.append( html.pageTitle(data.title) );
 				if (data.items) $.each(data.items, function (index, item) {
-					list.append( html.bannerItem(item) );
+					html.bannerItem(item).appendTo(list);
 				});
 				return list;
 			}
