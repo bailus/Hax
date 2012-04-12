@@ -1,7 +1,7 @@
 xbmcPlayer = (function ($) { //create the xbmcPlayer global object
 
 	//constants
-	var REFRESH = 10000;
+	var REFRESH = 1000;
 
 	//html helper functions
 	var html = {
@@ -76,8 +76,10 @@ xbmcPlayer = (function ($) { //create the xbmcPlayer global object
 		});
 	};
 	
-	var refreshPlayer = (function () {
+	var startTimer = function () {
 		var body = $('body');
+		var volume = $('#volume');
+		var progress = $('#progress');
 		var GetActivePlayerProperties = function (callback) {
 			xbmc.GetActivePlayerProperties(function (player) {
 				if (!player) {
@@ -85,20 +87,20 @@ xbmcPlayer = (function ($) { //create the xbmcPlayer global object
 				} else {
 					if (player.speed) body.attr('data-status','playing');
 					else body.attr('data-status','paused');
-					$('#progress').slider('value',player.percentage);
+					progress.slider('value',player.percentage);
 				}
 				callback();
 			});
 		};
 		var GetApplicationProperties = function (callback) {
 			xbmc.GetApplicationProperties(function (app) {
-				$('#volume').slider('value',app.volume);
+				volume.slider('value',app.volume);
 				document.title = app.name;
 				callback();
 			});
 		};
-		var timeout  = function (func) {
-			window.setTimeout(func, REFRESH);
+		var timeout  = function (callback) {
+			window.setTimeout(callback, REFRESH);
 		};
 		var timer = function () {
 			GetApplicationProperties(function () {
@@ -111,15 +113,15 @@ xbmcPlayer = (function ($) { //create the xbmcPlayer global object
 				});
 			});
 		};
-		return timer;
-	})();
+		timer();
+	};
 	
 	var init = function () {		
 		//render the player
 		renderPlayer($('#player'));
 		
 		//start polling
-		refreshPlayer();
+		startTimer();
 	};
 	
 	return {

@@ -503,7 +503,6 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			'data': function (callback) {
 				$.ajax('/img/remote.svg').
 				  done(function (data) {
-				  console.log(data)
 				  	callback({
 				  		'svg': data
 				  	});
