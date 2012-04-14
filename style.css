@@ -240,6 +240,7 @@ p {
 	height:100%;
 	margin-left:auto;
 	margin-right:auto;
+	min-width:100%;
 }
 [data-orientation=portrait] .fanart {
 	padding-top:60px;
