@@ -1,7 +1,7 @@
 xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 
 	//constants
-	var DEBUG = true;
+	var DEBUG = false;
 	var LAZYLOAD_OPTIONS = { failure_limit : 10 };
 
 	//html helper functions
@@ -37,16 +37,16 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			return $('<p></p>');
 		},
 		'fanart': function (src) {
-			return $('<div class="fanart"><img src="'+src+'" alt=""></img></div>');
+			return $('<div class="fanart"><img src="'+src+'" alt=""></div>');
 		},
 		'headerThumbnail': function (src) {
-			return $('<img src="'+src+'" alt="" class="headerThumbnail"></img>');
+			return $('<img src="'+src+'" alt="" class="headerThumbnail">');
 		},
 		'listThumbnail': function (src) {
-			return $('<img src="'+src+'" alt="" class="listThumbnail"></img>');
+			return $('<img src="'+src+'" alt="" class="listThumbnail">');
 		},
 		'image': function (src) {
-			return $('<img src="'+src+'" alt="" class="image"></img>');
+			return $('<img src="'+src+'" alt="" class="image">');
 		},
 		'listItem': function (item) {
 			var i = $('<li class="listItem"></li>');
@@ -54,9 +54,8 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			i.css('height', item.height || 50);
 			if (item.rotatethumbnail) c += 'rotatethumbnail';
 			if (item.thumbnail) {
-				var img = $('<img alt="" class="'+c+'"></img>');
-				console.log(item.thumbnail.slice(0,4))
-				if (item.thumbnail.slice(0,4) === '/vfs/') { //only lazyload thumbnails that come from the xbmc virtual file system
+				var img = $('<img alt="" class="'+c+'">');
+				if (item.thumbnail.slice(0,5) === '/vfs/') { //only lazyload thumbnails that come from the xbmc virtual file system
 					img.attr('src', '/img/Transparent.png');
 					img.attr('data-original', item.thumbnail);
 				} else { //images that aren't on the vfs are loaded normally
@@ -113,7 +112,7 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			return $('<h1>'+title+'</h1>');
 		},
 		'headerButton': function (page, src) {
-			return $('<a class="headerButton" href="#page='+page+'"><img alt="'+page+'" src="'+src+'"></img></span>');
+			return $('<a class="headerButton" href="#page='+page+'" tabindex="0"><img alt="'+page+'" src="'+src+'"></span>');
 		},
 		'listDetails': function (data, output) {
 			if (data.thumbnail) {
@@ -601,8 +600,9 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 		},
 		'svg': {
 			'render': function (data) {
-				//console.dir(data)
-				var svg = document.adoptNode(data.svg.documentElement);
+				var svg;
+				if (document.adoptNode) svg = document.adoptNode(data.svg.documentElement);
+				else if (document.importNode) svg = document.importNode(data.svg.documentElement);
 				return $('<div class="svg"></div>').append(svg);
 			}
 		}

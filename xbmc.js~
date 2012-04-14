@@ -1,7 +1,7 @@
 xbmc = (function ($) { //create the xbmc global object
 
 	//constants
-	var DEBUG = true;
+	var DEBUG = false;
 
 	var pub = {};
 
@@ -187,7 +187,7 @@ xbmc = (function ($) { //create the xbmc global object
 		dataString = JSON.stringify(data);
 		if (DEBUG) console.log('xbmc: loading '+name+': '+dataString);
 		var success = function (result) {
-			console.dir(result); //output all received data to the console
+			//console.dir(result); //output all received data to the console
 		  	if (result.error) {
 			  	if (DEBUG) console.log('ERROR: '+result.error.message+' '+dataString);
 			  	result.result = result.error;

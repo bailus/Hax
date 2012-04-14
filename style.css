@@ -19,10 +19,13 @@ h1, h2, h3, h4, h5 {
 li {
 	list-style-type:none;
 }
+/* whoever thought blue linked image borders were a good idea? */
+a img,:link img,:visited img { border:none }
 a {
 	color:white;
 	text-decoration:none;
 	color:#59B4D4;
+	outline:none;
 }
 a:hover {
 	color:#0078A3;
