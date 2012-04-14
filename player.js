@@ -95,8 +95,10 @@ xbmcPlayer = (function ($) { //create the xbmcPlayer global object
 		};
 		var GetApplicationProperties = function (callback) {
 			xbmc.GetApplicationProperties(function (app) {
-				volume.slider('value',app.volume);
-				document.title = app.name;
+				if (app) {
+					volume.slider('value',app.volume);
+					document.title = app.name;
+				}
 				callback();
 			});
 		};
