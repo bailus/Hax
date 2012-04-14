@@ -1,7 +1,8 @@
 xbmcPlayer = (function ($) { //create the xbmcPlayer global object
 
 	//constants
-	var REFRESH = 1000;
+	var DEBUG = true;
+	var REFRESH = 1000; //polling interval in ms
 
 	//html helper functions
 	var html = {

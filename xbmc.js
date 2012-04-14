@@ -1,7 +1,7 @@
 xbmc = (function ($) { //create the xbmc global object
 
 	//constants
-	var DEBUG = false;
+	var DEBUG = true;
 
 	var pub = {};
 
@@ -181,7 +181,7 @@ xbmc = (function ($) { //create the xbmc global object
 		}
 	};
 
-	var load = function (name, params, callback) { //helper function that loads data from the JSON-RPC server using HTTP
+	var load = function (name, params, callback) { //loads data from the JSON-RPC server using HTTP
 		var data = {'jsonrpc': '2.0', 'method': rpc[name].method, 'params': params };
 		data.id = +new Date();
 		dataString = JSON.stringify(data);

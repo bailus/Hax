@@ -1,8 +1,9 @@
 xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 
 	//constants
-	var DEBUG = false;
+	var DEBUG = true;
 	var LAZYLOAD_OPTIONS = { failure_limit : 10 };
+	var PAGESIZE = 20;
 
 	//html helper functions
 	var html = {
@@ -476,25 +477,30 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 		'Playlist': {
 			'view': 'list',
 			'data': function (callback) {
-				xbmc.GetPlaylistItems({'playlistid':1}, function (data) {
-					if (data.items) $.each(data.items, function (i, item) {
-						if (item.file) {
-							item.play = function () {
-								xbmc.Play(item.file, 1);
-							};
-							item.remove = function () {
-								xbmc.RemoveFromPlaylist({ 'playlistid': 1, 'position': i });
-								renderPage('Playlist'); //refresh the playlist
-							};
-						}
-						if (item.thumbnail) item.thumbnail = xbmc.vfs2uri(item.thumbnail);
+				var playlistid = getHash('playlistid') || 1;
+				xbmc.GetPlaylistItems({ 'playlistid': playlistid }, function (playlist) {
+					xbmc.GetActivePlayerProperties(function (player) {
+						if (playlist.items) $.each(playlist.items, function (i, item) {
+							if (player && player.position == i) item.playing = true;
+							if (item.file && !item.playing) {
+								item.play = function () {
+									xbmc.Open({ 'item': { 'playlistid': playlistid, 'position': i } });
+									renderPage('Playlist'); //refresh the playlist
+								};
+								item.remove = function () {
+									xbmc.RemoveFromPlaylist({ 'playlistid': 1, 'position': i });
+									renderPage('Playlist'); //refresh the playlist
+								};
+							}
+							if (item.thumbnail) item.thumbnail = xbmc.vfs2uri(item.thumbnail);
+						});
+						var page = {
+							'title': 'Playlist',
+							'items': playlist.items,
+							//'fanart': '/img/backgrounds/appearance.jpg'
+						};
+						callback(page);
 					});
-					var page = {
-						'title': 'Playlist',
-						'items': data.items,
-						//'fanart': '/img/backgrounds/appearance.jpg'
-					};
-					callback(page);
 				});
 			}
 		},
