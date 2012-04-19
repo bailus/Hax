@@ -2,6 +2,8 @@ xbmc = (function ($) { //create the xbmc global object
 
 	//constants
 	var DEBUG = true;
+	
+	if (!window.DEBUG) var DEBUG = false;
 
 	var pub = {};
 
@@ -245,7 +247,7 @@ xbmc = (function ($) { //create the xbmc global object
 	
 	$.each(rpc, makeFunction);
 	
-	if (DEBUG) load('Introspect', {}, function (o) { console.log('xbmc: Loaded Introspect'); console.dir(o) });
+	if (DEBUG) load('Introspect', {}, function (o) { window.console.log('xbmc: Loaded Introspect'); window.console.dir(o); });
 	
 	return pub;
 })(jQuery);

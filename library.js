@@ -1,9 +1,10 @@
 xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 
 	//constants
-	var DEBUG = true;
 	var LAZYLOAD_OPTIONS = { failure_limit : 10 };
 	var PAGESIZE = 20;
+	
+	if (!window.DEBUG) var DEBUG = false;
 
 	//html helper functions
 	var html = {

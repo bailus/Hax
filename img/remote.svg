@@ -10,108 +10,14 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="329.6795"
-   height="271.44678"
+   width="315.6795"
+   height="257.44678"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.1 r9760"
    sodipodi:docname="remote.svg">
   <defs
      id="defs4">
-    <linearGradient
-       y2="125.82899"
-       x2="200.43187"
-       y1="171.80569"
-       x1="200.43187"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient4057"
-       xlink:href="#linearGradient4093"
-       inkscape:collect="always" />
-    <linearGradient
-       y2="126.83779"
-       x2="127.85551"
-       y1="172.29601"
-       x1="127.85551"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient4055"
-       xlink:href="#linearGradient4093"
-       inkscape:collect="always" />
-    <linearGradient
-       y2="125.31604"
-       x2="57.64991"
-       y1="171.79094"
-       x1="57.64991"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient4053"
-       xlink:href="#linearGradient4093"
-       inkscape:collect="always" />
-    <linearGradient
-       y2="124.81884"
-       x2="343.87354"
-       y1="172.2973"
-       x1="343.87354"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient4051"
-       xlink:href="#linearGradient4093"
-       inkscape:collect="always" />
-    <linearGradient
-       y2="125.28727"
-       x2="209.17279"
-       y1="172.80109"
-       x1="209.17279"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient4049"
-       xlink:href="#linearGradient4093"
-       inkscape:collect="always" />
-    <linearGradient
-       gradientUnits="userSpaceOnUse"
-       y2="149.0625"
-       x2="378.21872"
-       y1="149.0625"
-       x1="33.40625"
-       id="linearGradient4047"
-       xlink:href="#linearGradient4093"
-       inkscape:collect="always" />
-    <linearGradient
-       id="linearGradient4093">
-      <stop
-         id="stop4095"
-         offset="0"
-         style="stop-color:#a4a4a4;stop-opacity:1;" />
-      <stop
-         id="stop4097"
-         offset="1"
-         style="stop-color:#f4f4f4;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient
-       id="linearGradient4093-0">
-      <stop
-         id="stop4095-0"
-         offset="0"
-         style="stop-color:#a4a4a4;stop-opacity:1;" />
-      <stop
-         id="stop4097-6"
-         offset="1"
-         style="stop-color:#f4f4f4;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient
-       y2="483.15805"
-       x2="227.32314"
-       y1="483.15805"
-       x1="174.71758"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient4185"
-       xlink:href="#linearGradient4093-0"
-       inkscape:collect="always" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4093-7"
-       id="linearGradient4168-3"
-       x1="174.71758"
-       y1="483.15805"
-       x2="227.32314"
-       y2="483.15805"
-       gradientUnits="userSpaceOnUse" />
     <linearGradient
        id="linearGradient4093-7">
       <stop
@@ -124,15 +30,6 @@
          style="stop-color:#f4f4f4;stop-opacity:1" />
     </linearGradient>
     <linearGradient
-       y2="483.15805"
-       x2="227.32314"
-       y1="483.15805"
-       x1="174.71758"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient4185-8"
-       xlink:href="#linearGradient4093-7"
-       inkscape:collect="always" />
-    <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient4093-7"
        id="linearGradient4219"
@@ -144,39 +41,12 @@
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient4093-7"
-       id="linearGradient4221"
-       gradientUnits="userSpaceOnUse"
-       x1="196.77187"
-       y1="460.5238"
-       x2="196.77187"
-       y2="505.78864" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4093-7"
        id="linearGradient4223"
        gradientUnits="userSpaceOnUse"
        x1="461.60089"
        y1="142.73665"
        x2="460.66837"
        y2="109.40161" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4093-7"
-       id="linearGradient4225"
-       gradientUnits="userSpaceOnUse"
-       x1="246.51604"
-       y1="275.0762"
-       x2="246.51604"
-       y2="229.60976" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4093-7"
-       id="linearGradient4227"
-       gradientUnits="userSpaceOnUse"
-       x1="198.47968"
-       y1="508.05167"
-       x2="198.47968"
-       y2="461.38156" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient4093-7"
@@ -227,15 +97,6 @@
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient4093-7"
-       id="linearGradient4241"
-       gradientUnits="userSpaceOnUse"
-       x1="267.50293"
-       y1="310.03418"
-       x2="268.05817"
-       y2="255.72078" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4093-7"
        id="linearGradient3042"
        gradientUnits="userSpaceOnUse"
        x1="174.71758"
@@ -246,42 +107,6 @@
        inkscape:collect="always"
        xlink:href="#linearGradient4093-7"
        id="linearGradient3044"
-       gradientUnits="userSpaceOnUse"
-       x1="174.71758"
-       y1="483.15805"
-       x2="227.32314"
-       y2="483.15805" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4093-7"
-       id="linearGradient3054"
-       gradientUnits="userSpaceOnUse"
-       x1="174.71758"
-       y1="483.15805"
-       x2="227.32314"
-       y2="483.15805" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4093-7"
-       id="linearGradient3056"
-       gradientUnits="userSpaceOnUse"
-       x1="174.71758"
-       y1="483.15805"
-       x2="227.32314"
-       y2="483.15805" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4093-7"
-       id="linearGradient3058"
-       gradientUnits="userSpaceOnUse"
-       x1="174.71758"
-       y1="483.15805"
-       x2="227.32314"
-       y2="483.15805" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4093-7"
-       id="linearGradient3060"
        gradientUnits="userSpaceOnUse"
        x1="174.71758"
        y1="483.15805"
@@ -377,8 +202,8 @@
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="128.40465"
-     inkscape:cy="-30.633707"
+     inkscape:cx="123.42496"
+     inkscape:cy="-37.633887"
      inkscape:document-units="px"
      inkscape:current-layer="g3062"
      showgrid="false"
@@ -387,10 +212,10 @@
      inkscape:window-x="43"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     fit-margin-top="10"
-     fit-margin-left="10"
-     fit-margin-right="10"
-     fit-margin-bottom="10" />
+     fit-margin-top="3"
+     fit-margin-left="3"
+     fit-margin-right="3"
+     fit-margin-bottom="3" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -407,7 +232,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(19.036756,2.9832652)">
+     transform="translate(12.036756,-4.0167348)">
     <path
        style="fill:#000000"
        d=""
@@ -466,7 +291,7 @@
          sodipodi:cy="284.64624"
          sodipodi:rx="19.192898"
          sodipodi:ry="19.192898"
-         d="m 286.88333,284.64624 c 0,10.59994 -8.59296,19.1929 -19.1929,19.1929 -10.59995,0 -19.1929,-8.59296 -19.1929,-19.1929 0,-10.59994 8.59295,-19.1929 19.1929,-19.1929 10.59981,0 19.19271,8.59275 19.1929,19.19257"
+         d="m 286.88333,284.64624 a 19.192898,19.192898 0 1 1 0,-3.3e-4"
          transform="matrix(0.89273263,0,0,0.89273263,-90.154367,-152.30435)"
          sodipodi:start="0"
          sodipodi:end="6.2831679"
@@ -522,7 +347,7 @@
          sodipodi:open="true"
          sodipodi:end="6.2831679"
          sodipodi:start="0"
-         d="m 274.76149,129.08275 c 0,14.50519 -11.75877,26.26396 -26.26396,26.26396 -14.50519,0 -26.26397,-11.75877 -26.26397,-26.26396 0,-14.50519 11.75878,-26.26397 26.26397,-26.26397 14.50501,0 26.26371,11.7585 26.26396,26.26351"
+         d="m 274.76149,129.08275 a 26.263966,26.263966 0 1 1 0,-4.6e-4"
          sodipodi:ry="26.263966"
          sodipodi:rx="26.263966"
          sodipodi:cy="129.08275"
@@ -545,7 +370,7 @@
          sodipodi:open="true"
          sodipodi:end="6.2831679"
          sodipodi:start="0"
-         d="m 274.76149,129.08275 c 0,14.50519 -11.75877,26.26396 -26.26396,26.26396 -14.50519,0 -26.26397,-11.75877 -26.26397,-26.26396 0,-14.50519 11.75878,-26.26397 26.26397,-26.26397 14.50501,0 26.26371,11.7585 26.26396,26.26351"
+         d="m 274.76149,129.08275 a 26.263966,26.263966 0 1 1 0,-4.6e-4"
          sodipodi:ry="26.263966"
          sodipodi:rx="26.263966"
          sodipodi:cy="129.08275"
@@ -593,7 +418,7 @@
            sodipodi:cy="129.08275"
            sodipodi:rx="26.263966"
            sodipodi:ry="26.263966"
-           d="m 274.76149,129.08275 c 0,14.50519 -11.75877,26.26396 -26.26396,26.26396 -14.50519,0 -26.26397,-11.75877 -26.26397,-26.26396 0,-14.50519 11.75878,-26.26397 26.26397,-26.26397 14.50501,0 26.26371,11.7585 26.26396,26.26351"
+           d="m 274.76149,129.08275 a 26.263966,26.263966 0 1 1 0,-4.6e-4"
            sodipodi:start="0"
            sodipodi:end="6.2831679"
            sodipodi:open="true" />
@@ -620,7 +445,7 @@
            sodipodi:cy="129.08275"
            sodipodi:rx="26.263966"
            sodipodi:ry="26.263966"
-           d="m 274.76149,129.08275 c 0,14.50519 -11.75877,26.26396 -26.26396,26.26396 -14.50519,0 -26.26397,-11.75877 -26.26397,-26.26396 0,-14.50519 11.75878,-26.26397 26.26397,-26.26397 14.50501,0 26.26371,11.7585 26.26396,26.26351"
+           d="m 274.76149,129.08275 a 26.263966,26.263966 0 1 1 0,-4.6e-4"
            sodipodi:start="0"
            sodipodi:end="6.2831679"
            sodipodi:open="true" />
@@ -645,7 +470,7 @@
            sodipodi:cy="129.08275"
            sodipodi:rx="26.263966"
            sodipodi:ry="26.263966"
-           d="m 274.76149,129.08275 c 0,14.50519 -11.75877,26.26396 -26.26396,26.26396 -14.50519,0 -26.26397,-11.75877 -26.26397,-26.26396 0,-14.50519 11.75878,-26.26397 26.26397,-26.26397 14.50501,0 26.26371,11.7585 26.26396,26.26351"
+           d="m 274.76149,129.08275 a 26.263966,26.263966 0 1 1 0,-4.6e-4"
            sodipodi:start="0"
            sodipodi:end="6.2831679"
            sodipodi:open="true" />
@@ -670,7 +495,7 @@
            sodipodi:cy="129.08275"
            sodipodi:rx="26.263966"
            sodipodi:ry="26.263966"
-           d="m 274.76149,129.08275 c 0,14.50519 -11.75877,26.26396 -26.26396,26.26396 -14.50519,0 -26.26397,-11.75877 -26.26397,-26.26396 0,-14.50519 11.75878,-26.26397 26.26397,-26.26397 14.50501,0 26.26371,11.7585 26.26396,26.26351"
+           d="m 274.76149,129.08275 a 26.263966,26.263966 0 1 1 0,-4.6e-4"
            sodipodi:start="0"
            sodipodi:end="6.2831679"
            sodipodi:open="true" />
