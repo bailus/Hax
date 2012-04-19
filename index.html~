@@ -9,7 +9,6 @@
 <link rel=stylesheet href=/assets/www/jquery-ui/jquery-ui.css>
 <!--[if IE]><link rel=stylesheet href=/ie.css><![endif]-->
 
-<script src=cordova-1.x.x.js></script>
 <script>
 	var URL = '/jsonrpc?';
 </script>
