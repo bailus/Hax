@@ -5,7 +5,7 @@ var xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 	//constants
 	var LAZYLOAD_OPTIONS = { failure_limit : 10 },
 	  PAGESIZE = 20,
-	  FANART = 1;
+	  FANART = 0; //0 = no fanart, 1 = normal fanart, 2 = fanart everywhere
 	
 	if (!window.DEBUG) var DEBUG = false;
 
@@ -42,7 +42,9 @@ var xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			return $('<p></p>');
 		},
 		'fanart': function (src) {
-			return $('<div class="fanart"><img src="'+src+'" alt=""></div>');
+			var fanart = $('<div class="fanart"></div>');
+			if (FANART) $('<img src="'+src+'" alt="">').appendTo(fanart);
+			return fanart;
 		},
 		'headerThumbnail': function (src) {
 			return $('<img src="'+src+'" alt="" class="headerThumbnail">');
