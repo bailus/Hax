@@ -11,6 +11,13 @@
 
 <script>
 	var URL = '/jsonrpc?';
+	//set the global debug variable if there is a console available
+	if (window.console) {
+		window.DEBUG = true;
+				
+		//create a console.dir function if it doesn't exist
+		if (!console.dir) console.dir = console.log;
+	}
 </script>
 <script src=/lib/jquery.js></script>
 <script src=/lib/json.js></script>

@@ -1,10 +1,10 @@
 xbmcPlayer = (function ($) { //create the xbmcPlayer global object
+	"use strict";
+	if (!window.DEBUG) var DEBUG = false;
 
 	//constants
-	var DEBUG = true;
 	var REFRESH = 1000; //polling interval in ms
 	
-	if (!window.DEBUG) var DEBUG = false;
 
 	//html helper functions
 	var html = {
@@ -28,19 +28,22 @@ xbmcPlayer = (function ($) { //create the xbmcPlayer global object
 	var controlButtons = {
 		/*'GoPrevious': {
 			'text': 'Previous',
-			'click': function () { xbmc.GoPrevious(); }
+			'click': function () { xbmc.GoPrevious(); },
+			'class': 'wide'
 		},*/
 		'PlayPause': {
 			'text': 'Play / Pause',
 			'click': function () { xbmc.PlayPause(); }
 		},
-		/*'Stop': {
+		'Stop': {
 			'text': 'Stop',
-			'click': function () { xbmc.Stop(); }
+			'click': function () { xbmc.Stop(); },
+			'class': 'wide'
 		},
-		'GoNext': {
+		/*'GoNext': {
 			'text': 'Next',
-			'click': function () { xbmc.GoNext(); }
+			'click': function () { xbmc.GoNext(); },
+			'class': 'wide'
 		},*/
 		'Remote': {
 			'text': 'Remote',
@@ -53,25 +56,28 @@ xbmcPlayer = (function ($) { //create the xbmcPlayer global object
 	};
 	
 	var renderPlayer = function (player) {
+		var slider, volume;
 		$.each(controlButtons, function (index, button) {
-			if (button.click) html.controlButton(index, button.text, player).click(button.click);
-			else if (button.link) html.controlButtonLink(index, button.text, button.link, player);
+			var name = index;
+			if (button['class']) name = index+' '+button['class'];
+			if (button.click) html.controlButton(name, button.text, player).click(button.click);
+			else if (button.link) html.controlButtonLink(name, button.text, button.link, player);
 		});
-		var slider = html.controlSlider(player);
+		slider = html.controlSlider(player);
 		$(slider).slider({
 			'stop': function (event, ui) {
 				xbmc.Seek({'value':ui.value});
 			},
 			'step': 0.001
 		});
-		var volume = html.volume(player);
+		volume = html.volume(player);
 		$(volume).slider({
 			//set the xbmc volume when the slider is changed
 			'stop': function (event, ui) {
 				xbmc.Volume({'volume':ui.value});
 			},
 			//set the xbmc volume continuously while the slider is changing
-			//this creates a metric fuckton of connections... probably needs websockets to work properly
+			//this creates a metric fuckton of connections... it probably needs websockets to work properly
 			/*'slide': function (event, ui) {
 				xbmc.Volume({'volume':ui.value});
 			},*/
@@ -80,10 +86,11 @@ xbmcPlayer = (function ($) { //create the xbmcPlayer global object
 	};
 	
 	var startTimer = function () {
-		var body = $('body');
-		var volume = $('#volume');
-		var progress = $('#progress');
-		var GetActivePlayerProperties = function (callback) {
+		var body, volume, progress, GetActivePlayerProperties, GetApplicationProperties, timeout, timer;
+		body = $('body'),
+		volume = $('#volume'),
+		progress = $('#progress');
+		GetActivePlayerProperties = function (callback) {
 			xbmc.GetActivePlayerProperties(function (player) {
 				if (!player) {
 					body.attr('data-status','stopped');
@@ -96,7 +103,7 @@ xbmcPlayer = (function ($) { //create the xbmcPlayer global object
 				callback();
 			});
 		};
-		var GetApplicationProperties = function (callback) {
+		GetApplicationProperties = function (callback) {
 			xbmc.GetApplicationProperties(function (app) {
 				if (app) {
 					volume.slider('value',app.volume);
@@ -105,10 +112,10 @@ xbmcPlayer = (function ($) { //create the xbmcPlayer global object
 				callback();
 			});
 		};
-		var timeout  = function (callback) {
+		timeout  = function (callback) {
 			window.setTimeout(callback, REFRESH);
 		};
-		var timer = function () {
+		timer = function () {
 			GetApplicationProperties(function () {
 				timeout(function () {
 					GetActivePlayerProperties(function () {

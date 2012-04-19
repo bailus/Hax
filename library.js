@@ -1,11 +1,11 @@
-/*jslint browser: true, eqeq: true, white: true, plusplus: true, maxerr: 50, indent: 4 */
 var xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 	"use strict";
 
 	//constants
 	var LAZYLOAD_OPTIONS = { failure_limit : 10 },
 	  PAGESIZE = 20,
-	  FANART = 0; //0 = no fanart, 1 = normal fanart, 2 = fanart everywhere
+	  FANART = 1, //0 = no fanart, 1 = normal fanart, 2 = fanart everywhere
+	  ROTATE_MOVIE_THUMBNAILS = true;
 	
 	if (!window.DEBUG) var DEBUG = false;
 
@@ -40,6 +40,13 @@ var xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 		'p': function (x) {
 			if (x !== undefined) return $('<p>'+x+'</p>');
 			return $('<p></p>');
+		},
+		'div': function (x) {
+			if (x !== undefined) return $('<div>'+x+'</div>');
+			return $('<div></div>');
+		},
+		'a': function (href) {
+			return $('<a href="'+href+'"/>');
 		},
 		'fanart': function (src) {
 			var fanart = $('<div class="fanart"></div>');
@@ -116,8 +123,9 @@ var xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			}
 			return i;	
 		},
-		'pageTitle': function (title) {
-			return $('<h1>'+title+'</h1>');
+		'pageTitle': function (title, link) {
+			if (link) return $('<h1><a href="'+link+'">'+title+'</a></h1>');
+			else return $('<h1>'+title+'</h1>');
 		},
 		'headerButton': function (page, src) {
 			return $('<a class="headerButton" href="#page='+page+'" tabindex="0"><img alt="'+page+'" src="'+src+'"></a>');
@@ -127,8 +135,8 @@ var xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 				output.append( html.headerThumbnail(data.thumbnail) );
 			}
 			if (data.title) {
-				if (data.banner) output.append( html.banner(data.banner, data.title) );
-				else output.append( html.pageTitle(data.title) );
+				if (data.banner) output.append( html.banner(data.banner, data.title, data.link) );
+				else output.append( html.pageTitle(data.title, data.link) );
 			}
 			if (data.subtitle) html.h2(data.subtitle).appendTo(output);
 			if (data.description)  html.p(data.description).appendTo(output);
@@ -193,9 +201,16 @@ var xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 								};
 							}
 							movie.thumbnail = movie.thumbnail ? xbmc.vfs2uri(movie.thumbnail) : '/img/DefaultVideo.png';
-							movie.rotatethumbnail = true;
-							movie.height = 50;
-							movie.width = 80;
+							if (ROTATE_MOVIE_THUMBNAILS) {
+								movie.rotatethumbnail = true;
+								movie.height = 50;
+								movie.width = 80;
+							}
+							else {
+								movie.rotatethumbnail = false;
+								movie.width = 33;
+								movie.height = 50;
+							}
 						});
 						var movies = {};
 						$.each(data.movies, function (i, movie) { //sort the movies into years
@@ -255,8 +270,9 @@ var xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 		'TV Show': {
 			'view': 'list2',
 			'data': function (callback) {
-				xbmc.GetTVShowDetails({ 'tvshowid': +getHash('tvshowid') }, function (show) {
-					xbmc.GetTVEpisodes({ 'tvshowid': +getHash('tvshowid') }, function (data) {
+				var tvshowid = +getHash('tvshowid');
+				xbmc.GetTVShowDetails({ 'tvshowid': tvshowid }, function (show) {
+					xbmc.GetTVEpisodes({ 'tvshowid': tvshowid }, function (data) {
 						var page = show.tvshowdetails;
 						if (page.fanart) page.fanart = xbmc.vfs2uri(show.tvshowdetails.fanart);
 						if (page.thumbnail) page.banner = xbmc.vfs2uri(show.tvshowdetails.thumbnail);
@@ -270,7 +286,7 @@ var xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 								episode.add = function () {
 									xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': episode.file } });
 								};
-								episode.link = '#page=Episode&episodeid='+episode.episodeid;
+								episode.link = '#page=Episode&episodeid='+episode.episodeid+'&tvshowid='+tvshowid;
 								if (episode.episode) episode.label = episode.episode+'. '+episode.title;
 								episode.thumbnail = episode.thumbnail ? xbmc.vfs2uri(episode.thumbnail) : '/img/DefaultVideo.png';
 							});
@@ -297,7 +313,9 @@ var xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			'data': function (callback) {
 				xbmc.GetEpisodeDetails({ 'episodeid': +getHash('episodeid') }, function (data) {
 					var episode = data.episodedetails;
+				console.dir(episode);
 					episode.heading = episode.title;
+					if (getHash('tvshowid')) episode.link = '#page=TV Show&tvshowid='+getHash('tvshowid');
 					if (episode.showtitle) episode.title = episode.showtitle;
 					if (episode.file) {
 						episode.play = function () {
@@ -363,6 +381,7 @@ var xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 						if (page.thumbnail) page.thumbnail = xbmc.vfs2uri(page.thumbnail);
 						if (page.fanart) page.fanart = xbmc.vfs2uri(page.fanart);
 						page.title = page.artist || '';
+						page.link = '#page=Artist&artistid='+page.artistid;
 						page.subtitle = page.label || '';
 						if (page.year) page.subtitle = '('+page.year+') '+page.subtitle;
 						if (page.description === 'Fetching album review from allmusic.com is not possible due to copyright reasons.') page.description = undefined;
@@ -556,6 +575,9 @@ var xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 					output.append( html.headerThumbnail(data.thumbnail) );
 				}
 				if (data.title) {
+					var title;
+					if (data.link) title = html.a(data.link).appendTo(output);
+					else title = html.div().appendTo(output);
 					if (data.banner) output.append( html.banner(data.banner, data.title) );
 					else output.append( html.pageTitle(data.title) );
 				}
@@ -587,7 +609,7 @@ var xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 				//console.dir(data);
 				var output = html.details();
 				if (data.thumbnail) html.image(xbmc.vfs2uri(data.thumbnail)).appendTo(output);
-				if (data.title) html.pageTitle(data.title).appendTo(output);
+				if (data.title) html.pageTitle(data.title, data.link).appendTo(output);
 				if (data.heading) html.h2(data.heading).appendTo(output);
 				if (data.play || data.add) html.play(data).appendTo(output);
 				if (data.season && data.episode) html.p('Season '+data.season+', Episode '+data.episode).appendTo(output);

@@ -1,8 +1,7 @@
 xbmc = (function ($) { //create the xbmc global object
+	"use strict";
 
 	//constants
-	var DEBUG = true;
-	
 	if (!window.DEBUG) var DEBUG = false;
 
 	var pub = {};
@@ -25,7 +24,7 @@ xbmc = (function ($) { //create the xbmc global object
 		},
 		'GetEpisodeDetails': {
 			'method': 'VideoLibrary.GetEpisodeDetails',
-			'params': { 'properties': [ 'title', 'plot', 'rating', 'director', 'showtitle', 'thumbnail', 'fanart', 'episode', 'season', 'runtime', 'file' ] }
+			'params': { 'properties': [ 'title', 'plot', 'rating', 'director', 'showtitle', 'thumbnail', 'fanart', 'episode', 'season', 'runtime', 'file', 'tvshowid' ] }
 		},
 		'GetMovies': {
 			'method': 'VideoLibrary.GetMovies',
@@ -184,11 +183,12 @@ xbmc = (function ($) { //create the xbmc global object
 	};
 
 	var load = function (name, params, callback) { //loads data from the JSON-RPC server using HTTP
-		var data = {'jsonrpc': '2.0', 'method': rpc[name].method, 'params': params };
+		var data, dataString, success, error, ajax;
+		data = {'jsonrpc': '2.0', 'method': rpc[name].method, 'params': params };
 		data.id = +new Date();
 		dataString = JSON.stringify(data);
 		if (DEBUG) console.log('xbmc: loading '+name+': '+dataString);
-		var success = function (result) {
+		success = function (result) {
 			//console.dir(result); //output all received data to the console
 		  	if (result.error) {
 			  	if (DEBUG) console.log('ERROR: '+result.error.message+' '+dataString);
@@ -201,14 +201,14 @@ xbmc = (function ($) { //create the xbmc global object
 		  		else callback(result.result);
 		  	};
 		};
-		var error = function (result) {
+		error = function (result) {
 			callback();
 		};
-		var ajax = {
+		ajax = {
 			'type': 'POST',
 			'dataType': 'json',
 			'contentType': 'application/json',
-			'url': '/jsonrpc?'+name,
+			'url': URL+name,
 			'data': dataString,
 			'success': success,
 			'error': error
@@ -218,10 +218,6 @@ xbmc = (function ($) { //create the xbmc global object
 	
 	
 	var makeFunction = function (index, item) { //make public functions from the rpc array
-		if (item instanceof Function) { //if item is a function, just use that
-			pub[index] = item;
-			return;
-		}
 		var template = function (params, callback) { //template for all the xbmc.* functions
 			if (params && params instanceof Function) {
 					callback = params;
@@ -231,16 +227,20 @@ xbmc = (function ($) { //create the xbmc global object
 			if (item.params) $.extend(true, params, item.params);
 			load(index, params, callback);
 		};
+		if (item instanceof Function) { //if item is a function, just use that
+			pub[index] = item;
+			return;
+		}
 		if (item.requires) pub[index] = function (params, callback) { //wrap the template if there is a dependency
 			if (params instanceof Function) { callback = params; params = {}; }
-			if (!params) var params = {};
+			if (!params) params = {};
 			//return the required function with the template as a callback
 			pub[item.requires.value]( {}, function (result) {
-				newparams = {};
+				var newparams = {};
 				if (result && item.requires.name) newparams[item.requires.name] = result;
 				$.extend(newparams, params);
 				template(newparams, callback);
-			})
+			});
 		};
 		else pub[index] = template; //just use the bare template if there is no dependency
 	};
