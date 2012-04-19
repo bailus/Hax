@@ -1,8 +1,11 @@
-xbmcLibrary = (function ($) { //create the xbmcLibrary global object
+/*jslint browser: true, eqeq: true, white: true, plusplus: true, maxerr: 50, indent: 4 */
+var xbmcLibrary = (function ($) { //create the xbmcLibrary global object
+	"use strict";
 
 	//constants
-	var LAZYLOAD_OPTIONS = { failure_limit : 10 };
-	var PAGESIZE = 20;
+	var LAZYLOAD_OPTIONS = { failure_limit : 10 },
+	  PAGESIZE = 20,
+	  FANART = 1;
 	
 	if (!window.DEBUG) var DEBUG = false;
 
@@ -51,8 +54,9 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			return $('<img src="'+src+'" alt="" class="image">');
 		},
 		'listItem': function (item) {
-			var i = $('<li class="listItem"></li>');
-			var c = '';
+			var play, add, remove,
+			  i = $('<li class="listItem"></li>'),
+			  c = '';
 			i.css('height', item.height || 50);
 			if (item.rotatethumbnail) c += 'rotatethumbnail';
 			if (item.thumbnail) {
@@ -61,7 +65,7 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 					img.attr('src', '/img/Transparent.png');
 					img.attr('data-original', item.thumbnail);
 				} else { //images that aren't on the vfs are loaded normally
-					img.attr('src', item.thumbnail)
+					img.attr('src', item.thumbnail);
 				}
 				var thumbnail = $('<div class="thumbnail"></div>').appendTo(i);
 				if (item.link) $('<a href="'+item.link+'"></a>').append(img).appendTo(thumbnail);
@@ -70,16 +74,16 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			}
 			
 			if (item.play) {
-				var play = $('<span class="play">▶</span>').appendTo(i);
+				play = $('<span class="play">▶</span>').appendTo(i);
 				play.click(item.play);
 			}
 			if (item.add) {
-				var add = $('<span class="add">+</span>').appendTo(i);
+				add = $('<span class="add">+</span>').appendTo(i);
 				add.click(item.add);
 			}
 			if (item.remove) {
-				var add = $('<span class="remove">-</span>').appendTo(i);
-				add.click(item.remove);
+				remove = $('<span class="remove">-</span>').appendTo(i);
+				remove.click(item.remove);
 			}
 			
 			if (item.link) i.append('<a href="'+item.link+'"><span class="label">'+item.label+'</span></a>');
@@ -87,8 +91,8 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			return i;
 		},
 		'bannerItem': function (item) {
-			var i = $('<li class="bannerItem"></li>');
-			var a = i;
+			var i = $('<li class="bannerItem"></li>'),
+			  a = i;
 			if (item.link) a = $('<a href="'+item.link+'"></a>').appendTo(i);
 			if (item.thumbnail) a.append('<img class="banner" src="/img/Banner.png" data-original="'+xbmc.vfs2uri(item.thumbnail)+'" alt="'+item.label+'">');
 			a.append('<span class="bannerLabel">'+item.label+'</span>');
@@ -99,13 +103,13 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			return $('<img class="pagebanner" src="'+src+'" alt="'+title+'"></div>');
 		},
 		'play': function (item) {
-			var i = html.p();
+			var play, add, i = html.p();
 			if (item.play) {
-				var play = $('<span class="play">▶ Play</span>').appendTo(i);
+				play = $('<span class="play">▶ Play</span>').appendTo(i);
 				play.click(item.play);
 			}
 			if (item.add) {
-				var add = $('<span class="add">+ Add to playlist</span>').appendTo(i);
+				add = $('<span class="add">+ Add to playlist</span>').appendTo(i);
 				add.click(item.add);
 			}
 			return i;	
@@ -154,7 +158,7 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 						'label': title,
 						'title': title,
 						'icon': page.icon || undefined,
-						'link': '#page='+title,
+						'link': '#page='+title
 					};
 				});
 				var page = {
@@ -172,18 +176,18 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 				xbmc.GetMovies(function (data) {
 					var page = {
 						'title': 'Movies',
-						'items': [],
-						//'fanart': '/img/backgrounds/videos.jpg'
+						'items': []
 					};
+					if (FANART >= 2) page.fanart = '/img/backgrounds/videos.jpg';
 					if (data.movies) {
 						$.each(data.movies, function (i, movie) {
 							movie.link = '#page=Movie&movieid='+movie.movieid;
 							if (movie.file) {
 								movie.play = function () {
-									xbmc.Play(movie.file, 1)
+									xbmc.Play(movie.file, 1);
 								};
 								movie.add = function () {
-									xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': movie.file } })
+									xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': movie.file } });
 								};
 							}
 							movie.thumbnail = movie.thumbnail ? xbmc.vfs2uri(movie.thumbnail) : '/img/DefaultVideo.png';
@@ -221,7 +225,7 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 						movie.add = function () {
 							xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': movie.file } });
 						};
-					};
+					}
 					callback(movie);
 				});
 			}
@@ -241,7 +245,7 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 						$.each(page.items, function (i, tvshow) {
 							tvshow.link = '#page=TV Show&tvshowid='+tvshow.tvshowid;
 						});
-					};
+					}
 					callback(page);
 				});
 			}
@@ -280,7 +284,7 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 									'items': items
 								});
 							});
-						};
+						}
 						callback(page);
 					});
 				});
@@ -292,8 +296,6 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 				xbmc.GetEpisodeDetails({ 'episodeid': +getHash('episodeid') }, function (data) {
 					var episode = data.episodedetails;
 					episode.heading = episode.title;
-					//if (episode.thumbnail) episode.fanart = data.episodedetails.thumbnail;
-					//episode.thumbnail = undefined;
 					if (episode.showtitle) episode.title = episode.showtitle;
 					if (episode.file) {
 						episode.play = function () {
@@ -320,9 +322,9 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 					});
 					var page = {
 						'title': 'Music',
-						'items': data.artists,
-						//'fanart': '/img/backgrounds/music.jpg'
+						'items': data.artists
 					};
+					if (FANART >= 2) page.fanart = '/img/backgrounds/music.jpg';
 					callback(page);
 				});
 			}
@@ -364,15 +366,15 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 						if (page.description === 'Fetching album review from allmusic.com is not possible due to copyright reasons.') page.description = undefined;
 						page.items = data.songs || [];
 						$.each(page.items, function (i, song) {
-							if (song.track) song.label = song.track+'. '+song.label
+							if (song.track) song.label = song.track+'. '+song.label;
 							song.thumbnail = undefined;
 							song.width = 50;
 							if (song.file) {
 								song.play = function () {
-									xbmc.Play(song.file, 1)
+									xbmc.Play(song.file, 1);
 								};
 								song.add = function () {
-									xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': song.file } })
+									xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': song.file } });
 								};
 							}
 						});
@@ -385,23 +387,24 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			'view': 'list',
 			'home': true,
 			'icon': '/img/Files.png',
-			'data': function (callback) {
-				medias = {
+			'medias': {
 					'video': { 'label': 'Video' },
 					'music': { 'label': 'Music' },
 					'pictures': { 'label': 'Pictures' },
 					'files': { 'label': 'Files' }
-				};
+			},
+			'data': function (callback) {
+				var medias = pages.Files.medias,
+				  page = {
+					'title': 'Files',
+					'items': medias
+				  };
+				if (FANART >= 2) page.fanart = '/img/backgrounds/system.jpg';
 				$.each(medias, function (i, media) {
 					if (!media.thumbnail) media.thumbnail = '/img/DefaultFolder.png';
 					if (!media.width) media.width = 50;
 					media.link = '#page=Sources&media='+i;
 				});
-				var page = {
-					'title': 'Files',
-					'items': medias,
-					//'fanart': '/img/backgrounds/system.jpg'
-				};
 				callback(page);
 			}
 		},
@@ -421,10 +424,10 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 						'width': 50
 					});
 					var page = {
-						'title': getHash('media'),
-						'items': data.sources,
-						//'fanart': '/img/backgrounds/system.jpg'
+						'title': 'Files',
+						'items': data.sources
 					};
+					if (FANART >= 2) page.fanart = '/img/backgrounds/system.jpg';
 					callback(page);
 				});
 			}
@@ -433,24 +436,23 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 			'view': 'list',
 			'data': function (callback) {
 				xbmc.GetDirectory({ 'directory': getHash('directory'), 'media': getHash('media') }, function (data) {
-				//console.dir(data)
 					if (!data.files) data.files = [];
 					$.each(data.files, function (i, file) {
+						var f = file.file.split('/'),
+						  filename = f.pop();
 						if (file.filetype === 'directory') {
 							file.link = '#page=Directory&directory='+file.file+'&media='+getHash('media');
 							if (!file.thumbnail) file.thumbnail = '/img/DefaultFolder.png';
-						};
+						}
 						if (file.filetype === 'file') {
 							file.play = function () {
-								xbmc.Play(file.file, 1)
+								xbmc.Play(file.file, 1);
 							};
 							file.add = function () {
-								xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': file.file } })
+								xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': file.file } });
 							};
 							file.thumbnail = file.thumbnail ? xbmc.vfs2uri(file.thumbnail) : '/img/DefaultFile.png';
-						};
-						var f = file.file.split('/');
-						var filename = f.pop();
+						}
 						if (!filename) filename = f.pop();
 						file.label = filename;
 						file.width = 50;
@@ -466,11 +468,11 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 						'width': 50
 					});
 					var page = {
-						'title': getHash('media'),
+						'title': 'Files',
 						'directory': getHash('directory'),
-						'items': data.files,
-						//'fanart': '/img/backgrounds/system.jpg'
+						'items': data.files
 					};
+					if (FANART >= 2) page.fanart = '/img/backgrounds/system.jpg';
 					callback(page);
 				});
 			}
@@ -497,9 +499,9 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 						});
 						var page = {
 							'title': 'Playlist',
-							'items': playlist.items,
-							//'fanart': '/img/backgrounds/appearance.jpg'
+							'items': playlist.items
 						};
+						if (FANART >= 2) page.fanart = '/img/backgrounds/appearance.jpg';
 						callback(page);
 					});
 				});
@@ -563,10 +565,11 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 				
 				var list = html.list().appendTo(output);
 				if (data.items) $.each(data.items, function (i, item) {
-					var listitem = html.li().addClass('superListItem').appendTo(list);
+					var listitem, title, l;
+					listitem = html.li().addClass('superListItem').appendTo(list);
 					if (item.thumbnail) html.listThumbnail(item.thumbnail).appendTo(listitem);
-					var title = html.h3(item.label).appendTo(listitem);
-					var l = html.list().appendTo(listitem);
+					title = html.h3(item.label).appendTo(listitem);
+					l = html.list().appendTo(listitem);
 					if (item.items) $.each(item.items, function (index, item) {
 						l.append( html.listItem(item) );
 					});
@@ -622,11 +625,11 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 		var page = pages[title];
 		if (page) page.data(function (data) {
 			if (page.view) {
-				var p = html.page();
-				var v = views[page.view].render(data).appendTo(p);
+				var p = html.page(),
+				  v = views[page.view].render(data).appendTo(p);
 				$('#content').empty().append(p);
 				$('body').scrollTop(0);
-				v.find('img').filter('[data-original]').lazyload(LAZYLOAD_OPTIONS);   //initialize the lazyload plugin after the page is added to the DOM
+				v.find('img').filter('[data-original]').lazyload(LAZYLOAD_OPTIONS); //initialize the lazyload plugin after the page is added to the DOM
 			}
 			$('#loading').hide();
 		});
@@ -641,8 +644,8 @@ xbmcLibrary = (function ($) { //create the xbmcLibrary global object
 	};
 	
 	var getOrientation = function () { //get the current screen orientation
-		var h = $(window).height();
-		var w = $(window).width();
+		var h = $(window).height(),
+		  w = $(window).width();
 		if (h > w) return 'portrait';
 		return 'landscape';
 	};
