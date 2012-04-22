@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<title>XBMC</title>
+
+<link rel=stylesheet href=/style.css>
+<link rel=stylesheet href=/player.css>
+<link rel=stylesheet href=/jquery-ui/jquery-ui.css>
+<!--[if IE]><link rel=stylesheet href=/ie.css><![endif]-->
+
+<script>
+	var URL = '/jsonrpc?';
+	//set the global debug variable if there is a console available
+	if (window.console) {
+		window.DEBUG = true;
+				
+		//create a console.dir function if it doesn't exist
+		if (!console.dir) console.dir = console.log;
+	}
+</script>
+<script src=/lib/jquery.js></script>
+<script src=/lib/json.js></script>
+<script src=/lib/hash.js></script>
+<script src=/lib/hashchange.js></script>
+<script src=/lib/lazyload.js></script>
+<script src=/jquery-ui/jquery-ui.js></script>
+<script src=/xbmc.js></script>
+<script src=/library.js></script>
+<script src=/player.js></script>
+
+<body lang=en>
+<div id=loading><span>Loading...</span></div>
+<div id=header></div>
+<div id=content></div>
+<div id=player></div>
