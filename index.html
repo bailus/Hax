@@ -76,25 +76,42 @@ jQuery(function () { //on document load
 	};
 	
 	var submit = function () {
-		var a = $('#address').val();
-		connect(santizeAddress(a));
+		var a = santizeAddress($('#address').val());
+		connect(a);
 		return false;
 	};
 	
 	var sanitizeAddress = function (a) {
 		a = a.trim();
 		if ((a !== '') && (a.indexOf('http://') !== 0)) a = 'http://' + a; //add http prefix if needed
-		if (a.lastIndexOf('/') !== (a.length - 1)) a = a + '/'; //add / prefix if needed
+		if (a.lastIndexOf('/') !== (a.length - 1)) a = a + '/'; //add / suffix if needed
 		return a;
 	}
+	
+	var testConnection = function (address, callback) {
+		$.ajax({
+			'type': 'POST',
+			'dataType': 'json',
+			'contentType': 'application/json',
+			'url': address+'jsonrpc?',
+			'data': JSON.stringify({ "jsonrpc":"2.0","method":"JSONRPC.Ping","params":{},"id":+new Date() }),
+			'success': function (data) { console.dir(data); callback(true) },
+			'error': function (data) { console.dir(data); callback(false) }
+		});
+	};
 
 	var connect = function (address) {
-		var xbmcPlayer, xbmcLibrary;
-		window.xbmc = xbmcFactory(address);
-		html.app();
-		xbmcPlayer = xbmcPlayerFactory(xbmc);
-		xbmcLibrary = xbmcLibraryFactory(xbmc);
-		storeAddress(address);
+		testConnection(address, function (connected) {
+			if (connected) {
+				var xbmcPlayer, xbmcLibrary;
+				window.xbmc = xbmcFactory(address);
+				html.app();
+				xbmcPlayer = xbmcPlayerFactory(xbmc);
+				xbmcLibrary = xbmcLibraryFactory(xbmc);
+				storeAddress(address);
+			}
+			else render();
+		});
 	};
 	
 	var renderList = function (array) {
@@ -117,7 +134,7 @@ jQuery(function () { //on document load
 			renderList(getAddresses());
 		}
 	};	
-	render();
+	connect('/'); //try to connect to localhost first
 });
 </script>
 
