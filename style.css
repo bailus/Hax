@@ -3,7 +3,7 @@
 body {
 	color: white;
 	background-color: black;
-	font-family: 'Lato', sans-serif;
+	font-family: sans-serif;
 	overflow:auto;
 	overflow-x:hidden;
 }
@@ -32,7 +32,7 @@ a:hover {
 }
 
 #content {
-	margin-top:60px;
+	margin-top:40px;
 }
 h1 {
 	margin-top:10px;
@@ -169,16 +169,16 @@ p {
 }
 #header {
 	position:fixed;
+	overflow:hidden;
+	height:40px;
 	top:0;
 	left:0;
 	width:100%;
-	height:60px;
 	z-index:1000000000;
 }
-#header, #player {
+#player, #header {
 	background:             #111111 /*{a-bar-background-color}*/;
 	color:                  #ffffff /*{a-bar-color}*/;
-	font-weight: bold;
 	text-shadow: 0 /*{a-bar-shadow-x}*/ -1px /*{a-bar-shadow-y}*/ 1px /*{a-bar-shadow-radius}*/ #000000 /*{a-bar-shadow-color}*/;
 	background-image: -webkit-gradient(linear, left top, left bottom, from( #3c3c3c /*{a-bar-background-start}*/), to( #111 /*{a-bar-background-end}*/)); /* Saf4+, Chrome */
 	background-image: -webkit-linear-gradient(#3c3c3c /*{a-bar-background-start}*/, #111 /*{a-bar-background-end}*/); /* Chrome 10+, Saf5.1+ */
@@ -188,13 +188,21 @@ p {
 	background-image:         linear-gradient(#3c3c3c /*{a-bar-background-start}*/, #111 /*{a-bar-background-end}*/);
 }
 #header .headerButton {
-	display:block;
-	font-size:22px;
-	margin:6px;
-	margin-left:10px;
-	line-height:60px;
-	float:left;
-	width:48px;height:48px;
+	display:inline-block;
+	font-size:18px;
+	line-height:40px;
+	width:140px;
+	text-align:center;
+}
+#header .headerButton a {
+	color:white;
+}
+#header .headerButton a:hover {
+	color:#59B4D4;
+}
+#header .headerButton.selected {
+	border-bottom:4px solid #59B4D4;
+	height:36px;
 }
 #header .headerButton img {
 	width:48px;height:48px;

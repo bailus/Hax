@@ -129,7 +129,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 			else return $('<h1>'+title+'</h1>');
 		},
 		'headerButton': function (page, src) {
-			return $('<a class="headerButton" href="#page='+page+'" tabindex="0"><img alt="'+page+'" src="'+src+'"></a>');
+			return $('<li class="headerButton"><a href="#page='+page+'" tabindex="0">'+page+'</a></li>');
 		},
 		'listDetails': function (data, output) {
 			if (data.thumbnail) {
@@ -158,35 +158,13 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 	
 	//controllers
 	var pages = {
-		'Home': {
-			'view': 'list',
-			//'header': true,
-			//'icon': '/img/Home.png',
-			'data': function (callback) {
-				var items = {};
-				$.each(pages, function (title, page) {
-					if (page.home) items[title] = {
-						'label': title,
-						'title': title,
-						'icon': page.icon || undefined,
-						'link': '#page='+title
-					};
-				});
-				var page = {
-					'title': 'Home',
-					'items': obj2array(items)
-				};
-				callback(page);
-			}
-		},
 		'Movies': {
 			'view': 'list2',
-			'home': true,
+			'header': true,
 			'icon': 'img/Movie.png',
 			'data': function (callback) {
 				xbmc.GetMovies(function (data) {
 					var page = {
-						'title': 'Movies',
 						'items': []
 					};
 					if (FANART >= 2) page.fanart = 'img/backgrounds/videos.jpg';
@@ -231,6 +209,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		},
 		'Movie': {
 			'view': 'details',
+			'parent': 'Movies',
 			'data': function (callback) {
 				xbmc.GetMovieDetails({ 'movieid': +getHash('movieid') }, function (data) {
 					var movie = data.moviedetails;
@@ -250,12 +229,11 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		},
 		'TV Shows': {
 			'view': 'banner',
-			'home': true,
+			'header': true,
 			'icon': 'img/TV.png',
 			'data': function (callback) {
 				xbmc.GetTVShows(function (data) {
 					var page = {
-						'title': 'TV Shows',
 						'items': []
 					};
 					if (data.tvshows) {
@@ -270,6 +248,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		},
 		'TV Show': {
 			'view': 'list2',
+			'parent': 'TV Shows',
 			'data': function (callback) {
 				var tvshowid = +getHash('tvshowid');
 				xbmc.GetTVShowDetails({ 'tvshowid': tvshowid }, function (show) {
@@ -311,6 +290,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		},
 		'Episode': {
 			'view': 'details',
+			'parent': 'TV Shows',
 			'data': function (callback) {
 				xbmc.GetEpisodeDetails({ 'episodeid': +getHash('episodeid') }, function (data) {
 					var episode = data.episodedetails;
@@ -332,7 +312,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		},
 		'Music': {
 			'view': 'list',
-			'home': true,
+			'header': true,
 			'icon': 'img/Music.png',
 			'data': function (callback) {
 				xbmc.GetArtists(function (data) {
@@ -342,7 +322,6 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 						artist.width = 50;
 					});
 					var page = {
-						'title': 'Music',
 						'items': data.artists
 					};
 					if (FANART >= 2) page.fanart = 'img/backgrounds/music.jpg';
@@ -352,6 +331,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		},
 		'Artist': {
 			'view': 'list',
+			'parent': 'Music',
 			'data': function (callback) {
 				xbmc.GetAlbums({ 'artistid': +getHash('artistid') }, function (data) {
 					xbmc.GetArtistDetails({ 'artistid': +getHash('artistid') }, function (artist) {
@@ -375,6 +355,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		},
 		'Album': {
 			'view': 'list',
+			'parent': 'Music',
 			'data': function (callback) {
 				xbmc.GetSongs({ 'albumid': +getHash('albumid') }, function (data) {
 					xbmc.GetAlbumDetails({ 'albumid': +getHash('albumid') }, function (album) {
@@ -407,7 +388,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		},
 		'Files': {
 			'view': 'list',
-			'home': true,
+			'header': true,
 			'icon': 'img/Files.png',
 			'medias': {
 					'video': { 'label': 'Video' },
@@ -418,7 +399,6 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 			'data': function (callback) {
 				var medias = pages.Files.medias,
 				  page = {
-					'title': 'Files',
 					'items': medias
 				  };
 				if (FANART >= 2) page.fanart = 'img/backgrounds/system.jpg';
@@ -432,10 +412,12 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		},
 		'Sources': {
 			'view': 'list',
+			'parent': 'Files',
 			'data': function (callback) {
-				xbmc.GetSources({ 'media': getHash('media') }, function (data) {
+				var media = getHash('media');
+				xbmc.GetSources({ 'media': media }, function (data) {
 					if (data.sources) $.each(data.sources, function (i, source) {
-						source.link = '#page=Directory&directory='+source.file+'&media='+getHash('media');
+						source.link = '#page=Directory&directory='+source.file+'&media='+media;
 						source.thumbnail = 'img/DefaultFolder.png';
 						source.width = 50;
 					});
@@ -446,7 +428,6 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 						'width': 50
 					});
 					var page = {
-						'title': 'Files',
 						'items': data.sources
 					};
 					if (FANART >= 2) page.fanart = 'img/backgrounds/system.jpg';
@@ -456,6 +437,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		},
 		'Directory': {
 			'view': 'list',
+			'parent': 'Files',
 			'data': function (callback) {
 				xbmc.GetDirectory({ 'directory': getHash('directory'), 'media': getHash('media') }, function (data) {
 					if (!data.files) data.files = [];
@@ -490,7 +472,6 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 						'width': 50
 					});
 					var page = {
-						'title': 'Files',
 						'directory': getHash('directory'),
 						'items': data.files
 					};
@@ -501,6 +482,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		},
 		'Playlist': {
 			'view': 'list',
+			'header': true, 
 			'data': function (callback) {
 				var playlistid = getHash('playlistid') || 1;
 				xbmc.GetPlaylistItems({ 'playlistid': playlistid }, function (playlist) {
@@ -520,7 +502,6 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 							if (item.thumbnail) item.thumbnail = xbmc.vfs2uri(item.thumbnail);
 						});
 						var page = {
-							'title': 'Playlist',
 							'items': playlist.items
 						};
 						if (FANART >= 2) page.fanart = 'img/backgrounds/appearance.jpg';
@@ -643,32 +624,55 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		}
 	};
 	
-	var history = [];
+	var buttons = { //functions that interact with the buttons at the top of the page
+			'render': function () {
+				var header = $('#header');
+				var list = $('<ul></ul>').appendTo(header);
+				$.each(pages, function (title, page) {
+					if (page.header) html.headerButton(title).appendTo(list);
+				});
+				list.css('width',list.children().width()*list.children().length);
+				buttons.iScroll = new iScroll(header[0],{
+					'vScroll': false,
+					'hScrollbar': false
+				});
+			},
+			'select': function (title) {
+				var b = $('.headerButton');
+				b.filter('.selected').removeClass('selected');
+				b.each(function () {
+					var button = $(this);
+					if (button.text() === title) {
+						button.addClass('selected');
+						buttons.iScroll.scrollToElement(button[0]);
+					}
+				});
+			}
+	};
+	
 	var renderPage = function (title) {
 		if (DEBUG) console.log('Rendering page: '+title);
 		if (!title) title = 'Remote';
 		var page = pages[title];
-		if (!page) page = pages[title.replace('%20',' ')]; //some browsers replace spaces with %20
-		if (page) page.data(function (data) {
-			if (page.view) {
-				var p = html.page(),
-				  v = views[page.view].render(data).appendTo(p);
-				$('#content').empty().append(p);
-				$('body').scrollTop(0);
-				v.find('img').filter('[data-original]').lazyload(LAZYLOAD_OPTIONS); //initialize the lazyload plugin after the page is added to the DOM
-			}
-			$('#loading').hide();
-		});
-		else {
+		title = title.replace('%20',' '); //some browsers replace spaces with %20
+		if (!page) page = pages[title];
+		if (page) {
+			page.data(function (data) {
+				if (page.view) {
+					var p = html.page(),
+					v = views[page.view].render(data).appendTo(p);
+					$('#content').empty().append(p);
+					$('body').scrollTop(0);
+					v.find('img').filter('[data-original]').lazyload(LAZYLOAD_OPTIONS); //initialize the lazyload plugin after the page is added to the DOM
+				}
+				$('#loading').hide();
+			});
+			//select and scroll to the appropriate button in the header
+			if (page.parent) buttons.select(page.parent);
+			else buttons.select(title);
+		} else {
 			if (DEBUG) console.log('Rendering failed: '+title);
 		}
-	};
-	
-	var renderButtons = function () {
-		var header = $('#header');
-		$.each(pages, function (title, page) {
-			if (/*page.header && */page.icon) header.append(html.headerButton(title, page.icon));
-		});
 	};
 	
 	var getOrientation = function () { //get the current screen orientation
@@ -685,7 +689,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 	return function (x) {
 		xbmc = x;
 		//render the buttons
-		renderButtons();
+		buttons.render();
 	
 		//render the page
 		renderPage(getHash('page') || undefined);

@@ -37,12 +37,12 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 			'text': 'Play / Pause',
 			'click': function () { xbmc.PlayPause(); }
 		},
-		'Stop': {
+		/*'Stop': {
 			'text': 'Stop',
 			'click': function () { xbmc.Stop(); },
 			'class': 'wide'
 		},
-		/*'GoNext': {
+		'GoNext': {
 			'text': 'Next',
 			'click': function () { xbmc.GoNext(); },
 			'class': 'wide'
@@ -50,11 +50,11 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 		'Remote': {
 			'text': 'Remote',
 			'link': '#page=Remote'
-		},
+		}/*,
 		'Playlist': {
 			'text': 'Playlist',
 			'link': '#page=Playlist'
-		}
+		}*/
 	};
 	
 	var renderPlayer = function (player) {

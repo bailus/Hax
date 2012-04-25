@@ -9,36 +9,116 @@
 <link rel=stylesheet href=jquery-ui/jquery-ui.css>
 <!--[if IE]><link rel=stylesheet href=/ie.css><![endif]-->
 
-<script src="http://192.168.0.42:8080/target/target-script-min.js#anonymous"></script>
+<!--<script src="http://192.168.0.42:8080/target/target-script-min.js#anonymous"></script>-->
 <script src=lib/jquery.js></script>
 <script src=lib/json.js></script>
 <script src=lib/hash.js></script>
 <script src=lib/hashchange.js></script>
 <script src=lib/lazyload.js></script>
+<script src=lib/iscroll.js></script>
 <script src=jquery-ui/jquery-ui.js></script>
 <script src=xbmc.js></script>
 <script src=library.js></script>
 <script src=player.js></script>
 <script>
 jQuery(function () { //on document load
-	var connect = function (address) {
-		var xbmcPlayer, xbmcLibrary, body = $('body');
-		window.xbmc = xbmcFactory(address);
-		body.empty();
-		body.append('<div id=loading><span>Loading...</span></div>');
-		body.append('<div id=header></div>');
-		body.append('<div id=content></div>');
-		body.append('<div id=player></div>');
-		xbmcPlayer = xbmcPlayerFactory(xbmc);
-		xbmcLibrary = xbmcLibraryFactory(xbmc);
+	var body = $('body');
+
+	var html = {
+		'app': function () {
+			body.empty();
+			body.append('<div id=loading><span>Loading...</span></div>');
+			body.append('<div id=header></div>');
+			body.append('<div id=content></div>');
+			body.append('<div id=player></div>');
+		},
+		'connect': function () {
+			var div;
+			div = $('<div id="connect"></div>').appendTo(body);
+			$('<div>Enter the address of your xbmc server</div>').appendTo(div);
+			$('<form></form>').
+			  append('<input id="address">').
+			  append('<input type="submit">').
+			  submit(function () {
+				connect( sanitizeAddress( $('#address').val() ) );
+				return false;
+			  }).
+			  appendTo(div);
+		} 
+	};
+
+	var supports_html5_storage = function () { //stolen from http://diveintohtml5.info/storage.html
+		try {
+			return 'localStorage' in window && window['localStorage'] !== null;
+		} catch (e) {
+			return false;
+		}
 	};
 	
-	connect('http://192.168.0.102/');
+	var getAddresses = function () {
+		if (supports_html5_storage && localStorage['addresses']) {
+			return localStorage['addresses'].split(',');
+		}
+		return [];
+	}
+	var storeAddress = function (a) {
+		if (supports_html5_storage) {
+			if (localStorage['addresses']) {
+				array = getAddresses();
+				if (array.length > 3) array = array.slice(0,3);
+				array.unshift(a);
+				localStorage['addresses'] = array.join(',');
+				//localStorage['addresses'] = a + ',' + localStorage['addresses'];
+			}
+			else localStorage['addresses'] = a;
+		}
+		return a;
+	};
+	
+	var submit = function () {
+		var a = $('#address').val();
+		connect(santizeAddress(a));
+		return false;
+	};
+	
+	var sanitizeAddress = function (a) {
+		a = a.trim();
+		if ((a !== '') && (a.indexOf('http://') !== 0)) a = 'http://' + a; //add http prefix if needed
+		if (a.lastIndexOf('/') !== (a.length - 1)) a = a + '/'; //add / prefix if needed
+		return a;
+	}
+
+	var connect = function (address) {
+		var xbmcPlayer, xbmcLibrary;
+		window.xbmc = xbmcFactory(address);
+		html.app();
+		xbmcPlayer = xbmcPlayerFactory(xbmc);
+		xbmcLibrary = xbmcLibraryFactory(xbmc);
+		storeAddress(address);
+	};
+	
+	var renderList = function (array) {
+		var list = $('<div class="addressList"></div>').appendTo(body);
+		$.each(array, function (i, address) {
+			$('<a href="#"></a>').
+			  text(address).
+			  click(function () { 
+				connect( sanitizeAddress( address ) );
+				return false;
+			  }).
+			  appendTo(list);
+		});
+	};
+	
+	var render = function () {
+		body.empty();
+		html.connect();
+		if (supports_html5_storage) {
+			renderList(getAddresses());
+		}
+	};	
+	render();
 });
 </script>
 
 <body lang=en>
-
-
-
-
