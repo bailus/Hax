@@ -9,7 +9,8 @@
 	margin-bottom:80px;
 }
 /* remove the progress bar when nothing is playing */
-body[data-status=stopped] #progress {
+body[data-status=stopped] #progress,
+body[data-status=stopped] #nowPlaying {
 	display:none;
 }
 .controlButton {
@@ -74,6 +75,24 @@ body[data-status=stopped] #progress {
 #player .ui-slider {
 	background:black;
 	font-size:28px;
+}
+#player #nowPlaying {
+	position:absolute;
+	background:black;
+	left:120px;
+	right:175px;
+	top:13px;
+	height:34px;
+	line-height:34px;
+	padding-left:10px;
+	padding-right:10px;
+	font-size:14px;
+	overflow:hidden;
+}
+#player #nowPlaying .time {
+	text-align:right;
+	float:right;
+	width:100px;
 }
 #player .GoPrevious { background-image:url('img/GoPrevious.png'); }
 #player .PlayPause { background-image:url('img/Play.png'); }

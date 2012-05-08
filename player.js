@@ -24,7 +24,27 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 		},
 		'volume': function (appendTo) {
 			return $('<div id="volume"></div>').appendTo(appendTo);
+		},
+		'nowPlaying': function (appendTo) {
+			return $('<div id="nowPlaying"></div>').appendTo(appendTo);
+		},
+		'time': function (player) {
+			return $('<div class="time">'+timeToString(player.time)+' / '+timeToString(player.totaltime)+'</div>');
+		},
+		'playing': function (label) {
+			return $('<div class="playing">'+label+'</div>');
 		}
+	};
+	
+	var timeToString = function (time) {
+		var string = '';
+		if (time) {
+			if (time.hours) string += time.hours + ':';
+			string += (time.minutes < 10 ? '0'+time.minutes : time.minutes);
+			string += ':';
+			string += (time.seconds < 10 ? '0'+time.seconds : time.seconds);
+		}
+		return string;
 	};
 	
 	var controlButtons = {
@@ -72,6 +92,7 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 			},
 			'step': 0.001
 		});
+		html.nowPlaying(player);
 		volume = html.volume(player);
 		$(volume).slider({
 			//set the xbmc volume when the slider is changed
@@ -88,23 +109,36 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 	};
 	
 	var startTimer = function () {
-		var body, volume, progress, GetActivePlayerProperties, GetApplicationProperties, timeout, timer;
-		body = $('body'),
+		var body = $('body'),
 		volume = $('#volume'),
-		progress = $('#progress');
+		progress = $('#progress'),
+		nowPlaying = $('#nowPlaying'),
 		GetActivePlayerProperties = function (callback) {
 			xbmc.GetActivePlayerProperties(function (player) {
 				if (!player) {
 					body.attr('data-status','stopped');
 					progress.slider('value',0);
+					nowPlaying.html('');
+					callback();
 				} else {
 					if (player.speed) body.attr('data-status','playing');
 					else body.attr('data-status','paused');
 					progress.slider('value',player.percentage);
+					if (player.playlistid >= 0 && player.position >= 0) xbmc.GetPlaylistItems({ 'playlistid': player.playlistid }, function (playlist) {
+						$.extend(player, playlist.items[player.position]);
+						console.dir(player)
+						nowPlaying.html('');
+						html.time(player).appendTo(nowPlaying);
+						html.playing(player.label).appendTo(nowPlaying);
+						callback();
+					});
+					else {
+						nowPlaying.html('');
+						callback();
+					}
 				}
-				callback();
 			});
-		};
+		},
 		GetApplicationProperties = function (callback) {
 			xbmc.GetApplicationProperties(function (app) {
 				if (app) {
@@ -113,10 +147,10 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 				}
 				callback();
 			});
-		};
+		},
 		timeout  = function (callback) {
 			window.setTimeout(callback, REFRESH);
-		};
+		},
 		timer = function () {
 			GetApplicationProperties(function () {
 				timeout(function () {

@@ -294,7 +294,6 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 			'data': function (callback) {
 				xbmc.GetEpisodeDetails({ 'episodeid': +getHash('episodeid') }, function (data) {
 					var episode = data.episodedetails;
-				console.log(episode);
 					episode.heading = episode.title;
 					if (getHash('tvshowid')) episode.link = '#page=TV Show&tvshowid='+getHash('tvshowid');
 					if (episode.showtitle) episode.title = episode.showtitle;
@@ -658,6 +657,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		if (!page) page = pages[title];
 		if (page) {
 			page.data(function (data) {
+				console.dir(data);
 				if (page.view) {
 					var p = html.page(),
 					v = views[page.view].render(data).appendTo(p);

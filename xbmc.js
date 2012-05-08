@@ -3,7 +3,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 
 	//globals
 	var URL, VFSURL, pub = {},
-	  DEBUG = true;
+	  DEBUG = false;
 
 	var rpc = {
 		'Introspect': {
@@ -68,7 +68,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		},
 		'GetPlayerProperties': {
 			'method': 'Player.GetProperties',
-			'params': { 'properties': [ 'type', 'speed', 'time', 'percentage', 'totaltime', 'playlistid', 'position' ] }
+			'params': { 'properties': [ 'type', 'partymode', 'speed', 'time', 'percentage', 'totaltime', 'playlistid', 'position' ] }
 		},
 		'GetActivePlayerProperties': function (callback) {
 			pub.GetActivePlayer(function (player) {
