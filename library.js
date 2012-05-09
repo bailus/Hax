@@ -15,136 +15,8 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		'page': function () {
 			return $('<div class="page"></div>');
 		},
-		'details': function () {
-			return $('<div class="details"></div>');
-		},
-		'directory': function (x) {
-			if (x !== undefined) return $('<div class="directory">'+x+'</div>');
-			return $('<div class="directory"></div>');
-		},
-		'list': function (x) {
-			if (x !== undefined) return $('<ul>'+x+'</ul>');
-			return $('<ul></ul>');
-		},
-		'li': function (x) {
-			if (x !== undefined) return $('<li>'+x+'</li>');
-			return $('<li></li>');
-		},
-		'h2': function (x) {
-			if (x !== undefined) return $('<h2>'+x+'</h2>');
-			return $('<h2></h2>');
-		},
-		'h3': function (x) {
-			if (x !== undefined) return $('<h3>'+x+'</h3>');
-			return $('<h3></h3>');
-		},
-		'p': function (x) {
-			if (x !== undefined) return $('<p>'+x+'</p>');
-			return $('<p></p>');
-		},
-		'div': function (x) {
-			if (x !== undefined) return $('<div>'+x+'</div>');
-			return $('<div></div>');
-		},
-		'a': function (href) {
-			return $('<a href="'+href+'"/>');
-		},
-		'fanart': function (src) {
-			var fanart = $('<div class="fanart"></div>');
-			if (FANART) $('<img src="'+src+'" alt="">').appendTo(fanart);
-			return fanart;
-		},
-		'headerThumbnail': function (src) {
-			return $('<img src="'+src+'" alt="" class="headerThumbnail">');
-		},
-		'listThumbnail': function (src) {
-			return $('<img src="'+src+'" alt="" class="listThumbnail">');
-		},
-		'image': function (src) {
-			return $('<img src="'+src+'" alt="" class="image">');
-		},
-		'listItem': function (item) {
-			var play, add, remove,
-			  i = $('<li class="listItem"></li>'),
-			  c = '';
-			i.css('height', item.height || 50);
-			if (item.rotatethumbnail) c += 'rotatethumbnail';
-			if (item.thumbnail) {
-				var img = $('<img alt="" class="'+c+'">');
-				if (item.thumbnail.slice(0,5) === '/vfs/') { //only lazyload thumbnails that come from the xbmc virtual file system
-					img.attr('src', '/img/Transparent.png');
-					img.attr('data-original', item.thumbnail);
-				} else { //images that aren't on the vfs are loaded normally
-					img.attr('src', item.thumbnail);
-				}
-				var thumbnail = $('<div class="thumbnail"></div>').appendTo(i);
-				if (item.link) $('<a href="'+item.link+'"></a>').append(img).appendTo(thumbnail);
-				else img.appendTo(thumbnail);
-				if (item.width) thumbnail.css('width', item.width);
-			}
-			
-			if (item.play) {
-				play = $('<span class="play">▶</span>').appendTo(i);
-				play.click(item.play);
-			}
-			if (item.add) {
-				add = $('<span class="add">+</span>').appendTo(i);
-				add.click(item.add);
-			}
-			if (item.remove) {
-				remove = $('<span class="remove">-</span>').appendTo(i);
-				remove.click(item.remove);
-			}
-			
-			if (item.link) i.append('<a href="'+item.link+'"><span class="label">'+item.label+'</span></a>');
-			else i.append('<span class="label">'+item.label+'</span>');
-			return i;
-		},
-		'bannerItem': function (item) {
-			var i = $('<li class="bannerItem"></li>'),
-			  a = i;
-			if (item.link) a = $('<a href="'+item.link+'"></a>').appendTo(i);
-			if (item.thumbnail) a.append('<img class="banner" src="img/Banner.png" data-original="'+xbmc.vfs2uri(item.thumbnail)+'" alt="'+item.label+'">');
-			a.append('<span class="bannerLabel">'+item.label+'</span>');
-			a.append('<img class="bannerBackground" src="img/Banner.png" alt="">');
-			return i;
-		},
-		'banner': function (src, title) {
-			return $('<img class="pagebanner" src="'+src+'" alt="'+title+'"></div>');
-		},
-		'play': function (item) {
-			var play, add, i = html.p();
-			if (item.play) {
-				play = $('<span class="play">▶ Play</span>').appendTo(i);
-				play.click(item.play);
-			}
-			if (item.add) {
-				add = $('<span class="add">+ Add to playlist</span>').appendTo(i);
-				add.click(item.add);
-			}
-			return i;	
-		},
-		'pageTitle': function (title, link) {
-			if (link) return $('<h1><a href="'+link+'">'+title+'</a></h1>');
-			else return $('<h1>'+title+'</h1>');
-		},
 		'headerButton': function (page, src) {
 			return $('<li class="headerButton"><a href="#page='+page+'" tabindex="0">'+page+'</a></li>');
-		},
-		'listDetails': function (data, output) {
-			if (data.thumbnail) {
-				output.append( html.headerThumbnail(data.thumbnail) );
-			}
-			if (data.title) {
-				if (data.banner) output.append( html.banner(data.banner, data.title, data.link) );
-				else output.append( html.pageTitle(data.title, data.link) );
-			}
-			if (data.subtitle) html.h2(data.subtitle).appendTo(output);
-			if (data.description)  html.p(data.description).appendTo(output);
-			if (data.formed) html.p('Formed: '+data.formed).appendTo(output);
-			if (data.disbanded) html.p('Disbanded: '+data.disbanded).appendTo(output);
-			if (data.died) html.p('Died: '+data.died).appendTo(output);
-			if (data.directory) output.append( html.p(data.directory) );
 		}
 	};
 	
@@ -179,17 +51,8 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 									xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': movie.file } });
 								};
 							}
+							if (movie.fanart) movie.thumbnail = movie.fanart;
 							movie.thumbnail = movie.thumbnail ? xbmc.vfs2uri(movie.thumbnail) : 'img/DefaultVideo.png';
-							if (ROTATE_MOVIE_THUMBNAILS) {
-								movie.rotatethumbnail = true;
-								movie.height = 50;
-								movie.width = 80;
-							}
-							else {
-								movie.rotatethumbnail = false;
-								movie.width = 33;
-								movie.height = 50;
-							}
 						});
 						var movies = {};
 						$.each(data.movies, function (i, movie) { //sort the movies into years
@@ -223,6 +86,8 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 							xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': movie.file } });
 						};
 					}
+					if (movie.thumbnail) movie.thumbnail = xbmc.vfs2uri(movie.thumbnail);
+					if (movie.fanart) movie.fanart = xbmc.vfs2uri(movie.fanart);
 					callback(movie);
 				});
 			}
@@ -240,6 +105,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 						page.items = data.tvshows;
 						$.each(page.items, function (i, tvshow) {
 							tvshow.link = '#page=TV Show&tvshowid='+tvshow.tvshowid;
+							if (tvshow.thumbnail) tvshow.thumbnail = xbmc.vfs2uri(tvshow.thumbnail);
 						});
 					}
 					callback(page);
@@ -305,6 +171,8 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 							xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': episode.file } });
 						};
 					}
+					if (episode.thumbnail) episode.thumbnail = xbmc.vfs2uri(episode.thumbnail);
+					if (episode.fanart) episode.fanart = xbmc.vfs2uri(episode.fanart);
 					callback(episode);
 				});
 			}
@@ -398,13 +266,14 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 			'data': function (callback) {
 				var medias = pages.Files.medias,
 				  page = {
-					'items': medias
+					'items': []
 				  };
 				if (FANART >= 2) page.fanart = 'img/backgrounds/system.jpg';
 				$.each(medias, function (i, media) {
 					if (!media.thumbnail) media.thumbnail = 'img/DefaultFolder.png';
 					if (!media.width) media.width = 50;
 					media.link = '#page=Sources&media='+i;
+					page.items.push(media);
 				});
 				callback(page);
 			}
@@ -487,8 +356,9 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 				xbmc.GetPlaylistItems({ 'playlistid': playlistid }, function (playlist) {
 					xbmc.GetActivePlayerProperties(function (player) {
 						if (playlist.items) $.each(playlist.items, function (i, item) {
+							if (item.file) item.label = item.file.split('/')[--item.file.split('/').length];
 							if (player && player.position == i) item.playing = true;
-							if (item.file && !item.playing) {
+							if (!item.playing) {
 								item.play = function () {
 									xbmc.Open({ 'item': { 'playlistid': playlistid, 'position': i } });
 									renderPage('Playlist'); //refresh the playlist
@@ -510,115 +380,9 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 			}
 		},
 		'Remote': {
-			'view': 'svg',
+			'view': 'remote',
 			'data': function (callback) {
-				$.ajax('img/remote.svg').
-				  done(function (data) {
-				  	callback({
-				  		'svg': data
-				  	});
-				  });
-			}
-		}
-	};
-	
-	//views
-	var views = {
-		'list': {
-			'render': function (data) {
-				//console.log('rendering list view');
-				var output = $('<div class="list"></div>');
-				html.listDetails(data, output);
-				var list = html.list().appendTo(output);
-				if (data.items) $.each(data.items, function (index, item) {
-					list.append( html.listItem(item) );
-				});
-				if (data.fanart) html.fanart(data.fanart).appendTo(output);
-				return output;
-			}
-		},
-		'banner': {
-			'render': function (data) {
-				//console.log('rendering banner view');
-				var list = html.list();
-				//if (data.title) list.append( html.pageTitle(data.title) );
-				if (data.items) $.each(data.items, function (index, item) {
-					html.bannerItem(item).appendTo(list);
-				});
-				return list;
-			}
-		},
-		'list2': {
-			'render': function (data) {
-				//console.log('rendering list2 view');
-				var output = $('<div class="list"></div>');
-				if (data.thumbnail) {
-					output.append( html.headerThumbnail(data.thumbnail) );
-				}
-				if (data.title) {
-					var title;
-					if (data.link) title = html.a(data.link).appendTo(output);
-					else title = html.div().appendTo(output);
-					if (data.banner) output.append( html.banner(data.banner, data.title) );
-					else output.append( html.pageTitle(data.title) );
-				}
-				if (data.description)  html.p(data.description).appendTo(output);
-				if (data.style) html.p(data.style).appendTo(output);
-				if (data.formed) html.p('Formed: '+data.formed).appendTo(output);
-				if (data.disbanded) html.p('Disbanded: '+data.disbanded).appendTo(output);
-				if (data.died) html.p('Died: '+data.died).appendTo(output);
-				
-				var list = html.list().appendTo(output);
-				if (data.items) $.each(data.items, function (i, item) {
-					var listitem, title, l;
-					listitem = html.li().addClass('superListItem').appendTo(list);
-					if (item.thumbnail) html.listThumbnail(item.thumbnail).appendTo(listitem);
-					title = html.h3(item.label).appendTo(listitem);
-					l = html.list().appendTo(listitem);
-					if (item.items) $.each(item.items, function (index, item) {
-						l.append( html.listItem(item) );
-					});
-					
-				});
-				if (data.fanart) html.fanart(data.fanart).appendTo(output);
-				return output;
-			}
-		},
-		'details': {
-			'render': function (data) {
-				//console.log('rendering details view');
-				//console.log(data);
-				var output = html.details();
-				if (data.thumbnail) html.image(xbmc.vfs2uri(data.thumbnail)).appendTo(output);
-				if (data.title) html.pageTitle(data.title, data.link).appendTo(output);
-				if (data.heading) html.h2(data.heading).appendTo(output);
-				if (data.play || data.add) html.play(data).appendTo(output);
-				if (data.season && data.episode) html.p('Season '+data.season+', Episode '+data.episode).appendTo(output);
-				if (data.genre) html.p(data.genre).appendTo(output);
-				if (data.runtime) html.p(data.runtime+' Minutes').appendTo(output);
-				if (data.director) {
-					html.h3('Director').appendTo(output);
-					html.p(data.director).appendTo(output);
-				}
-				if (data.writer) {
-					html.h3('Writer').appendTo(output);
-					html.p(data.writer).appendTo(output);
-				}
-				if (data.plot) {
-					html.h3('Plot').appendTo(output);
-					html.p(data.plot).appendTo(output);
-				}
-				
-				if (data.fanart) html.fanart(xbmc.vfs2uri(data.fanart)).appendTo(output);
-				return output;
-			}
-		},
-		'svg': {
-			'render': function (data) {
-				var svg;
-				if (document.adoptNode) svg = document.adoptNode(data.svg.documentElement);
-				else if (document.importNode) svg = document.importNode(data.svg.documentElement);
-				return $('<div class="svg"></div>').append(svg);
+				callback({});
 			}
 		}
 	};
@@ -658,9 +422,9 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		if (page) {
 			page.data(function (data) {
 				console.dir(data);
-				if (page.view) {
+				if (page.view && template[page.view]) {
 					var p = html.page(),
-					v = views[page.view].render(data).appendTo(p);
+					v = $(template[page.view].bind(data)).appendTo(p);
 					$('#content').empty().append(p);
 					$('body').scrollTop(0);
 					v.find('img').filter('[data-original]').lazyload(LAZYLOAD_OPTIONS); //initialize the lazyload plugin after the page is added to the DOM

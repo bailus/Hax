@@ -27,7 +27,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		},
 		'GetMovies': {
 			'method': 'VideoLibrary.GetMovies',
-			'params': { "properties": [ "genre", "director", "trailer", "tagline", "plot", "plotoutline", "title", "originaltitle", "lastplayed", "runtime", "year", "playcount", "rating", "thumbnail", "file" ], "sort": { "method": "sorttitle", "ignorearticle": true } }
+			'params': { "properties": [ "genre", "director", "trailer", "tagline", "plot", "plotoutline", "title", "originaltitle", "lastplayed", "runtime", "year", "playcount", "rating", "thumbnail", "fanart", "file" ], "sort": { "method": "sorttitle", "ignorearticle": true } }
 		},
 		'GetMovieDetails': {
 			'method': 'VideoLibrary.GetMovieDetails',

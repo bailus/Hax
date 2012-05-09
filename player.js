@@ -126,7 +126,7 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 					progress.slider('value',player.percentage);
 					if (player.playlistid >= 0 && player.position >= 0) xbmc.GetPlaylistItems({ 'playlistid': player.playlistid }, function (playlist) {
 						$.extend(player, playlist.items[player.position]);
-						console.dir(player)
+						if (player.file) player.label = player.file.split('/')[--player.file.split('/').length];
 						nowPlaying.html('');
 						html.time(player).appendTo(nowPlaying);
 						html.playing(player.label).appendTo(nowPlaying);
