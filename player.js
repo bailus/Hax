@@ -5,29 +5,11 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 	var REFRESH = 1000, //polling interval in ms
 	  pub = {},
 	  xbmc,
-	  DEBUG = true;
+	  DEBUG = false;
 	
 
 	//html helper functions
 	var html = {
-		'controls': function (appendTo) {
-			return $('<div class="controls"></div>').appendTo(appendTo);
-		},
-		'controlButton': function (name, text, appendTo) {
-			return $('<div class="controlButton '+name+'" tabindex="0" title="'+text+'"></div>').appendTo(appendTo);
-		},
-		'controlButtonLink': function (name, text, href, appendTo) {
-			return $('<a class="controlButton '+name+'" href="'+href+'" title="'+text+'"></a>').appendTo(appendTo);
-		},
-		'controlSlider': function (appendTo) {
-			return $('<div id="progress"></div>').appendTo(appendTo);
-		},
-		'volume': function (appendTo) {
-			return $('<div id="volume"></div>').appendTo(appendTo);
-		},
-		'nowPlaying': function (appendTo) {
-			return $('<div id="nowPlaying"></div>').appendTo(appendTo);
-		},
 		'time': function (player) {
 			return $('<div class="time">'+timeToString(player.time)+' / '+timeToString(player.totaltime)+'</div>');
 		},
@@ -47,64 +29,34 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 		return string;
 	};
 	
-	var controlButtons = {
-		/*'GoPrevious': {
-			'text': 'Previous',
-			'click': function () { xbmc.GoPrevious(); },
-			'class': 'wide'
-		},*/
-		'PlayPause': {
-			'text': 'Play / Pause',
-			'click': function () { xbmc.PlayPause(); }
-		},
-		/*'Stop': {
-			'text': 'Stop',
-			'click': function () { xbmc.Stop(); },
-			'class': 'wide'
-		},
-		'GoNext': {
-			'text': 'Next',
-			'click': function () { xbmc.GoNext(); },
-			'class': 'wide'
-		},*/
-		'Remote': {
-			'text': 'Remote',
-			'link': '#page=Remote'
-		}/*,
-		'Playlist': {
-			'text': 'Playlist',
-			'link': '#page=Playlist'
-		}*/
-	};
-	
 	var renderPlayer = function (player) {
-		var slider, volume;
-		$.each(controlButtons, function (index, button) {
-			var name = index;
-			if (button['class']) name = index+' '+button['class'];
-			if (button.click) html.controlButton(name, button.text, player).click(button.click);
-			else if (button.link) html.controlButtonLink(name, button.text, button.link, player);
+		var slider, volume, data;
+		
+		//construct data
+		data = {
+			'buttons': [
+			            { 'text': 'Play / Pause', 'class': 'PlayPause', 'onclick': function () { xbmc.PlayPause(); } },
+			            { 'text': 'Remote', 'class': 'Remote', 'href': '#page=Remote' }
+			]
+		};
+		
+		//render the data to the DOM via the player template
+		player.
+		  html(''). //remove child elements
+		  append(template.player.bind(data));
+		
+		//apply javascript UI hacks
+		player.find('#volume').slider({
+			'orientation': 'horizontal',
+			'stop': function (event, ui) {  //set the xbmc volume when the slider is changed by the user
+				xbmc.Volume({'volume':ui.value});
+			}
 		});
-		slider = html.controlSlider(player);
-		$(slider).slider({
-			'stop': function (event, ui) {
+		player.find('#progress').slider({
+			'stop': function (event, ui) {  //seek when the slider is changed by the user
 				xbmc.Seek({'value':ui.value});
 			},
 			'step': 0.001
-		});
-		html.nowPlaying(player);
-		volume = html.volume(player);
-		$(volume).slider({
-			//set the xbmc volume when the slider is changed
-			'stop': function (event, ui) {
-				xbmc.Volume({'volume':ui.value});
-			},
-			//set the xbmc volume continuously while the slider is changing
-			//this creates a metric fuckton of connections... it probably needs websockets to work properly
-			/*'slide': function (event, ui) {
-				xbmc.Volume({'volume':ui.value});
-			},*/
-			'orientation': 'horizontal'
 		});
 	};
 	
@@ -124,7 +76,7 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 					if (player.speed) body.attr('data-status','playing');
 					else body.attr('data-status','paused');
 					progress.slider('value',player.percentage);
-					if (player.playlistid >= 0 && player.position >= 0) xbmc.GetPlaylistItems({ 'playlistid': player.playlistid }, function (playlist) {
+					if (player.playlistid !== undefined) xbmc.GetPlaylistItems({ 'playlistid': player.playlistid }, function (playlist) {
 						$.extend(player, playlist.items[player.position]);
 						if (player.file) player.label = player.file.split('/')[--player.file.split('/').length];
 						nowPlaying.html('');
@@ -152,6 +104,15 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 			window.setTimeout(callback, REFRESH);
 		},
 		timer = function () {
+			Q([
+			   GetApplicationProperties,
+			   timeout,
+			   GetActivePlayerProperties,
+			   timeout,
+			   timer
+			]);
+		}/*,
+		timer = function () {
 			GetApplicationProperties(function () {
 				timeout(function () {
 					GetActivePlayerProperties(function () {
@@ -161,7 +122,7 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 					});
 				});
 			});
-		};
+		}*/;
 		timer();
 	};
 	

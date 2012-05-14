@@ -9,7 +9,6 @@
 <link rel=stylesheet href=jquery-ui/jquery-ui.css>
 <!--[if IE]><link rel=stylesheet href=/ie.css><![endif]-->
 
-<!--<script src="http://192.168.0.42:8080/target/target-script-min.js#anonymous"></script>-->
 <script src=lib/jquery.js></script>
 <script src=lib/json.js></script>
 <script src=lib/jsonml.js></script>
@@ -18,15 +17,16 @@
 <script src=lib/hashchange.js></script>
 <script src=lib/lazyload.js></script>
 <script src=lib/iscroll.js></script>
+<script src=lib/Q.js></script>
 <script src=jquery-ui/jquery-ui.js></script>
 <script src=templates/details.js></script>
 <script src=templates/list.js></script>
 <script src=templates/listdetails.js></script>
 <script src=templates/listitem.js></script>
-<script src=templates/list2.js></script>
 <script src=templates/banner.js></script>
 <script src=templates/banneritem.js></script>
-<script src=templates/remote.js></script>
+<script src=templates/buttons.js></script>
+<script src=templates/player.js></script>
 <script src=xbmc.js></script>
 <script src=library.js></script>
 <script src=player.js></script>
@@ -105,8 +105,8 @@ jQuery(function () { //on document load
 			'contentType': 'application/json',
 			'url': address+'jsonrpc?',
 			'data': JSON.stringify({ "jsonrpc":"2.0","method":"JSONRPC.Ping","params":{},"id":+new Date() }),
-			'success': function (data) { console.dir(data); callback(true) },
-			'error': function (data) { console.dir(data); callback(false) }
+			'success': function (data) { callback(true) },
+			'error': function (data) { callback(false) }
 		});
 	};
 

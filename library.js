@@ -5,35 +5,15 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 	var LAZYLOAD_OPTIONS = { failure_limit : 10 },
 	  PAGESIZE = 20,
 	  FANART = 1, //0 = no fanart, 1 = normal fanart, 2 = fanart everywhere
-	  ROTATE_MOVIE_THUMBNAILS = true,
 	  pub = {},
 	  xbmc,
 	  DEBUG = true;
-
-	//html helper functions
-	var html = {
-		'page': function () {
-			return $('<div class="page"></div>');
-		},
-		'headerButton': function (page, src) {
-			return $('<li class="headerButton"><a href="#page='+page+'" tabindex="0">'+page+'</a></li>');
-		}
-	};
-	
-	var obj2array = function (obj) { //makes a new array from an object using jQuery.each()
-		var array = [];
-		$.each(obj, function (index, item) {
-			array.push(item);
-		});
-		return array;
-	};
 	
 	//controllers
 	var pages = {
 		'Movies': {
-			'view': 'list2',
+			'view': 'list',
 			'header': true,
-			'icon': 'img/Movie.png',
 			'data': function (callback) {
 				xbmc.GetMovies(function (data) {
 					var page = {
@@ -51,8 +31,9 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 									xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': movie.file } });
 								};
 							}
-							if (movie.fanart) movie.thumbnail = movie.fanart;
+							//if (movie.fanart) movie.thumbnail = movie.fanart; fanart takes too long to load
 							movie.thumbnail = movie.thumbnail ? xbmc.vfs2uri(movie.thumbnail) : 'img/DefaultVideo.png';
+							movie.width = 33;
 						});
 						var movies = {};
 						$.each(data.movies, function (i, movie) { //sort the movies into years
@@ -95,7 +76,6 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		'TV Shows': {
 			'view': 'banner',
 			'header': true,
-			'icon': 'img/TV.png',
 			'data': function (callback) {
 				xbmc.GetTVShows(function (data) {
 					var page = {
@@ -113,7 +93,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 			}
 		},
 		'TV Show': {
-			'view': 'list2',
+			'view': 'list',
 			'parent': 'TV Shows',
 			'data': function (callback) {
 				var tvshowid = +getHash('tvshowid');
@@ -180,7 +160,6 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		'Music': {
 			'view': 'list',
 			'header': true,
-			'icon': 'img/Music.png',
 			'data': function (callback) {
 				xbmc.GetArtists(function (data) {
 					if (data.artists) $.each(data.artists, function (i, artist) {
@@ -256,7 +235,6 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		'Files': {
 			'view': 'list',
 			'header': true,
-			'icon': 'img/Files.png',
 			'medias': {
 					'video': { 'label': 'Video' },
 					'music': { 'label': 'Music' },
@@ -285,7 +263,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 				var media = getHash('media');
 				xbmc.GetSources({ 'media': media }, function (data) {
 					if (data.sources) $.each(data.sources, function (i, source) {
-						source.link = '#page=Directory&directory='+source.file+'&media='+media;
+						source.link = '#page=Directory&directory='+encodeURIComponent(source.file)+'&media='+media;
 						source.thumbnail = 'img/DefaultFolder.png';
 						source.width = 50;
 					});
@@ -313,7 +291,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 						var f = file.file.split('/'),
 						  filename = f.pop();
 						if (file.filetype === 'directory') {
-							file.link = '#page=Directory&directory='+file.file+'&media='+getHash('media');
+							file.link = '#page=Directory&directory='+encodeURIComponent(file.file)+'&media='+getHash('media');
 							if (!file.thumbnail) file.thumbnail = 'img/DefaultFolder.png';
 						}
 						if (file.filetype === 'file') {
@@ -380,76 +358,101 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 			}
 		},
 		'Remote': {
-			'view': 'remote',
-			'data': function (callback) {
-				callback({});
-			}
+			'view': 'buttons',
+			'data': { 'buttons':[
+			                    { 'text': 'Home', 'class':'home', 'src':'img/buttons/home.png', 'onclick':function () { xbmc.Home(); } },
+			                    { 'text': 'Up', 'class':'up', 'src':'img/buttons/up.png', 'onclick':function () { xbmc.Up(); } },
+			                    { 'text': 'Down', 'class':'down', 'src':'img/buttons/down.png', 'onclick':function () { xbmc.Down(); } },
+			                    { 'text': 'Left', 'class':'left', 'src':'img/buttons/left.png', 'onclick':function () { xbmc.Left(); } },
+			                    { 'text': 'Right', 'class':'right', 'src':'img/buttons/right.png', 'onclick':function () { xbmc.Right(); } },
+			                    { 'text': 'Select', 'class':'select', 'src':'img/buttons/select.png', 'onclick':function () { xbmc.Select(); } },
+			                    { 'text': 'Back', 'class':'back', 'src':'img/buttons/back.png', 'onclick':function () { xbmc.Back(); } },
+			                    { 'text': 'Previous', 'class':'previous', 'src':'img/buttons/previous.png', 'onclick':function () { xbmc.GoPrevious(); } },
+			                    { 'text': 'Stop', 'class':'stop', 'src':'img/buttons/stop.png', 'onclick':function () { xbmc.Stop(); } },
+			                    { 'text': 'Next', 'class':'next', 'src':'img/buttons/next.png', 'onclick':function () { xbmc.GoNext(); } }
+			]}
 		}
 	};
 	
 	var buttons = { //functions that interact with the buttons at the top of the page
 			'render': function () {
-				var header = $('#header');
-				var list = $('<ul></ul>').appendTo(header);
+				var header, list, data;
+				
+				//construct data
+				data = { 'class': 'headerButtons', 'buttons': [] };
 				$.each(pages, function (title, page) {
-					if (page.header) html.headerButton(title).appendTo(list);
+					if (page.header) data.buttons.push({
+						'text': title,
+						'href': '#page='+title
+					});
 				});
-				list.css('width',list.children().width()*list.children().length);
-				buttons.iScroll = new iScroll(header[0],{
+				
+				//render the data to the DOM via the buttons template
+				header = $('#header').
+				  html(''). //remove child elements
+				  append(template.buttons.bind(data));
+				
+				//apply javascript UI hacks
+				list = header.children('ul')
+				list.css({
+					'width': list.children().width()*list.children().length,
+					'height': list.children().height(),
+				});
+				buttons.iScroll = new iScroll(header.get(0),{
 					'vScroll': false,
 					'hScrollbar': false
 				});
 			},
 			'select': function (title) {
-				var b = $('.headerButton');
-				b.filter('.selected').removeClass('selected');
-				b.each(function () {
-					var button = $(this);
-					if (button.text() === title) {
-						button.addClass('selected');
-						buttons.iScroll.scrollToElement(button[0]);
-					}
-				});
+				$('#header li'). //all the buttons in the header
+					removeClass('selected').
+					each(function () { //find the button that should be selected
+						var button = $(this);
+						if (button.text() === title) {
+							button.addClass('selected');
+							buttons.iScroll.scrollToElement(button[0]);
+						}
+					});
 			}
 	};
 	
 	var renderPage = function (title) {
-		if (DEBUG) console.log('Rendering page: '+title);
-		if (!title) title = 'Remote';
-		var page = pages[title];
+		var data, page, defaultPage = 'Remote';
+		
+		//find the page to render
+		if (!title) title = defaultPage;
 		title = title.replace('%20',' '); //some browsers replace spaces with %20
-		if (!page) page = pages[title];
-		if (page) {
-			page.data(function (data) {
-				console.dir(data);
-				if (page.view && template[page.view]) {
-					var p = html.page(),
-					v = $(template[page.view].bind(data)).appendTo(p);
-					$('#content').empty().append(p);
-					$('body').scrollTop(0);
-					v.find('img').filter('[data-original]').lazyload(LAZYLOAD_OPTIONS); //initialize the lazyload plugin after the page is added to the DOM
-				}
-				$('#loading').hide();
-			});
-			//select and scroll to the appropriate button in the header
-			if (page.parent) buttons.select(page.parent);
-			else buttons.select(title);
-		} else {
-			if (DEBUG) console.log('Rendering failed: '+title);
-		}
+		page = pages[title];
+		if (!page) page = pages[defaultPage];
+		
+		if (DEBUG) console.log('Rendering page: '+title);
+		
+		//if the data isn't a function, turn it into one
+		if (!page.data) data = function (callback) { callback({}) };
+		else if (!(page.data instanceof Function)) data = function (callback) { callback(page.data) };
+		else data = page.data;
+
+		//get the page data
+		data(function (data) {			
+			if (DEBUG) console.dir(data);
+			
+			//render the data to the DOM via the template
+			var p = $('<div class="page"></div>'),
+			v = $(template[page.view].bind(data)).appendTo(p);
+			$('#content').empty().append(p);
+			
+			//apply javascript UI hacks
+			$('body').scrollTop(0);
+			v.find('img').filter('[data-original]').lazyload(LAZYLOAD_OPTIONS); //initialize the lazyload plugin
+			$('#loading').hide();
+		});
+		
+		//select and scroll to the appropriate button in the header
+		if (page.parent) buttons.select(page.parent);
+		else buttons.select(title);
 	};
 	
-	var getOrientation = function () { //get the current screen orientation
-		var h = $(window).height(),
-		  w = $(window).width();
-		if (h > w) return 'portrait';
-		return 'landscape';
-	};
-	
-	var onResize = function () {
-		$('body').attr('data-orientation', getOrientation());
-	};
-	
+	//main()
 	return function (x) {
 		xbmc = x;
 		//render the buttons
@@ -463,9 +466,6 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 			$('#loading').show();
 			renderPage(getHash('page'));
 		});
-		
-		$(window).resize(onResize);
-		onResize();
 		
 		return pub;
 	};

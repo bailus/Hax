@@ -13,15 +13,6 @@ body[data-status=stopped] #progress,
 body[data-status=stopped] #nowPlaying {
 	display:none;
 }
-.controlButton {
-	width:32px;height:32px;
-	margin:14px;
-	float:left;
-	cursor:pointer;
-}
-.controlButton + .controlButton {
-	margin-left:5px;
-}
 #player #progress {
 	position:absolute;
 	left:0;
@@ -103,3 +94,16 @@ body[data-status=playing] #player .PlayPause { background-image:url('img/Pause.p
 #player .Volume { background-image:url('img/Volume.png'); }
 #player .Remote { background-image:url('img/Remote.png'); }
 #player .Playlist { background-image:url('img/Playlist.png'); }
+#player .buttons li {
+	width:32px;height:32px;
+	margin:14px;
+	float:left;
+	cursor:pointer;
+}
+#player .buttons a {
+	display:block;
+	width:100%;height:100%;
+}
+#player .buttons span {
+	display:none;
+}
