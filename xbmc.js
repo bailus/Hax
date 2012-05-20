@@ -11,7 +11,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		},
 		'GetTVShows': {
 			'method': 'VideoLibrary.GetTVShows',
-			'params': { 'properties': [ 'thumbnail' ] }
+			'params': { 'properties': [ 'thumbnail', 'year', 'studio', 'genre', 'lastplayed', 'playcount', 'premiered' ] }
 		},
 		'GetTVShowDetails': {
 			'method': 'VideoLibrary.GetTVShowDetails',
@@ -128,7 +128,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		},
 		'GetAlbums': {
 			'params': {
-				'properties': [ 'title', 'description', 'artist', 'type', 'albumlabel', 'year', 'thumbnail' ],
+				'properties': [ 'title', 'description', 'artist', 'albumlabel', 'rating', 'year', 'thumbnail' ],
 				'sort': { 'method': 'year', 'order': 'ascending' }
 			},
 			'method': 'AudioLibrary.GetAlbums'

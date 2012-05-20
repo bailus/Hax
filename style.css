@@ -245,6 +245,8 @@ p {
 	width:100%;
 	z-index:10;
 	opacity:0.3;
+	padding-top:40px;
+	padding-bottom:60px;
 }
 .fanart img {
 	display:block;
@@ -252,10 +254,6 @@ p {
 	margin-left:auto;
 	margin-right:auto;
 	min-width:100%;
-}
-[data-orientation=portrait] .fanart {
-	padding-top:60px;
-	padding-bottom:76px;
 }
 .details .image {
 	max-width:30%;

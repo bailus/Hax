@@ -110,7 +110,7 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 			   GetActivePlayerProperties,
 			   timeout,
 			   timer
-			]);
+			])();
 		}/*,
 		timer = function () {
 			GetApplicationProperties(function () {
