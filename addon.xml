@@ -1,17 +1,16 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <addon
-  id="webinterface.sam"
+  id="webinterface.xbmc-simple-remote"
   version="0.0.0"
-  name="Default"
+  name="XBMC Simple Remote"
   provider-name="bailey.geek.nz">
   <requires>
     <import addon="xbmc.gui" version="3.00"/>
     <import addon="xbmc.json" version="4.00"/>
   </requires>
-  <extension
-    point="xbmc.gui.webinterface"/>
+  <extension point="xbmc.gui.webinterface"/>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">Sam's Web Interface</summary>
+    <summary lang="en">An XBMC web interface that supports mobile devices. Designed to be simple, fast and easy to use.</summary>
     <platform>all</platform>
   </extension>
 </addon>

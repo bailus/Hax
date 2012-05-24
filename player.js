@@ -2,7 +2,7 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 	"use strict";
 
 	//constants
-	var REFRESH = 1000, //polling interval in ms
+	var REFRESH = 2000, //polling interval in ms
 	  pub = {},
 	  xbmc,
 	  DEBUG = false;
@@ -60,69 +60,92 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 		});
 	};
 	
+	var time2seconds = function (time) {
+		var t = (time.seconds || 0);
+		t += (time.hours || 0) * 3600;
+		t += (time.minutes || 0) * 60;
+		t += (time.milliseconds || 0) / 1000;
+		return t;
+	};
+	
+	var on = function () {
+		var body = $('body'),
+		  volume = $('#volume'),
+		  progress = $('#progress'),
+		  nowPlaying = $('#nowPlaying');
+		return {
+			'Player.OnPlay': function () {
+				body.attr('data-status','playing');
+			},
+			'Player.OnPause': function () {
+				body.attr('data-status','paused');
+			},
+			'Player.OnStop': function () {
+				body.attr('data-status','stopped');
+			},
+			'Player.OnSeek': function (data) {
+				progress.slider('value', 0);
+			}
+		};
+	};
+	
 	var startTimer = function () {
 		var body = $('body'),
 		volume = $('#volume'),
 		progress = $('#progress'),
 		nowPlaying = $('#nowPlaying'),
-		GetActivePlayerProperties = function (callback) {
-			xbmc.GetActivePlayerProperties(function (player) {
-				if (!player) {
-					body.attr('data-status','stopped');
-					progress.slider('value',0);
-					nowPlaying.html('');
-					callback();
-				} else {
-					if (player.speed) body.attr('data-status','playing');
-					else body.attr('data-status','paused');
-					progress.slider('value',player.percentage);
-					if (player.playlistid !== undefined) xbmc.GetPlaylistItems({ 'playlistid': player.playlistid }, function (playlist) {
-						$.extend(player, playlist.items[player.position]);
-						if (player.file) player.label = player.file.split('/')[--player.file.split('/').length];
-						nowPlaying.html('');
-						html.time(player).appendTo(nowPlaying);
-						html.playing(player.label).appendTo(nowPlaying);
-						callback();
-					});
-					else {
-						nowPlaying.html('');
-						callback();
-					}
-				}
-			});
-		},
-		GetApplicationProperties = function (callback) {
-			xbmc.GetApplicationProperties(function (app) {
-				if (app) {
-					volume.slider('value',app.volume);
-					document.title = app.name;
-				}
-				callback();
-			});
-		},
-		timeout  = function (callback) {
+		sleep  = function (callback) {
 			window.setTimeout(callback, REFRESH);
 		},
 		timer = function () {
-			Q([
-			   GetApplicationProperties,
-			   timeout,
-			   GetActivePlayerProperties,
-			   timeout,
-			   timer
-			])();
-		}/*,
-		timer = function () {
-			GetApplicationProperties(function () {
-				timeout(function () {
-					GetActivePlayerProperties(function () {
-						timeout(function () {
-							timer();
-						});
-					});
+			var q = Q();
+			q.add(function (callback) {
+				xbmc.GetApplicationProperties(function (app) {
+					if (app) {
+						volume.slider('value',app.volume);
+						document.title = app.name;
+					}
+					callback();
 				});
+				return {
+					'timeout': 30000, //30 seconds
+				};
 			});
-		}*/;
+			q.add(sleep);
+			q.add(function (callback) {
+				xbmc.GetActivePlayerProperties(function (player) {
+					if (!player) {
+						body.attr('data-status','stopped');
+						progress.slider('value',0);
+						nowPlaying.html('');
+						callback();
+					} else {
+						if (player.speed) body.attr('data-status','playing');
+						else body.attr('data-status','paused');
+						progress.slider('value',player.percentage);
+						if (player.playlistid !== undefined) {
+							xbmc.GetPlaylistItems({ 'playlistid': player.playlistid || 0 }, function (playlist) {
+								if (playlist.items) $.extend(player, playlist.items[player.position || 0]);
+								if (player.file) player.label = player.file.split('/')[--player.file.split('/').length];
+								nowPlaying.html('');
+								html.time(player).appendTo(nowPlaying);
+								html.playing(player.label).appendTo(nowPlaying);
+								callback();
+							});
+						} else {
+							nowPlaying.html('');
+							callback();
+						}
+					}
+				});
+				return {
+					'timeout': 30000, //30 seconds
+				};
+			});
+			q.add(sleep);
+			q.onfinish(timer);
+			q.start();
+		}
 		timer();
 	};
 	
@@ -133,6 +156,9 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 		
 		//start polling
 		startTimer();
+		
+		//bind event handlers to the xbmc websocket api
+		$.each(on(), xbmc.onnotification);
 		
 		return pub;
 	};

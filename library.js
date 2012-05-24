@@ -1,13 +1,11 @@
 var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 	"use strict";
 
-	//constants
 	var LAZYLOAD_OPTIONS = { failure_limit : 10 },
-	  PAGESIZE = 20,
-	  FANART = 1, //0 = no fanart, 1 = normal fanart, 2 = fanart everywhere
 	  pub = {},
 	  xbmc,
-	  DEBUG = true;
+	  DEBUG = false,
+	  RECENTLYADDED = false;
 	  
 	var groupItems = function (items, groupby) {
 		var o = [], temp = {};
@@ -38,22 +36,37 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		});
 	};
 	
-	//controllers
 	var pages = {
 		'Movies': {
 			'view': 'list',
 			'header': true,
 			'groupby': 'year',
 			'data': function (callback) {
-				var page = {};
-				Q().
-				  add(function (c) { //get movies
+				var page = {}, q = Q();
+				if (RECENTLYADDED) {
+					q.add(function (c) { //get recently added movies
+						xbmc.GetRecentlyAddedMovies(function (d) {
+							console.dir(d);
+							page.recentlyadded = d.movies || [];
+							c();
+						});
+					});
+					q.add(function (c) { //format recently added movies
+						$.each(page.recentlyadded, function (i, movie) {
+							movie.thumbnailWidth = '34px';
+							movie.link = '#page=Movie&movieid='+movie.movieid;
+							movie.thumbnail = movie.thumbnail ? xbmc.vfs2uri(movie.thumbnail) : 'img/DefaultVideo.png';
+						});
+						c();
+					});
+				}
+				q.add(function (c) { //get movies
 					xbmc.GetMovies(function (d) {
 						page.items = d.movies || [];
 						c();
 					});
-				  }).
-				  add(function (c) { //format movies
+				});
+				q.add(function (c) { //format movies
 					$.each(page.items, function (i, movie) {
 						movie.link = '#page=Movie&movieid='+movie.movieid;
 						if (movie.file) {
@@ -66,29 +79,28 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 						}
 						//if (movie.fanart) movie.thumbnail = movie.fanart; fanart takes too long to load
 						movie.thumbnail = movie.thumbnail ? xbmc.vfs2uri(movie.thumbnail) : 'img/DefaultVideo.png';
-						movie.width = 33;
+						movie.thumbnailWidth = '34px';
 					});
 					c();
-				  }).
-				  onfinish(function () {
+				});
+				q.onfinish(function () {
 					callback(page);
-				  }).
-				  start();
+				});
+				q.start();
 			}
 		},
 		'Movie': {
 			'view': 'details',
 			'parent': 'Movies',
 			'data': function (callback) {
-				var page = {};
-				Q().
-				  add(function (c) { //get movie details
+				var page = {}, q = Q();
+				q.add(function (c) { //get movie details
 					xbmc.GetMovieDetails({ 'movieid': +getHash('movieid') }, function (d) {
 						page = d.moviedetails || {};
 						c();
 					});
-				  }).
-				  add(function (c) { //format movie details
+				});
+				q.add(function (c) { //format movie details
 					if (page.year) page.title += ' ('+page.year+')';
 					if (page.tagline) page.heading = page.tagline;
 					if (page.file) {
@@ -99,39 +111,62 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 							xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': page.file } });
 						};
 					}
+					if (page.trailer) page.trailer = function () {
+						xbmc.Play(page.trailer, 1);
+					};
 					if (page.thumbnail) page.thumbnail = xbmc.vfs2uri(page.thumbnail);
 					if (page.fanart) page.fanart = xbmc.vfs2uri(page.fanart);
 					c();
-				  }).
-				  onfinish(function () {
+				});
+				q.onfinish(function () {
 					callback(page);
-				  }).
-				  start();
+				});
+				q.start();
 			}
 		},
 		'TV Shows': {
 			'view': 'banner',
 			'header': true,
 			'data': function (callback) {
-				var page = {};
-				Q().
-				  add(function (c) { //get tv shows
+				var page = {}, q = Q();
+				if (RECENTLYADDED) {
+					q.add(function (c) { //get recently added episodes
+						xbmc.GetRecentlyAddedEpisodes(function (d) {
+							console.dir(d);
+							page.recentlyadded = d.episodes || [];
+							c();
+						});
+					});
+					q.add(function (c) { //format recently added episodes
+						$.each(page.recentlyadded, function (i, episode) {
+							episode.link = '#page=Episode&episodeid='+episode.episodeid+'&tvshowid='+episode.tvshowid;
+							if (episode.episode) {
+								episode.label = episode.episode+'. '+episode.title;
+								if (episode.season) episode.label = episode.season+'x'+episode.label;
+							}
+							episode.thumbnail = episode.thumbnail ? xbmc.vfs2uri(episode.thumbnail) : 'img/DefaultVideo.png';
+							episode.season = 'Season '+episode.season;
+						});
+						c();
+					});
+				};
+				q.add(function (c) { //get tv shows
 					xbmc.GetTVShows(function (d) {
 						page.items = d.tvshows || [];
 						c();
 					});
-				  }).
-				  add(function (c) { //format tv shows
+				});
+				q.add(function (c) { //format tv shows
 					$.each(page.items, function (i, tvshow) {
 						tvshow.link = '#page=TV Show&tvshowid='+tvshow.tvshowid;
 						if (tvshow.thumbnail) tvshow.thumbnail = xbmc.vfs2uri(tvshow.thumbnail);
 					});
 					c();
-				  }).
-				  onfinish(function () {
+				});
+				q.onfinish(function () {
 					callback(page);
-				  }).
-				  start();
+				});
+				q.start();
 			}
 		},
 		'TV Show': {
@@ -171,6 +206,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 						if (episode.episode) episode.label = episode.episode+'. '+episode.title;
 						episode.thumbnail = episode.thumbnail ? xbmc.vfs2uri(episode.thumbnail) : 'img/DefaultVideo.png';
 						episode.season = 'Season '+episode.season;
+						episode.thumbnailWidth = '89px';
 					});
 					c();
 				  }).
@@ -218,26 +254,41 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 			'view': 'list',
 			'header': true,
 			'data': function (callback) {
-				var page = {};
-				Q().
-				  add(function (c) { //get artists
+				var page = {}, q = Q();
+				if (RECENTLYADDED) {
+					q.add(function (c) { //get recently added albums
+						xbmc.GetRecentlyAddedAlbums(function (d) {
+							page.recentlyadded = d.albums || [];
+							c();
+						});
+					})
+					q.add(function (c) { //format recently added albums
+					  	$.each(page.recentlyadded, function (i, album) {
+							if (album.year) album.label = '('+album.year+') '+album.label;
+							album.link = '#page=Album&albumid='+album.albumid;
+							album.thumbnail = album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : 'img/DefaultAudio.png';
+						});
+						c();
+					});
+				}
+				q.add(function (c) { //get artists
 					xbmc.GetArtists(function (d) {
 						page.items = d.artists || [];
 						c();
 					});
-				  }).
-				  add(function (c) { //format artists
+				});
+				q.add(function (c) { //format artists
 				  	$.each(page.items, function (i, artist) {
 						artist.link = '#page=Artist&artistid='+artist.artistid;
 						artist.thumbnail = artist.thumbnail ? xbmc.vfs2uri(artist.thumbnail) : 'img/DefaultArtist.png';
-						artist.width = 50;
+						artist.thumbnailWidth = '50px';
 					});
 					c();
-				  }).
-				  onfinish(function () {
+				});
+				q.onfinish(function () {
 					callback(page);
-				  }).
-				  start();
+				});
+				q.start();
 			}
 		},
 		'Artist': {
@@ -271,7 +322,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 						if (album.year) album.label = '('+album.year+') '+album.label;
 						album.link = '#page=Album&albumid='+album.albumid;
 						album.thumbnail = album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : 'img/DefaultAudio.png';
-						album.width = 50;
+						album.thumbnailWidth = '50px';
 					});
 					c();
 				  }).
@@ -313,7 +364,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 					$.each(page.items, function (i, song) {
 						if (song.track) song.label = song.track+'. '+song.label;
 						song.thumbnail = undefined;
-						song.width = 50;
+						song.thumbnailWidth = '50px';
 						if (song.file) {
 							song.play = function () {
 								xbmc.Play(song.file, 1);
@@ -345,10 +396,9 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 				  page = {
 					'items': []
 				  };
-				if (FANART >= 2) page.fanart = 'img/backgrounds/system.jpg';
 				$.each(medias, function (i, media) {
 					if (!media.thumbnail) media.thumbnail = 'img/DefaultFolder.png';
-					if (!media.width) media.width = 50;
+					if (!media.width) media.thumbnailWidth = '50px';
 					media.link = '#page=Sources&media='+i;
 					page.items.push(media);
 				});
@@ -372,12 +422,12 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 						'link': '#page=Files',
 						'label': ' . . ',
 						'thumbnail': 'img/DefaultFolderBack.png',
-						'width': 50
+						'thumbnailWidth': '50px'
 					});
 					$.each(page.items, function (i, source) {
 						source.link = '#page=Directory&directory='+encodeURIComponent(source.file)+'&media='+media;
 						source.thumbnail = 'img/DefaultFolder.png';
-						source.width = 50;
+						source.thumbnailWidth = '50px';
 					});
 					c();
 				  }).
@@ -418,7 +468,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 						}
 						if (!filename) filename = f.pop();
 						file.label = filename;
-						file.width = 50;
+						file.thumbnailWidth = '50px';
 					});
 					c();
 				  }).
@@ -430,7 +480,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 						'link': '#page=Directory&directory='+back+'&media='+getHash('media'),
 						'label': ' . . ',
 						'thumbnail': 'img/DefaultFolderBack.png',
-						'width': 50
+						'thumbnailWidth': '50px'
 					});
 					c();
 				  }).
@@ -440,7 +490,68 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 				  start();
 			}
 		},
-		'Playlist': {
+		'Playlists': {
+			'view': 'list',
+			'header': true,
+			'data': function (callback) {
+				var page = {}, player;
+				Q().
+				  add(function (c) { //get playlists
+					xbmc.GetPlaylists(function (d) {
+						page.items = d || [];
+						c();
+					});
+				  }).
+				  add(function (c) {
+					var q = Q();
+		  			$.each(page.items, function (i, item) { //for each playlist
+		  				item.label = item.type || 'Playlist';
+		  				q.add(function(cb) { //get playlist items
+			  				xbmc.GetPlaylistItems({ 'playlistid': item.playlistid }, function (d) {
+			  					item.items = d.items || [];
+			  					cb();
+			  				});
+			  			});
+					});
+					q.onfinish(function () {
+						c();
+					});
+					q.start();
+				  }).
+				  add(function (c) { //get active player
+					xbmc.GetActivePlayerProperties(function (d) {
+						player = d || {};
+						c();
+					});
+				  }).
+				  add(function (c) { //format playlist items
+		  			$.each(page.items, function (i, item) {
+		  				var playlistid = item.playlistid || 0;
+			  			$.each(item.items, function (i, item) {
+							if (item.file) item.label = item.file.split('/')[--item.file.split('/').length];
+							if (player.playlistid === playlistid && player.position === i) item.playing = true;
+							if (!item.playing) {
+								item.play = function () {
+									xbmc.Open({ 'item': { 'playlistid': playlistid, 'position': i } });
+									renderPage('Playlists'); //refresh the playlist
+								};
+								item.remove = function () {
+									xbmc.RemoveFromPlaylist({ 'playlistid': playlistid, 'position': i });
+									renderPage('Playlists'); //refresh the playlist
+								};
+							}
+							if (item.thumbnail) item.thumbnail = xbmc.vfs2uri(item.thumbnail);
+						});
+					});
+					c();
+				  }).
+				  onfinish(function () {
+					callback(page);
+				  }).
+				  start();
+			}
+		},
+		/*'Playlist': {
 			'view': 'list',
 			'header': true,
 			'data': function (callback) {
@@ -454,7 +565,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 				  }).
 				  add(function (c) { //get active player
 					xbmc.GetActivePlayerProperties(function (d) {
-						player = d || {};
+						if (d.playlistid === playlistid) player = d || {};
 						c();
 					});
 				  }).
@@ -481,7 +592,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 				  }).
 				  start();
 			}
-		},
+		},*/
 		'Remote': {
 			'view': 'buttons',
 			'data': { 'buttons':[
@@ -492,53 +603,57 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 			                    { 'text': 'Right', 'class':'right', 'src':'img/buttons/right.png', 'onclick':function () { xbmc.Right(); } },
 			                    { 'text': 'Select', 'class':'select', 'src':'img/buttons/select.png', 'onclick':function () { xbmc.Select(); } },
 			                    { 'text': 'Back', 'class':'back', 'src':'img/buttons/back.png', 'onclick':function () { xbmc.Back(); } },
+			                    { 'text': 'Information', 'class':'info', 'src':'img/buttons/info.png', 'onclick':function () { xbmc.Info(); } },
+			                    { 'text': 'Menu', 'class':'menu', 'src':'img/buttons/menu.png', 'onclick':function () { xbmc.ContextMenu(); } },
 			                    { 'text': 'Previous', 'class':'previous', 'src':'img/buttons/previous.png', 'onclick':function () { xbmc.GoPrevious(); } },
 			                    { 'text': 'Stop', 'class':'stop', 'src':'img/buttons/stop.png', 'onclick':function () { xbmc.Stop(); } },
-			                    { 'text': 'Next', 'class':'next', 'src':'img/buttons/next.png', 'onclick':function () { xbmc.GoNext(); } }
+			                    { 'text': 'Next', 'class':'next', 'src':'img/buttons/next.png', 'onclick':function () { xbmc.GoNext(); } },
+			                    { 'text': 'Fullscreen', 'class':'fullscreen', 'src':'img/buttons/fullscreen.png', 'onclick':function () { xbmc.ToggleFullscreen(); } },
+			                    { 'text': 'Eject', 'class':'eject', 'src':'img/buttons/eject.png', 'onclick':function () { xbmc.Eject(); } }
 			]}
 		}
 	};
 	
 	var buttons = { //functions that interact with the buttons at the top of the page
-			'render': function () {
-				var header, list, data;
-				
-				//construct data
-				data = { 'class': 'headerButtons', 'buttons': [] };
-				$.each(pages, function (title, page) {
-					if (page.header) data.buttons.push({
-						'text': title,
-						'href': '#page='+title
-					});
+		'render': function () {
+			var header, list, data;
+			
+			//construct data
+			data = { 'class': 'headerButtons', 'buttons': [] };
+			$.each(pages, function (title, page) {
+				if (page.header) data.buttons.push({
+					'text': title,
+					'href': '#page='+title
 				});
-				
-				//render the data to the DOM via the buttons template
-				header = $('#header').
-				  html(''). //remove child elements
-				  append(template.buttons.bind(data));
-				
-				//apply javascript UI hacks
-				list = header.children('ul')
-				list.css({
-					'width': list.children().width()*list.children().length,
-					'height': list.children().height(),
+			});
+			
+			//render the data to the DOM via the buttons template
+			header = $('#header').
+			  html(''). //remove child elements
+			  append(template.buttons.bind(data));
+			
+			//apply javascript UI hacks
+			list = header.children('ul')
+			list.css({
+				'width': list.children().width()*list.children().length,
+				'height': list.children().height(),
+			});
+			buttons.iScroll = new iScroll(header.get(0),{
+				'vScroll': false,
+				'hScrollbar': false
+			});
+		},
+		'select': function (title) {
+			$('#header li'). //all the buttons in the header
+				removeClass('selected').
+				each(function () { //find the button that should be selected
+					var button = $(this);
+					if (button.text() === title) {
+						button.addClass('selected');
+						buttons.iScroll.scrollToElement(button[0]);
+					}
 				});
-				buttons.iScroll = new iScroll(header.get(0),{
-					'vScroll': false,
-					'hScrollbar': false
-				});
-			},
-			'select': function (title) {
-				$('#header li'). //all the buttons in the header
-					removeClass('selected').
-					each(function () { //find the button that should be selected
-						var button = $(this);
-						if (button.text() === title) {
-							button.addClass('selected');
-							buttons.iScroll.scrollToElement(button[0]);
-						}
-					});
-			}
+		}
 	};
 	
 	var renderPage = function (title) {
@@ -558,7 +673,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		else data = page.data;
 
 		//get the page data
-		data(function (data) {			
+		data(function (data) {
 			if (DEBUG) console.dir(data);
 			
 			//sort and group the data
