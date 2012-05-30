@@ -1,0 +1,8 @@
+<%@ Control Name="template.player" Language="JavaScript" %>
+
+<div id="player">
+	<jbst:control name="template.buttons" />
+	<div id="progress"></div>
+	<div id="nowPlaying"></div>
+	<div id="volume"></div>
+</div>

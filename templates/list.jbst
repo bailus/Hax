@@ -1,0 +1,28 @@
+<%@ Control Name="template.list" Language="JavaScript" %>
+
+<div jbst:visible="<%= !this.data.items %>" class="emptylist">Empty</div>
+
+<div jbst:visible="<%= !!this.data.items %>" class="list">
+
+	<jbst:control name="template.listdetails" />
+
+	<ul jbst:visible="<%= !this.data.items[0].items %>">
+		<jbst:control name="template.listitem" data="<%= this.data.items %>" />
+	</ul>
+		
+	<ul jbst:visible="<%= !!this.data.items[0].items %>">
+		<jbst:control data="<%= this.data.items %>">
+			<li class="superListItem">
+				<h3><%= this.data.label %></h3>
+				<ul>
+					<jbst:control name="template.listitem" data="<%= this.data.items %>" />
+				</ul>
+			</li>
+		</jbst:control>
+	</ul>
+
+	<div jbst:visible="<%= !!this.data.fanart %>" class="fanart">
+		<img src="<%= this.data.fanart %>" alt="" />
+	</div>
+
+</div>

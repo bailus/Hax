@@ -11,12 +11,14 @@
 
 <script src=lib/jquery.js></script>
 <script src=lib/json.js></script>
+<script src=lib/jsonrpc.js></script>
 <script src=lib/jsonml.js></script>
 <script src=lib/jsonml-jbst.js></script>
 <script src=lib/hash.js></script>
 <script src=lib/hashchange.js></script>
 <script src=lib/lazyload.js></script>
 <script src=lib/iscroll.js></script>
+<script src=lib/time.js></script>
 <script src=lib/Q.js></script>
 <script src=jquery-ui/jquery-ui.js></script>
 <script src=templates/details.js></script>
@@ -28,6 +30,7 @@
 <script src=templates/buttons.js></script>
 <script src=templates/player.js></script>
 <script src=templates/recentlyaddeditem.js></script>
+<script src=templates/link.js></script>
 <script src=xbmc.js></script>
 <script src=library.js></script>
 <script src=player.js></script>
@@ -92,37 +95,18 @@ jQuery(function () { //on document load
 		return false;
 	};
 	
-	var sanitizeAddress = function (a) {
-		a = a.trim();
-		if ((a !== '') && (a.indexOf('http://') !== 0)) a = 'http://' + a; //add http prefix if needed
-		if (a.lastIndexOf('/') !== (a.length - 1)) a = a + '/'; //add / suffix if needed
-		return a;
-	}
-	
-	var testConnection = function (address, callback) {
-		$.ajax({
-			'type': 'POST',
-			'dataType': 'json',
-			'contentType': 'application/json',
-			'url': address+'jsonrpc?',
-			'data': JSON.stringify({ "jsonrpc":"2.0","method":"JSONRPC.Ping","params":{},"id":+new Date() }),
-			'success': function (data) { callback(true) },
-			'error': function (data) { callback(false) }
-		});
-	};
-
 	var connect = function (address) {
-		testConnection(address, function (connected) {
-			if (connected) {
-				var xbmcPlayer, xbmcLibrary;
-				window.xbmc = xbmcFactory(address);
-				html.app();
-				xbmcPlayer = xbmcPlayerFactory(xbmc);
-				xbmcLibrary = xbmcLibraryFactory(xbmc);
-				storeAddress(address);
-			}
-			else render();
-		});
+		var x = xbmcFactory(address,
+		  function () { //connected
+			window.xbmc = x;
+			html.app();
+			xbmcPlayer = xbmcPlayerFactory(x);
+			xbmcLibrary = xbmcLibraryFactory(x);
+			storeAddress(address);
+		  },
+		  function () { //failed to connect
+			render();
+		  });
 	};
 	
 	var renderList = function (array) {

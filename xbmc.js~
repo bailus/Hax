@@ -330,7 +330,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 			function () { if (this.port === 9090) this.port = 80 }
 		]));
 		
-		if (DEBUG) console.log('XBMC: Connecting to '+ajaxURL);
+		if (DEBUG) console.log('XBMC: Connecting to '+address);
 	 
 	 	//create an ajax transport
 		server = JSONRPC(ajaxURL);

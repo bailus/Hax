@@ -2,8 +2,8 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 	"use strict";
 
 	//constants
-	var REFRESH = 5000, //ajax polling interval in ms
-	  REFRESHWS = 1000, //websocket polling interval in ms
+	var REFRESH = 600, //ajax polling interval in ms
+	  REFRESHWS = 250, //websocket polling interval in ms
 	  pub = {},
 	  xbmc,
 	  DEBUG = false;

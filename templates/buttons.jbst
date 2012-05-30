@@ -1,0 +1,14 @@
+<%@ Control Name="template.buttons" Language="JavaScript" %>
+
+<ul class="<%= this.data['class'] || 'buttons' %>">
+
+	<jbst:control data="<%= this.data.buttons %>">
+		<li class="<%= this.data['class'] %>">
+			<a href="<%= this.data.href || 'javascript: (' + (this.data.onclick || 'function () { void(0) }') + ')()' %>">
+				<img jbst:visible="<%= !!this.data.src %>" src="<%= this.data.src %>" alt="<%= this.data.text %>" />
+				<span jbst:visible="<%= !this.data.src %>"><%= this.data.text %></span>
+			</a>
+		</li>
+	</jbst:control>
+
+</ul>

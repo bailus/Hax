@@ -306,7 +306,6 @@ ul {
 	background:url('img/buttons/active.png');
 }
 .remote > li:hover {
-	background:url('img/buttons/hover.png');
 	cursor:pointer;
 }
 .remote .home      { top:0;     left: 30px; }
