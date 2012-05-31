@@ -235,7 +235,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 						episode.season = 'Season '+episode.season;
 						episode.thumbnailWidth = '89px';
 						episode.details = [];
-						if (episode.firstaired) episode.details.push( 'First aired '+ymd2string(episode.firstaired) );
+						if (episode.runtime) episode.details.push( minutes2string(episode.runtime) );
 						if (episode.lastplayed) episode.details.push( 'Last played '+ymd2string(episode.lastplayed) );
 						//episode.details.push( minutes2string(episode.runtime || 0) );
 					});

@@ -14,7 +14,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		},
 		'GetTVShows': {
 			'method': 'VideoLibrary.GetTVShows',
-			'params': { 'properties': [ 'thumbnail', 'year', 'studio', 'genre', 'lastplayed', 'playcount', 'premiered' ] }
+			'params': { 'properties': [ 'thumbnail', 'year', 'studio' ] }
 		},
 		'GetTVShowDetails': {
 			'method': 'VideoLibrary.GetTVShowDetails',
@@ -22,7 +22,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		},
 		'GetTVEpisodes': {
 			'method': 'VideoLibrary.GetEpisodes',
-			'params': { 'properties': [ 'tvshowid', 'title', 'thumbnail', 'episode', 'season', 'file', 'showtitle', 'firstaired', 'runtime', 'lastplayed' ] }
+			'params': { 'properties': [ 'tvshowid', 'title', 'thumbnail', 'episode', 'season', 'file', 'showtitle', 'runtime', 'lastplayed' ] }
 		},
 		'GetEpisodeDetails': {
 			'method': 'VideoLibrary.GetEpisodeDetails',
@@ -262,13 +262,13 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 
 	var load = function (name, params, callback) { //loads data from the JSON-RPC server using HTTP
 		var r = rpc[name];
-		if (r && r.method) server.sendMessage(r.method, params, function (result) {
+		if (r && r.method) server.sendMessage(r.method, params, callback ? function (result) {
 		  	if (callback instanceof Function) {
 				if (result.result) result = result.result;
 		  		if (r.wrapper) r.wrapper( result, callback );
 		  		else callback(result);
 			}
-		});
+		} : undefined);
 	};
 	
 	

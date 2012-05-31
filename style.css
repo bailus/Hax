@@ -1,10 +1,163 @@
 /* NOTE:
 	css gradients, shadows and rounded corners should be avoided as they slow down rendering */
 
+
+/* OTHER */
+li {
+	list-style-type:none;
+}
+a, [data-role=button] {
+	cursor:pointer;
+}
+.details .play, .details .add {
+	border-radius:9px;
+}
+a img,:link img,:visited img {
+	border:none
+}
+.fanart img {
+	opacity:0.3;
+}
+
+
+
+/* COLOUR */
 body {
-	color: white;
-	background-color: black;
-	font-family: sans-serif;
+	color:#DDD;
+	background-color:#000;
+}
+a, [data-role=button] {
+	color:#58B9DA;
+}
+a:hover, [data-role=button]:hover {
+	color:#E79A38;
+}
+a:active, [data-role=button]:active {
+	color:#E79A38;
+}
+h1 a, h2 a, h3 a, h4 a, h5 a {
+	color:inherit;
+}
+.details .play, .details .add {
+	background:rgba(0,0,0,0.6);
+}
+.listItem {
+	border-top-color:#222;
+	border-bottom-color:#222;
+}
+.recentlyaddeditem {
+	background:#222;
+	border-color:#333;
+}
+.bannerItem .banner {
+	background:transparent;
+}
+#header li.selected {
+	border-bottom-color: #59B4D4;
+}
+#loading {
+	background-color:rgba(0,0,0,0.8);
+}
+#player, #header {
+	background:#222;
+}
+.recentlyaddeditem .label {
+	color:#BBB;
+}
+#loading span {
+	color:#999;
+}
+
+
+
+/* TYPOGRAPHY */
+body {
+	font-family:sans-serif;
+}
+h1, h2, h3, h4, h5 {
+	font-weight:normal;
+}
+h1 {
+	font-size:22px;
+	font-weight:bold;
+}
+a {
+	outline:none;
+	text-decoration:none;
+}
+h2 {
+	font-size:18px;
+}
+h3 {
+	font-weight:bold;
+	font-size:14px;
+}
+.details .play, .details .add {
+	font-size:22px;
+}
+.listItem {
+	font-size:15px;
+}
+.listItem .label,
+.listItem .line1,
+.listItem .line2 {
+	word-break:break-all;
+	word-wrap:break-word;
+	font-weight:bold;
+}
+.listItem .line2 {
+	font-size:12px;
+	font-weight:normal;
+}
+.listItem .play,
+.listItem .add,
+.listItem .remove {
+	font-size:30px;
+	text-align:center;
+}
+.listItem .number {
+	font-weight:bold;
+}
+.recentlyaddeditem .label {
+	font-size:12px;
+}
+.bannerItem .bannerLabel {
+	font-size:22px;
+	font-weight:bold;
+}
+#header li {
+	font-size:15px;
+	font-weight:bold;
+	text-align:center;
+}
+#loading span {
+	font-size:24px;
+	text-align:center;
+}
+
+
+
+/* THE OTHER DIMENSION */
+#header {
+	z-index:50;
+}
+#loading {
+	z-index:40;
+}
+.bannerItem .banner {
+	z-index:30;
+}
+.details > *, .list > * {
+	z-index:20;
+}
+.fanart {
+	z-index:10;
+}
+
+
+
+/* LAYOUT */
+body {
 	overflow:auto;
 	overflow-x:hidden;
 }
@@ -13,52 +166,26 @@ body, li, ul {
 }
 h1, h2, h3, h4, h5 {
 	margin:0;padding:0;
-	font-weight:normal;
 	overflow:hidden;
-}
-li {
-	list-style-type:none;
-}
-a img,:link img,:visited img { border:none }
-a, [data-role=button] {
-	color:white;
-	text-decoration:none;
-	color:#59B4D4;
-	outline:none;
-	cursor:pointer;
-}
-a:hover, [data-role=button]:hover {
-	color:#0078A3;
-}
-a:active, [data-role=button]:active {
-	color:#E79A38;
 }
 #content {
 	margin-top:40px;
 }
 h1 {
 	margin-top:10px;
-	font-size:22px;
 	margin-left:10px;
-	font-weight:bold;
-}
-h1 a {
-	color:inherit;
 }
 h2 {
 	margin-top:5px;
 	margin-bottom:10px;
-	font-size:18px;
 	margin-left:10px;
 }
 h3 {
+	display:inline-block;
 	height:30px;
 	line-height:30px;
-	font-size:14px;
 	margin-top:14px;
 	margin-left:10px;
-	font-weight:bold;
-	display:inline-block;
 }
 h3 + p, h2 + p {
 	margin-top:0;
@@ -69,22 +196,20 @@ p {
 }
 .details .play, .details .add {
 	display:inline-block;
-	font-size:22px;
 	margin-right:30px;
 	margin-top:16px;
-	background:rgba(0,0,0,0.6);
 	padding-left:8px;
 	padding-right:8px;
 	padding-bottom:3px;
-	border-radius:9px;
 }
 .listItem {
 	height:50px;
-	border-top:1px solid #222;
-	border-bottom:1px solid #222;
 	overflow:hidden;
 	position:relative;
-	font-size:15px;
+	border-top-width:1px;
+	border-top-style:solid;
+	border-bottom-width:1px;
+	border-bottom-style:solid;
 }
 .listItem + .listItem {
 	border-top:none;
@@ -92,9 +217,6 @@ p {
 .listItem .label,
 .listItem .line1,
 .listItem .line2 {
-	word-break:break-all;
-	word-wrap:break-word;
-	font-weight:bold;
 	padding-left:10px;
 	overflow:hidden;
 }
@@ -107,8 +229,6 @@ p {
 	height:18px;
 }
 .listItem .line2 {
-	font-size:12px;
-	font-weight:normal;
 	height:15px;
 }
 .listItem .line2 span + span {
@@ -117,12 +237,10 @@ p {
 .listItem .play,
 .listItem .add,
 .listItem .remove {
-	font-size:30px;
 	width:50px;height:50px;
 	line-height:50px;
 	float:right;
 	display:block;
-	text-align:center;
 }
 .listItem .play {
 	right:0;
@@ -138,17 +256,16 @@ p {
 }
 @media all and (max-width : 380px) {
 	.listItem .thumbnail {
-		display: none !important;
+		display:none !important;
 	}
 }
 .listItem .number {
-	font-weight:bold;
+	height:42px;
 	padding-left:10px;
 	min-width:22px;
 	float:left;
 	text-align:right;
 	margin-top:8px;
-	height:42px;
 	margin-right:-4px;
 }
 .recentlyadded {
@@ -156,21 +273,19 @@ p {
 	margin-bottom:10px;
 }
 .recentlyaddeditem {
+	border-style:solid;
+	border-width:1px;
 	width:143px;
 	display:inline-block;
 	position:relative;
 	vertical-align:top;
 	padding:2px;
-	background:#222;
 	margin:1px;
-	border:1px solid #333;
 }
 .recentlyaddeditem .label {
-	font-size:12px;
-	height: 18px;
-	overflow: hidden;
-	display: block;
-	color:#BBB;
+	height:18px;
+	overflow:hidden;
+	display:block;
 }
 .recentlyaddeditem .thumbnail a {
 	display:block;
@@ -194,8 +309,6 @@ p {
 .bannerItem .banner {
 	position:absolute;
 	left:0;top:0;
-	z-index:10000;
-	background:transparent;
 }
 .bannerItem .bannerLabel {
 	position:absolute;
@@ -203,8 +316,6 @@ p {
 	right:10px;
 	margin-top:-15px;
 	height:30px;
-	font-size:22px;
-	font-weight:bold;
 }
 #header {
 	position:fixed;
@@ -213,42 +324,30 @@ p {
 	top:0;
 	left:0;
 	width:100%;
-	z-index:1000000000;
-}
-#player, #header {
-	background:  #222222 /*{a-bar-background-color}*/;
-	color: #ffffff /*{a-bar-color}*/;
-	background-image:none;
 }
 #header li {
 	float:left;
-	font-size:18px;
 	line-height:40px;
 	width:140px;
-	text-align:center;
 }
 #header li.selected {
-	border-bottom:4px solid #59B4D4;
+	border-bottom-width: 4px;
+	border-bottom-style: solid;
+}
+#header li.selected {
 	height:36px;
 }
 #header li img {
 	width:48px;height:48px;
 }
-
 #loading {
 	position:fixed;
-	z-index:1000000;
-	background-color:rgba(0,0,0,0.8);
 	top:0;left:0;
 	height:100%;width:100%;
 }
-
 #loading span {
 	position:absolute;
 	display:block;
-	color:#999;
-	font-size:24px;
-	text-align:center;
 	width:300px;height:30px;
 	line-height:30px;
 	left:50%;top:50%;
@@ -261,14 +360,11 @@ p {
 }
 .details > *, .list > * {
 	position:relative;
-	z-index:100;
 }
 .fanart {
 	position:fixed;
 	left:0;top:0;bottom:0;
 	width:100%;
-	z-index:10;
-	opacity:0.3;
 	padding-top:40px;
 	padding-bottom:60px;
 }
@@ -290,6 +386,10 @@ p {
 ul {
 	clear:both;
 }
+
+
+
+/* REMOTE BUTTONS */
 .remote {
 	position:relative;
 	width:100%;

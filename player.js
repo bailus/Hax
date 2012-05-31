@@ -2,7 +2,7 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 	"use strict";
 
 	//constants
-	var REFRESH = 5000, //ajax polling interval in ms
+	var REFRESH = 1000, //ajax polling interval in ms
 	  REFRESHWS = 1000, //websocket polling interval in ms
 	  pub = {},
 	  xbmc,
@@ -81,10 +81,10 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 			window.setTimeout(callback, xbmc.transport() === 'websocket' ? REFRESHWS : REFRESH);
 		},
 		options = {
-			'timeout': 30000, //30 seconds
+			//'timeout': 30000, //30 seconds
 		},
 		timer = function () {
-			var q = Q();
+			var q = Q().onfinish(timer);
 			q.add(function (callback) {
 				xbmc.GetApplicationProperties(function (app) {
 					if (app) {
@@ -105,9 +105,9 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 			});
 			q.add(sleep);
 			q.add(function (callback) {
-				var queue = Q();
+				var q = Q().onfinish(callback);
 				if (player) {
-					queue.add(function (c) {
+					q.add(function (c) {
 						xbmc.GetPlayerProperties({ 'playerid': player.playerid }, function (properties) {
 							$.extend(player, properties);
 							if (player.speed) body.attr('data-status','playing');
@@ -117,8 +117,8 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 						});
 						return options;
 					});
-					queue.add(sleep);
-					queue.add(function (c) {
+					q.add(sleep);
+					q.add(function (c) {
 						if (player.playlistid !== undefined) {
 							xbmc.GetPlaylistItems({ 'playlistid': player.playlistid || 0 }, function (playlist) {
 								if (playlist.items) $.extend(player, playlist.items[player.position || 0]);
@@ -133,20 +133,18 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 							c();
 						}
 					});
-					queue.add(sleep);
+					q.add(sleep);
 				} else {
-					queue.add(function (c) {
+					q.add(function (c) {
 						body.attr('data-status','stopped');
 						progress.slider('value',0);
 						nowPlaying.html('');
 						c();
 					});
-					queue.add(sleep);
+					q.add(sleep);
 				}
-				queue.onfinish(callback);
-				queue.start();
+				q.start();
 			});
-			q.onfinish(timer);
 			q.start();
 		};
 		timer();
