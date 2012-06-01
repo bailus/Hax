@@ -302,11 +302,16 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 	$.each(rpc, makeFunction); //make public functions from the rpc array
 	
 	var upgradeToSocket = function (address, callback) { //upgrade from ajax to websocket
-		var ws = JSONRPC(address), ajax = server;
+		var ws = JSONRPC(address), ajax;
+		if (DEBUG) console.log('XBMC: Attempting to upgrade transport to websocket '+address);
+		if (!ws) { //ws is undefined if the browser has no websocket support
+			if (DEBUG) console.log('XBMC: No websocket support in this browser: '+navigator.userAgent);
+			return;
+		}
+		ajax = server;
 		$.each(ajax.notifications(), function (method, func) { //transfer onNotification events to the websocket transport
 			ws.onNotification(method, func);
 		});
-		if (DEBUG) console.log('XBMC: Attempting to upgrade transport to websocket '+address);
 		ws.onConnect(function () {
 			if (DEBUG) console.log('XBMC: Transport upgraded to websocket');
 			server = ws; //replace ajax transport with websocket

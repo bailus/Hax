@@ -54,7 +54,7 @@ jQuery(function () { //on document load
 			  append('<input id="address">').
 			  append('<input type="submit">').
 			  submit(function () {
-				connect( sanitizeAddress( $('#address').val() ) );
+				connect( $('#address').val() );
 				return false;
 			  }).
 			  appendTo(div);
@@ -115,7 +115,7 @@ jQuery(function () { //on document load
 			$('<a href="#"></a>').
 			  text(address).
 			  click(function () { 
-				connect( sanitizeAddress( address ) );
+				connect( address );
 				return false;
 			  }).
 			  appendTo(list);
