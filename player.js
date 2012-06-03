@@ -26,7 +26,7 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 		data = {
 			'buttons': [
 			            { 'text': 'Play / Pause', 'class': 'PlayPause', 'onclick': function () { xbmc.PlayPause(); } },
-			            { 'text': 'Remote', 'class': 'Remote', 'href': '#page=Remote' }
+			            //{ 'text': 'Remote', 'class': 'Remote', 'href': '#page=Remote' }
 			]
 		};
 		
@@ -80,74 +80,66 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 		sleep  = function (callback) {
 			window.setTimeout(callback, xbmc.transport() === 'websocket' ? REFRESHWS : REFRESH);
 		},
-		options = {
-			//'timeout': 30000, //30 seconds
-		},
-		timer = function () {
-			var q = Q().onfinish(timer);
-			q.add(function (callback) {
-				xbmc.GetApplicationProperties(function (app) {
-					if (app) {
-						volume.slider('value',app.volume);
-						document.title = app.name;
-					}
-					callback();
-				});
-				return options;
+		q = Q();
+		q.add(function (callback) {
+			xbmc.GetApplicationProperties(function (app) {
+				if (app) {
+					volume.slider('value',app.volume);
+					document.title = app.name;
+				}
+				callback();
 			});
-			q.add(sleep);
-			q.add(function (callback) {
-				xbmc.GetActivePlayer(function (p) {
-					player = p;
-					callback();
-				});
-				return options;
+		});
+		q.add(sleep);
+		q.add(function (callback) {
+			xbmc.GetActivePlayer(function (p) {
+				player = p;
+				callback();
 			});
-			q.add(sleep);
-			q.add(function (callback) {
-				var q = Q().onfinish(callback);
-				if (player) {
-					q.add(function (c) {
-						xbmc.GetPlayerProperties({ 'playerid': player.playerid }, function (properties) {
-							$.extend(player, properties);
-							if (player.speed) body.attr('data-status','playing');
-							else body.attr('data-status','paused');
-							progress.slider('value',player.percentage);
-							c();
-						});
-						return options;
-					});
-					q.add(sleep);
-					q.add(function (c) {
-						if (player.playlistid !== undefined) {
-							xbmc.GetPlaylistItems({ 'playlistid': player.playlistid || 0 }, function (playlist) {
-								if (playlist.items) $.extend(player, playlist.items[player.position || 0]);
-								if (player.file) player.label = player.file.split('/')[--player.file.split('/').length];
-								nowPlaying.html('');
-								html.time(player).appendTo(nowPlaying);
-								html.playing(player.label).appendTo(nowPlaying);
-								c();
-							});
-						} else {
-							nowPlaying.html('');
-							c();
-						}
-					});
-					q.add(sleep);
-				} else {
-					q.add(function (c) {
-						body.attr('data-status','stopped');
-						progress.slider('value',0);
-						nowPlaying.html('');
+		});
+		q.add(sleep);
+		q.add(function (callback) {
+			var q = Q().onfinish(callback);
+			if (player) {
+				q.add(function (c) {
+					xbmc.GetPlayerProperties({ 'playerid': player.playerid }, function (properties) {
+						$.extend(player, properties);
+						if (player.speed) body.attr('data-status','playing');
+						else body.attr('data-status','paused');
+						progress.slider('value',player.percentage);
 						c();
 					});
-					q.add(sleep);
-				}
-				q.start();
-			});
+				});
+				q.add(sleep);
+				q.add(function (c) {
+					if (player.playlistid !== undefined) {
+						xbmc.GetPlaylistItems({ 'playlistid': player.playlistid || 0 }, function (playlist) {
+							if (playlist.items) $.extend(player, playlist.items[player.position || 0]);
+							if (player.file) player.label = player.file.split('/')[--player.file.split('/').length];
+							nowPlaying.html('');
+							html.time(player).appendTo(nowPlaying);
+							html.playing(player.label).appendTo(nowPlaying);
+							c();
+						});
+					} else {
+						nowPlaying.html('');
+						c();
+					}
+				});
+				q.add(sleep);
+			} else {
+				q.add(function (c) {
+					body.attr('data-status','stopped');
+					progress.slider('value',0);
+					nowPlaying.html('');
+					c();
+				});
+				q.add(sleep);
+			}
 			q.start();
-		};
-		timer();
+		});
+		q.onfinish(q.start); //re-start the queue when it finishes
+		q.start(); //start the queue
 	};
 	
 	return function (x) {

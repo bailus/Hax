@@ -58,6 +58,31 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 	};
 	
 	var pages = {
+		'Remote': {
+			'view': 'buttons',
+			'header': true,
+			'data': function (callback) {
+				var buttons = [
+			                    { 'text': 'Home', 'class':'home', 'src':'img/buttons/home.png', 'onclick':function () { xbmc.Home(); } },
+			                    { 'text': 'Up', 'class':'up', 'src':'img/buttons/up.png', 'onclick':function () { xbmc.Up(); } },
+			                    { 'text': 'Down', 'class':'down', 'src':'img/buttons/down.png', 'onclick':function () { xbmc.Down(); } },
+			                    { 'text': 'Left', 'class':'left', 'src':'img/buttons/left.png', 'onclick':function () { xbmc.Left(); } },
+			                    { 'text': 'Right', 'class':'right', 'src':'img/buttons/right.png', 'onclick':function () { xbmc.Right(); } },
+			                    { 'text': 'Select', 'class':'select', 'src':'img/buttons/select.png', 'onclick':function () { xbmc.Select(); } },
+			                    { 'text': 'Back', 'class':'back', 'src':'img/buttons/back.png', 'onclick':function () { xbmc.Back(); } },
+			                    { 'text': 'Previous', 'class':'previous', 'src':'img/buttons/previous.png', 'onclick':function () { xbmc.GoPrevious(); } },
+			                    { 'text': 'Stop', 'class':'stop', 'src':'img/buttons/stop.png', 'onclick':function () { xbmc.Stop(); } },
+			                    { 'text': 'Next', 'class':'next', 'src':'img/buttons/next.png', 'onclick':function () { xbmc.GoNext(); } }
+				];
+				if (xbmc.version() >= 5) buttons = buttons.concat([
+			                    { 'text': 'Information', 'class':'info', 'src':'img/buttons/info.png', 'onclick':function () { xbmc.Info(); } },
+			                    { 'text': 'Menu', 'class':'menu', 'src':'img/buttons/menu.png', 'onclick':function () { xbmc.ContextMenu(); } },
+			                    { 'text': 'Fullscreen', 'class':'fullscreen', 'src':'img/buttons/fullscreen.png', 'onclick':function () { xbmc.ToggleFullscreen(); } },
+			                    { 'text': 'Eject', 'class':'eject', 'src':'img/buttons/eject.png', 'onclick':function () { xbmc.Eject(); } }
+				]);
+				callback({ 'class': 'remote', 'height': '340px', 'width': '340px', 'buttons': buttons });
+			}
+		},
 		'Movies': {
 			'view': 'list',
 			'header': true,
@@ -566,30 +591,6 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 					callback(page);
 				  }).
 				  start();
-			}
-		},
-		'Remote': {
-			'view': 'buttons',
-			'data': function (callback) {
-				var buttons = [
-			                    { 'text': 'Home', 'class':'home', 'src':'img/buttons/home.png', 'onclick':function () { xbmc.Home(); } },
-			                    { 'text': 'Up', 'class':'up', 'src':'img/buttons/up.png', 'onclick':function () { xbmc.Up(); } },
-			                    { 'text': 'Down', 'class':'down', 'src':'img/buttons/down.png', 'onclick':function () { xbmc.Down(); } },
-			                    { 'text': 'Left', 'class':'left', 'src':'img/buttons/left.png', 'onclick':function () { xbmc.Left(); } },
-			                    { 'text': 'Right', 'class':'right', 'src':'img/buttons/right.png', 'onclick':function () { xbmc.Right(); } },
-			                    { 'text': 'Select', 'class':'select', 'src':'img/buttons/select.png', 'onclick':function () { xbmc.Select(); } },
-			                    { 'text': 'Back', 'class':'back', 'src':'img/buttons/back.png', 'onclick':function () { xbmc.Back(); } },
-			                    { 'text': 'Previous', 'class':'previous', 'src':'img/buttons/previous.png', 'onclick':function () { xbmc.GoPrevious(); } },
-			                    { 'text': 'Stop', 'class':'stop', 'src':'img/buttons/stop.png', 'onclick':function () { xbmc.Stop(); } },
-			                    { 'text': 'Next', 'class':'next', 'src':'img/buttons/next.png', 'onclick':function () { xbmc.GoNext(); } }
-				];
-				if (xbmc.version() >= 5) buttons = buttons.concat([
-			                    { 'text': 'Information', 'class':'info', 'src':'img/buttons/info.png', 'onclick':function () { xbmc.Info(); } },
-			                    { 'text': 'Menu', 'class':'menu', 'src':'img/buttons/menu.png', 'onclick':function () { xbmc.ContextMenu(); } },
-			                    { 'text': 'Fullscreen', 'class':'fullscreen', 'src':'img/buttons/fullscreen.png', 'onclick':function () { xbmc.ToggleFullscreen(); } },
-			                    { 'text': 'Eject', 'class':'eject', 'src':'img/buttons/eject.png', 'onclick':function () { xbmc.Eject(); } }
-				]);
-				callback({ 'class': 'remote', 'buttons': buttons });
 			}
 		}
 	};
