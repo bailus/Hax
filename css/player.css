@@ -1,0 +1,120 @@
+#player {
+	position:fixed;
+	z-index:1000000000;
+	bottom:0;left:0;
+	width:100%; height:60px;
+	display:block;
+}
+/* remove the progress bar when nothing is playing */
+body #progress,
+body #nowPlaying {
+	display:none;
+}
+body[data-status=playing] #progress,
+body[data-status=playing] #nowPlaying,
+body[data-status=paused] #progress,
+body[data-status=paused] #nowPlaying {
+	display:block;
+}
+/*body #player,
+body #player {
+	display:none;
+}
+body[data-status=playing] #player,
+body[data-status=paused] #player {
+	display:block;
+}*/
+#player #progress {
+	position:absolute;
+	left:0;
+	top:-16px;
+	width:100%;
+	font-size:19px;
+	border-radius:0;
+	border:none;
+	border-top:1px solid #333;
+}
+#player #progress .ui-slider-handle {
+	border-radius:50%;
+	border:0.3em solid #777;
+	background:white;
+	background:rgba(255,255,255,0.7);
+	height:0.8em;width:0.8em;
+	cursor:pointer;
+}
+#player #progress .ui-slider-handle:hover {
+	background:#FFAF0F;
+	background:rgba(255,255,255,0.9);
+}
+#player #progress .ui-slider-handle:focus {
+	background:#59B4D4;
+}
+#player #volume {
+	position:absolute;
+	right:20px;top:14px;
+	width:140px;
+	border:none;
+	background:url('../img/Volume.png');
+	border-radius:0;
+	height:32px;
+}
+#player #volume .ui-slider-handle {
+	top:0;
+	background:white;
+	background:rgba(255,255,255,0.7);
+	border:0.21em solid #777;
+	border-radius:50%;
+	width:0.5em;
+	height:0.5em;
+	margin:0.16em;
+	margin-left:-.43em;
+	cursor:pointer;
+}
+#player #volume .ui-slider-handle:hover {
+	background:#FFAF0F;
+	background:rgba(255,255,255,0.9);
+}
+#player .ui-slider {
+	background:black;
+	font-size:28px;
+}
+#player #nowPlaying {
+	position:absolute;
+	background:black;
+	left:60px;
+	right:170px;
+	top:13px;
+	height:34px;
+	line-height:34px;
+	padding-left:10px;
+	padding-right:10px;
+	font-size:14px;
+	overflow:hidden;
+}
+#player #nowPlaying .time {
+	text-align:right;
+	float:right;
+	width:100px;
+}
+#player .GoPrevious { background-image:url('../img/GoPrevious.png'); }
+#player .PlayPause { background-image:url('../img/Play.png'); }
+body[data-status=playing] #player .PlayPause { background-image:url('../img/Pause.png'); }
+#player .Stop { background-image:url('../img/Stop.png'); }
+#player .GoNext { background-image:url('../img/GoNext.png'); }
+#player .GoPrevious { background-image:url('../img/GoPrevious.png'); }
+#player .Volume { background-image:url('../img/Volume.png'); }
+#player .Remote { background-image:url('../img/Remote.png'); }
+#player .Playlist { background-image:url('../img/Playlist.png'); }
+#player .buttons li {
+	width:32px;height:32px;
+	margin:14px;
+	float:left;
+	cursor:pointer;
+}
+#player .buttons a {
+	display:block;
+	width:100%;height:100%;
+}
+#player .buttons span {
+	display:none;
+}
