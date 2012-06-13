@@ -4,7 +4,7 @@ jQuery(function () { //on document load
 	var html = {
 		'app': function () {
 			body.empty();
-			body.append('<div id=loading><span>Loading...</span></div>');
+			body.append('<div id=loading><span><img alt="Loading" src="img/loading.gif"></span></div>');
 			body.append('<div id=header></div>');
 			body.append('<div id=content></div>');
 			body.append('<div id=player></div>');
@@ -59,12 +59,11 @@ jQuery(function () { //on document load
 	};
 	
 	var connect = function (address) {
-		var x = xbmcFactory(address,
+		window.xbmc = xbmcFactory(address,
 		  function () { //connected
-			window.xbmc = x;
 			html.app();
-			xbmcPlayer = xbmcPlayerFactory(x);
-			xbmcLibrary = xbmcLibraryFactory(x);
+			xbmcPlayer = xbmcPlayerFactory();
+			xbmcLibrary = xbmcLibraryFactory();
 			storeAddress(address);
 		  },
 		  function () { //failed to connect
@@ -92,5 +91,5 @@ jQuery(function () { //on document load
 			renderList(getAddresses());
 		}
 	};
-	connect('/'); //try to connect to localhost first
+	connect(); //try to connect to localhost first
 });

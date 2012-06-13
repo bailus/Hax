@@ -1,13 +1,12 @@
-var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
+var xbmcLibraryFactory = (function ($) {
 	"use strict";
 
 	var LAZYLOAD_OPTIONS = { },
 	  pub = {},
-	  xbmc,
 	  DEBUG = window.DEBUG || false,
-	  RECENTLYADDED = false;
+	  RECENTLYADDED = false,
 	  
-	var groupItems = function (items, groupby) {
+	groupItems = function (items, groupby) {
 		var o = [], temp = {};
 		if (!(items[0] && items[0][groupby])) return items;
 		$.each(items, function (i, item) {
@@ -24,9 +23,9 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 			});
 		});
 		return o;
-	};
+	},
 	  
-	var sortItems = function (items, sortby) {
+	sortItems = function (items, sortby) {
 		if (!(items[0] && items[0][sortby])) return items;
 		return items.sort(function (a, b) {
 			var x = a[sortby], y = b[sortby];
@@ -34,30 +33,34 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 			if (x > y) return +1;
 			return 0;
 		});
-	};
-	
-	var seconds2string = function (t) {
+	},
+	  
+	seconds2string = function (t) {
 		var str = function (n) {
 			return (n < 10 && n > -10 ? '0' : '')+Math.floor(n);
 		};
 		if (t > 3600) return str(t/3600) +':'+ str((t%3600)/60) +':'+ str(t%60);
 		else return str(t/60) +':'+ str(t%60);
-	};
-	
-	var minutes2string = function (t) {
+	},
+	  
+	minutes2string = function (t) {
 		var str = function (n) {
 			return (n < 10 && n > -10 ? '0' : '')+Math.floor(n);
 		};
 		if (t > 60) return str(t/60) +':'+ str(t%60) + ':00';
 		return str(t) + ':00';
-	};
-	
-	var ymd2string = function (date) {
-		var x = date.split(' ')[0].split('-');
-		return [ ['January','February','March','April','May','June','July','August','September','October','November','December'][x[1]-1], x[2]+',', x[0] ].join(' ');
-	};
-	
-	var pages = {
+	},
+	  
+	ymd2string = function (ymd) {
+		var x = ymd.split(' ')[0].split('-');
+		return [
+			['January','February','March','April','May','June','July','August','September','October','November','December'][x[1]-1], 
+			+x[2]+((/1[1-3]$/).test(x[2]) ? 'th' : (/1$/).test(x[2]) ? 'st' : (/2$/).test(x[2]) ? 'nd' : (/3$/).test(x[2]) ? 'rd' : 'th')+',',
+			x[0]
+		].join(' ');
+	},
+	  
+	pages = {
 		'Remote': {
 			'view': 'buttons',
 			'header': true,
@@ -593,9 +596,9 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 				  start();
 			}
 		}
-	};
-	
-	var buttons = { //functions that interact with the buttons at the top of the page
+	},
+	  
+	buttons = { //functions that interact with the buttons at the top of the page
 		'render': function () {
 			var header, list, data;
 			
@@ -635,9 +638,9 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 					}
 				});
 		}
-	};
-	
-	var renderPage = function (title) {
+	},
+	  
+	renderPage = function (title) {
 		var data, page, defaultPage = 'Remote';
 		
 		//find the page to render
@@ -646,7 +649,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		page = pages[title];
 		if (!page) page = pages[defaultPage];
 		
-		if (DEBUG) console.log('Rendering page: '+title);
+		if (DEBUG) console.log('Library: Fetching data: '+title);
 		
 		//if the data isn't a function, turn it into one
 		if (!page.data) data = function (callback) { callback({}) };
@@ -655,7 +658,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 
 		//get the page data
 		data(function (data) {
-			if (DEBUG) console.dir(data);
+			if (DEBUG) console.log('Library: Rendering page: '+title, data);
 			
 			//sort and group the data
 			if (getHash('sort') || page.sortby) data.items = sortItems(data.items, getHash('sort') || page.sortby)
@@ -668,7 +671,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 			
 			//apply javascript UI hacks
 			$('body').scrollTop(0);
-			$('#loading').hide();
+			$('#loading').stop(true).hide();
 			v.find('img').filter('[data-original]').lazyload(LAZYLOAD_OPTIONS); //initialize the lazyload plugin
 		});
 		
@@ -677,8 +680,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		else buttons.select(title);
 	};
 	
-	return function (x) {
-		xbmc = x;
+	return function () {
 		//render the buttons
 		buttons.render();
 	
@@ -687,7 +689,7 @@ var xbmcLibraryFactory = (function ($) { //create the xbmcLibrary global object
 		
 		//render the page every time the hash changes
 		$(window).hashchange(function () {
-			$('#loading').show();
+			$('#loading').fadeIn(800);
 			renderPage(getHash('page'));
 		});
 		

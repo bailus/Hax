@@ -214,9 +214,16 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		}
 	};
 	
+	
+	//parseURL( '/' );
+	//parseURL( '/', { 'protocol': 'https', 'port': 8080 } );
+	//parseURL( '/', [ { 'protocol': 'https' }, { 'port': 8080 } ] );
+	//parseURL( '/', function () { this.protocol = 'https'; this.port = 8080; } );
+	//parseURL( '/', [ { 'protocol': 'https' }, function () { this.port = '8080'; } ] );
+	
 	var parseURL = function (url, m) {
 		var temp = document.createElement('a');
-		temp.href = url;
+		temp.href = url || '/';
 		var modifyObject = function (object, modifications) {
 			if (!(modifications instanceof Array)) modifications = [modifications];
 			$.each(modifications, function (i, modification) {
@@ -325,8 +332,9 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 	return function (address, success, fail) {
 		
 		//set URL variables
+		var address = parseURL('/', { 'host': address });
 		var ajaxURL = parseURL(address, { 'protocol': 'http', 'pathname': 'jsonrpc', 'search': '' });
-		var wsURL = parseURL(address, { 'protocol': 'ws',   'pathname': 'jsonrpc', 'port': 9090 });
+		var wsURL = parseURL(address, { 'protocol': 'ws', 'pathname': 'jsonrpc', 'port': 9090 });
 		pub.vfs2uri.set(parseURL(address, [
 			{ 'protocol': 'http', 'pathname': 'vfs/' },
 			function () { if (this.port === 9090) this.port = 80 }

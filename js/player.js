@@ -1,4 +1,4 @@
-xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
+xbmcPlayerFactory = (function ($) {
 	"use strict";
 
 	//constants
@@ -141,8 +141,7 @@ xbmcPlayerFactory = (function ($) { //create the xbmcPlayer global object
 		q.start(); //start the queue
 	};
 	
-	return function (x) {
-		//xbmc = x;
+	return function () {
 		//render the player
 		renderPlayer($('#player'));
 		

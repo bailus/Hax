@@ -35,7 +35,7 @@ events: (websocket only)
 var JSONRPC = (function (window, undefined) {
 	"use strict";
 	
-	var DEBUG = window.DEBUG || false;
+	var DEBUG = false//window.DEBUG || false;
 	var WEBSOCKET_TIMEOUT = 3000; //3 seconds
 	var MAX_SOCKET_CONNECTION_ATTEMPTS = 3;
 	

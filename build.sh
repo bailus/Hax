@@ -37,14 +37,14 @@ minifiers=(
 )
 
 
-echo 'Making debug.html'	
+echo 'making debug.html...'
 	
 	#copy base.html
 	touch debug.html
 	cat base.html > debug.html
 	
 	#add debug global javascript variable
-	echo '<script>window.DEBUG = true</script>' >> index.html
+	echo '<script>window.DEBUG = true</script>' >> debug.html
 
 	#link to the scripts
 	for script in ${scripts[*]}
@@ -52,8 +52,10 @@ echo 'Making debug.html'
 		echo "<script src=\"$script\"></script>" >> debug.html
 	done
 
+	file debug.html
 
-echo 'Making index.html'	
+
+echo 'making index.html...'
 	
 	#copy base.html
 	touch index.html
@@ -74,6 +76,8 @@ echo 'Making index.html'
 		$minifier $script >> index.html
 		echo '</script>' >> index.html
 	done
+
+	file index.html
 
 
 
