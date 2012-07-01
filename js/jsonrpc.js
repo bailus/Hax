@@ -6,11 +6,11 @@ author: Samuel Bailey (sam@bailey.geek.nz)
 licence: To the extent possible under law, Samuel Bailey has waived all copyright and related or neighboring rights to this work. This work is published from: New Zealand.
 
 usage:
-	var rpc = JSONRPC( 'ws://localhost:9090/jsonrpc' );
-	rpc.sendMessage('JSONRPC.Introspect', function (data) {
+	var server = JSONRPC( 'ws://localhost:9090/jsonrpc' );
+	server.sendMessage('JSONRPC.Introspect', function (data) {
 		console.log('JSONRPC Introspect: ', data);
 	});
-	rpc.onNotification('Player.OnPlay', function (data) {
+	server.onNotification('Player.OnPlay', function (data) {
 		console.log('Playing', data);
 	});
 	
@@ -35,29 +35,54 @@ events: (websocket only)
 var JSONRPC = (function (window, undefined) {
 	"use strict";
 	
-	var DEBUG = false//window.DEBUG || false;
-	var WEBSOCKET_TIMEOUT = 3000; //3 seconds
-	var MAX_SOCKET_CONNECTION_ATTEMPTS = 3;
+	var DEBUG = false,
+	WEBSOCKET_TIMEOUT = 3000, //3 seconds
+	MAX_SOCKET_CONNECTION_ATTEMPTS = 3,
+	notifications = {},
+	onopen = [],
+	onclose = [],
+	address,
+	transport,
 	
-	var parseURL = function (url, func) {
+	parseURL = function (url, func) {
 		var temp = document.createElement('a');
 		temp.href = url;
 		if (func instanceof Function) func.apply(temp);
 		return temp.href;
-	};
-
-	var JSONRPC = function (url) {
-		var transport;
-		url = parseURL(url, function () {
+	},
+	
+	connect = function (url) {
+		address = parseURL(url, function () {
 			if ((this.protocol === 'ws:') || (this.protocol === 'wss:')) transport = 'websocket';
 			if ((this.protocol === 'http:') || (this.protocol === 'https:')) transport = 'ajax';
 		});
-		if (transport) return JSONRPC[transport](url);
+		if (transport) return $.extend({
+			'transport': transport,
+			'address': address,
+			'connect': connect,
+			'onNotification': function (method, callback) {
+				if (!notifications[method]) notifications[method] = [];
+				notifications[method].push(callback);
+			},
+			'onConnect': function (callback) {
+				if (callback instanceof Function) onopen.push(callback);
+			},
+			'onDisconnect': function (callback) {
+				if (callback instanceof Function) onclose.push(callback);
+			},
+			'notifications': function (n) {
+				if (n) notifications = n; return notifications;
+			}
+		}, JSONRPC[transport](address));
+	}
+
+	JSONRPC = function (url, debug) {
+		if (debug && window.console) DEBUG = true;
+		if (url) return connect(url);
 	};
 
 	JSONRPC.ajax = function (url) {
-		  var notifications = {},
-		    send = function (message) {
+		  var send = function (message) {
 			$.ajax({
 				'type': 'POST',
 				'dataType': 'json',
@@ -98,22 +123,15 @@ var JSONRPC = (function (window, undefined) {
 					'params': params || {}
 				}
 			});
-		  },
-		  onNotification = function (method, callback) {
-			notifications[method] = callback;
 		  };
 		return {
-			'transport': 'ajax',
 			'sendMessage': sendMessage,
-			'sendNotification': sendNotification,
-			'onNotification': onNotification,
-			'onConnect': function (callback) { callback(); },
-			'notifications': function (n) { if (n) notifications = n; return notifications; }
+			'sendNotification': sendNotification
 		};
 	};
 
 	JSONRPC.websocket = function (url) {
-		var socket = {}, messages = {}, notifications = {}, buffer = [], onopen = {}, onclose = {}, socketConnectionAttempts = 0,
+		var socket = {}, messages = {}, buffer = [], socketConnectionAttempts = 0,
 		  socketReady = function () {
 			return socket.readyState === 1;
 		  },
@@ -164,15 +182,6 @@ var JSONRPC = (function (window, undefined) {
 				}
 			});
 		  },
-		  onNotification = function (method, callback) {
-			notifications[method] = callback;
-		  },
-		  onConnect = function (callback) {
-			if (callback instanceof Function) onopen = callback;
-		  },
-		  onDisconnect = function (callback) {
-			if (callback instanceof Function) onclose = callback;
-		  },
 		  connectSocket = function () {
 			socket = new WebSocket(url);
 			socket.q = {};
@@ -191,7 +200,7 @@ var JSONRPC = (function (window, undefined) {
 				else { //json-rpc notification
 					if (DEBUG) console.log('JSONRPC.websocket: NOTIFICATION RECEIVED: '+data.method, data);
 					if (notifications[data.method]) {
-						notifications[data.method](data.params);
+						$.each(notifications[data.method], function (i, o) { if (o instanceof Function) o(data.params); });
 					};
 				}
 				sendNext();
@@ -203,25 +212,20 @@ var JSONRPC = (function (window, undefined) {
 						if (socket.readyState === 3) connectSocket();
 					}, 1000); //retry after 1 second
 				}
-				else if (onclose instanceof Function) onclose(); //too many connection attempts
+				else $.each(onclose, function (i, o) { if (o instanceof Function) o(); }); //too many connection attempts
 			};
 			socket.onopen = function () {
 				if (DEBUG) console.log('JSONRPC.websocket: CONNECTED');
 				socketConnectionAttempts = 0;
 				sendNext(); //re-start the buffer when the socket reconnects
-				if (onopen instanceof Function) onopen();
+				$.each(onopen, function (i, o) { if (o instanceof Function) o(); });
 			};
 		  };
 		if (!('WebSocket' in window)) return;
 		connectSocket();
 		return {
-			'transport': 'websocket',
 			'sendMessage': sendMessage,
-			'sendNotification': sendNotification,
-			'onNotification': onNotification,
-			'onConnect': onConnect,
-			'onDisconnect': onDisconnect,
-			'notifications': function (n) { if (n) notifications = n; return notifications; }
+			'sendNotification': sendNotification
 		};
 	};
 	

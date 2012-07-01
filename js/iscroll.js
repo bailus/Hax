@@ -2,7 +2,7 @@
  * iScroll v4.1.9 ~ Copyright (c) 2011 Matteo Spinelli, http://cubiq.org
  * Released under MIT license, http://cubiq.org/license
  */
-(function(){
+(navigator.appName !== 'Microsoft Internet Explorer') && (function(){
 var m = Math,
 	mround = function (r) { return r >> 0; },
 	vendor = (/webkit/i).test(navigator.appVersion) ? 'webkit' :
@@ -839,13 +839,9 @@ iScroll.prototype = {
 		return { x: x, y: y, time: time };
 	},
 
-	_bind: function (type, el, bubble) {
-		(el || this.scroller).addEventListener(type, this, !!bubble);
-	},
+	_bind: function (type, el, bubble) { (el || this.scroller).addEventListener(type, this, !!bubble); },
 
-	_unbind: function (type, el, bubble) {
-		(el || this.scroller).removeEventListener(type, this, !!bubble);
-	},
+	_unbind: function (type, el, bubble) { (el || this.scroller).removeEventListener(type, this, !!bubble); },
 
 
 	/**

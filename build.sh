@@ -44,7 +44,7 @@ echo 'making debug.html...'
 	cat base.html > debug.html
 	
 	#add debug global javascript variable
-	echo '<script>window.DEBUG = true</script>' >> debug.html
+	echo '<script>window.DEBUG = !!window.console</script>' >> debug.html
 
 	#link to the scripts
 	for script in ${scripts[*]}

@@ -24,8 +24,7 @@ xbmcPlayerFactory = (function ($) {
 		//construct data
 		data = {
 			'buttons': [
-			            { 'text': 'Play / Pause', 'class': 'PlayPause', 'onclick': function () { xbmc.PlayPause(); } },
-			            //{ 'text': 'Remote', 'class': 'Remote', 'href': '#page=Remote' }
+			            { 'text': 'Play / Pause', 'class': 'PlayPause', 'onclick': function () { xbmc.PlayPause(); } }
 			]
 		};
 		

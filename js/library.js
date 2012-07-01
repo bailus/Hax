@@ -95,7 +95,7 @@ var xbmcLibraryFactory = (function ($) {
 				if (RECENTLYADDED) {
 					q.add(function (c) { //get recently added movies
 						xbmc.GetRecentlyAddedMovies(function (d) {
-							console.dir(d);
+							//console.dir(d);
 							page.recentlyadded = d.movies || [];
 							c();
 						});
@@ -184,7 +184,7 @@ var xbmcLibraryFactory = (function ($) {
 				if (RECENTLYADDED) {
 					q.add(function (c) { //get recently added episodes
 						xbmc.GetRecentlyAddedEpisodes(function (d) {
-							console.dir(d);
+							//console.dir(d);
 							page.recentlyadded = d.episodes || [];
 							c();
 						});
@@ -622,7 +622,7 @@ var xbmcLibraryFactory = (function ($) {
 				'width': list.children().width()*list.children().length,
 				'height': list.children().height(),
 			});
-			buttons.iScroll = new iScroll(header.get(0),{
+			if (window.iScroll) buttons.iScroll = new iScroll(header.get(0),{
 				'vScroll': false,
 				'hScrollbar': false
 			});
@@ -634,7 +634,7 @@ var xbmcLibraryFactory = (function ($) {
 					var button = $(this);
 					if (button.text() === title) {
 						button.addClass('selected');
-						buttons.iScroll.scrollToElement(button[0]);
+						if (buttons.iScroll) buttons.iScroll.scrollToElement(button[0]);
 					}
 				});
 		}
