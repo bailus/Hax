@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<title>JSON-RPC Test</title>
+
+<link rel=stylesheet type=text/css href="http://yui.yahooapis.com/3.5.1/build/cssreset/cssreset-min.css">
+<link rel=stylesheet type=text/css href="http://yui.yahooapis.com/3.5.1/build/cssbase/cssbase-min.css">
+<link rel=stylesheet href=style.css>
+
+<body>
+<div id=header></div>
+<div id=menu></div>
+<div id=output></div>
+<div style="clear:both;"></div>
+
+<script>window.DEBUG = true</script>
+<script src=jquery.js></script>
+<script src=Q.js></script>
+<script src=parseURL.js></script>
+<script src=jsonrpc.js></script>
+<script>
+
+window.Server = function (url, debug) { //wrapper for JSONRPC
+	var server,
+	upgradeServer = function (u) {
+		var temp = server.connect(u, function () { server = temp; });
+	},
+	connectServer = function (u) {
+		server = JSONRPC(u, debug);
+	};
+
+	if (typeof url === 'string') {
+		connectServer(url)
+	}
+	
+	else if (typeof url.ajax === 'string') {
+		connectServer(url.ajax);
+		if (typeof url.websocket === 'string') upgradeServer(url.websocket);
+	}
+	
+	else if (typeof url.websocket === 'string') {
+		connectServer(url.websocket);
+	};
+	
+	return {
+		sendMessage: function (a,b) { return server.sendMessage(a,b); },
+		onNotification: function (a,b) { return server.onNotification(a,b); },
+		onConnect: function (a) { return server.onConnect(a); },
+		onDisconnect: function (a) { return server.onDisconnect(a); },
+		transport: function (a) { return server.transport(); },
+		address: function (a) { return server.address(); }
+	};
+};
+
+$(function () {
+	"use strict";
+	
+	var server = Server({
+		'ajax': parseURL('/', { 'pathname': 'jsonrpc' }),
+		'websocket': parseURL('/', { 'pathname': 'jsonrpc', 'protocol': 'ws', 'port': 9090 })
+	}, true);
+	/*var server = Server({
+		'websocket': parseURL('/', { 'pathname': 'jsonrpc', 'protocol': 'ws', 'port': 9090 })
+	}, true);*/
+	/*var server = Server({
+		'ajax': parseURL('/', { 'pathname': 'jsonrpc' })
+	}, true);*/
+	//var server = Server(parseURL('/', { 'pathname': 'jsonrpc' }), true);
+	//var server = Server(parseURL('/', { 'pathname': 'jsonrpc', 'protocol': 'ws', 'port': 9090 }), true);
+	
+	server.sendMessage('JSONRPC.Ping', function (data) { console.log('Ping '+data.result) });
+	
+	server.onNotification('Player.OnPlay', function (data) { console.log('Play notification received',data.result); });
+	
+	server.onConnect(function () { console.log('Connected to '+server.address()+' via '+server.transport()) });
+		
+	server.onConnect(function () {
+		server.sendMessage('JSONRPC.Ping', function (data) { console.log('Ping '+data.result) });
+	});
+	
+});
+
+</script>
