@@ -32,7 +32,6 @@ scripts=(
 	'js/load.js'
 )
 minifiers=(
-	'yui-compressor'
 	'cat'
 )
 

@@ -5,7 +5,7 @@ jQuery(function () { //on document load
 		'app': function () {
 			body.empty();
 			body.append('<div id=loading><span><img alt="Loading" src="img/loading.gif"></span></div>');
-			body.append('<div id=header></div>');
+			//body.append('<div id=header></div>');
 			body.append('<div id=content></div>');
 			body.append('<div id=player></div>');
 		},

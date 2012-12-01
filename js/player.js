@@ -24,7 +24,10 @@ xbmcPlayerFactory = (function ($) {
 		//construct data
 		data = {
 			'buttons': [
-			            { 'text': 'Play / Pause', 'class': 'PlayPause', 'onclick': function () { xbmc.PlayPause(); } }
+                { 'text': 'Previous', 'class':'GoPrevious', 'onclick':function () { xbmc.GoPrevious(); } },
+	            { 'text': 'Play / Pause', 'class': 'PlayPause', 'onclick': function () { xbmc.PlayPause(); } },
+                { 'text': 'Stop', 'class':'Stop', 'onclick':function () { xbmc.Stop(); } },
+                { 'text': 'Next', 'class':'GoNext', 'onclick':function () { xbmc.GoNext(); } }
 			]
 		};
 		
@@ -34,25 +37,26 @@ xbmcPlayerFactory = (function ($) {
 		  append(template.player.bind(data));
 		
 		//apply javascript UI hacks
-		player.find('#volume').slider({
+		/*player.find('#volume').slider({
 			'orientation': 'horizontal',
 			'stop': function (event, ui) {  //set the xbmc volume when the slider is changed by the user
 				xbmc.Volume({'volume':ui.value});
 			}
-		});
+		});*/
 		player.find('#progress').slider({
 			'stop': function (event, ui) {  //seek when the slider is changed by the user
 				xbmc.Seek({'value':ui.value});
 			},
 			'step': 0.001
 		});
+		player.find('.show').on('click', function () {
+			player.toggleClass('visible');
+		});
 	};
 	
 	var on = function () {
 		var body = $('body'),
-		  volume = $('#volume'),
-		  progress = $('#progress'),
-		  nowPlaying = $('#nowPlaying');
+		  progress = $('#progress');
 		return {
 			'Player.OnPlay': function () {
 				body.attr('data-status','playing');
@@ -71,7 +75,7 @@ xbmcPlayerFactory = (function ($) {
 	
 	var startTimer = function () {
 		var body = $('body'),
-		volume = $('#volume'),
+		//volume = $('#volume'),
 		progress = $('#progress'),
 		nowPlaying = $('#nowPlaying'),
 		player = {},
@@ -82,7 +86,7 @@ xbmcPlayerFactory = (function ($) {
 		q.add(function (callback) {
 			xbmc.GetApplicationProperties(function (app) {
 				if (app) {
-					volume.slider('value',app.volume);
+					//volume.slider('value',app.volume);
 					document.title = app.name;
 				}
 				callback();

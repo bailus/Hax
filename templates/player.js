@@ -8,34 +8,30 @@ if ("undefined" === typeof template) {
 
 template.player = JsonML.BST(
 [
-	"div",
-	{
-		id: "player"
-	},
-	" ",
-	function() {
-				return JsonML.BST(template.buttons).dataBind(this.data, this.index, this.count);
-			},
-	" ",
-	[
-		"div",
-		{
-			id: "progress"
-		}
-	],
-	" ",
+	"",
+	"\n",
 	[
 		"div",
 		{
 			id: "nowPlaying"
 		}
 	],
-	" ",
+	"\n",
 	[
 		"div",
 		{
-			id: "volume"
+			"class": "show"
 		}
 	],
-	"\n"
+	"\n",
+	[
+		"div",
+		{
+			id: "progress"
+		}
+	],
+	"\n",
+	function() {
+				return JsonML.BST(template.buttons).dataBind(this.data, this.index, this.count);
+			}
 ]);

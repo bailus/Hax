@@ -3,6 +3,8 @@
 <img jbst:visible="<%= !!this.data.banner %>" class="banner" src="<%= this.data.banner %>" alt="">
 <img jbst:visible="<%= !!this.data.thumbnail %>" class="headerThumbnail" src="<%= this.data.thumbnail %>" alt="">
 
+<a href="#page=Home" class="homeButton"><img src="img/Remote.png" height="32" width="32"></a>
+
 <h1 jbst:visible="<%= !!(this.data.title && !this.data.banner) %>">
 	<%= this.data.title %>
 </h1>

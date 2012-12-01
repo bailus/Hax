@@ -2,7 +2,7 @@
 
 <div jbst:visible="<%= !this.data.items %>" class="emptylist">Empty</div>
 
-<div jbst:visible="<%= !!this.data.items %>" class="list">
+<div jbst:visible="<%= !!this.data.items %>" class="<%= ('list'+(this.data.collapsed ? ' collapsed' : '')) %>" data-groupby="<%= this.data.groupby %>">
 
 	<jbst:control name="template.listdetails" />
 

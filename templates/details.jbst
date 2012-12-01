@@ -2,6 +2,7 @@
 
 <div class="details">
 	<img jbst:visible="<%= !!this.data.thumbnail %>" src="<%= this.data.thumbnail %>" alt="" class="image">
+	<a href="#page=Home" class="homeButton"><img src="img/Remote.png" height="32" width="32"></a>
 	
 	<h1 jbst:visible="<%= !!this.data.title %>"><%= this.data.title %></h1>
 	

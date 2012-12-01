@@ -18,6 +18,16 @@ a img,:link img,:visited img {
 .fanart img {
 	opacity:0.3;
 }
+.list.collapsed[data-groupby="alpha"] .label {
+	padding:0;
+}
+.list.collapsed[data-groupby="alpha"] .listItem {
+	width:50px;
+	height:50px;
+	display:inline-block;
+	margin:10px;
+	text-align:center;
+}
 
 
 
@@ -88,6 +98,7 @@ h1, h2, h3, h4, h5 {
 h1 {
 	font-size:22px;
 	font-weight:bold;
+	line-height: 32px;
 }
 a {
 	outline:none;
@@ -176,16 +187,11 @@ h1, h2, h3, h4, h5 {
 	margin:0;padding:0;
 	overflow:hidden;
 }
-#content {
-	margin-top:40px;
-	margin-bottom:60px;
-}
 body[data-status=paused] #content,
 body[data-status=playing] #content {
 	margin-bottom:76px;
 }
 h1 {
-	margin-top:10px;
 	margin-left:10px;
 }
 h2 {
@@ -330,29 +336,6 @@ p {
 	margin-top:-15px;
 	height:30px;
 }
-#header {
-	position:fixed;
-	overflow:hidden;
-	height:40px;
-	top:0;
-	left:0;
-	width:100%;
-}
-#header li {
-	float:left;
-	line-height:40px;
-	width:140px;
-}
-#header li.selected {
-	border-bottom-width: 4px;
-	border-bottom-style: solid;
-}
-#header li.selected {
-	height:36px;
-}
-#header li img {
-	width:48px;height:48px;
-}
 #loading {
 	position:fixed;
 	top:0;left:0;
@@ -367,18 +350,17 @@ p {
 	margin-top:-12px;
 }
 .page {
-	margin:auto;
+	margin:10px auto;
 	max-width:758px;
 }
 .details > *, .list > * {
 	position:relative;
 }
 .fanart {
-	position:fixed;
+	display:none;
+/*	position:fixed;
 	left:0;top:0;bottom:0;
-	width:100%;
-	padding-top:40px;
-	padding-bottom:60px;
+	width:100%;*/
 }
 /*body[data-status=playing] .fanart,
 body[data-status=paused] .fanart {
@@ -411,7 +393,7 @@ ul {
 	width:100%;
 	max-width:340px;
 	height:340px;
-	margin:70px auto;
+	margin:0 auto;
 }
 .remote > li {
 	position:absolute;
@@ -419,6 +401,7 @@ ul {
 	width:60px;height:60px;
 	text-align:center;
 }
+.remote img { width:60px;height:60px; }
 .remote > li:active {
 	background:url('../img/buttons/active.png');
 }
@@ -426,18 +409,25 @@ ul {
 	background:url('../img/buttons/hover.png');
 	cursor:pointer;
 }
-.remote .home      { top:0;     left: 30px; }
-.remote .back      { top:0;     right:30px; }
-.remote .up        { top:0;     left: 50%;  }
-.remote .select    { top:70px;  left: 50%;  }
-.remote .left      { top:70px;  left: 50%; margin-left:-100px; }
-.remote .right     { top:70px;  right:50%; margin-right:-100px; }
-.remote .down      { top:140px; left: 50%;  }
-.remote .fullscreen{ top:140px; left: 30px;  }
-.remote .menu      { top:140px; right:30px;  }
+.remote .music     { top:0; left: 50%;  }
+.remote .videos    { top:0; left: 50%; margin-left:-100px;  }
+.remote .pictures  { top:0; right:50%; margin-right:-100px; }
+.remote .info      { top:70px;	left: 30px; }
+.remote .back      { top:70px;	right:30px; }
+.remote .up        { top:70px;	left: 50%;  }
+.remote .select    { top:140px; left: 50%;  }
+.remote .left      { top:140px; left: 50%; margin-left:-100px;  }
+.remote .right     { top:140px; right:50%; margin-right:-100px; }
+.remote .down      { top:210px; left: 50%;  }
+.remote .fullscreen{ top:210px; left: 30px; }
+.remote .menu      { top:210px; right:30px; }
 .remote .stop      { top:280px; left: 50%;  }
-.remote .previous  { top:280px; left: 50%; margin-left:-100px; }
+.remote .previous  { top:280px; left: 50%; margin-left:-100px;  }
 .remote .next      { top:280px; right:50%; margin-right:-100px; }
-.remote .eject     { top:210px; left: 30px;  }
-.remote .info      { top:210px; right: 30px;  }
 
+.homeButton {
+	display:block;
+	float:left;
+	width:32px;height:32px;
+	margin:0 10px;
+}

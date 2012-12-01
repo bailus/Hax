@@ -14,15 +14,18 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		},
 		'GetTVShows': {
 			'method': 'VideoLibrary.GetTVShows',
-			'params': { 'properties': [ 'thumbnail', 'year', 'studio' ] }
+			'params': { 'properties': [ 'thumbnail', 'art', 'year', 'studio', 'genre' ] },
+			'cache': true
 		},
 		'GetTVShowDetails': {
 			'method': 'VideoLibrary.GetTVShowDetails',
-			'params': { 'properties': [ 'title', 'fanart', 'thumbnail' ] }
+			'params': { 'properties': [ 'title', 'art', 'fanart', 'thumbnail' ] },
+			'cache': true
 		},
 		'GetTVEpisodes': {
 			'method': 'VideoLibrary.GetEpisodes',
-			'params': { 'properties': [ 'tvshowid', 'title', 'thumbnail', 'episode', 'season', 'file', 'showtitle', 'runtime', 'lastplayed' ] }
+			'params': { 'properties': [ 'tvshowid', 'title', 'thumbnail', 'episode', 'season', 'file', 'showtitle', 'runtime', 'lastplayed' ] },
+			'cache': true
 		},
 		'GetEpisodeDetails': {
 			'method': 'VideoLibrary.GetEpisodeDetails',
@@ -34,7 +37,21 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		},
 		'GetMovies': {
 			'method': 'VideoLibrary.GetMovies',
-			'params': { "properties": [ "title", "originaltitle", "runtime", "year", "thumbnail", "file", "genre" ], "sort": { "method": "sorttitle", "ignorearticle": true } }
+			'params': { "properties": [ "title", "originaltitle", "runtime", "year", "thumbnail", "file", "genre" ], "sort": { "method": "sorttitle", "ignorearticle": true } },
+			'cache': true
+		},
+		'GetMovieYears': {
+			'method': 'VideoLibrary.GetMovies',
+			'params': { "properties": [ "year" ] },
+			'cache': true
+		},
+		'GetVideoGenres': {
+			'method': 'VideoLibrary.GetGenres',
+			'cache': true
+		},
+		'GetAudioGenres': {
+			'method': 'AudioLibrary.GetGenres',
+			'cache': true
 		},
 		'GetRecentlyAddedMovies': {
 			'method': 'VideoLibrary.GetRecentlyAddedMovies',
@@ -46,11 +63,13 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		},
 		'GetArtists': {
 			'params': { 'properties': [ 'thumbnail', 'genre' ], 'albumartistsonly': true },
-			'method': 'AudioLibrary.GetArtists'
+			'method': 'AudioLibrary.GetArtists',
+			'cache': true
 		},
 		'GetArtistDetails': {
 			'params': { 'properties': [ 'thumbnail', 'instrument', 'style', 'born', 'formed', 'genre', 'died', 'disbanded', 'yearsactive', 'fanart' ] },
-			'method': 'AudioLibrary.GetArtistDetails'
+			'method': 'AudioLibrary.GetArtistDetails',
+			'cache': true
 		},
 		'GetSongs': {
 			'params': { 'properties': [ 'artist', 'album', 'albumid', 'year', 'thumbnail', 'file', 'title', 'track', 'duration' ] },
@@ -62,21 +81,24 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		},
 		'GetAlbums': {
 			'params': {
-				'properties': [ 'title', 'artist', 'year', 'thumbnail' ],
-				'sort': { 'method': 'year', 'order': 'ascending' }
+				'properties': [ 'title', 'artist', 'year', 'thumbnail' ]
+				//'sort': { 'method': 'year', 'order': 'ascending' }
 			},
-			'method': 'AudioLibrary.GetAlbums'
+			'method': 'AudioLibrary.GetAlbums',
+			'cache': true
 		},
 		'GetAlbumDetails': {
-			'params': { 'properties': [ 'title', 'artist', 'genre', 'type', 'albumlabel', 'rating', 'year', 'fanart', 'thumbnail', 'artistid' ] },
+			'params': { 'properties': [ 'title', 'artist', 'genre', 'type', 'albumlabel', 'rating', 'year', 'fanart', 'thumbnail' ] },
 			'method': 'AudioLibrary.GetAlbumDetails'
 		},
 		'GetMusicVideos': {
 			'params': { 'properties': [ 'title', 'runtime', 'year', 'album', 'artist', 'track', 'thumbnail', 'file' ] },
-			'method': 'VideoLibrary.GetMusicVideos'
+			'method': 'VideoLibrary.GetMusicVideos',
+			'cache': true
 		},
 		'GetSources': {
-			'method': 'Files.GetSources'
+			'method': 'Files.GetSources',
+			'cache': true
 		},
 		'GetDirectory': {
 			'params': {
@@ -267,15 +289,21 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		})()
 	};
 
+	var cache = {};
 	var load = function (name, params, callback) { //loads data from the JSON-RPC server using HTTP
-		var r = rpc[name];
-		if (r && r.method) server.sendMessage(r.method, params, callback ? function (result) {
-		  	if (callback instanceof Function) {
-				if (result.result) result = result.result;
-		  		if (r.wrapper) r.wrapper( result, callback );
-		  		else callback(result);
-			}
-		} : undefined);
+		var r = rpc[name], cb;
+		var hash = r.method+'_'+JSON.stringify(params).replace(/\W/g,''), cached = cache[hash];
+		if (cached) callback(JSON.parse(cached));
+		else {
+			if (r && r.method) server.sendMessage(r.method, params, callback ? function (result) {
+			  	if (callback instanceof Function) {
+			  		cb = r.cache ? function (x) { cache[hash] = JSON.stringify(x); return callback(x); } : callback;
+					if (result.result) result = result.result;
+			  		if (r.wrapper) r.wrapper(result, cb);
+			  		else cb(result);
+				}
+			} : undefined);
+		}
 	};
 	
 	

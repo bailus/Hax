@@ -5,7 +5,7 @@
 	<span data-role="button" jbst:visible="<%= !!this.data.add %>" class="add" onclick="<%= this.data.add %>">+</span>
 	
 	<jbst:control name="template.link">
-		<img jbst:visible="<%= !!this.data.thumbnail %>" class="thumbnail" src="/img/transparent.png" data-original="<%= this.data.thumbnail %>" style="<%= this.data.thumbnailWidth ? 'width:'+this.data.thumbnailWidth : '' %>"/>
+		<img jbst:visible="<%= !!this.data.thumbnail %>" class="thumbnail" src="<%= this.data.thumbnail %>" style="<%= this.data.thumbnailWidth ? 'width:'+this.data.thumbnailWidth : '' %>"/>
 		<div jbst:visible="<%= !!this.data.number %>" class="number"><%= this.data.number %>.</div>
 		<div class="<%= this.data.details ? 'line1' : 'label' %>"><%= this.data.label %></div>
 		<div class="line2" jbst:visible="<%= !!this.data.details %>">
