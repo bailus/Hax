@@ -11,6 +11,81 @@ template.listdetails = JsonML.BST(
 	"",
 	" ",
 	[
+		"header",
+		" ",
+		[
+			"a",
+			{
+				"jbst:visible": 
+					function() {
+	return !this.data.hideNavigation;
+},
+				href: "javascript:history.go(-1)",
+				"class": "backButton"
+			},
+			[
+				"img",
+				{
+					src: "img/icon_back.png",
+					height: "32",
+					width: "32"
+				}
+			]
+		],
+		" ",
+		[
+			"a",
+			{
+				"jbst:visible": 
+					function() {
+	return !this.data.hideNavigation;
+},
+				href: "#page=Home",
+				"class": "homeButton"
+			},
+			[
+				"img",
+				{
+					src: "img/icon_home.png",
+					height: "32",
+					width: "32"
+				}
+			]
+		],
+		" ",
+		[
+			"h1",
+			{
+				"jbst:visible": 
+					function() {
+	return !!this.data.title;
+}
+			},
+			" ",
+			function() {
+	return this.data.title;
+},
+			" "
+		],
+		" ",
+		[
+			"h2",
+			{
+				"jbst:visible": 
+					function() {
+	return !!this.data.subtitle;
+}
+			},
+			" ",
+			function() {
+	return this.data.subtitle;
+},
+			" "
+		],
+		"\n"
+	],
+	" ",
+	[
 		"img",
 		{
 			"jbst:visible": 
@@ -31,7 +106,7 @@ template.listdetails = JsonML.BST(
 		{
 			"jbst:visible": 
 				function() {
-	return !!this.data.thumbnail;
+	return (!!this.data.thumbnail && !this.data.banner);
 },
 			"class": "headerThumbnail",
 			src: 
@@ -43,125 +118,59 @@ template.listdetails = JsonML.BST(
 	],
 	" ",
 	[
-		"a",
+		"span",
 		{
-			href: "#page=Home",
-			"class": "homeButton"
-		},
-		[
-			"img",
-			{
-				src: "img/Remote.png",
-				height: "32",
-				width: "32"
-			}
-		]
-	],
-	" ",
-	[
-		"h1",
-		{
+			"data-role": "button",
 			"jbst:visible": 
 				function() {
-	return !!(this.data.title && !this.data.banner);
+	return !!this.data.play;
+},
+			"class": "play",
+			onclick: 
+				function() {
+	return this.data.play;
 }
 		},
-		" ",
-		function() {
-	return this.data.title;
-},
-		"\n"
+		"\u25B6 Play"
 	],
 	"\n",
 	[
-		"h2",
+		"span",
 		{
+			"data-role": "button",
 			"jbst:visible": 
 				function() {
-	return !!this.data.subtitle;
+	return !!this.data.add;
+},
+			"class": "add",
+			onclick: 
+				function() {
+	return this.data.add;
 }
 		},
-		" ",
-		function() {
-	return this.data.subtitle;
-},
-		"\n"
+		"+ Add to playlist"
 	],
 	" ",
-	[
-		"p",
-		{
-			"jbst:visible": 
-				function() {
-	return !!this.data.formed;
-}
-		},
+	function() {
+				return JsonML.BST([
+		"",
 		" ",
-		function() {
-	return 'Formed: ' + this.data.formed;
-},
-		"\n"
-	],
-	" ",
-	[
-		"p",
-		{
-			"jbst:visible": 
-				function() {
-	return !!this.data.disbanded;
+		[
+			"h3",
+			function() {
+	return this.data.id+(this.data.value instanceof Array && this.data.value.length > 1 ? 's' : '');
 }
-		},
+		],
 		" ",
-		function() {
-	return 'Disbanded: ' + this.data.disbanded;
-},
-		"\n"
-	],
-	" ",
-	[
-		"p",
-		{
-			"jbst:visible": 
-				function() {
-	return !!this.data.died;
+		[
+			"p",
+			function() {
+	return (this.data.value instanceof Array ? this.data.value.join(', ') : this.data.value);
 }
-		},
-		" ",
-		function() {
-	return 'Died: ' + this.data.died;
-},
+		],
 		"\n"
-	],
-	" ",
-	[
-		"p",
-		{
-			"jbst:visible": 
-				function() {
-	return !!this.data.instrument;
-}
-		},
-		" ",
-		function() {
-	return 'Instrument: ' + this.data.instrument;
-},
-		"\n"
-	],
-	" ",
-	[
-		"p",
-		{
-			"jbst:visible": 
-				function() {
-	return !!this.data.style;
-}
-		},
-		" ",
-		function() {
-	return 'Style: ' + this.data.style;
-},
-		"\n"
-	],
+	]).dataBind((['Year', 'Formed', 'Disbanded', 'Born', 'Died', 'Runtime', 'Genre', 'Mood', 'Style', 'Type', 'Instrument', 'Director', 'Writer', 'Description', 'Plot']).map(function (id) { return { 'id': id, 'value': this.data[id.toLowerCase()] }; }, this).filter(function (x) { return ((x.value instanceof Array && x.value.length && x.value[0] !== '') || (x.value instanceof String && x.value.length) || (typeof x.value === 'number')); }), this.index, this.count);
+			},
 	" ",
 	[
 		"h3",

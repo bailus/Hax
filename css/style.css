@@ -9,13 +9,13 @@ li {
 a, [data-role=button] {
 	cursor:pointer;
 }
-.details .play, .details .add {
+.buttons .play, .buttons .add {
 	border-radius:9px;
 }
 a img,:link img,:visited img {
 	border:none
 }
-.fanart img {
+.fanart {
 	opacity:0.3;
 }
 .list.collapsed[data-groupby="alpha"] .label {
@@ -56,7 +56,7 @@ a:active,
 h1 a, h2 a, h3 a, h4 a, h5 a {
 	color:inherit;
 }
-.details .play, .details .add {
+.buttons .play, .buttons .add {
 	background:rgba(0,0,0,0.6);
 }
 .listItem {
@@ -96,23 +96,29 @@ h1, h2, h3, h4, h5 {
 	font-weight:normal;
 }
 h1 {
-	font-size:22px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size:18px;
 	font-weight:bold;
-	line-height: 32px;
 }
 a {
 	outline:none;
 	text-decoration:none;
 }
 h2 {
-	font-size:18px;
+	font-size:16px;
 }
 h3 {
 	font-weight:bold;
+	font-size:15px;
+}
+p {
 	font-size:14px;
 }
-.details .play, .details .add {
+.buttons .play, .buttons .add {
 	font-size:22px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 .listItem {
 	font-size:15px;
@@ -120,9 +126,9 @@ h3 {
 .listItem .label,
 .listItem .line1,
 .listItem .line2 {
-	word-break:break-all;
-	word-wrap:break-word;
 	font-weight:bold;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 .listItem .line2 {
 	font-size:12px;
@@ -170,7 +176,7 @@ h3 {
 	z-index:20;
 }
 .fanart {
-	z-index:10;
+	z-index:-1;
 }
 
 
@@ -192,34 +198,39 @@ body[data-status=playing] #content {
 	margin-bottom:76px;
 }
 h1 {
-	margin-left:10px;
+	text-align:center;
+	line-height: 32px;
+}
+h1 img {
+	width: 100%;
 }
 h2 {
-	margin-top:5px;
 	margin-bottom:10px;
-	margin-left:10px;
+	text-align:center;
 }
 h3 {
-	display:inline-block;
-	height:30px;
-	line-height:30px;
-	margin-top:14px;
-	margin-left:10px;
+	margin-bottom:3px;
+	margin-left:5px;
 }
-h3 + p, h2 + p {
-	margin-top:0;
+h3 + p {
+	margin-top: 0;
 }
 p {
-	margin-left:20px;
 	margin-right:10px;
+	margin-left:10px;
 }
-.details .play, .details .add {
+.buttons .play, .buttons .add {
 	display:inline-block;
 	margin-right:30px;
 	margin-top:16px;
 	padding-left:8px;
 	padding-right:8px;
 	padding-bottom:3px;
+	line-height:28px;
+	height:28px;
+}
+.superListItem {
+	margin-bottom:15px;
 }
 .listItem {
 	height:50px;
@@ -350,39 +361,34 @@ p {
 	margin-top:-12px;
 }
 .page {
-	margin:10px auto;
+	margin:0 auto;
 	max-width:758px;
 }
 .details > *, .list > * {
 	position:relative;
 }
 .fanart {
-	display:none;
-/*	position:fixed;
-	left:0;top:0;bottom:0;
-	width:100%;*/
-}
-/*body[data-status=playing] .fanart,
-body[data-status=paused] .fanart {
-	padding-bottom:76px;
-}*/
-.fanart img {
-	display:block;
-	height:100%;
-	margin-left:auto;
-	margin-right:auto;
+	position:fixed;
+	top:0; left:0;
 	min-width:100%;
+	max-height:100%;
 }
-.headerThumbnail, .details .image {
+.page > .thumbnail, .details .image {
 	max-width:30%;
 	float:right;
 	margin-left:10px;
+	clear:both;
 }
 .list .banner {
 	width:100%;
 }
 ul {
 	clear:both;
+}
+header {
+	margin-bottom: 10px;
+	min-height: 42px;
+	padding: 4px;
 }
 
 
@@ -424,10 +430,16 @@ ul {
 .remote .stop      { top:280px; left: 50%;  }
 .remote .previous  { top:280px; left: 50%; margin-left:-100px;  }
 .remote .next      { top:280px; right:50%; margin-right:-100px; }
+.remote .settings  { top:280px; left: 50%; margin-left:-100px;  }
+.remote .playlists { top:280px; right:50%; margin-right:-100px; }
 
-.homeButton {
+.homeButton, .backButton {
 	display:block;
 	float:left;
-	width:32px;height:32px;
-	margin:0 10px;
+	margin:0 5px;
 }
+.homeButton img, .backButton img {
+	width:42px; height:42px;
+}
+.backButton { float:left; margin-left:10px; }
+.homeButton { float:right; margin-right:10px; }

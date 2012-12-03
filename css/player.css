@@ -9,7 +9,6 @@
 	-ms-transition: height 0.2s;
 	-o-transition: height 0.2s;
 	transition: height 0.2s;
-	padding:0 20px;
 }
 #player.visible {
 	height:auto;
@@ -24,13 +23,13 @@
 	left: 50%;
 }
 #progress {
-	margin:10px 0;
+	margin:10px 20px;
 }
 #nowPlaying {
 	font-size:16px;
 	overflow:hidden;
 	color:white;
-	margin:5px;
+	margin:10px 30px;
 	height: 30px;
 	line-height: 30px;
 }

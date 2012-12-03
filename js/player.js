@@ -28,7 +28,8 @@ xbmcPlayerFactory = (function ($) {
 	            { 'text': 'Play / Pause', 'class': 'PlayPause', 'onclick': function () { xbmc.PlayPause(); } },
                 { 'text': 'Stop', 'class':'Stop', 'onclick':function () { xbmc.Stop(); } },
                 { 'text': 'Next', 'class':'GoNext', 'onclick':function () { xbmc.GoNext(); } }
-			]
+			],
+			'hideNavigation': true
 		};
 		
 		//render the data to the DOM via the player template
@@ -83,7 +84,7 @@ xbmcPlayerFactory = (function ($) {
 			window.setTimeout(callback, xbmc.transport() === 'websocket' ? REFRESHWS : REFRESH);
 		},
 		q = Q();
-		q.add(function (callback) {
+		/*q.add(function (callback) {
 			xbmc.GetApplicationProperties(function (app) {
 				if (app) {
 					//volume.slider('value',app.volume);
@@ -92,7 +93,7 @@ xbmcPlayerFactory = (function ($) {
 				callback();
 			});
 		});
-		q.add(sleep);
+		q.add(sleep);*/
 		q.add(function (callback) {
 			xbmc.GetActivePlayer(function (p) {
 				player = p;

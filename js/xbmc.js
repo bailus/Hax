@@ -3,7 +3,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 
 	//globals
 	var VERSION, pub = {},
-	  DEBUG = window.DEBUG || false, socket = { 'q': {} }, events = {}, server;
+	  DEBUG = window.DEBUG || true, socket = { 'q': {} }, events = {}, server;
 
 	var rpc = {
 		'Introspect': {
@@ -19,7 +19,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		},
 		'GetTVShowDetails': {
 			'method': 'VideoLibrary.GetTVShowDetails',
-			'params': { 'properties': [ 'title', 'art', 'fanart', 'thumbnail' ] },
+			'params': { 'properties': [ 'title', 'art', 'thumbnail' ] },
 			'cache': true
 		},
 		'GetTVEpisodes': {
@@ -29,7 +29,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		},
 		'GetEpisodeDetails': {
 			'method': 'VideoLibrary.GetEpisodeDetails',
-			'params': { 'properties': [ 'title', 'plot', 'rating', 'director', 'showtitle', 'thumbnail', 'fanart', 'episode', 'season', 'runtime', 'file', 'tvshowid' ] }
+			'params': { 'properties': [ 'title', 'plot', 'writer', 'firstaired', 'playcount', 'runtime', 'director', 'season', 'episode', 'showtitle', 'cast', 'streamdetails', 'lastplayed', 'thumbnail', 'fanart', 'file', 'tvshowid' ] }
 		},
 		'GetRecentlyAddedEpisodes': {
 			'method': 'VideoLibrary.GetRecentlyAddedEpisodes',
@@ -59,7 +59,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		},
 		'GetMovieDetails': {
 			'method': 'VideoLibrary.GetMovieDetails',
-			'params': { 'properties': [ 'title', 'genre', 'year', 'rating', 'director', 'tagline', 'plot', 'runtime', 'fanart', 'thumbnail', 'writer', 'file' ] }
+			'params': { 'properties': [ 'title', 'genre', 'year', 'director', 'tagline', 'plot', 'runtime', 'fanart', 'thumbnail', 'writer', 'file' ] }
 		},
 		'GetArtists': {
 			'params': { 'properties': [ 'thumbnail', 'genre' ], 'albumartistsonly': true },
@@ -67,28 +67,27 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 			'cache': true
 		},
 		'GetArtistDetails': {
-			'params': { 'properties': [ 'thumbnail', 'instrument', 'style', 'born', 'formed', 'genre', 'died', 'disbanded', 'yearsactive', 'fanart' ] },
+			'params': { 'properties': [ 'thumbnail', 'genre', 'born', 'formed', 'died', 'disbanded' ] },
 			'method': 'AudioLibrary.GetArtistDetails',
 			'cache': true
 		},
 		'GetSongs': {
-			'params': { 'properties': [ 'artist', 'album', 'albumid', 'year', 'thumbnail', 'file', 'title', 'track', 'duration' ] },
+			'params': { 'properties': [ 'file', 'title', 'track', 'duration' ] },
 			'method': 'AudioLibrary.GetSongs'
 		},
 		'GetRecentlyAddedAlbums': {
-			'params': { 'properties': [ 'title', 'artist', 'albumlabel', 'rating', 'year', 'thumbnail' ], 'limits': { 'end': 5 } },
+			'params': { 'properties': [ 'title', 'artist', 'albumlabel', 'year', 'thumbnail' ], 'limits': { 'end': 5 } },
 			'method': 'AudioLibrary.GetRecentlyAddedAlbums'
 		},
 		'GetAlbums': {
 			'params': {
 				'properties': [ 'title', 'artist', 'year', 'thumbnail' ]
-				//'sort': { 'method': 'year', 'order': 'ascending' }
 			},
 			'method': 'AudioLibrary.GetAlbums',
 			'cache': true
 		},
 		'GetAlbumDetails': {
-			'params': { 'properties': [ 'title', 'artist', 'genre', 'type', 'albumlabel', 'rating', 'year', 'fanart', 'thumbnail' ] },
+			'params': { 'properties': [ 'title', 'artist', 'genre', 'albumlabel', 'year', 'fanart', 'thumbnail' ] },
 			'method': 'AudioLibrary.GetAlbumDetails'
 		},
 		'GetMusicVideos': {

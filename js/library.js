@@ -3,7 +3,7 @@ var xbmcLibraryFactory = (function ($) {
 
 	var LAZYLOAD_OPTIONS = { },
 	  pub = {},
-	  DEBUG = window.DEBUG || false,
+	  DEBUG = window.DEBUG || true,
 	  
 	groupItems = function (items, groupby) {
 		var o = [], temp = {};
@@ -60,13 +60,48 @@ var xbmcLibraryFactory = (function ($) {
 	},
 	  
 	pages = {
-		'Home': {
+		/*'Home': {
 			'view': 'buttons',
 			'data': function (callback) {
 				var buttons = [
 					{ 'text': 'Videos', 'class':'videos', 'href': '#page=Menu&media=Videos', 'src': 'img/icon_video.png' },
 					{ 'text': 'Music', 'class':'music', 'href': '#page=Menu&media=Music', 'src': 'img/icon_music.png' },
 					{ 'text': 'Pictures', 'class':'pictures', 'href': '#page=Menu&media=Pictures', 'src': 'img/icon_pictures.png' },
+                    { 'text': 'Up', 'class':'up', 'src':'img/buttons/up.png', 'onclick':function () { xbmc.Up(); } },
+                    { 'text': 'Down', 'class':'down', 'src':'img/buttons/down.png', 'onclick':function () { xbmc.Down(); } },
+                    { 'text': 'Left', 'class':'left', 'src':'img/buttons/left.png', 'onclick':function () { xbmc.Left(); } },
+                    { 'text': 'Right', 'class':'right', 'src':'img/buttons/right.png', 'onclick':function () { xbmc.Right(); } },
+                    { 'text': 'Select', 'class':'select', 'src':'img/buttons/select.png', 'onclick':function () { xbmc.Select(); } },
+                    { 'text': 'Back', 'class':'back', 'src':'img/buttons/back.png', 'onclick':function () { xbmc.Back(); } },
+                    { 'text': 'Settings', 'class':'settings', 'src':'img/settings.png', 'href': '#page=Settings' },
+                    { 'text': 'Playlists', 'class':'playlists', 'src':'img/playlist.png', 'href': '#page=Playlists' }
+				];
+				if (xbmc.version() >= 5) buttons = buttons.concat([
+                    { 'text': 'Information', 'class':'info', 'src':'img/buttons/info.png', 'onclick':function () { xbmc.Info(); } },
+                    { 'text': 'Menu', 'class':'menu', 'src':'img/buttons/menu.png', 'onclick':function () { xbmc.ContextMenu(); } },
+                    { 'text': 'Fullscreen', 'class':'fullscreen', 'src':'img/buttons/fullscreen.png', 'onclick':function () { xbmc.ToggleFullscreen(); } }
+				]);
+				callback({ 'class': 'remote', 'height': '340px', 'width': '340px', 'buttons': buttons });
+			}
+		},*/
+		'Home': {
+			'view': 'list',
+			'data': function (callback) {
+				var items = [
+					{ 'label': 'Videos', 'link': '#page=Menu&media=Videos', 'thumbnail': 'img/icon_video.png' },
+					{ 'label': 'Music', 'link': '#page=Menu&media=Music', 'thumbnail': 'img/icon_music.png' },
+					{ 'label': 'Pictures', 'link': '#page=Menu&media=Pictures', 'thumbnail': 'img/icon_pictures.png' },
+                    { 'label': 'Remote', 'link': '#page=Remote', 'thumbnail':'img/remote.png' },
+                    { 'label': 'Playlists', 'link': '#page=Playlists', 'thumbnail':'img/playlist.png' },
+                    { 'label': 'Settings', 'link': '#page=Settings', 'thumbnail':'img/settings.png' }
+				];
+				callback({ 'items': items, 'hideNavigation': true });
+			}
+		},
+		'Remote': {
+			'view': 'buttons',
+			'data': function (callback) {
+				var buttons = [
                     { 'text': 'Up', 'class':'up', 'src':'img/buttons/up.png', 'onclick':function () { xbmc.Up(); } },
                     { 'text': 'Down', 'class':'down', 'src':'img/buttons/down.png', 'onclick':function () { xbmc.Down(); } },
                     { 'text': 'Left', 'class':'left', 'src':'img/buttons/left.png', 'onclick':function () { xbmc.Left(); } },
@@ -79,7 +114,7 @@ var xbmcLibraryFactory = (function ($) {
                     { 'text': 'Menu', 'class':'menu', 'src':'img/buttons/menu.png', 'onclick':function () { xbmc.ContextMenu(); } },
                     { 'text': 'Fullscreen', 'class':'fullscreen', 'src':'img/buttons/fullscreen.png', 'onclick':function () { xbmc.ToggleFullscreen(); } }
 				]);
-				callback({ 'class': 'remote', 'height': '340px', 'width': '340px', 'buttons': buttons });
+				callback({ 'title': 'Remote', 'class': 'remote', 'height': '340px', 'width': '340px', 'buttons': buttons });
 			}
 		},
 		'Menu': {
@@ -105,7 +140,7 @@ var xbmcLibraryFactory = (function ($) {
 						'Music': [
 							{ 'label': 'Artists', 'items': [
 								{ 'label': 'By Name', 'link': '#page=Artists', 'thumbnail': 'img/DefaultMusicArtists.png' },
-								{ 'label': 'By Genre', 'link': '#page=Genres&type=Artists', 'thumbnail': 'img/DefaultMusicGenres.png' }
+								{ 'label': 'By Genre', 'link': '#page=Artists&group=genre', 'thumbnail': 'img/DefaultMusicGenres.png' }
 							] },
 						],
 						'Pictures': [ ]
@@ -122,16 +157,25 @@ var xbmcLibraryFactory = (function ($) {
 						c();
 					});
 				});
-				q.add(function (c) { //get playlists
+				/*q.add(function (c) { //get playlists
 					pages.Playlists.data(function (playlistPage) {
 						page.items = page.items.concat(playlistPage.items.filter(function (item) { return item.type == x; }));
 						c();
 					})
-				});
+				});*/
 				q.onfinish(function () {
 					callback(page);
 				});
 				q.start();
+			}
+		},
+		'Settings': {
+			'view': 'settings',
+			'data': {
+				'items': [
+					{ 'label': 'Fanart', 'type': 'checkbox' },
+					{ 'label': 'Thumbnails', 'type': 'checkbox' }
+				]
 			}
 		},
 		'Genres': {
@@ -202,7 +246,7 @@ var xbmcLibraryFactory = (function ($) {
 			}
 		},
 		'Movie': {
-			'view': 'details',
+			'view': 'list',
 			'parent': 'Movies',
 			'data': function (callback) {
 				var page = {}, q = Q();
@@ -214,7 +258,7 @@ var xbmcLibraryFactory = (function ($) {
 				});
 				q.add(function (c) { //format movie details
 					if (page.year) page.title += ' ('+page.year+')';
-					if (page.tagline) page.heading = page.tagline;
+					if (page.tagline) page.subtitle = page.tagline;
 					if (page.file) {
 						page.play = function () {
 							xbmc.Play(page.file, 1);
@@ -238,6 +282,7 @@ var xbmcLibraryFactory = (function ($) {
 		},
 		'TV Shows': {
 			'view': 'list',
+			'groupby': 'alpha',
 			'data': function (callback) {
 				var page = { title: 'TV Shows' }, q = Q();
 				q.add(function (c) { //get tv shows
@@ -256,6 +301,7 @@ var xbmcLibraryFactory = (function ($) {
 						tvshow.link = '#page=TV Show&tvshowid='+tvshow.tvshowid;
 						if (tvshow.thumbnail) tvshow.thumbnail = xbmc.vfs2uri(tvshow.thumbnail);
 						//if (tvshow.art) tvshow.thumbnail = xbmc.vfs2uri(tvshow.art.thumbnail);
+						tvshow.alpha = tvshow.label[0].toUpperCase();
 					});
 					c();
 				});
@@ -281,8 +327,8 @@ var xbmcLibraryFactory = (function ($) {
 				  }).
 				  add(function (c) { //format show details
 					//if (page.fanart) page.fanart = xbmc.vfs2uri(page.fanart);
-					if (page.thumbnail) page.banner = xbmc.vfs2uri(page.thumbnail);
 					if (page.art) page.banner = xbmc.vfs2uri(page.art.banner);
+					delete page.thumbnail;
 					c();
 				  }).
 				  add(function (c) { //get episodes
@@ -319,19 +365,19 @@ var xbmcLibraryFactory = (function ($) {
 			}
 		},
 		'Episode': {
-			'view': 'details',
+			'view': 'list',
 			'parent': 'TV Shows',
 			'data': function (callback) {
 				var page = {}, tvshowid = +getHash('tvshowid'), episodeid = +getHash('episodeid');
 				Q().
-				  add(function (c) { //get movie details
+				  add(function (c) { //get episode details
 					xbmc.GetEpisodeDetails({ 'episodeid': episodeid }, function (d) {
 						page = d.episodedetails || {};
 						c();
 					});
 				  }).
-				  add(function (c) { //format movie details
-					if (page.title) page.heading = page.title;
+				  add(function (c) { //format episode details
+					page.subtitle = (page.season>0 && page.episode>0 ? page.season+'x'+(page.episode<10 ? '0' : '')+page.episode+' ' : '')+(page.title || page.showtitle || '');
 					if (tvshowid) page.link = '#page=TV Show&tvshowid='+tvshowid;
 					if (page.showtitle) page.title = page.showtitle;
 					if (page.file) {
@@ -374,6 +420,7 @@ var xbmcLibraryFactory = (function ($) {
 						artist.link = '#page=Artist&artistid='+artist.artistid;
 						artist.thumbnail = artist.thumbnail ? xbmc.vfs2uri(artist.thumbnail) : 'img/DefaultArtist.png';
 						artist.thumbnailWidth = '50px';
+						if (artist.genre instanceof Array) artist.genre.map(function (genre) { return genre.charAt(0).toUpperCase()+genre.charAt(0).toUpperCase()+genre.substr(1) });
 						artist.details = artist.genre || ' ';
 					});
 					c();
@@ -386,6 +433,7 @@ var xbmcLibraryFactory = (function ($) {
 		},
 		'Artist': {
 			'view': 'list',
+			'groupby': 'year',
 			'data': function (callback) {
 				var page = {}, artistid = +getHash('artistid');
 				Q().
@@ -398,9 +446,7 @@ var xbmcLibraryFactory = (function ($) {
 				  add(function (c) { //format artist details
 					if (page.thumbnail) page.thumbnail = xbmc.vfs2uri(page.thumbnail);
 					//if (page.fanart) page.fanart = xbmc.vfs2uri(page.fanart);
-					delete page.fanart;
-					page.title = page.label || '';
-					page.genre = undefined;
+					page.title = page.label || 'Artist '+artistid;
 					c();
 				  }).
 				  add(function (c) { //get albums
@@ -414,7 +460,7 @@ var xbmcLibraryFactory = (function ($) {
 						album.link = '#page=Album&albumid='+album.albumid;
 						album.thumbnail = album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : 'img/DefaultAudio.png';
 						album.thumbnailWidth = '50px';
-						if (album.year) album.details = album.year;
+						//if (album.year) album.details = album.year;
 					});
 					c();
 				  }).
@@ -438,12 +484,10 @@ var xbmcLibraryFactory = (function ($) {
 				  }).
 				  add(function (c) { //format album details
 					if (page.thumbnail) page.thumbnail = xbmc.vfs2uri(page.thumbnail);
-					//if (page.fanart) page.fanart = xbmc.vfs2uri(page.fanart);
-					delete page.fanart;
+					if (page.fanart) page.fanart = xbmc.vfs2uri(page.fanart);
 					page.title = page.artist.join(', ') || '';
 					page.link = '#page=Artist&artistid='+page.artistid;
 					page.subtitle = page.label || '';
-					if (page.year) page.subtitle = '('+page.year+') '+page.subtitle;
 					c();
 				  }).
 				  add(function (c) { //get songs
@@ -513,10 +557,13 @@ var xbmcLibraryFactory = (function ($) {
 			'view': 'list',
 			'parent': 'Files',
 			'data': function (callback) {
-				var page = {}, directory = getHash('directory'), media = getHash('media') || '';
+				var directory = getHash('directory'), page = {}, media = getHash('media') || '';
 				Q().
 				  add(function (c) { //get files
 					xbmc.GetDirectory({ 'directory': directory, 'media': media }, function (d) {
+						page.subtitle = directory.substring(0,12) === 'multipath://' ? decodeURIComponent(directory.substring(12, directory.length-1)) : directory;
+						var directoryArray = page.subtitle.split('/');
+						page.title = directoryArray[directoryArray.length-2];
 						page.items = d.files || [];
 						c();
 					});
@@ -579,7 +626,7 @@ var xbmcLibraryFactory = (function ($) {
 				  add(function (c) {
 					var q = Q();
 		  			$.each(page.items, function (i, item) { //for each playlist
-		  				item.label = item.label || 'Playlist';
+		  				item.label = item.type || 'Playlist';
 		  				q.add(function(cb) { //get playlist items
 			  				xbmc.GetPlaylistItems({ 'playlistid': item.playlistid }, function (d) {
 			  					item.items = d.items || [];
@@ -665,13 +712,14 @@ var xbmcLibraryFactory = (function ($) {
 					data.items = data.items.map(function (x) {
 						return {
 							'label': x.label,
-							'link': '#page='+title+'&'+groupby+'='+x.label
+							'link': document.location.hash+'&'+groupby+'='+x.label
 						}
 					});
 				}
 			}
 
 			data.id = title;
+			document.title = 'XBMC'+(data.title ? ' - '+data.title : ' Simple Remote');
 			
 			//render the data to the DOM via the template
 			var p = $('<div class="page" data-page="'+title+'"></div>'),

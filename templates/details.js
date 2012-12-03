@@ -17,6 +17,38 @@ template.details = JsonML.BST(
 		},
 		" ",
 		[
+			"a",
+			{
+				href: "javascript:history.go(-1)",
+				"class": "backButton"
+			},
+			[
+				"img",
+				{
+					src: "img/icon_back.png",
+					height: "32",
+					width: "32"
+				}
+			]
+		],
+		" ",
+		[
+			"a",
+			{
+				href: "#page=Home",
+				"class": "homeButton"
+			},
+			[
+				"img",
+				{
+					src: "img/icon_home.png",
+					height: "32",
+					width: "32"
+				}
+			]
+		],
+		" ",
+		[
 			"img",
 			{
 				"jbst:visible": 
@@ -30,22 +62,6 @@ template.details = JsonML.BST(
 				alt: "",
 				"class": "image"
 			}
-		],
-		" ",
-		[
-			"a",
-			{
-				href: "#page=Home",
-				"class": "homeButton"
-			},
-			[
-				"img",
-				{
-					src: "img/Remote.png",
-					height: "32",
-					width: "32"
-				}
-			]
 		],
 		" ",
 		[
@@ -145,7 +161,9 @@ template.details = JsonML.BST(
 	return !!this.data.director;
 }
 			},
-			"Director"
+			function() {
+	return 'Director'+(this.data.director instanceof Array && this.data.director.length > 1 ? 's' : '');
+}
 		],
 		" ",
 		[
@@ -157,7 +175,7 @@ template.details = JsonML.BST(
 }
 			},
 			function() {
-	return this.data.director;
+	return (this.data.director instanceof Array ? this.data.director.join(', ') : this.data.director);
 }
 		],
 		" ",
@@ -169,7 +187,9 @@ template.details = JsonML.BST(
 	return !!this.data.writer;
 }
 			},
-			"Writer"
+			function() {
+	return 'Writer'+(this.data.writer instanceof Array && this.data.writer.length > 1 ? 's' : '');
+}
 		],
 		" ",
 		[
@@ -181,7 +201,7 @@ template.details = JsonML.BST(
 }
 			},
 			function() {
-	return this.data.writer;
+	return (this.data.writer instanceof Array ? this.data.writer.join(', ') : this.data.writer);
 }
 		],
 		" ",
@@ -217,7 +237,9 @@ template.details = JsonML.BST(
 	return !!this.data.genre;
 }
 			},
-			"Genre"
+			function() {
+	return 'Genre'+(this.data.genre instanceof Array && this.data.genre.length > 1 ? 's' : '');
+}
 		],
 		" ",
 		[
@@ -229,7 +251,7 @@ template.details = JsonML.BST(
 }
 			},
 			function() {
-	return this.data.genre;
+	return (this.data.genre instanceof Array ? this.data.genre.join(', ') : this.data.genre);
 }
 		],
 		" ",

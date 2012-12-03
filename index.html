@@ -3196,6 +3196,38 @@ template.details = JsonML.BST(
 		},
 		" ",
 		[
+			"a",
+			{
+				href: "javascript:history.go(-1)",
+				"class": "backButton"
+			},
+			[
+				"img",
+				{
+					src: "img/icon_back.png",
+					height: "32",
+					width: "32"
+				}
+			]
+		],
+		" ",
+		[
+			"a",
+			{
+				href: "#page=Home",
+				"class": "homeButton"
+			},
+			[
+				"img",
+				{
+					src: "img/icon_home.png",
+					height: "32",
+					width: "32"
+				}
+			]
+		],
+		" ",
+		[
 			"img",
 			{
 				"jbst:visible": 
@@ -3209,22 +3241,6 @@ template.details = JsonML.BST(
 				alt: "",
 				"class": "image"
 			}
-		],
-		" ",
-		[
-			"a",
-			{
-				href: "#page=Home",
-				"class": "homeButton"
-			},
-			[
-				"img",
-				{
-					src: "img/Remote.png",
-					height: "32",
-					width: "32"
-				}
-			]
 		],
 		" ",
 		[
@@ -3324,7 +3340,9 @@ template.details = JsonML.BST(
 	return !!this.data.director;
 }
 			},
-			"Director"
+			function() {
+	return 'Director'+(this.data.director instanceof Array && this.data.director.length > 1 ? 's' : '');
+}
 		],
 		" ",
 		[
@@ -3336,7 +3354,7 @@ template.details = JsonML.BST(
 }
 			},
 			function() {
-	return this.data.director;
+	return (this.data.director instanceof Array ? this.data.director.join(', ') : this.data.director);
 }
 		],
 		" ",
@@ -3348,7 +3366,9 @@ template.details = JsonML.BST(
 	return !!this.data.writer;
 }
 			},
-			"Writer"
+			function() {
+	return 'Writer'+(this.data.writer instanceof Array && this.data.writer.length > 1 ? 's' : '');
+}
 		],
 		" ",
 		[
@@ -3360,7 +3380,7 @@ template.details = JsonML.BST(
 }
 			},
 			function() {
-	return this.data.writer;
+	return (this.data.writer instanceof Array ? this.data.writer.join(', ') : this.data.writer);
 }
 		],
 		" ",
@@ -3396,7 +3416,9 @@ template.details = JsonML.BST(
 	return !!this.data.genre;
 }
 			},
-			"Genre"
+			function() {
+	return 'Genre'+(this.data.genre instanceof Array && this.data.genre.length > 1 ? 's' : '');
+}
 		],
 		" ",
 		[
@@ -3408,7 +3430,7 @@ template.details = JsonML.BST(
 }
 			},
 			function() {
-	return this.data.genre;
+	return (this.data.genre instanceof Array ? this.data.genre.join(', ') : this.data.genre);
 }
 		],
 		" ",
@@ -3450,19 +3472,190 @@ template.list = JsonML.BST(
 	"",
 	" ",
 	[
-		"div",
-		{
-			"jbst:visible": 
-				function() {
-	return !this.data.items;
+		"header",
+		" ",
+		[
+			"a",
+			{
+				"jbst:visible": 
+					function() {
+	return !this.data.hideNavigation;
 },
-			"class": "emptylist"
-		},
-		"Empty"
+				href: "javascript:history.go(-1)",
+				"class": "backButton"
+			},
+			[
+				"img",
+				{
+					src: "img/icon_back.png",
+					height: "32",
+					width: "32"
+				}
+			]
+		],
+		" ",
+		[
+			"a",
+			{
+				"jbst:visible": 
+					function() {
+	return !this.data.hideNavigation;
+},
+				href: "#page=Home",
+				"class": "homeButton"
+			},
+			[
+				"img",
+				{
+					src: "img/icon_home.png",
+					height: "32",
+					width: "32"
+				}
+			]
+		],
+		" ",
+		[
+			"h1",
+			{
+				"jbst:visible": 
+					function() {
+	return !this.data.banner;
+}
+			},
+			" ",
+			function() {
+	return this.data.title;
+},
+			" "
+		],
+		" ",
+		[
+			"h1",
+			{
+				"jbst:visible": 
+					function() {
+	return !!this.data.banner;
+}
+			},
+			" ",
+			[
+				"img",
+				{
+					src: 
+						function() {
+	return this.data.banner;
+},
+					alt: 
+						function() {
+	return this.data.title;
+},
+					title: 
+						function() {
+	return this.data.title;
+}
+				}
+			],
+			" "
+		],
+		" ",
+		[
+			"h2",
+			{
+				"jbst:visible": 
+					function() {
+	return !!this.data.subtitle;
+}
+			},
+			" ",
+			function() {
+	return this.data.subtitle;
+},
+			" "
+		],
+		"\n"
 	],
 	" ",
 	[
-		"div",
+		"img",
+		{
+			"jbst:visible": 
+				function() {
+	return !!this.data.thumbnail;
+},
+			"class": "thumbnail",
+			src: 
+				function() {
+	return this.data.thumbnail;
+},
+			alt: ""
+		}
+	],
+	" ",
+	[
+		"p",
+		{
+			"class": "buttons"
+		},
+		" ",
+		[
+			"span",
+			{
+				"data-role": "button",
+				"jbst:visible": 
+					function() {
+	return !!this.data.play;
+},
+				"class": "play",
+				onclick: 
+					function() {
+	return this.data.play;
+}
+			},
+			"\u25B6 Play"
+		],
+		" ",
+		[
+			"span",
+			{
+				"data-role": "button",
+				"jbst:visible": 
+					function() {
+	return !!this.data.add;
+},
+				"class": "add",
+				onclick: 
+					function() {
+	return this.data.add;
+}
+			},
+			"+ Add to playlist"
+		],
+		"\n"
+	],
+	" ",
+	function() {
+				return JsonML.BST([
+		"",
+		" ",
+		[
+			"h3",
+			function() {
+	return this.data.id+(this.data.value instanceof Array && this.data.value.length > 1 ? 's' : '');
+}
+		],
+		" ",
+		[
+			"p",
+			function() {
+	return (this.data.value instanceof Array ? this.data.value.join(', ') : this.data.value);
+}
+		],
+		"\n"
+	]).dataBind((['Year', 'Formed', 'Disbanded', 'Born', 'Died', 'Runtime', 'Genre', 'Mood', 'Style', 'Type', 'Instrument', 'Director', 'Writer', 'Description', 'Plot']).map(function (id) { return { 'id': id, 'value': this.data[id.toLowerCase()] }; }, this).filter(function (x) { return ((x.value instanceof Array && x.value.length && x.value[0] !== '') || (typeof x.value === 'string' && x.value.length) || (typeof x.value === 'number')); }), this.index, this.count);
+			},
+	" ",
+	[
+		"ul",
 		{
 			"jbst:visible": 
 				function() {
@@ -3479,91 +3672,115 @@ template.list = JsonML.BST(
 		},
 		" ",
 		function() {
-				return JsonML.BST(template.listdetails).dataBind(this.data, this.index, this.count);
-			},
-		" ",
-		[
-			"ul",
-			{
-				"jbst:visible": 
-					function() {
-	return !this.data.items[0].items;
-}
-			},
-			" ",
-			function() {
-				return JsonML.BST(template.listitem).dataBind(this.data.items, this.index, this.count);
-			},
-			" "
-		],
-		" ",
-		[
-			"ul",
-			{
-				"jbst:visible": 
-					function() {
-	return !!this.data.items[0].items;
-}
-			},
-			" ",
-			function() {
 				return JsonML.BST([
-				"",
+			"",
+			" ",
+			[
+				"li",
+				{
+					"jbst:visible": 
+						function() {
+	return this.data.items instanceof Array;
+},
+					"class": "superListItem"
+				},
 				" ",
 				[
-					"li",
-					{
-						"class": "superListItem"
-					},
-					" ",
-					[
-						"h3",
-						function() {
+					"h3",
+					function() {
 	return this.data.label;
 }
-					],
+				],
+				" ",
+				[
+					"ul",
 					" ",
-					[
-						"ul",
+					function() {
+				return JsonML.BST([
+						"",
 						" ",
-						function() {
-				return JsonML.BST(template.listitem).dataBind(this.data.items, this.index, this.count);
+						[
+							"li",
+							{
+								"class": "listItem"
+							},
+							" ",
+							function() {
+				return JsonML.BST(template.listitem).dataBind(this.data, this.index, this.count);
 			},
+							" "
+						],
 						" "
-					],
+					]).dataBind(this.data.items, this.index, this.count);
+			},
 					" "
 				],
 				" "
-			]).dataBind(this.data.items, this.index, this.count);
-			},
-			" "
-		],
-		" ",
-		[
-			"div",
-			{
-				"jbst:visible": 
-					function() {
-	return !!this.data.fanart;
-},
-				"class": "fanart"
-			},
+			],
 			" ",
 			[
-				"img",
+				"li",
 				{
-					src: 
+					"class": "listItem",
+					"jbst:visible": 
 						function() {
-	return this.data.fanart;
-},
-					alt: ""
-				}
+	return !(this.data.items instanceof Array);
+}
+				},
+				" ",
+				function() {
+				return JsonML.BST(template.listitem).dataBind(this.data.items instanceof Array ? undefined : this.data, this.index, this.count);
+			},
+				" "
 			],
 			" "
-		],
-		" "
+		]).dataBind(this.data.items, this.index, this.count);
+			},
+		"\n"
 	],
-	"\n"
+	" ",
+	[
+		"h3",
+		{
+			"jbst:visible": 
+				function() {
+	return !!this.data.recentlyadded;
+}
+		},
+		"Recently Added"
+	],
+	"\n",
+	[
+		"ul",
+		{
+			"jbst:visible": 
+				function() {
+	return !!this.data.recentlyadded;
+},
+			"class": "recentlyadded"
+		},
+		" ",
+		function() {
+				return JsonML.BST(template.recentlyaddeditem).dataBind(this.data.recentlyadded, this.index, this.count);
+			},
+		"\n"
+	],
+	" ",
+	[
+		"img",
+		{
+			"jbst:visible": 
+				function() {
+	return !!this.data.fanart;
+},
+			"class": "fanart",
+			src: 
+				function() {
+	return this.data.fanart;
+},
+			alt: ""
+		}
+	]
 ]);</script>
 <script>
 /*global JsonML */
@@ -3577,6 +3794,81 @@ if ("undefined" === typeof template) {
 template.listdetails = JsonML.BST(
 [
 	"",
+	" ",
+	[
+		"header",
+		" ",
+		[
+			"a",
+			{
+				"jbst:visible": 
+					function() {
+	return !this.data.hideNavigation;
+},
+				href: "javascript:history.go(-1)",
+				"class": "backButton"
+			},
+			[
+				"img",
+				{
+					src: "img/icon_back.png",
+					height: "32",
+					width: "32"
+				}
+			]
+		],
+		" ",
+		[
+			"a",
+			{
+				"jbst:visible": 
+					function() {
+	return !this.data.hideNavigation;
+},
+				href: "#page=Home",
+				"class": "homeButton"
+			},
+			[
+				"img",
+				{
+					src: "img/icon_home.png",
+					height: "32",
+					width: "32"
+				}
+			]
+		],
+		" ",
+		[
+			"h1",
+			{
+				"jbst:visible": 
+					function() {
+	return !!this.data.title;
+}
+			},
+			" ",
+			function() {
+	return this.data.title;
+},
+			" "
+		],
+		" ",
+		[
+			"h2",
+			{
+				"jbst:visible": 
+					function() {
+	return !!this.data.subtitle;
+}
+			},
+			" ",
+			function() {
+	return this.data.subtitle;
+},
+			" "
+		],
+		"\n"
+	],
 	" ",
 	[
 		"img",
@@ -3599,7 +3891,7 @@ template.listdetails = JsonML.BST(
 		{
 			"jbst:visible": 
 				function() {
-	return !!this.data.thumbnail;
+	return (!!this.data.thumbnail && !this.data.banner);
 },
 			"class": "headerThumbnail",
 			src: 
@@ -3611,125 +3903,59 @@ template.listdetails = JsonML.BST(
 	],
 	" ",
 	[
-		"a",
+		"span",
 		{
-			href: "#page=Home",
-			"class": "homeButton"
-		},
-		[
-			"img",
-			{
-				src: "img/Remote.png",
-				height: "32",
-				width: "32"
-			}
-		]
-	],
-	" ",
-	[
-		"h1",
-		{
+			"data-role": "button",
 			"jbst:visible": 
 				function() {
-	return !!(this.data.title && !this.data.banner);
+	return !!this.data.play;
+},
+			"class": "play",
+			onclick: 
+				function() {
+	return this.data.play;
 }
 		},
-		" ",
-		function() {
-	return this.data.title;
-},
-		"\n"
+		"\u25B6 Play"
 	],
 	"\n",
 	[
-		"h2",
+		"span",
 		{
+			"data-role": "button",
 			"jbst:visible": 
 				function() {
-	return !!this.data.subtitle;
+	return !!this.data.add;
+},
+			"class": "add",
+			onclick: 
+				function() {
+	return this.data.add;
 }
 		},
-		" ",
-		function() {
-	return this.data.subtitle;
-},
-		"\n"
+		"+ Add to playlist"
 	],
 	" ",
-	[
-		"p",
-		{
-			"jbst:visible": 
-				function() {
-	return !!this.data.formed;
-}
-		},
+	function() {
+				return JsonML.BST([
+		"",
 		" ",
-		function() {
-	return 'Formed: ' + this.data.formed;
-},
-		"\n"
-	],
-	" ",
-	[
-		"p",
-		{
-			"jbst:visible": 
-				function() {
-	return !!this.data.disbanded;
+		[
+			"h3",
+			function() {
+	return this.data.id+(this.data.value instanceof Array && this.data.value.length > 1 ? 's' : '');
 }
-		},
+		],
 		" ",
-		function() {
-	return 'Disbanded: ' + this.data.disbanded;
-},
-		"\n"
-	],
-	" ",
-	[
-		"p",
-		{
-			"jbst:visible": 
-				function() {
-	return !!this.data.died;
+		[
+			"p",
+			function() {
+	return (this.data.value instanceof Array ? this.data.value.join(', ') : this.data.value);
 }
-		},
-		" ",
-		function() {
-	return 'Died: ' + this.data.died;
-},
+		],
 		"\n"
-	],
-	" ",
-	[
-		"p",
-		{
-			"jbst:visible": 
-				function() {
-	return !!this.data.instrument;
-}
-		},
-		" ",
-		function() {
-	return 'Instrument: ' + this.data.instrument;
-},
-		"\n"
-	],
-	" ",
-	[
-		"p",
-		{
-			"jbst:visible": 
-				function() {
-	return !!this.data.style;
-}
-		},
-		" ",
-		function() {
-	return 'Style: ' + this.data.style;
-},
-		"\n"
-	],
+	]).dataBind((['Year', 'Formed', 'Disbanded', 'Born', 'Died', 'Runtime', 'Genre', 'Mood', 'Style', 'Type', 'Instrument', 'Director', 'Writer', 'Description', 'Plot']).map(function (id) { return { 'id': id, 'value': this.data[id.toLowerCase()] }; }, this).filter(function (x) { return ((x.value instanceof Array && x.value.length && x.value[0] !== '') || (x.value instanceof String && x.value.length) || (typeof x.value === 'number')); }), this.index, this.count);
+			},
 	" ",
 	[
 		"h3",
@@ -3773,147 +3999,138 @@ template.listitem = JsonML.BST(
 	"",
 	"\n",
 	[
-		"li",
+		"span",
 		{
-			"class": "listItem"
-		},
-		" ",
-		[
-			"span",
-			{
-				"data-role": "button",
-				"jbst:visible": 
-					function() {
+			"data-role": "button",
+			"jbst:visible": 
+				function() {
 	return !!this.data.play;
 },
-				"class": "play",
-				onclick: 
-					function() {
+			"class": "play",
+			onclick: 
+				function() {
 	return this.data.play;
 }
-			},
-			"\u25B6"
-		],
-		" ",
-		[
-			"span",
-			{
-				"data-role": "button",
-				"jbst:visible": 
-					function() {
+		},
+		"\u25B6"
+	],
+	"\n",
+	[
+		"span",
+		{
+			"data-role": "button",
+			"jbst:visible": 
+				function() {
 	return !!this.data.remove;
 },
-				"class": "remove",
-				onclick: 
-					function() {
+			"class": "remove",
+			onclick: 
+				function() {
 	return this.data.remove;
 }
-			},
-			"-"
-		],
-		" ",
-		[
-			"span",
-			{
-				"data-role": "button",
-				"jbst:visible": 
-					function() {
+		},
+		"-"
+	],
+	"\n",
+	[
+		"span",
+		{
+			"data-role": "button",
+			"jbst:visible": 
+				function() {
 	return !!this.data.add;
 },
-				"class": "add",
-				onclick: 
-					function() {
+			"class": "add",
+			onclick: 
+				function() {
 	return this.data.add;
 }
-			},
-			"+"
-		],
-		" ",
-		function() {
+		},
+		"+"
+	],
+	" ",
+	function() {
 				return JsonML.BST(template.link).dataBind(this.data, this.index, this.count, {
-			$: 
+		$: 
+			[
+				"",
+				" ",
 				[
-					"",
-					" ",
-					[
-						"img",
-						{
-							"jbst:visible": 
-								function() {
+					"img",
+					{
+						"jbst:visible": 
+							function() {
 	return !!this.data.thumbnail;
 },
-							"class": "thumbnail",
-							src: 
-								function() {
+						"class": "thumbnail",
+						src: 
+							function() {
 	return this.data.thumbnail;
 },
-							style: 
-								function() {
+						style: 
+							function() {
 	return this.data.thumbnailWidth ? 'width:'+this.data.thumbnailWidth : '';
 }
-						}
-					],
-					" ",
-					[
-						"div",
-						{
-							"jbst:visible": 
-								function() {
+					}
+				],
+				" ",
+				[
+					"div",
+					{
+						"jbst:visible": 
+							function() {
 	return !!this.data.number;
 },
-							"class": "number"
-						},
-						function() {
+						"class": "number"
+					},
+					function() {
 	return this.data.number;
 },
-						"."
-					],
-					" ",
-					[
-						"div",
-						{
-							"class": 
-								function() {
+					"."
+				],
+				" ",
+				[
+					"div",
+					{
+						"class": 
+							function() {
 	return this.data.details ? 'line1' : 'label';
 }
-						},
-						function() {
+					},
+					function() {
 	return this.data.label;
 }
-					],
-					" ",
-					[
-						"div",
-						{
-							"class": "line2",
-							"jbst:visible": 
-								function() {
+				],
+				" ",
+				[
+					"div",
+					{
+						"class": "line2",
+						"jbst:visible": 
+							function() {
 	return !!this.data.details;
 }
-						},
-						" ",
-						function() {
+					},
+					" ",
+					function() {
 				return JsonML.BST([
-							"",
-							" ",
-							[
-								"span",
-								function() {
+						"",
+						" ",
+						[
+							"span",
+							function() {
 	return this.data;
 }
-							],
-							" "
-						]).dataBind(this.data.details, this.index, this.count);
-			},
+						],
 						" "
-					],
-					" "
-				]
-		});
+					]).dataBind(this.data.details, this.index, this.count);
 			},
-		"\n"
-	],
-	"\n"
+					" "
+				],
+				"\n"
+			]
+	});
+			}
 ]);</script>
 <script>
 var template;if("undefined"===typeof template){template={};}template.banner=JsonML.BST([""," ",["div",{"jbst:visible":function(){return !this.data.items;},"class":"emptylist"},"Empty"]," ",["div",{"jbst:visible":function(){return !!this.data.items;},"class":"banner"}," ",function(){return JsonML.BST(template.listdetails).dataBind(this.data,this.index,this.count);}," ",["ul",{"class":"bannerlist"}," ",function(){return JsonML.BST(template.banneritem).dataBind(this.data.items,this.index,this.count);}," "]," "]]);
@@ -3922,7 +4139,145 @@ var template;if("undefined"===typeof template){template={};}template.banner=Json
 var template;if("undefined"===typeof template){template={};}template.banneritem=JsonML.BST(["li",{"class":"bannerItem"}," ",["a",{href:function(){return this.data.link;}}," ",["img",{"jbst:visible":function(){return !!this.data.thumbnail;},"class":"banner",src:"/img/transparent.png","data-original":function(){return this.data.thumbnail;},alt:function(){return this.data.label;},style:"display:block"}]," ",["span",{"class":"bannerLabel"},function(){return this.data.label;}]," ",["img",{"class":"bannerBackground",src:"img/Banner.png",alt:""}]," "],"\n"]);
 </script>
 <script>
-var template;if("undefined"===typeof template){template={};}template.buttons=JsonML.BST([""," ",["ul",{"class":function(){return this.data["class"]||"buttons";}}," ",function(){return JsonML.BST([""," ",["li",{"class":function(){return this.data["class"];}}," ",["a",{href:function(){return this.data.href||"javascript: ("+(this.data.onclick||"function () { void(0) }")+")()";}}," ",["img",{"jbst:visible":function(){return !!this.data.src;},src:function(){return this.data.src;},alt:function(){return this.data.text;}}]," ",["span",{"jbst:visible":function(){return !this.data.src;}},function(){return this.data.text;}]," "]," "]," "]).dataBind(this.data.buttons,this.index,this.count);}," "],"\n"]);</script>
+/*global JsonML */
+
+/* namespace template */
+var template;
+if ("undefined" === typeof template) {
+	template = {};
+}
+
+template.buttons = JsonML.BST(
+[
+	"",
+	" ",
+	[
+		"a",
+		{
+			"jbst:visible": 
+				function() {
+	return !this.data.hideNavigation;
+},
+			href: "javascript:history.go(-1)",
+			"class": "backButton"
+		},
+		[
+			"img",
+			{
+				src: "img/icon_back.png",
+				height: "32",
+				width: "32"
+			}
+		]
+	],
+	"\n",
+	[
+		"a",
+		{
+			"jbst:visible": 
+				function() {
+	return !this.data.hideNavigation;
+},
+			href: "#page=Home",
+			"class": "homeButton"
+		},
+		[
+			"img",
+			{
+				src: "img/icon_home.png",
+				height: "32",
+				width: "32"
+			}
+		]
+	],
+	" ",
+	[
+		"h1",
+		{
+			"jbst:visible": 
+				function() {
+	return !!this.data.title;
+}
+		},
+		" ",
+		function() {
+	return this.data.title;
+},
+		"\n"
+	],
+	" ",
+	[
+		"ul",
+		{
+			"class": 
+				function() {
+	return this.data['class'] || 'buttons';
+}
+		},
+		" ",
+		function() {
+				return JsonML.BST([
+			"",
+			" ",
+			[
+				"li",
+				{
+					"class": 
+						function() {
+	return this.data['class'];
+}
+				},
+				" ",
+				[
+					"a",
+					{
+						href: 
+							function() {
+	return this.data.href || 'javascript: (' + (this.data.onclick || 'function () { void(0) }') + ')()';
+}
+					},
+					" ",
+					[
+						"img",
+						{
+							"jbst:visible": 
+								function() {
+	return !!this.data.src;
+},
+							src: 
+								function() {
+	return this.data.src;
+},
+							alt: 
+								function() {
+	return this.data.text;
+}
+						}
+					],
+					" ",
+					[
+						"span",
+						{
+							"jbst:visible": 
+								function() {
+	return !this.data.src;
+}
+						},
+						function() {
+	return this.data.text;
+}
+					],
+					" "
+				],
+				" "
+			],
+			" "
+		]).dataBind(this.data.buttons, this.index, this.count);
+			},
+		" "
+	],
+	"\n"
+]);</script>
 <script>
 /*global JsonML */
 
@@ -3968,12 +4323,69 @@ var template;if("undefined"===typeof template){template={};}template.recentlyadd
 var template;if("undefined"===typeof template){template={};}template.link=JsonML.BST([""," ",["a",{href:function(){return this.data.link;},"jbst:visible":function(){return !!this.data.link;}}," ",function(){var A="$",B=this.args;if(B&&B[A]){return JsonML.BST(B[A]).dataBind(this.data,this.index,this.count,B);}}," "]," ",["span",{"jbst:visible":function(){return !this.data.link;}}," ",function(){var A="$",B=this.args;if(B&&B[A]){return JsonML.BST(B[A]).dataBind(this.data,this.index,this.count,B);}}," "]]);
 </script>
 <script>
+/*global JsonML */
+
+/* namespace template */
+var template;
+if ("undefined" === typeof template) {
+	template = {};
+}
+
+template.settings = JsonML.BST(
+[
+	"div",
+	{
+		"class": "settings"
+	},
+	" ",
+	[
+		"ul",
+		" ",
+		function() {
+				return JsonML.BST([
+			"",
+			" ",
+			[
+				"li",
+				function() {
+	return this.data.label;
+},
+				[
+					"input",
+					{
+						list: 
+							function() {
+	return this.data.list;
+},
+						type: 
+							function() {
+	return this.data.type;
+},
+						value: 
+							function() {
+	return this.data.value || this.data.label;
+},
+						name: 
+							function() {
+	return this.data.name || this.data.label;
+}
+					}
+				]
+			],
+			" "
+		]).dataBind(this.data.items, this.index, this.count);
+			},
+		" "
+	],
+	" "
+]);</script>
+<script>
 var xbmcFactory = (function ($) { //create the xbmc global object
 	"use strict";
 
 	//globals
 	var VERSION, pub = {},
-	  DEBUG = window.DEBUG || false, socket = { 'q': {} }, events = {}, server;
+	  DEBUG = window.DEBUG || true, socket = { 'q': {} }, events = {}, server;
 
 	var rpc = {
 		'Introspect': {
@@ -3989,7 +4401,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		},
 		'GetTVShowDetails': {
 			'method': 'VideoLibrary.GetTVShowDetails',
-			'params': { 'properties': [ 'title', 'art', 'fanart', 'thumbnail' ] },
+			'params': { 'properties': [ 'title', 'art', 'thumbnail' ] },
 			'cache': true
 		},
 		'GetTVEpisodes': {
@@ -3999,7 +4411,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		},
 		'GetEpisodeDetails': {
 			'method': 'VideoLibrary.GetEpisodeDetails',
-			'params': { 'properties': [ 'title', 'plot', 'rating', 'director', 'showtitle', 'thumbnail', 'fanart', 'episode', 'season', 'runtime', 'file', 'tvshowid' ] }
+			'params': { 'properties': [ 'title', 'plot', 'writer', 'firstaired', 'playcount', 'runtime', 'director', 'season', 'episode', 'showtitle', 'cast', 'streamdetails', 'lastplayed', 'thumbnail', 'fanart', 'file', 'tvshowid' ] }
 		},
 		'GetRecentlyAddedEpisodes': {
 			'method': 'VideoLibrary.GetRecentlyAddedEpisodes',
@@ -4029,7 +4441,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		},
 		'GetMovieDetails': {
 			'method': 'VideoLibrary.GetMovieDetails',
-			'params': { 'properties': [ 'title', 'genre', 'year', 'rating', 'director', 'tagline', 'plot', 'runtime', 'fanart', 'thumbnail', 'writer', 'file' ] }
+			'params': { 'properties': [ 'title', 'genre', 'year', 'director', 'tagline', 'plot', 'runtime', 'fanart', 'thumbnail', 'writer', 'file' ] }
 		},
 		'GetArtists': {
 			'params': { 'properties': [ 'thumbnail', 'genre' ], 'albumartistsonly': true },
@@ -4037,28 +4449,27 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 			'cache': true
 		},
 		'GetArtistDetails': {
-			'params': { 'properties': [ 'thumbnail', 'instrument', 'style', 'born', 'formed', 'genre', 'died', 'disbanded', 'yearsactive', 'fanart' ] },
+			'params': { 'properties': [ 'thumbnail', 'genre', 'born', 'formed', 'died', 'disbanded' ] },
 			'method': 'AudioLibrary.GetArtistDetails',
 			'cache': true
 		},
 		'GetSongs': {
-			'params': { 'properties': [ 'artist', 'album', 'albumid', 'year', 'thumbnail', 'file', 'title', 'track', 'duration' ] },
+			'params': { 'properties': [ 'file', 'title', 'track', 'duration' ] },
 			'method': 'AudioLibrary.GetSongs'
 		},
 		'GetRecentlyAddedAlbums': {
-			'params': { 'properties': [ 'title', 'artist', 'albumlabel', 'rating', 'year', 'thumbnail' ], 'limits': { 'end': 5 } },
+			'params': { 'properties': [ 'title', 'artist', 'albumlabel', 'year', 'thumbnail' ], 'limits': { 'end': 5 } },
 			'method': 'AudioLibrary.GetRecentlyAddedAlbums'
 		},
 		'GetAlbums': {
 			'params': {
 				'properties': [ 'title', 'artist', 'year', 'thumbnail' ]
-				//'sort': { 'method': 'year', 'order': 'ascending' }
 			},
 			'method': 'AudioLibrary.GetAlbums',
 			'cache': true
 		},
 		'GetAlbumDetails': {
-			'params': { 'properties': [ 'title', 'artist', 'genre', 'type', 'albumlabel', 'rating', 'year', 'fanart', 'thumbnail' ] },
+			'params': { 'properties': [ 'title', 'artist', 'genre', 'albumlabel', 'year', 'fanart', 'thumbnail' ] },
 			'method': 'AudioLibrary.GetAlbumDetails'
 		},
 		'GetMusicVideos': {
@@ -4373,7 +4784,7 @@ var xbmcLibraryFactory = (function ($) {
 
 	var LAZYLOAD_OPTIONS = { },
 	  pub = {},
-	  DEBUG = window.DEBUG || false,
+	  DEBUG = window.DEBUG || true,
 	  
 	groupItems = function (items, groupby) {
 		var o = [], temp = {};
@@ -4430,13 +4841,48 @@ var xbmcLibraryFactory = (function ($) {
 	},
 	  
 	pages = {
-		'Home': {
+		/*'Home': {
 			'view': 'buttons',
 			'data': function (callback) {
 				var buttons = [
 					{ 'text': 'Videos', 'class':'videos', 'href': '#page=Menu&media=Videos', 'src': 'img/icon_video.png' },
 					{ 'text': 'Music', 'class':'music', 'href': '#page=Menu&media=Music', 'src': 'img/icon_music.png' },
 					{ 'text': 'Pictures', 'class':'pictures', 'href': '#page=Menu&media=Pictures', 'src': 'img/icon_pictures.png' },
+                    { 'text': 'Up', 'class':'up', 'src':'img/buttons/up.png', 'onclick':function () { xbmc.Up(); } },
+                    { 'text': 'Down', 'class':'down', 'src':'img/buttons/down.png', 'onclick':function () { xbmc.Down(); } },
+                    { 'text': 'Left', 'class':'left', 'src':'img/buttons/left.png', 'onclick':function () { xbmc.Left(); } },
+                    { 'text': 'Right', 'class':'right', 'src':'img/buttons/right.png', 'onclick':function () { xbmc.Right(); } },
+                    { 'text': 'Select', 'class':'select', 'src':'img/buttons/select.png', 'onclick':function () { xbmc.Select(); } },
+                    { 'text': 'Back', 'class':'back', 'src':'img/buttons/back.png', 'onclick':function () { xbmc.Back(); } },
+                    { 'text': 'Settings', 'class':'settings', 'src':'img/settings.png', 'href': '#page=Settings' },
+                    { 'text': 'Playlists', 'class':'playlists', 'src':'img/playlist.png', 'href': '#page=Playlists' }
+				];
+				if (xbmc.version() >= 5) buttons = buttons.concat([
+                    { 'text': 'Information', 'class':'info', 'src':'img/buttons/info.png', 'onclick':function () { xbmc.Info(); } },
+                    { 'text': 'Menu', 'class':'menu', 'src':'img/buttons/menu.png', 'onclick':function () { xbmc.ContextMenu(); } },
+                    { 'text': 'Fullscreen', 'class':'fullscreen', 'src':'img/buttons/fullscreen.png', 'onclick':function () { xbmc.ToggleFullscreen(); } }
+				]);
+				callback({ 'class': 'remote', 'height': '340px', 'width': '340px', 'buttons': buttons });
+			}
+		},*/
+		'Home': {
+			'view': 'list',
+			'data': function (callback) {
+				var items = [
+					{ 'label': 'Videos', 'link': '#page=Menu&media=Videos', 'thumbnail': 'img/icon_video.png' },
+					{ 'label': 'Music', 'link': '#page=Menu&media=Music', 'thumbnail': 'img/icon_music.png' },
+					{ 'label': 'Pictures', 'link': '#page=Menu&media=Pictures', 'thumbnail': 'img/icon_pictures.png' },
+                    { 'label': 'Remote', 'link': '#page=Remote', 'thumbnail':'img/remote.png' },
+                    { 'label': 'Playlists', 'link': '#page=Playlists', 'thumbnail':'img/playlist.png' },
+                    { 'label': 'Settings', 'link': '#page=Settings', 'thumbnail':'img/settings.png' }
+				];
+				callback({ 'items': items, 'hideNavigation': true });
+			}
+		},
+		'Remote': {
+			'view': 'buttons',
+			'data': function (callback) {
+				var buttons = [
                     { 'text': 'Up', 'class':'up', 'src':'img/buttons/up.png', 'onclick':function () { xbmc.Up(); } },
                     { 'text': 'Down', 'class':'down', 'src':'img/buttons/down.png', 'onclick':function () { xbmc.Down(); } },
                     { 'text': 'Left', 'class':'left', 'src':'img/buttons/left.png', 'onclick':function () { xbmc.Left(); } },
@@ -4449,7 +4895,7 @@ var xbmcLibraryFactory = (function ($) {
                     { 'text': 'Menu', 'class':'menu', 'src':'img/buttons/menu.png', 'onclick':function () { xbmc.ContextMenu(); } },
                     { 'text': 'Fullscreen', 'class':'fullscreen', 'src':'img/buttons/fullscreen.png', 'onclick':function () { xbmc.ToggleFullscreen(); } }
 				]);
-				callback({ 'class': 'remote', 'height': '340px', 'width': '340px', 'buttons': buttons });
+				callback({ 'title': 'Remote', 'class': 'remote', 'height': '340px', 'width': '340px', 'buttons': buttons });
 			}
 		},
 		'Menu': {
@@ -4475,7 +4921,7 @@ var xbmcLibraryFactory = (function ($) {
 						'Music': [
 							{ 'label': 'Artists', 'items': [
 								{ 'label': 'By Name', 'link': '#page=Artists', 'thumbnail': 'img/DefaultMusicArtists.png' },
-								{ 'label': 'By Genre', 'link': '#page=Genres&type=Artists', 'thumbnail': 'img/DefaultMusicGenres.png' }
+								{ 'label': 'By Genre', 'link': '#page=Artists&group=genre', 'thumbnail': 'img/DefaultMusicGenres.png' }
 							] },
 						],
 						'Pictures': [ ]
@@ -4492,16 +4938,25 @@ var xbmcLibraryFactory = (function ($) {
 						c();
 					});
 				});
-				q.add(function (c) { //get playlists
+				/*q.add(function (c) { //get playlists
 					pages.Playlists.data(function (playlistPage) {
 						page.items = page.items.concat(playlistPage.items.filter(function (item) { return item.type == x; }));
 						c();
 					})
-				});
+				});*/
 				q.onfinish(function () {
 					callback(page);
 				});
 				q.start();
+			}
+		},
+		'Settings': {
+			'view': 'settings',
+			'data': {
+				'items': [
+					{ 'label': 'Fanart', 'type': 'checkbox' },
+					{ 'label': 'Thumbnails', 'type': 'checkbox' }
+				]
 			}
 		},
 		'Genres': {
@@ -4572,7 +5027,7 @@ var xbmcLibraryFactory = (function ($) {
 			}
 		},
 		'Movie': {
-			'view': 'details',
+			'view': 'list',
 			'parent': 'Movies',
 			'data': function (callback) {
 				var page = {}, q = Q();
@@ -4584,7 +5039,7 @@ var xbmcLibraryFactory = (function ($) {
 				});
 				q.add(function (c) { //format movie details
 					if (page.year) page.title += ' ('+page.year+')';
-					if (page.tagline) page.heading = page.tagline;
+					if (page.tagline) page.subtitle = page.tagline;
 					if (page.file) {
 						page.play = function () {
 							xbmc.Play(page.file, 1);
@@ -4608,6 +5063,7 @@ var xbmcLibraryFactory = (function ($) {
 		},
 		'TV Shows': {
 			'view': 'list',
+			'groupby': 'alpha',
 			'data': function (callback) {
 				var page = { title: 'TV Shows' }, q = Q();
 				q.add(function (c) { //get tv shows
@@ -4626,6 +5082,7 @@ var xbmcLibraryFactory = (function ($) {
 						tvshow.link = '#page=TV Show&tvshowid='+tvshow.tvshowid;
 						if (tvshow.thumbnail) tvshow.thumbnail = xbmc.vfs2uri(tvshow.thumbnail);
 						//if (tvshow.art) tvshow.thumbnail = xbmc.vfs2uri(tvshow.art.thumbnail);
+						tvshow.alpha = tvshow.label[0].toUpperCase();
 					});
 					c();
 				});
@@ -4651,8 +5108,8 @@ var xbmcLibraryFactory = (function ($) {
 				  }).
 				  add(function (c) { //format show details
 					//if (page.fanart) page.fanart = xbmc.vfs2uri(page.fanart);
-					if (page.thumbnail) page.banner = xbmc.vfs2uri(page.thumbnail);
 					if (page.art) page.banner = xbmc.vfs2uri(page.art.banner);
+					delete page.thumbnail;
 					c();
 				  }).
 				  add(function (c) { //get episodes
@@ -4689,19 +5146,19 @@ var xbmcLibraryFactory = (function ($) {
 			}
 		},
 		'Episode': {
-			'view': 'details',
+			'view': 'list',
 			'parent': 'TV Shows',
 			'data': function (callback) {
 				var page = {}, tvshowid = +getHash('tvshowid'), episodeid = +getHash('episodeid');
 				Q().
-				  add(function (c) { //get movie details
+				  add(function (c) { //get episode details
 					xbmc.GetEpisodeDetails({ 'episodeid': episodeid }, function (d) {
 						page = d.episodedetails || {};
 						c();
 					});
 				  }).
-				  add(function (c) { //format movie details
-					if (page.title) page.heading = page.title;
+				  add(function (c) { //format episode details
+					page.subtitle = (page.season>0 && page.episode>0 ? page.season+'x'+(page.episode<10 ? '0' : '')+page.episode+' ' : '')+(page.title || page.showtitle || '');
 					if (tvshowid) page.link = '#page=TV Show&tvshowid='+tvshowid;
 					if (page.showtitle) page.title = page.showtitle;
 					if (page.file) {
@@ -4744,6 +5201,7 @@ var xbmcLibraryFactory = (function ($) {
 						artist.link = '#page=Artist&artistid='+artist.artistid;
 						artist.thumbnail = artist.thumbnail ? xbmc.vfs2uri(artist.thumbnail) : 'img/DefaultArtist.png';
 						artist.thumbnailWidth = '50px';
+						if (artist.genre instanceof Array) artist.genre.map(function (genre) { return genre.charAt(0).toUpperCase()+genre.charAt(0).toUpperCase()+genre.substr(1) });
 						artist.details = artist.genre || ' ';
 					});
 					c();
@@ -4756,6 +5214,7 @@ var xbmcLibraryFactory = (function ($) {
 		},
 		'Artist': {
 			'view': 'list',
+			'groupby': 'year',
 			'data': function (callback) {
 				var page = {}, artistid = +getHash('artistid');
 				Q().
@@ -4768,9 +5227,7 @@ var xbmcLibraryFactory = (function ($) {
 				  add(function (c) { //format artist details
 					if (page.thumbnail) page.thumbnail = xbmc.vfs2uri(page.thumbnail);
 					//if (page.fanart) page.fanart = xbmc.vfs2uri(page.fanart);
-					delete page.fanart;
-					page.title = page.label || '';
-					page.genre = undefined;
+					page.title = page.label || 'Artist '+artistid;
 					c();
 				  }).
 				  add(function (c) { //get albums
@@ -4784,7 +5241,7 @@ var xbmcLibraryFactory = (function ($) {
 						album.link = '#page=Album&albumid='+album.albumid;
 						album.thumbnail = album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : 'img/DefaultAudio.png';
 						album.thumbnailWidth = '50px';
-						if (album.year) album.details = album.year;
+						//if (album.year) album.details = album.year;
 					});
 					c();
 				  }).
@@ -4808,12 +5265,10 @@ var xbmcLibraryFactory = (function ($) {
 				  }).
 				  add(function (c) { //format album details
 					if (page.thumbnail) page.thumbnail = xbmc.vfs2uri(page.thumbnail);
-					//if (page.fanart) page.fanart = xbmc.vfs2uri(page.fanart);
-					delete page.fanart;
+					if (page.fanart) page.fanart = xbmc.vfs2uri(page.fanart);
 					page.title = page.artist.join(', ') || '';
 					page.link = '#page=Artist&artistid='+page.artistid;
 					page.subtitle = page.label || '';
-					if (page.year) page.subtitle = '('+page.year+') '+page.subtitle;
 					c();
 				  }).
 				  add(function (c) { //get songs
@@ -4883,10 +5338,13 @@ var xbmcLibraryFactory = (function ($) {
 			'view': 'list',
 			'parent': 'Files',
 			'data': function (callback) {
-				var page = {}, directory = getHash('directory'), media = getHash('media') || '';
+				var directory = getHash('directory'), page = {}, media = getHash('media') || '';
 				Q().
 				  add(function (c) { //get files
 					xbmc.GetDirectory({ 'directory': directory, 'media': media }, function (d) {
+						page.subtitle = directory.substring(0,12) === 'multipath://' ? decodeURIComponent(directory.substring(12, directory.length-1)) : directory;
+						var directoryArray = page.subtitle.split('/');
+						page.title = directoryArray[directoryArray.length-2];
 						page.items = d.files || [];
 						c();
 					});
@@ -4949,7 +5407,7 @@ var xbmcLibraryFactory = (function ($) {
 				  add(function (c) {
 					var q = Q();
 		  			$.each(page.items, function (i, item) { //for each playlist
-		  				item.label = item.label || 'Playlist';
+		  				item.label = item.type || 'Playlist';
 		  				q.add(function(cb) { //get playlist items
 			  				xbmc.GetPlaylistItems({ 'playlistid': item.playlistid }, function (d) {
 			  					item.items = d.items || [];
@@ -5035,13 +5493,14 @@ var xbmcLibraryFactory = (function ($) {
 					data.items = data.items.map(function (x) {
 						return {
 							'label': x.label,
-							'link': '#page='+title+'&'+groupby+'='+x.label
+							'link': document.location.hash+'&'+groupby+'='+x.label
 						}
 					});
 				}
 			}
 
 			data.id = title;
+			document.title = 'XBMC'+(data.title ? ' - '+data.title : ' Simple Remote');
 			
 			//render the data to the DOM via the template
 			var p = $('<div class="page" data-page="'+title+'"></div>'),
@@ -5108,7 +5567,8 @@ xbmcPlayerFactory = (function ($) {
 	            { 'text': 'Play / Pause', 'class': 'PlayPause', 'onclick': function () { xbmc.PlayPause(); } },
                 { 'text': 'Stop', 'class':'Stop', 'onclick':function () { xbmc.Stop(); } },
                 { 'text': 'Next', 'class':'GoNext', 'onclick':function () { xbmc.GoNext(); } }
-			]
+			],
+			'hideNavigation': true
 		};
 		
 		//render the data to the DOM via the player template
@@ -5163,7 +5623,7 @@ xbmcPlayerFactory = (function ($) {
 			window.setTimeout(callback, xbmc.transport() === 'websocket' ? REFRESHWS : REFRESH);
 		},
 		q = Q();
-		q.add(function (callback) {
+		/*q.add(function (callback) {
 			xbmc.GetApplicationProperties(function (app) {
 				if (app) {
 					//volume.slider('value',app.volume);
@@ -5172,7 +5632,7 @@ xbmcPlayerFactory = (function ($) {
 				callback();
 			});
 		});
-		q.add(sleep);
+		q.add(sleep);*/
 		q.add(function (callback) {
 			xbmc.GetActivePlayer(function (p) {
 				player = p;

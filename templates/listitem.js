@@ -11,145 +11,136 @@ template.listitem = JsonML.BST(
 	"",
 	"\n",
 	[
-		"li",
+		"span",
 		{
-			"class": "listItem"
-		},
-		" ",
-		[
-			"span",
-			{
-				"data-role": "button",
-				"jbst:visible": 
-					function() {
+			"data-role": "button",
+			"jbst:visible": 
+				function() {
 	return !!this.data.play;
 },
-				"class": "play",
-				onclick: 
-					function() {
+			"class": "play",
+			onclick: 
+				function() {
 	return this.data.play;
 }
-			},
-			"\u25B6"
-		],
-		" ",
-		[
-			"span",
-			{
-				"data-role": "button",
-				"jbst:visible": 
-					function() {
+		},
+		"\u25B6"
+	],
+	"\n",
+	[
+		"span",
+		{
+			"data-role": "button",
+			"jbst:visible": 
+				function() {
 	return !!this.data.remove;
 },
-				"class": "remove",
-				onclick: 
-					function() {
+			"class": "remove",
+			onclick: 
+				function() {
 	return this.data.remove;
 }
-			},
-			"-"
-		],
-		" ",
-		[
-			"span",
-			{
-				"data-role": "button",
-				"jbst:visible": 
-					function() {
+		},
+		"-"
+	],
+	"\n",
+	[
+		"span",
+		{
+			"data-role": "button",
+			"jbst:visible": 
+				function() {
 	return !!this.data.add;
 },
-				"class": "add",
-				onclick: 
-					function() {
+			"class": "add",
+			onclick: 
+				function() {
 	return this.data.add;
 }
-			},
-			"+"
-		],
-		" ",
-		function() {
+		},
+		"+"
+	],
+	" ",
+	function() {
 				return JsonML.BST(template.link).dataBind(this.data, this.index, this.count, {
-			$: 
+		$: 
+			[
+				"",
+				" ",
 				[
-					"",
-					" ",
-					[
-						"img",
-						{
-							"jbst:visible": 
-								function() {
+					"img",
+					{
+						"jbst:visible": 
+							function() {
 	return !!this.data.thumbnail;
 },
-							"class": "thumbnail",
-							src: 
-								function() {
+						"class": "thumbnail",
+						src: 
+							function() {
 	return this.data.thumbnail;
 },
-							style: 
-								function() {
+						style: 
+							function() {
 	return this.data.thumbnailWidth ? 'width:'+this.data.thumbnailWidth : '';
 }
-						}
-					],
-					" ",
-					[
-						"div",
-						{
-							"jbst:visible": 
-								function() {
+					}
+				],
+				" ",
+				[
+					"div",
+					{
+						"jbst:visible": 
+							function() {
 	return !!this.data.number;
 },
-							"class": "number"
-						},
-						function() {
+						"class": "number"
+					},
+					function() {
 	return this.data.number;
 },
-						"."
-					],
-					" ",
-					[
-						"div",
-						{
-							"class": 
-								function() {
+					"."
+				],
+				" ",
+				[
+					"div",
+					{
+						"class": 
+							function() {
 	return this.data.details ? 'line1' : 'label';
 }
-						},
-						function() {
+					},
+					function() {
 	return this.data.label;
 }
-					],
-					" ",
-					[
-						"div",
-						{
-							"class": "line2",
-							"jbst:visible": 
-								function() {
+				],
+				" ",
+				[
+					"div",
+					{
+						"class": "line2",
+						"jbst:visible": 
+							function() {
 	return !!this.data.details;
 }
-						},
-						" ",
-						function() {
+					},
+					" ",
+					function() {
 				return JsonML.BST([
-							"",
-							" ",
-							[
-								"span",
-								function() {
+						"",
+						" ",
+						[
+							"span",
+							function() {
 	return this.data;
 }
-							],
-							" "
-						]).dataBind(this.data.details, this.index, this.count);
-			},
+						],
 						" "
-					],
-					" "
-				]
-		});
+					]).dataBind(this.data.details, this.index, this.count);
 			},
-		"\n"
-	],
-	"\n"
+					" "
+				],
+				"\n"
+			]
+	});
+			}
 ]);

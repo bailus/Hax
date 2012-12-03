@@ -26,6 +26,7 @@ scripts=(
 	'templates/player.js'
 	'templates/recentlyaddeditem.js'
 	'templates/link.js'
+	'templates/settings.js'
 	'js/xbmc.js'
 	'js/library.js'
 	'js/player.js'
