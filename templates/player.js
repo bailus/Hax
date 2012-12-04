@@ -13,21 +13,28 @@ template.player = JsonML.BST(
 	[
 		"div",
 		{
-			id: "nowPlaying"
-		}
-	],
-	"\n",
-	[
-		"div",
-		{
 			"class": "show"
 		}
 	],
 	"\n",
 	[
+		"progress",
+		{
+			max: "10000"
+		}
+	],
+	"\n",
+	[
 		"div",
 		{
-			id: "progress"
+			"class": "time"
+		}
+	],
+	"\n",
+	[
+		"div",
+		{
+			id: "nowPlaying"
 		}
 	],
 	"\n",

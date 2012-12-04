@@ -60,30 +60,6 @@ var xbmcLibraryFactory = (function ($) {
 	},
 	  
 	pages = {
-		/*'Home': {
-			'view': 'buttons',
-			'data': function (callback) {
-				var buttons = [
-					{ 'text': 'Videos', 'class':'videos', 'href': '#page=Menu&media=Videos', 'src': 'img/icon_video.png' },
-					{ 'text': 'Music', 'class':'music', 'href': '#page=Menu&media=Music', 'src': 'img/icon_music.png' },
-					{ 'text': 'Pictures', 'class':'pictures', 'href': '#page=Menu&media=Pictures', 'src': 'img/icon_pictures.png' },
-                    { 'text': 'Up', 'class':'up', 'src':'img/buttons/up.png', 'onclick':function () { xbmc.Up(); } },
-                    { 'text': 'Down', 'class':'down', 'src':'img/buttons/down.png', 'onclick':function () { xbmc.Down(); } },
-                    { 'text': 'Left', 'class':'left', 'src':'img/buttons/left.png', 'onclick':function () { xbmc.Left(); } },
-                    { 'text': 'Right', 'class':'right', 'src':'img/buttons/right.png', 'onclick':function () { xbmc.Right(); } },
-                    { 'text': 'Select', 'class':'select', 'src':'img/buttons/select.png', 'onclick':function () { xbmc.Select(); } },
-                    { 'text': 'Back', 'class':'back', 'src':'img/buttons/back.png', 'onclick':function () { xbmc.Back(); } },
-                    { 'text': 'Settings', 'class':'settings', 'src':'img/settings.png', 'href': '#page=Settings' },
-                    { 'text': 'Playlists', 'class':'playlists', 'src':'img/playlist.png', 'href': '#page=Playlists' }
-				];
-				if (xbmc.version() >= 5) buttons = buttons.concat([
-                    { 'text': 'Information', 'class':'info', 'src':'img/buttons/info.png', 'onclick':function () { xbmc.Info(); } },
-                    { 'text': 'Menu', 'class':'menu', 'src':'img/buttons/menu.png', 'onclick':function () { xbmc.ContextMenu(); } },
-                    { 'text': 'Fullscreen', 'class':'fullscreen', 'src':'img/buttons/fullscreen.png', 'onclick':function () { xbmc.ToggleFullscreen(); } }
-				]);
-				callback({ 'class': 'remote', 'height': '340px', 'width': '340px', 'buttons': buttons });
-			}
-		},*/
 		'Home': {
 			'view': 'list',
 			'data': function (callback) {
@@ -95,7 +71,7 @@ var xbmcLibraryFactory = (function ($) {
                     { 'label': 'Playlists', 'link': '#page=Playlists', 'thumbnail':'img/playlist.png' },
                     { 'label': 'Settings', 'link': '#page=Settings', 'thumbnail':'img/settings.png' }
 				];
-				callback({ 'items': items, 'hideNavigation': true });
+				callback({ 'items': items, 'fanart': 'img/backgrounds/default.jpg', 'hideNavigation': true });
 			}
 		},
 		'Remote': {
@@ -188,7 +164,8 @@ var xbmcLibraryFactory = (function ($) {
 						type == 'TV Shows' ? 'tvshow' :
 						type == 'Music Videos' ? 'musicvideo' : '',
 					getGenres = type === 'Artists' ? xbmc.GetAudioGenres : function (x) { xbmc.GetVideoGenres({ 'type': t }, x) };
-					page.title = type+' by Genre';
+					page.title = type;
+					page.subtitle = 'by genre';
 					getGenres(function (d) {
 						page.items = d.genres.map(function (genre) {
 							return { 'label': genre.label, 'link': '#page='+type+'&genre='+genre.label }
@@ -390,6 +367,7 @@ var xbmcLibraryFactory = (function ($) {
 					}
 					if (page.thumbnail) page.thumbnail = xbmc.vfs2uri(page.thumbnail);
 					if (page.fanart) page.fanart = xbmc.vfs2uri(page.fanart);
+					if (page.runtime) page.runtime += ' minutes';
 					c();
 				  }).
 				  onfinish(function () {
@@ -503,7 +481,7 @@ var xbmcLibraryFactory = (function ($) {
 						song.thumbnailWidth = '50px';
 						if (song.file) {
 							song.play = function () {
-								xbmc.Play(song.file, 1);
+								xbmc.Play(song.file, 0);
 							};
 							song.add = function () {
 								xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': song.file } });
@@ -578,7 +556,7 @@ var xbmcLibraryFactory = (function ($) {
 						}
 						if (file.filetype === 'file') {
 							file.play = function () {
-								xbmc.Play(file.file, 1);
+								xbmc.Play(file.file, file.type === 'audio' ? 0 : file.type === 'video' ? 1 : 2);
 							};
 							file.add = function () {
 								xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': file.file } });
@@ -615,7 +593,7 @@ var xbmcLibraryFactory = (function ($) {
 		'Playlists': {
 			'view': 'list',
 			'data': function (callback) {
-				var page = {}, player;
+				var page = { 'title': 'Playlists' }, player;
 				Q().
 				  add(function (c) { //get playlists
 					xbmc.GetPlaylists(function (d) {

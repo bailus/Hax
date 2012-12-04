@@ -2,8 +2,8 @@ xbmcPlayerFactory = (function ($) {
 	"use strict";
 
 	//constants
-	var REFRESH = 1000, //ajax polling interval in ms
-	  REFRESHWS = 300, //websocket polling interval in ms
+	var REFRESH = 3e3, //ajax polling interval in ms
+	  REFRESHWS = 1e3, //websocket polling interval in ms
 	  pub = {},
 	  DEBUG = window.DEBUG || false;
 	
@@ -18,6 +18,19 @@ xbmcPlayerFactory = (function ($) {
 		}
 	};
 	
+	var progress;
+
+	var timeObjToSeconds = function (o) {
+		return ((((o.hours*60) + o.minutes)*60) + o.seconds)+(o.milliseconds/1e3);
+	};
+	var seconds2string = function (t) {
+		var str = function (n) {
+			return (n < 10 && n > -10 ? '0' : '')+Math.floor(n);
+		};
+		if (t > 3600) return str(t/3600) +':'+ str((t%3600)/60) +':'+ str(t%60);
+		else return str(t/60) +':'+ str(t%60);
+	};
+
 	var renderPlayer = function (player) {
 		var slider, volume, data;
 		
@@ -37,39 +50,47 @@ xbmcPlayerFactory = (function ($) {
 		  html(''). //remove child elements
 		  append(template.player.bind(data));
 		
-		//apply javascript UI hacks
-		/*player.find('#volume').slider({
-			'orientation': 'horizontal',
-			'stop': function (event, ui) {  //set the xbmc volume when the slider is changed by the user
-				xbmc.Volume({'volume':ui.value});
-			}
-		});*/
-		player.find('#progress').slider({
-			'stop': function (event, ui) {  //seek when the slider is changed by the user
-				xbmc.Seek({'value':ui.value});
-			},
-			'step': 0.001
+		//make the progress bar work
+		var progressElem = player.find('progress').get(0);
+		var timeElem = player.find('.time').get(0);
+		progress = Progress(function (position, time, duration) {
+			progressElem.value = Math.floor(position*10000);
+			timeElem.innerText = seconds2string(time)+'/'+seconds2string(duration);
 		});
+		progressElem.addEventListener('mouseup', function (e) { //enable seeking
+			//progress.updateFraction(e.offsetX/e.target.clientWidth);
+			xbmc.GetActivePlayer(function (player) {
+ 				xbmc.Seek({ 'playerid': player.playerid, 'value': (e.offsetX/e.target.clientWidth)*100 });
+			});
+		});
+
 		player.find('.show').on('click', function () {
 			player.toggleClass('visible');
 		});
 	};
+
 	
 	var on = function () {
-		var body = $('body'),
-		  progress = $('#progress');
+		var body = $('body');
 		return {
-			'Player.OnPlay': function () {
+			'Player.OnPlay': function (data) {
 				body.attr('data-status','playing');
+				xbmc.GetPlayerProperties({ 'playerid': data.data.player.playerid }, function (player) {
+					progress.start(timeObjToSeconds(player.totaltime), timeObjToSeconds(player.time));
+				});
 			},
-			'Player.OnPause': function () {
+			'Player.OnPause': function (data) {
 				body.attr('data-status','paused');
+				progress.pause();
 			},
-			'Player.OnStop': function () {
+			'Player.OnStop': function (data) {
 				body.attr('data-status','stopped');
+				progress.stop();
 			},
 			'Player.OnSeek': function (data) {
-				progress.slider('value', 0);
+				xbmc.GetPlayerProperties({ 'playerid': data.data.player.playerid }, function (player) {
+					progress.update(timeObjToSeconds(player.totaltime), timeObjToSeconds(data.data.player.time));
+				});
 			}
 		};
 	};
@@ -77,7 +98,7 @@ xbmcPlayerFactory = (function ($) {
 	var startTimer = function () {
 		var body = $('body'),
 		//volume = $('#volume'),
-		progress = $('#progress'),
+		//progress = $('#progress'),
 		nowPlaying = $('#nowPlaying'),
 		player = {},
 		sleep  = function (callback) {
@@ -106,10 +127,10 @@ xbmcPlayerFactory = (function ($) {
 			if (player) {
 				q.add(function (c) {
 					xbmc.GetPlayerProperties({ 'playerid': player.playerid }, function (properties) {
+						progress.update(timeObjToSeconds(properties.totaltime), timeObjToSeconds(properties.time));
 						$.extend(player, properties);
 						if (player.speed) body.attr('data-status','playing');
 						else body.attr('data-status','paused');
-						progress.slider('value',player.percentage);
 						c();
 					});
 				});
@@ -119,9 +140,7 @@ xbmcPlayerFactory = (function ($) {
 						xbmc.GetPlaylistItems({ 'playlistid': player.playlistid || 0 }, function (playlist) {
 							if (playlist.items) $.extend(player, playlist.items[player.position || 0]);
 							if (player.file) player.label = player.file.split('/')[--player.file.split('/').length];
-							nowPlaying.html('');
-							html.time(player).appendTo(nowPlaying);
-							html.playing(player.label).appendTo(nowPlaying);
+							nowPlaying.text(player.label);
 							c();
 						});
 					} else {
@@ -133,7 +152,7 @@ xbmcPlayerFactory = (function ($) {
 			} else {
 				q.add(function (c) {
 					body.attr('data-status','stopped');
-					progress.slider('value',0);
+					progress.stop();
 					nowPlaying.html('');
 					c();
 				});

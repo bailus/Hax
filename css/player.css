@@ -3,6 +3,8 @@
 	z-index:1000;
 	bottom:0;left:5%;
 	width:90%; height:0;
+	padding: 0 10px;
+	margin: 0 -10px;
 	display:block;
 	-webkit-transition: height 0.2s;
 	-moz-transition: height 0.2s;
@@ -21,22 +23,6 @@
 	width: 120px;
 	margin-left: -60px;
 	left: 50%;
-}
-#progress {
-	margin:10px 20px;
-}
-#nowPlaying {
-	font-size:16px;
-	overflow:hidden;
-	color:white;
-	margin:10px 30px;
-	height: 30px;
-	line-height: 30px;
-}
-#nowPlaying .time {
-	text-align:right;
-	float:right;
-	width:150px;
 }
 #player .PlayPause { background-image:url('../img/Play.png'); }
 body[data-status=playing] #player .PlayPause { background-image:url('../img/Pause.png'); }
@@ -59,5 +45,24 @@ body[data-status=playing] #player .PlayPause { background-image:url('../img/Paus
 #player .buttons span {
 	display:none;
 }
-#progress {
+progress {
+	border: none;
+	width: 100%;
+	height: 50px;
+	margin-top: 10px;
+}
+progress,
+progress::-webkit-progress-bar {
+	background: hsl(0, 0%, 30%);
+}
+progress::-moz-progress-bar,
+progress::-webkit-progress-value {
+	background: hsl(195, 64%, 30%);
+}
+.time {
+	float:right;
+}
+#nowPlaying {
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }

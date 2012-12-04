@@ -16,6 +16,7 @@ scripts=(
 	'js/iscroll.js'
 	'js/time.js'
 	'js/Q.js'
+	'js/progress.js'
 	'templates/details.js'
 	'templates/list.js'
 	'templates/listdetails.js'

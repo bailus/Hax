@@ -141,7 +141,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		},
 		'GetPlayerProperties': {
 			'method': 'Player.GetProperties',
-			'params': { 'properties': [ 'speed', 'time', 'percentage', 'totaltime', 'playlistid', 'position' ] }
+			'params': { 'properties': [ 'time', 'totaltime', 'playlistid', 'position' ] }
 		},
 		'GetActivePlayerProperties': function (callback) {
 			pub.GetActivePlayer(function (player) {

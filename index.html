@@ -3177,6 +3177,72 @@ jQuery(function () {
 });
 </script>
 <script>
+var Progress = function (update) {
+	var requestAnimationFrame = window.requestAnimationFrame ||
+      window.webkitRequestAnimationFrame ||
+      window.mozRequestAnimationFrame ||
+      window.oRequestAnimationFrame ||
+      window.msRequestAnimationFrame ||
+      function(c){ window.setTimeout(c, 100); },
+	start,
+	end,
+	paused,
+	duration,
+	position = function () {
+		var now = (new Date()).getTime();
+		return paused ? (paused-start)/duration : 
+			now <= end ? (now-start)/duration : 0;
+	},    
+	timer = function () {
+		var pos = position(),
+		d = duration/1e3;
+		update(pos, Math.floor(pos*d), Math.floor(d));
+		requestAnimationFrame(timer);
+	},
+	pub = {
+		start: function (totaltime, time) {
+			if (totaltime) pub.update(totaltime, time);
+			else unpause();
+		},
+		pause: function () {
+			var now = (new Date()).getTime();
+			if (!paused && now < end) paused = now;
+		},
+		unpause: function () {
+			if (paused) {
+				start += now-paused;
+				end += now-paused;
+				paused = undefined;
+			}
+		},
+		stop: function () {
+			var now = (new Date()).getTime();
+			end=start;
+			paused = undefined;
+		},
+		update: function (totaltime, time) {
+			var now = (new Date()).getTime();
+			if (totaltime > 0) duration = (totaltime*1e3);
+			if (now >= end || totaltime > 0) {
+				start = now - ((time||0)*1e3);
+				end = start + duration;
+			}
+			if (totaltime !== duration/1e3) pub.unpause();
+		},
+		updateFraction: function (fraction) {
+			var d = duration/1e3;
+			pub.update(d, d*fraction);
+		},
+		offset: function (d) {
+			var diff = d*1e3;
+			start += diff;
+			end += diff;
+		}
+	};
+	timer();
+	return pub;
+};</script>
+<script>
 /*global JsonML */
 
 /* namespace template */
@@ -4294,21 +4360,28 @@ template.player = JsonML.BST(
 	[
 		"div",
 		{
-			id: "nowPlaying"
-		}
-	],
-	"\n",
-	[
-		"div",
-		{
 			"class": "show"
 		}
 	],
 	"\n",
 	[
+		"progress",
+		{
+			max: "10000"
+		}
+	],
+	"\n",
+	[
 		"div",
 		{
-			id: "progress"
+			"class": "time"
+		}
+	],
+	"\n",
+	[
+		"div",
+		{
+			id: "nowPlaying"
 		}
 	],
 	"\n",
@@ -4523,7 +4596,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		},
 		'GetPlayerProperties': {
 			'method': 'Player.GetProperties',
-			'params': { 'properties': [ 'speed', 'time', 'percentage', 'totaltime', 'playlistid', 'position' ] }
+			'params': { 'properties': [ 'time', 'totaltime', 'playlistid', 'position' ] }
 		},
 		'GetActivePlayerProperties': function (callback) {
 			pub.GetActivePlayer(function (player) {
@@ -4841,30 +4914,6 @@ var xbmcLibraryFactory = (function ($) {
 	},
 	  
 	pages = {
-		/*'Home': {
-			'view': 'buttons',
-			'data': function (callback) {
-				var buttons = [
-					{ 'text': 'Videos', 'class':'videos', 'href': '#page=Menu&media=Videos', 'src': 'img/icon_video.png' },
-					{ 'text': 'Music', 'class':'music', 'href': '#page=Menu&media=Music', 'src': 'img/icon_music.png' },
-					{ 'text': 'Pictures', 'class':'pictures', 'href': '#page=Menu&media=Pictures', 'src': 'img/icon_pictures.png' },
-                    { 'text': 'Up', 'class':'up', 'src':'img/buttons/up.png', 'onclick':function () { xbmc.Up(); } },
-                    { 'text': 'Down', 'class':'down', 'src':'img/buttons/down.png', 'onclick':function () { xbmc.Down(); } },
-                    { 'text': 'Left', 'class':'left', 'src':'img/buttons/left.png', 'onclick':function () { xbmc.Left(); } },
-                    { 'text': 'Right', 'class':'right', 'src':'img/buttons/right.png', 'onclick':function () { xbmc.Right(); } },
-                    { 'text': 'Select', 'class':'select', 'src':'img/buttons/select.png', 'onclick':function () { xbmc.Select(); } },
-                    { 'text': 'Back', 'class':'back', 'src':'img/buttons/back.png', 'onclick':function () { xbmc.Back(); } },
-                    { 'text': 'Settings', 'class':'settings', 'src':'img/settings.png', 'href': '#page=Settings' },
-                    { 'text': 'Playlists', 'class':'playlists', 'src':'img/playlist.png', 'href': '#page=Playlists' }
-				];
-				if (xbmc.version() >= 5) buttons = buttons.concat([
-                    { 'text': 'Information', 'class':'info', 'src':'img/buttons/info.png', 'onclick':function () { xbmc.Info(); } },
-                    { 'text': 'Menu', 'class':'menu', 'src':'img/buttons/menu.png', 'onclick':function () { xbmc.ContextMenu(); } },
-                    { 'text': 'Fullscreen', 'class':'fullscreen', 'src':'img/buttons/fullscreen.png', 'onclick':function () { xbmc.ToggleFullscreen(); } }
-				]);
-				callback({ 'class': 'remote', 'height': '340px', 'width': '340px', 'buttons': buttons });
-			}
-		},*/
 		'Home': {
 			'view': 'list',
 			'data': function (callback) {
@@ -4876,7 +4925,7 @@ var xbmcLibraryFactory = (function ($) {
                     { 'label': 'Playlists', 'link': '#page=Playlists', 'thumbnail':'img/playlist.png' },
                     { 'label': 'Settings', 'link': '#page=Settings', 'thumbnail':'img/settings.png' }
 				];
-				callback({ 'items': items, 'hideNavigation': true });
+				callback({ 'items': items, 'fanart': 'img/backgrounds/default.jpg', 'hideNavigation': true });
 			}
 		},
 		'Remote': {
@@ -4969,7 +5018,8 @@ var xbmcLibraryFactory = (function ($) {
 						type == 'TV Shows' ? 'tvshow' :
 						type == 'Music Videos' ? 'musicvideo' : '',
 					getGenres = type === 'Artists' ? xbmc.GetAudioGenres : function (x) { xbmc.GetVideoGenres({ 'type': t }, x) };
-					page.title = type+' by Genre';
+					page.title = type;
+					page.subtitle = 'by genre';
 					getGenres(function (d) {
 						page.items = d.genres.map(function (genre) {
 							return { 'label': genre.label, 'link': '#page='+type+'&genre='+genre.label }
@@ -5171,6 +5221,7 @@ var xbmcLibraryFactory = (function ($) {
 					}
 					if (page.thumbnail) page.thumbnail = xbmc.vfs2uri(page.thumbnail);
 					if (page.fanart) page.fanart = xbmc.vfs2uri(page.fanart);
+					if (page.runtime) page.runtime += ' minutes';
 					c();
 				  }).
 				  onfinish(function () {
@@ -5284,7 +5335,7 @@ var xbmcLibraryFactory = (function ($) {
 						song.thumbnailWidth = '50px';
 						if (song.file) {
 							song.play = function () {
-								xbmc.Play(song.file, 1);
+								xbmc.Play(song.file, 0);
 							};
 							song.add = function () {
 								xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': song.file } });
@@ -5359,7 +5410,7 @@ var xbmcLibraryFactory = (function ($) {
 						}
 						if (file.filetype === 'file') {
 							file.play = function () {
-								xbmc.Play(file.file, 1);
+								xbmc.Play(file.file, file.type === 'audio' ? 0 : file.type === 'video' ? 1 : 2);
 							};
 							file.add = function () {
 								xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': file.file } });
@@ -5396,7 +5447,7 @@ var xbmcLibraryFactory = (function ($) {
 		'Playlists': {
 			'view': 'list',
 			'data': function (callback) {
-				var page = {}, player;
+				var page = { 'title': 'Playlists' }, player;
 				Q().
 				  add(function (c) { //get playlists
 					xbmc.GetPlaylists(function (d) {
@@ -5541,8 +5592,8 @@ xbmcPlayerFactory = (function ($) {
 	"use strict";
 
 	//constants
-	var REFRESH = 1000, //ajax polling interval in ms
-	  REFRESHWS = 300, //websocket polling interval in ms
+	var REFRESH = 3e3, //ajax polling interval in ms
+	  REFRESHWS = 1e3, //websocket polling interval in ms
 	  pub = {},
 	  DEBUG = window.DEBUG || false;
 	
@@ -5557,6 +5608,19 @@ xbmcPlayerFactory = (function ($) {
 		}
 	};
 	
+	var progress;
+
+	var timeObjToSeconds = function (o) {
+		return ((((o.hours*60) + o.minutes)*60) + o.seconds)+(o.milliseconds/1e3);
+	};
+	var seconds2string = function (t) {
+		var str = function (n) {
+			return (n < 10 && n > -10 ? '0' : '')+Math.floor(n);
+		};
+		if (t > 3600) return str(t/3600) +':'+ str((t%3600)/60) +':'+ str(t%60);
+		else return str(t/60) +':'+ str(t%60);
+	};
+
 	var renderPlayer = function (player) {
 		var slider, volume, data;
 		
@@ -5576,39 +5640,47 @@ xbmcPlayerFactory = (function ($) {
 		  html(''). //remove child elements
 		  append(template.player.bind(data));
 		
-		//apply javascript UI hacks
-		/*player.find('#volume').slider({
-			'orientation': 'horizontal',
-			'stop': function (event, ui) {  //set the xbmc volume when the slider is changed by the user
-				xbmc.Volume({'volume':ui.value});
-			}
-		});*/
-		player.find('#progress').slider({
-			'stop': function (event, ui) {  //seek when the slider is changed by the user
-				xbmc.Seek({'value':ui.value});
-			},
-			'step': 0.001
+		//make the progress bar work
+		var progressElem = player.find('progress').get(0);
+		var timeElem = player.find('.time').get(0);
+		progress = Progress(function (position, time, duration) {
+			progressElem.value = Math.floor(position*10000);
+			timeElem.innerText = seconds2string(time)+'/'+seconds2string(duration);
 		});
+		progressElem.addEventListener('mouseup', function (e) { //enable seeking
+			//progress.updateFraction(e.offsetX/e.target.clientWidth);
+			xbmc.GetActivePlayer(function (player) {
+ 				xbmc.Seek({ 'playerid': player.playerid, 'value': (e.offsetX/e.target.clientWidth)*100 });
+			});
+		});
+
 		player.find('.show').on('click', function () {
 			player.toggleClass('visible');
 		});
 	};
+
 	
 	var on = function () {
-		var body = $('body'),
-		  progress = $('#progress');
+		var body = $('body');
 		return {
-			'Player.OnPlay': function () {
+			'Player.OnPlay': function (data) {
 				body.attr('data-status','playing');
+				xbmc.GetPlayerProperties({ 'playerid': data.data.player.playerid }, function (player) {
+					progress.start(timeObjToSeconds(player.totaltime), timeObjToSeconds(player.time));
+				});
 			},
-			'Player.OnPause': function () {
+			'Player.OnPause': function (data) {
 				body.attr('data-status','paused');
+				progress.pause();
 			},
-			'Player.OnStop': function () {
+			'Player.OnStop': function (data) {
 				body.attr('data-status','stopped');
+				progress.stop();
 			},
 			'Player.OnSeek': function (data) {
-				progress.slider('value', 0);
+				xbmc.GetPlayerProperties({ 'playerid': data.data.player.playerid }, function (player) {
+					progress.update(timeObjToSeconds(player.totaltime), timeObjToSeconds(data.data.player.time));
+				});
 			}
 		};
 	};
@@ -5616,7 +5688,7 @@ xbmcPlayerFactory = (function ($) {
 	var startTimer = function () {
 		var body = $('body'),
 		//volume = $('#volume'),
-		progress = $('#progress'),
+		//progress = $('#progress'),
 		nowPlaying = $('#nowPlaying'),
 		player = {},
 		sleep  = function (callback) {
@@ -5645,10 +5717,10 @@ xbmcPlayerFactory = (function ($) {
 			if (player) {
 				q.add(function (c) {
 					xbmc.GetPlayerProperties({ 'playerid': player.playerid }, function (properties) {
+						progress.update(timeObjToSeconds(properties.totaltime), timeObjToSeconds(properties.time));
 						$.extend(player, properties);
 						if (player.speed) body.attr('data-status','playing');
 						else body.attr('data-status','paused');
-						progress.slider('value',player.percentage);
 						c();
 					});
 				});
@@ -5658,9 +5730,7 @@ xbmcPlayerFactory = (function ($) {
 						xbmc.GetPlaylistItems({ 'playlistid': player.playlistid || 0 }, function (playlist) {
 							if (playlist.items) $.extend(player, playlist.items[player.position || 0]);
 							if (player.file) player.label = player.file.split('/')[--player.file.split('/').length];
-							nowPlaying.html('');
-							html.time(player).appendTo(nowPlaying);
-							html.playing(player.label).appendTo(nowPlaying);
+							nowPlaying.text(player.label);
 							c();
 						});
 					} else {
@@ -5672,7 +5742,7 @@ xbmcPlayerFactory = (function ($) {
 			} else {
 				q.add(function (c) {
 					body.attr('data-status','stopped');
-					progress.slider('value',0);
+					progress.stop();
 					nowPlaying.html('');
 					c();
 				});
