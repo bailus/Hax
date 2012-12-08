@@ -21,8 +21,8 @@ eg:
 	function (callback) {
 		callback();
 		return {
-			'timeout': 1000,
-			'ontimeout': function (c) {
+			'timeout': 1000, //run the next function in the queue (or finish) after this many milliseconds
+			'ontimeout': function (c) { //optional
 				console.log('timeout');
 				c(); //run the next function in the queue
 			}

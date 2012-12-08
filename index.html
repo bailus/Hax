@@ -3056,8 +3056,8 @@ eg:
 	function (callback) {
 		callback();
 		return {
-			'timeout': 1000,
-			'ontimeout': function (c) {
+			'timeout': 1000, //run the next function in the queue (or finish) after this many milliseconds
+			'ontimeout': function (c) { //optional
 				console.log('timeout');
 				c(); //run the next function in the queue
 			}
@@ -3190,12 +3190,13 @@ var Progress = function (update) {
 	duration,
 	position = function () {
 		var now = (new Date()).getTime();
-		return paused ? (paused-start)/duration : 
+		return !start || !end || !duration ? 0 :
+			paused ? (paused-start)/duration : 
 			now <= end ? (now-start)/duration : 0;
 	},    
 	timer = function () {
 		var pos = position(),
-		d = duration/1e3;
+		d = duration/1e3 || 0;
 		update(pos, Math.floor(pos*d), Math.floor(d));
 		requestAnimationFrame(timer);
 	},
@@ -3205,29 +3206,36 @@ var Progress = function (update) {
 			else unpause();
 		},
 		pause: function () {
-			var now = (new Date()).getTime();
-			if (!paused && now < end) paused = now;
+			if (!paused) {
+				var now = (new Date()).getTime();
+				if (now < end) paused = now;
+			}
 		},
 		unpause: function () {
 			if (paused) {
+				var now = (new Date()).getTime();
 				start += now-paused;
 				end += now-paused;
 				paused = undefined;
 			}
 		},
 		stop: function () {
-			var now = (new Date()).getTime();
-			end=start;
+			//var now = (new Date()).getTime();
+			start = undefined;
+			end = undefined;
 			paused = undefined;
+			duration = undefined;
 		},
 		update: function (totaltime, time) {
 			var now = (new Date()).getTime();
+			var pause = paused-start;
 			if (totaltime > 0) duration = (totaltime*1e3);
 			if (now >= end || totaltime > 0) {
 				start = now - ((time||0)*1e3);
 				end = start + duration;
+				paused = start + pause;
 			}
-			if (totaltime !== duration/1e3) pub.unpause();
+			//if (totaltime !== duration/1e3) pub.unpause();
 		},
 		updateFraction: function (fraction) {
 			var d = duration/1e3;
@@ -4365,30 +4373,49 @@ template.player = JsonML.BST(
 	],
 	"\n",
 	[
-		"progress",
-		{
-			max: "10000"
-		}
-	],
-	"\n",
-	[
 		"div",
 		{
-			"class": "time"
-		}
-	],
-	"\n",
-	[
-		"div",
-		{
-			id: "nowPlaying"
-		}
-	],
-	"\n",
-	function() {
+			"class": "player"
+		},
+		" ",
+		""/* <progress max="1000"></progress> */,
+		" ",
+		[
+			"div",
+			{
+				id: "progress"
+			},
+			" ",
+			[
+				"div",
+				{
+					class: "bar"
+				}
+			],
+			" ",
+			[
+				"div",
+				{
+					class: "status"
+				}
+			],
+			" ",
+			[
+				"div",
+				{
+					class: "time"
+				}
+			],
+			" "
+		],
+		" ",
+		function() {
 				return JsonML.BST(template.buttons).dataBind(this.data, this.index, this.count);
-			}
-]);</script>
+			},
+		"\n"
+	]
+]);
+</script>
 <script>
 var template;if("undefined"===typeof template){template={};}template.recentlyaddeditem=JsonML.BST(["li",{"class":"recentlyaddeditem"}," ",["span",{"class":"label"},function(){return this.data.label;}]," ",["div",{"jbst:visible":function(){return !!this.data.thumbnail;},"class":"thumbnail"}," ",["a",{href:function(){return this.data.link;}},["img",{src:"/img/transparent.png","data-original":function(){return this.data.thumbnail;}}]]," "]," "]);
 </script>
@@ -4550,6 +4577,10 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 			'method': 'VideoLibrary.GetMusicVideos',
 			'cache': true
 		},
+		'GetMusicVideo': {
+			'params': { 'properties': [ 'title', 'runtime', 'year', 'album', 'artist', 'track', 'thumbnail', 'file' ] },
+			'method': 'VideoLibrary.GetMusicVideo'
+		},
 		'GetSources': {
 			'method': 'Files.GetSources',
 			'cache': true
@@ -4569,7 +4600,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		},
 		'GetPlaylistItems': {
 			'method': 'Playlist.GetItems',
-			'params': { 'properties': [ 'title', 'file', 'thumbnail', 'runtime', 'duration' ] }
+			'params': { 'properties': [ 'title', 'showtitle', 'artist', 'season', 'episode', 'file', 'thumbnail', 'runtime', 'duration' ] }
 		},
 		'AddToPlaylist': {
 			'method': 'Playlist.Add'
@@ -4596,7 +4627,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		},
 		'GetPlayerProperties': {
 			'method': 'Player.GetProperties',
-			'params': { 'properties': [ 'time', 'totaltime', 'playlistid', 'position' ] }
+			'params': { 'properties': [ 'time', 'totaltime', 'speed', 'playlistid', 'position', 'repeat', 'type', 'partymode', 'shuffled', 'live' ] }
 		},
 		'GetActivePlayerProperties': function (callback) {
 			pub.GetActivePlayer(function (player) {
@@ -4616,20 +4647,22 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 			'requires': { 'name': 'playerid', 'value': 'GetActivePlayerID' },
 			'method': 'Player.Stop'
 		},
-		'GoNext': {
+		'GoTo': {
 			'requires': { 'name': 'playerid', 'value': 'GetActivePlayerID' },
-			'method': 'Player.GoNext'
+			'method': 'Player.GoTo'
 		},
-		'GoPrevious': {
-			'requires': { 'name': 'playerid', 'value': 'GetActivePlayerID' },
-			'method': 'Player.GoPrevious'
+		'GoNext': function (callback) {
+			pub.GoTo({ 'to': 'next' }, callback);
 		},
-		'Play': function (file, playlistid, callback) {
+		'GoPrevious': function (callback) {
+			pub.GoTo({ 'to': 'previous' }, callback);
+		},
+		'Play': function (o, playlistid, position) {
 			pub.ClearPlaylist({ 'playlistid': playlistid }, function () {
-				pub.AddToPlaylist({ 'playlistid': playlistid, 'item': { 'file': file } }, function () {
-					pub.Open({ 'item': { 'playlistid': playlistid } }, callback);
+				pub.AddToPlaylist({ 'playlistid': playlistid, 'item': typeof o === 'string' ? { 'file': o } : o }, function () {
+					pub.Open({ 'item': { 'playlistid': playlistid, 'position': position||0 } });
 				});
-			});				
+			});
 		},
 		'Seek': {
 			'requires': { 'name': 'playerid', 'value': 'GetActivePlayerID' },
@@ -4774,14 +4807,14 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		if (item instanceof Function) { //if item is a function, just use that
 			pub[index] = item;
 			return;
-		}
+		};
 		if (item.requires) pub[index] = function (params, callback) { //wrap the template if there is a dependency
 			if (params instanceof Function) { callback = params; params = {}; }
 			if (!params) params = {};
 			//return the required function with the template as a callback
 			pub[item.requires.value]( {}, function (result) {
 				var newparams = {};
-				if (result && item.requires.name) newparams[item.requires.name] = result;
+				if (result !== undefined && item.requires.name) newparams[item.requires.name] = result;
 				$.extend(newparams, params);
 				template(newparams, callback);
 			});
@@ -4921,14 +4954,14 @@ var xbmcLibraryFactory = (function ($) {
 					{ 'label': 'Videos', 'link': '#page=Menu&media=Videos', 'thumbnail': 'img/icon_video.png' },
 					{ 'label': 'Music', 'link': '#page=Menu&media=Music', 'thumbnail': 'img/icon_music.png' },
 					{ 'label': 'Pictures', 'link': '#page=Menu&media=Pictures', 'thumbnail': 'img/icon_pictures.png' },
-                    { 'label': 'Remote', 'link': '#page=Remote', 'thumbnail':'img/remote.png' },
+                    //{ 'label': 'Remote', 'link': '#page=Remote', 'thumbnail':'img/remote.png' },
                     { 'label': 'Playlists', 'link': '#page=Playlists', 'thumbnail':'img/playlist.png' },
                     { 'label': 'Settings', 'link': '#page=Settings', 'thumbnail':'img/settings.png' }
 				];
 				callback({ 'items': items, 'fanart': 'img/backgrounds/default.jpg', 'hideNavigation': true });
 			}
 		},
-		'Remote': {
+		/*'Remote': {
 			'view': 'buttons',
 			'data': function (callback) {
 				var buttons = [
@@ -4937,16 +4970,14 @@ var xbmcLibraryFactory = (function ($) {
                     { 'text': 'Left', 'class':'left', 'src':'img/buttons/left.png', 'onclick':function () { xbmc.Left(); } },
                     { 'text': 'Right', 'class':'right', 'src':'img/buttons/right.png', 'onclick':function () { xbmc.Right(); } },
                     { 'text': 'Select', 'class':'select', 'src':'img/buttons/select.png', 'onclick':function () { xbmc.Select(); } },
-                    { 'text': 'Back', 'class':'back', 'src':'img/buttons/back.png', 'onclick':function () { xbmc.Back(); } }
-				];
-				if (xbmc.version() >= 5) buttons = buttons.concat([
+                    { 'text': 'Back', 'class':'back', 'src':'img/buttons/back.png', 'onclick':function () { xbmc.Back(); } },
                     { 'text': 'Information', 'class':'info', 'src':'img/buttons/info.png', 'onclick':function () { xbmc.Info(); } },
                     { 'text': 'Menu', 'class':'menu', 'src':'img/buttons/menu.png', 'onclick':function () { xbmc.ContextMenu(); } },
                     { 'text': 'Fullscreen', 'class':'fullscreen', 'src':'img/buttons/fullscreen.png', 'onclick':function () { xbmc.ToggleFullscreen(); } }
-				]);
+				];
 				callback({ 'title': 'Remote', 'class': 'remote', 'height': '340px', 'width': '340px', 'buttons': buttons });
 			}
-		},
+		},*/
 		'Menu': {
 			'view': 'list',
 			'data': function (callback) {
@@ -4965,6 +4996,9 @@ var xbmcLibraryFactory = (function ($) {
 							{ 'label': 'TV Shows', 'items': [
 								{ 'label': 'By Title', 'link': '#page=TV Shows', 'thumbnail': 'img/DefaultTVShows.png' },
 								{ 'label': 'By Genre', 'link': '#page=Genres&type=TV Shows', 'thumbnail': 'img/DefaultMusicGenres.png' }
+							] },
+							{ 'label': 'Music Videos', 'items': [
+								{ 'label': 'By Artist', 'link': '#page=Music Videos', 'thumbnail': 'img/DefaultMusicArtists.png' }
 							] }
 						],
 						'Music': [
@@ -4972,6 +5006,9 @@ var xbmcLibraryFactory = (function ($) {
 								{ 'label': 'By Name', 'link': '#page=Artists', 'thumbnail': 'img/DefaultMusicArtists.png' },
 								{ 'label': 'By Genre', 'link': '#page=Artists&group=genre', 'thumbnail': 'img/DefaultMusicGenres.png' }
 							] },
+							{ 'label': 'Music Videos', 'items': [
+								{ 'label': 'By Artist', 'link': '#page=Music Videos', 'thumbnail': 'img/DefaultMusicArtists.png' }
+							] }
 						],
 						'Pictures': [ ]
 					})[media]
@@ -5021,9 +5058,9 @@ var xbmcLibraryFactory = (function ($) {
 					page.title = type;
 					page.subtitle = 'by genre';
 					getGenres(function (d) {
-						page.items = d.genres.map(function (genre) {
+						page.items = d.genres instanceof Array ? d.genres.map(function (genre) {
 							return { 'label': genre.label, 'link': '#page='+type+'&genre='+genre.label }
-						});
+						}) : [];
 						c();
 					});
 				});
@@ -5045,7 +5082,7 @@ var xbmcLibraryFactory = (function ($) {
 						genre ? function (movie) { if (movie.genre.indexOf(genre) >= 0) return true; } :
 						function () { return true; };
 					xbmc.GetMovies(function (d) {
-						page.items = d.movies.filter(filter) || [];
+						page.items = d.movies instanceof Array ? d.movies.filter(filter) : [];
 						c();
 					});
 				});
@@ -5056,6 +5093,7 @@ var xbmcLibraryFactory = (function ($) {
 						if (movie.file) {
 							movie.play = function () {
 								xbmc.Play(movie.file, 1);
+								//xbmc.Open({ 'item': { 'path': xbmc.vfs2uri(movie.file) } });
 							};
 							movie.add = function () {
 								xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': movie.file } });
@@ -5123,7 +5161,7 @@ var xbmcLibraryFactory = (function ($) {
 							genre ? function (show) { if (show.genre.indexOf(genre) >= 0) return true; } :
 							function () { return true; };
 					xbmc.GetTVShows(function (d) {
-						page.items = d.tvshows.filter(filter) || [];
+						page.items = d.tvshows instanceof Array ? d.tvshows.filter(filter) : [];
 						c();
 					});
 				});
@@ -5171,10 +5209,10 @@ var xbmcLibraryFactory = (function ($) {
 				  add(function (c) { //format episodes
 					$.each(page.items, function (i, episode) {
 						episode.play = function () {
-							xbmc.Play(episode.file, 1);
+							xbmc.Play({ 'episodeid': episode.episodeid }, 1);
 						};
 						episode.add = function () {
-							xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': episode.file } });
+							xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'episodeid': episode.episodeid } });
 						};
 						episode.link = '#page=Episode&episodeid='+episode.episodeid+'&tvshowid='+tvshowid;
 						episode.label = episode.title || '';
@@ -5213,10 +5251,10 @@ var xbmcLibraryFactory = (function ($) {
 					if (page.showtitle) page.title = page.showtitle;
 					if (page.file) {
 						page.play = function () {
-							xbmc.Play(page.file, 1);
+							xbmc.Play({ 'episodeid': episodeid }, 1);
 						};
 						page.add = function () {
-							xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': page.file } });
+							xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'episodeid': episodeid } });
 						};
 					}
 					if (page.thumbnail) page.thumbnail = xbmc.vfs2uri(page.thumbnail);
@@ -5228,6 +5266,37 @@ var xbmcLibraryFactory = (function ($) {
 					callback(page);
 				  }).
 				  start();
+			}
+		},
+		'Music Videos': {
+			'view': 'list',
+			'groupby': 'artist',
+			'data': function (callback) {
+				var page = { title: 'Music Videos' }, q = Q();
+				q.add(function (c) { //get music videos
+					xbmc.GetMusicVideos(function (d) {
+						page.items = d.musicvideos || [];
+						c();
+					});
+				});
+				q.add(function (c) { //format music videos
+				  	$.each(page.items, function (i, mv) {
+				  		mv.artist = mv.artist.join(', ');
+				  		mv.label = mv.title;
+				  		mv.details = (mv.album ? mv.album+(mv.year ? ' ('+mv.year+')' : '') : '');
+						mv.play = function () {
+							xbmc.Play({ 'file': mv.file }, 1);
+						};
+						mv.add = function () {
+							xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': mv.file } });
+						};
+					});
+					c();
+				});
+				q.onfinish(function () {
+					callback(page);
+				});
+				q.start();
 			}
 		},
 		'Artists': {
@@ -5293,6 +5362,12 @@ var xbmcLibraryFactory = (function ($) {
 						album.thumbnail = album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : 'img/DefaultAudio.png';
 						album.thumbnailWidth = '50px';
 						//if (album.year) album.details = album.year;
+						album.play = function () {
+							xbmc.Play({ 'albumid': album.albumid }, 0);
+						};
+						album.add = function () {
+							xbmc.AddToPlaylist({ 'playlistid': 0, 'item': { 'albumid': album.albumid } });
+						};
 					});
 					c();
 				  }).
@@ -5320,6 +5395,12 @@ var xbmcLibraryFactory = (function ($) {
 					page.title = page.artist.join(', ') || '';
 					page.link = '#page=Artist&artistid='+page.artistid;
 					page.subtitle = page.label || '';
+					page.play = function () {
+						xbmc.Play({ 'albumid': albumid }, 0);
+					};
+					page.add = function () {
+						xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'albumid': albumid } });
+					};
 					c();
 				  }).
 				  add(function (c) { //get songs
@@ -5329,13 +5410,15 @@ var xbmcLibraryFactory = (function ($) {
 					});
 				  }).
 				  add(function (c) { //format songs
+				  	console.dir(page.items)
 					$.each(page.items, function (i, song) {
 						if (song.track <= 10000) song.number = song.track;
 						song.thumbnail = undefined;
 						song.thumbnailWidth = '50px';
 						if (song.file) {
 							song.play = function () {
-								xbmc.Play(song.file, 0);
+								//xbmc.Play(song.file, 0);
+								xbmc.Play({ 'albumid': albumid }, 0, song.track-1);
 							};
 							song.add = function () {
 								xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': song.file } });
@@ -5410,7 +5493,9 @@ var xbmcLibraryFactory = (function ($) {
 						}
 						if (file.filetype === 'file') {
 							file.play = function () {
-								xbmc.Play(file.file, file.type === 'audio' ? 0 : file.type === 'video' ? 1 : 2);
+								if (file.type === 'unknown' || !file.type) file.type = getHash('media');
+								//xbmc.Play(file.file, file.type === 'audio' ? 0 : file.type === 'video' ? 1 : 2);
+								xbmc.Open({ 'item': { 'file': xbmc.vfs2uri(file.file) } });
 							};
 							file.add = function () {
 								xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': file.file } });
@@ -5592,21 +5677,9 @@ xbmcPlayerFactory = (function ($) {
 	"use strict";
 
 	//constants
-	var REFRESH = 3e3, //ajax polling interval in ms
-	  REFRESHWS = 1e3, //websocket polling interval in ms
+	var REFRESH = 1e3, //ajax polling interval in ms
 	  pub = {},
 	  DEBUG = window.DEBUG || false;
-	
-
-	//html helper functions
-	var html = {
-		'time': function (player) {
-			return $('<div class="time">'+time.tostring(player.time)+' / '+time.tostring(player.totaltime)+'</div>');
-		},
-		'playing': function (label) {
-			return $('<div class="playing">'+label+'</div>');
-		}
-	};
 	
 	var progress;
 
@@ -5630,7 +5703,16 @@ xbmcPlayerFactory = (function ($) {
                 { 'text': 'Previous', 'class':'GoPrevious', 'onclick':function () { xbmc.GoPrevious(); } },
 	            { 'text': 'Play / Pause', 'class': 'PlayPause', 'onclick': function () { xbmc.PlayPause(); } },
                 { 'text': 'Stop', 'class':'Stop', 'onclick':function () { xbmc.Stop(); } },
-                { 'text': 'Next', 'class':'GoNext', 'onclick':function () { xbmc.GoNext(); } }
+                { 'text': 'Next', 'class':'GoNext', 'onclick':function () { xbmc.GoNext(); } },
+                { 'text': 'Up', 'class':'up', 'onclick':function () { xbmc.Up(); } },
+                { 'text': 'Down', 'class':'down', 'onclick':function () { xbmc.Down(); } },
+                { 'text': 'Left', 'class':'left', 'onclick':function () { xbmc.Left(); } },
+                { 'text': 'Right', 'class':'right', 'onclick':function () { xbmc.Right(); } },
+                { 'text': 'Select', 'class':'select', 'onclick':function () { xbmc.Select(); } },
+                { 'text': 'Back', 'class':'back', 'onclick':function () { xbmc.Back(); } },
+                { 'text': 'Information', 'class':'info', 'onclick':function () { xbmc.Info(); } },
+                { 'text': 'Menu', 'class':'menu', 'onclick':function () { xbmc.ContextMenu(); } },
+                { 'text': 'Fullscreen', 'class':'fullscreen', 'onclick':function () { xbmc.ToggleFullscreen(); } }
 			],
 			'hideNavigation': true
 		};
@@ -5641,16 +5723,31 @@ xbmcPlayerFactory = (function ($) {
 		  append(template.player.bind(data));
 		
 		//make the progress bar work
-		var progressElem = player.find('progress').get(0);
-		var timeElem = player.find('.time').get(0);
+		var oldString,
+		progressElem = document.getElementById('progress'),
+		$progressElem = $(progressElem),
+		$statusElem = $progressElem.children('.status'),
+		statusElem = $statusElem.get(0),
+		$timeElem = $progressElem.children('.time'),
+		timeElem = $timeElem.get(0),
+		$barElem = $progressElem.children('.bar');;
 		progress = Progress(function (position, time, duration) {
-			progressElem.value = Math.floor(position*10000);
-			timeElem.innerText = seconds2string(time)+'/'+seconds2string(duration);
+			var value = Math.round(position*10000);
+			var string = seconds2string(time)+'/'+seconds2string(duration);
+			if (string !== oldString) {
+				timeElem.innerHTML = string;
+				$barElem.css('width', (value/100)+'%');
+			}
+			oldString = string;
 		});
 		progressElem.addEventListener('mouseup', function (e) { //enable seeking
-			//progress.updateFraction(e.offsetX/e.target.clientWidth);
+			var value = (e.pageX - $progressElem.offset().left - 10) / ($progressElem.width());
+			if (value > 1) value = 1;
+			if (value < 0) value = 0;
+			value = Math.round(value*100);
+			if (xbmc.transport() === 'ajax') { progress.updateFraction(value/100); }
 			xbmc.GetActivePlayer(function (player) {
- 				xbmc.Seek({ 'playerid': player.playerid, 'value': (e.offsetX/e.target.clientWidth)*100 });
+ 				if (player) xbmc.Seek({ 'playerid': player.playerid, 'value': value });
 			});
 		});
 
@@ -5687,68 +5784,59 @@ xbmcPlayerFactory = (function ($) {
 	
 	var startTimer = function () {
 		var body = $('body'),
-		//volume = $('#volume'),
-		//progress = $('#progress'),
-		nowPlaying = $('#nowPlaying'),
+		progressElem = document.getElementById('progress'),
+		$progressElem = $(progressElem),
+		$statusElem = $progressElem.children('.status'),
+		statusElem = $statusElem.get(0),
 		player = {},
 		sleep  = function (callback) {
-			window.setTimeout(callback, xbmc.transport() === 'websocket' ? REFRESHWS : REFRESH);
+			window.setTimeout(callback, REFRESH);
 		},
 		q = Q();
-		/*q.add(function (callback) {
-			xbmc.GetApplicationProperties(function (app) {
-				if (app) {
-					//volume.slider('value',app.volume);
-					document.title = app.name;
-				}
-				callback();
-			});
-		});
-		q.add(sleep);*/
-		q.add(function (callback) {
-			xbmc.GetActivePlayer(function (p) {
+		q.add(function (c) {
+			var cancel = false;
+			xbmc.GetActivePlayerProperties(function (p) {
+				if (cancel) return;
+				//console.log('GetActivePlayerProperties', p)
 				player = p;
-				callback();
-			});
-		});
-		q.add(sleep);
-		q.add(function (callback) {
-			var q = Q().onfinish(callback);
-			if (player) {
-				q.add(function (c) {
-					xbmc.GetPlayerProperties({ 'playerid': player.playerid }, function (properties) {
-						progress.update(timeObjToSeconds(properties.totaltime), timeObjToSeconds(properties.time));
-						$.extend(player, properties);
-						if (player.speed) body.attr('data-status','playing');
-						else body.attr('data-status','paused');
-						c();
-					});
-				});
-				q.add(sleep);
-				q.add(function (c) {
-					if (player.playlistid !== undefined) {
-						xbmc.GetPlaylistItems({ 'playlistid': player.playlistid || 0 }, function (playlist) {
-							if (playlist.items) $.extend(player, playlist.items[player.position || 0]);
-							if (player.file) player.label = player.file.split('/')[--player.file.split('/').length];
-							nowPlaying.text(player.label);
-							c();
-						});
-					} else {
-						nowPlaying.html('');
-						c();
+				if (player) {
+					progress.update(timeObjToSeconds(player.totaltime), timeObjToSeconds(player.time));
+					if (player.speed > 0) {
+						progress.unpause();
+						body.attr('data-status','playing');
+					} else if (player.speed === 0) {
+						progress.pause();
+						body.attr('data-status','paused');
 					}
-				});
-				q.add(sleep);
-			} else {
-				q.add(function (c) {
+				} else {
 					body.attr('data-status','stopped');
+					statusElem.innerHTML = '';
 					progress.stop();
-					nowPlaying.html('');
-					c();
+				}
+				sleep(c);
+			});
+			return { 'timeout':1e3, 'ontimeout': function (c) {  } };
+		});
+		q.add(function (c) {
+			var cancel = false;
+			if (player && player.playlistid !== undefined && player.position !== undefined) {
+				if (!player.playlistid) player.playlistid = 0;
+				xbmc.GetPlaylistItems({ 'playlistid': player.playlistid }, function (playlist) {
+					if (!playlist.items) return;
+					var item = playlist.items[player.position];
+					//console.log('Current Playlist Item: ', item)
+					if (item) statusElem.innerHTML = ''+
+						(item.showtitle ? item.showtitle+' ' : '')+
+						(item.season>=0 && item.episode>=0 ? item.season+'x'+item.episode+' ':'')+
+						(item.artist && item.artist.length ? item.artist.join(', ')+' - ' : '')+
+						(item.title||item.label);
+					else statusElem.innerHTML = '';
+					sleep(c);
 				});
-				q.add(sleep);
+			} else {
+				c();
 			}
-			q.start();
+			return { 'timeout':1e3, 'ontimeout': function (c) {  } };
 		});
 		q.onfinish(q.start); //re-start the queue when it finishes
 		q.start(); //start the queue

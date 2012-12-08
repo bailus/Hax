@@ -393,7 +393,7 @@ header {
 
 
 
-/* REMOTE BUTTONS */
+/* REMOTE BUTTONS 
 .remote {
 	position:relative;
 	width:100%;
@@ -431,7 +431,7 @@ header {
 .remote .previous  { top:280px; left: 50%; margin-left:-100px;  }
 .remote .next      { top:280px; right:50%; margin-right:-100px; }
 .remote .settings  { top:280px; left: 50%; margin-left:-100px;  }
-.remote .playlists { top:280px; right:50%; margin-right:-100px; }
+.remote .playlists { top:280px; right:50%; margin-right:-100px; }*/
 
 .homeButton, .backButton {
 	display:block;
@@ -441,5 +441,41 @@ header {
 .homeButton img, .backButton img {
 	width:42px; height:42px;
 }
-.backButton { float:left; margin-left:10px; }
-.homeButton { float:right; margin-right:10px; }
+.backButton { float:left; }
+.homeButton { float:right; }
+
+.page[data-page="Home"] {
+	max-width: 350px;
+}
+.page[data-page="Home"] header {
+	display: none;
+}
+.page[data-page="Home"] .list {
+	text-align: center;
+}
+.page[data-page="Home"] .listItem {
+	height: auto;
+	width: 90px;
+	text-align: center;
+	border:none;
+	display: inline-block;
+	margin: 10px;
+}
+.page[data-page="Menu"] .thumbnail {
+	display: block !important;
+}
+.page[data-page="Home"] .thumbnail {
+	display: block !important;
+	float: none;
+	width: 64px;
+	height: 64px;
+	position: relative;
+	left:50%;
+	margin-left: -32px;
+}
+.page[data-page="Home"] .label {
+	float: none;
+	height: auto;
+	line-height: normal;
+	margin:0;padding:0;
+}

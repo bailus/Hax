@@ -2,21 +2,9 @@ xbmcPlayerFactory = (function ($) {
 	"use strict";
 
 	//constants
-	var REFRESH = 3e3, //ajax polling interval in ms
-	  REFRESHWS = 1e3, //websocket polling interval in ms
+	var REFRESH = 1e3, //ajax polling interval in ms
 	  pub = {},
 	  DEBUG = window.DEBUG || false;
-	
-
-	//html helper functions
-	var html = {
-		'time': function (player) {
-			return $('<div class="time">'+time.tostring(player.time)+' / '+time.tostring(player.totaltime)+'</div>');
-		},
-		'playing': function (label) {
-			return $('<div class="playing">'+label+'</div>');
-		}
-	};
 	
 	var progress;
 
@@ -40,7 +28,16 @@ xbmcPlayerFactory = (function ($) {
                 { 'text': 'Previous', 'class':'GoPrevious', 'onclick':function () { xbmc.GoPrevious(); } },
 	            { 'text': 'Play / Pause', 'class': 'PlayPause', 'onclick': function () { xbmc.PlayPause(); } },
                 { 'text': 'Stop', 'class':'Stop', 'onclick':function () { xbmc.Stop(); } },
-                { 'text': 'Next', 'class':'GoNext', 'onclick':function () { xbmc.GoNext(); } }
+                { 'text': 'Next', 'class':'GoNext', 'onclick':function () { xbmc.GoNext(); } },
+                { 'text': 'Up', 'class':'up', 'onclick':function () { xbmc.Up(); } },
+                { 'text': 'Down', 'class':'down', 'onclick':function () { xbmc.Down(); } },
+                { 'text': 'Left', 'class':'left', 'onclick':function () { xbmc.Left(); } },
+                { 'text': 'Right', 'class':'right', 'onclick':function () { xbmc.Right(); } },
+                { 'text': 'Select', 'class':'select', 'onclick':function () { xbmc.Select(); } },
+                { 'text': 'Back', 'class':'back', 'onclick':function () { xbmc.Back(); } },
+                { 'text': 'Information', 'class':'info', 'onclick':function () { xbmc.Info(); } },
+                { 'text': 'Menu', 'class':'menu', 'onclick':function () { xbmc.ContextMenu(); } },
+                { 'text': 'Fullscreen', 'class':'fullscreen', 'onclick':function () { xbmc.ToggleFullscreen(); } }
 			],
 			'hideNavigation': true
 		};
@@ -51,16 +48,31 @@ xbmcPlayerFactory = (function ($) {
 		  append(template.player.bind(data));
 		
 		//make the progress bar work
-		var progressElem = player.find('progress').get(0);
-		var timeElem = player.find('.time').get(0);
+		var oldString,
+		progressElem = document.getElementById('progress'),
+		$progressElem = $(progressElem),
+		$statusElem = $progressElem.children('.status'),
+		statusElem = $statusElem.get(0),
+		$timeElem = $progressElem.children('.time'),
+		timeElem = $timeElem.get(0),
+		$barElem = $progressElem.children('.bar');;
 		progress = Progress(function (position, time, duration) {
-			progressElem.value = Math.floor(position*10000);
-			timeElem.innerText = seconds2string(time)+'/'+seconds2string(duration);
+			var value = Math.round(position*10000);
+			var string = seconds2string(time)+'/'+seconds2string(duration);
+			if (string !== oldString) {
+				timeElem.innerHTML = string;
+				$barElem.css('width', (value/100)+'%');
+			}
+			oldString = string;
 		});
 		progressElem.addEventListener('mouseup', function (e) { //enable seeking
-			//progress.updateFraction(e.offsetX/e.target.clientWidth);
+			var value = (e.pageX - $progressElem.offset().left - 10) / ($progressElem.width());
+			if (value > 1) value = 1;
+			if (value < 0) value = 0;
+			value = Math.round(value*100);
+			if (xbmc.transport() === 'ajax') { progress.updateFraction(value/100); }
 			xbmc.GetActivePlayer(function (player) {
- 				xbmc.Seek({ 'playerid': player.playerid, 'value': (e.offsetX/e.target.clientWidth)*100 });
+ 				if (player) xbmc.Seek({ 'playerid': player.playerid, 'value': value });
 			});
 		});
 
@@ -97,68 +109,59 @@ xbmcPlayerFactory = (function ($) {
 	
 	var startTimer = function () {
 		var body = $('body'),
-		//volume = $('#volume'),
-		//progress = $('#progress'),
-		nowPlaying = $('#nowPlaying'),
+		progressElem = document.getElementById('progress'),
+		$progressElem = $(progressElem),
+		$statusElem = $progressElem.children('.status'),
+		statusElem = $statusElem.get(0),
 		player = {},
 		sleep  = function (callback) {
-			window.setTimeout(callback, xbmc.transport() === 'websocket' ? REFRESHWS : REFRESH);
+			window.setTimeout(callback, REFRESH);
 		},
 		q = Q();
-		/*q.add(function (callback) {
-			xbmc.GetApplicationProperties(function (app) {
-				if (app) {
-					//volume.slider('value',app.volume);
-					document.title = app.name;
-				}
-				callback();
-			});
-		});
-		q.add(sleep);*/
-		q.add(function (callback) {
-			xbmc.GetActivePlayer(function (p) {
+		q.add(function (c) {
+			var cancel = false;
+			xbmc.GetActivePlayerProperties(function (p) {
+				if (cancel) return;
+				//console.log('GetActivePlayerProperties', p)
 				player = p;
-				callback();
-			});
-		});
-		q.add(sleep);
-		q.add(function (callback) {
-			var q = Q().onfinish(callback);
-			if (player) {
-				q.add(function (c) {
-					xbmc.GetPlayerProperties({ 'playerid': player.playerid }, function (properties) {
-						progress.update(timeObjToSeconds(properties.totaltime), timeObjToSeconds(properties.time));
-						$.extend(player, properties);
-						if (player.speed) body.attr('data-status','playing');
-						else body.attr('data-status','paused');
-						c();
-					});
-				});
-				q.add(sleep);
-				q.add(function (c) {
-					if (player.playlistid !== undefined) {
-						xbmc.GetPlaylistItems({ 'playlistid': player.playlistid || 0 }, function (playlist) {
-							if (playlist.items) $.extend(player, playlist.items[player.position || 0]);
-							if (player.file) player.label = player.file.split('/')[--player.file.split('/').length];
-							nowPlaying.text(player.label);
-							c();
-						});
-					} else {
-						nowPlaying.html('');
-						c();
+				if (player) {
+					progress.update(timeObjToSeconds(player.totaltime), timeObjToSeconds(player.time));
+					if (player.speed > 0) {
+						progress.unpause();
+						body.attr('data-status','playing');
+					} else if (player.speed === 0) {
+						progress.pause();
+						body.attr('data-status','paused');
 					}
-				});
-				q.add(sleep);
-			} else {
-				q.add(function (c) {
+				} else {
 					body.attr('data-status','stopped');
+					statusElem.innerHTML = '';
 					progress.stop();
-					nowPlaying.html('');
-					c();
+				}
+				sleep(c);
+			});
+			return { 'timeout':1e3, 'ontimeout': function (c) {  } };
+		});
+		q.add(function (c) {
+			var cancel = false;
+			if (player && player.playlistid !== undefined && player.position !== undefined) {
+				if (!player.playlistid) player.playlistid = 0;
+				xbmc.GetPlaylistItems({ 'playlistid': player.playlistid }, function (playlist) {
+					if (!playlist.items) return;
+					var item = playlist.items[player.position];
+					//console.log('Current Playlist Item: ', item)
+					if (item) statusElem.innerHTML = ''+
+						(item.showtitle ? item.showtitle+' ' : '')+
+						(item.season>=0 && item.episode>=0 ? item.season+'x'+item.episode+' ':'')+
+						(item.artist && item.artist.length ? item.artist.join(', ')+' - ' : '')+
+						(item.title||item.label);
+					else statusElem.innerHTML = '';
+					sleep(c);
 				});
-				q.add(sleep);
+			} else {
+				c();
 			}
-			q.start();
+			return { 'timeout':1e3, 'ontimeout': function (c) {  } };
 		});
 		q.onfinish(q.start); //re-start the queue when it finishes
 		q.start(); //start the queue

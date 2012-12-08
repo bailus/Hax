@@ -18,27 +18,45 @@ template.player = JsonML.BST(
 	],
 	"\n",
 	[
-		"progress",
-		{
-			max: "10000"
-		}
-	],
-	"\n",
-	[
 		"div",
 		{
-			"class": "time"
-		}
-	],
-	"\n",
-	[
-		"div",
-		{
-			id: "nowPlaying"
-		}
-	],
-	"\n",
-	function() {
+			"class": "player"
+		},
+		" ",
+		""/* <progress max="1000"></progress> */,
+		" ",
+		[
+			"div",
+			{
+				id: "progress"
+			},
+			" ",
+			[
+				"div",
+				{
+					class: "bar"
+				}
+			],
+			" ",
+			[
+				"div",
+				{
+					class: "status"
+				}
+			],
+			" ",
+			[
+				"div",
+				{
+					class: "time"
+				}
+			],
+			" "
+		],
+		" ",
+		function() {
 				return JsonML.BST(template.buttons).dataBind(this.data, this.index, this.count);
-			}
+			},
+		"\n"
+	]
 ]);

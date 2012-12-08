@@ -95,6 +95,10 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 			'method': 'VideoLibrary.GetMusicVideos',
 			'cache': true
 		},
+		'GetMusicVideo': {
+			'params': { 'properties': [ 'title', 'runtime', 'year', 'album', 'artist', 'track', 'thumbnail', 'file' ] },
+			'method': 'VideoLibrary.GetMusicVideo'
+		},
 		'GetSources': {
 			'method': 'Files.GetSources',
 			'cache': true
@@ -114,7 +118,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		},
 		'GetPlaylistItems': {
 			'method': 'Playlist.GetItems',
-			'params': { 'properties': [ 'title', 'file', 'thumbnail', 'runtime', 'duration' ] }
+			'params': { 'properties': [ 'title', 'showtitle', 'artist', 'season', 'episode', 'file', 'thumbnail', 'runtime', 'duration' ] }
 		},
 		'AddToPlaylist': {
 			'method': 'Playlist.Add'
@@ -141,7 +145,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		},
 		'GetPlayerProperties': {
 			'method': 'Player.GetProperties',
-			'params': { 'properties': [ 'time', 'totaltime', 'playlistid', 'position' ] }
+			'params': { 'properties': [ 'time', 'totaltime', 'speed', 'playlistid', 'position', 'repeat', 'type', 'partymode', 'shuffled', 'live' ] }
 		},
 		'GetActivePlayerProperties': function (callback) {
 			pub.GetActivePlayer(function (player) {
@@ -161,20 +165,22 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 			'requires': { 'name': 'playerid', 'value': 'GetActivePlayerID' },
 			'method': 'Player.Stop'
 		},
-		'GoNext': {
+		'GoTo': {
 			'requires': { 'name': 'playerid', 'value': 'GetActivePlayerID' },
-			'method': 'Player.GoNext'
+			'method': 'Player.GoTo'
 		},
-		'GoPrevious': {
-			'requires': { 'name': 'playerid', 'value': 'GetActivePlayerID' },
-			'method': 'Player.GoPrevious'
+		'GoNext': function (callback) {
+			pub.GoTo({ 'to': 'next' }, callback);
 		},
-		'Play': function (file, playlistid, callback) {
+		'GoPrevious': function (callback) {
+			pub.GoTo({ 'to': 'previous' }, callback);
+		},
+		'Play': function (o, playlistid, position) {
 			pub.ClearPlaylist({ 'playlistid': playlistid }, function () {
-				pub.AddToPlaylist({ 'playlistid': playlistid, 'item': { 'file': file } }, function () {
-					pub.Open({ 'item': { 'playlistid': playlistid } }, callback);
+				pub.AddToPlaylist({ 'playlistid': playlistid, 'item': typeof o === 'string' ? { 'file': o } : o }, function () {
+					pub.Open({ 'item': { 'playlistid': playlistid, 'position': position||0 } });
 				});
-			});				
+			});
 		},
 		'Seek': {
 			'requires': { 'name': 'playerid', 'value': 'GetActivePlayerID' },
@@ -319,14 +325,14 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		if (item instanceof Function) { //if item is a function, just use that
 			pub[index] = item;
 			return;
-		}
+		};
 		if (item.requires) pub[index] = function (params, callback) { //wrap the template if there is a dependency
 			if (params instanceof Function) { callback = params; params = {}; }
 			if (!params) params = {};
 			//return the required function with the template as a callback
 			pub[item.requires.value]( {}, function (result) {
 				var newparams = {};
-				if (result && item.requires.name) newparams[item.requires.name] = result;
+				if (result !== undefined && item.requires.name) newparams[item.requires.name] = result;
 				$.extend(newparams, params);
 				template(newparams, callback);
 			});
