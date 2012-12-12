@@ -34,21 +34,21 @@ template.player = JsonML.BST(
 			[
 				"div",
 				{
-					class: "bar"
+					"class": "bar"
 				}
 			],
 			" ",
 			[
 				"div",
 				{
-					class: "status"
+					"class": "status"
 				}
 			],
 			" ",
 			[
 				"div",
 				{
-					class: "time"
+					"class": "time"
 				}
 			],
 			" "

@@ -37,7 +37,7 @@ xbmcPlayerFactory = (function ($) {
                 { 'text': 'Back', 'class':'back', 'onclick':function () { xbmc.Back(); } },
                 { 'text': 'Information', 'class':'info', 'onclick':function () { xbmc.Info(); } },
                 { 'text': 'Menu', 'class':'menu', 'onclick':function () { xbmc.ContextMenu(); } },
-                { 'text': 'Fullscreen', 'class':'fullscreen', 'onclick':function () { xbmc.ToggleFullscreen(); } }
+                { 'text': 'Home', 'class':'home', 'onclick':function () { xbmc.Home(); } }
 			],
 			'hideNavigation': true
 		};
@@ -79,6 +79,7 @@ xbmcPlayerFactory = (function ($) {
 		player.find('.show').on('click', function () {
 			player.toggleClass('visible');
 		});
+
 	};
 
 	
@@ -152,7 +153,7 @@ xbmcPlayerFactory = (function ($) {
 					//console.log('Current Playlist Item: ', item)
 					if (item) statusElem.innerHTML = ''+
 						(item.showtitle ? item.showtitle+' ' : '')+
-						(item.season>=0 && item.episode>=0 ? item.season+'x'+item.episode+' ':'')+
+						(item.season>=0 && item.episode>=0 ? item.season+'x'+item.episode+' ' : '')+
 						(item.artist && item.artist.length ? item.artist.join(', ')+' - ' : '')+
 						(item.title||item.label);
 					else statusElem.innerHTML = '';

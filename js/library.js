@@ -67,30 +67,74 @@ var xbmcLibraryFactory = (function ($) {
 					{ 'label': 'Videos', 'link': '#page=Menu&media=Videos', 'thumbnail': 'img/icon_video.png' },
 					{ 'label': 'Music', 'link': '#page=Menu&media=Music', 'thumbnail': 'img/icon_music.png' },
 					{ 'label': 'Pictures', 'link': '#page=Menu&media=Pictures', 'thumbnail': 'img/icon_pictures.png' },
-                    //{ 'label': 'Remote', 'link': '#page=Remote', 'thumbnail':'img/remote.png' },
+                    { 'label': 'Remote', 'link': '#page=Remote', 'thumbnail':'img/remote.png' },
                     { 'label': 'Playlists', 'link': '#page=Playlists', 'thumbnail':'img/playlist.png' },
-                    { 'label': 'Settings', 'link': '#page=Settings', 'thumbnail':'img/settings.png' }
+                    //{ 'label': 'Settings', 'link': '#page=Settings', 'thumbnail':'img/settings.png' }
 				];
 				callback({ 'items': items, 'fanart': 'img/backgrounds/default.jpg', 'hideNavigation': true });
 			}
 		},
-		/*'Remote': {
+		'Remote': {
 			'view': 'buttons',
 			'data': function (callback) {
 				var buttons = [
-                    { 'text': 'Up', 'class':'up', 'src':'img/buttons/up.png', 'onclick':function () { xbmc.Up(); } },
-                    { 'text': 'Down', 'class':'down', 'src':'img/buttons/down.png', 'onclick':function () { xbmc.Down(); } },
-                    { 'text': 'Left', 'class':'left', 'src':'img/buttons/left.png', 'onclick':function () { xbmc.Left(); } },
-                    { 'text': 'Right', 'class':'right', 'src':'img/buttons/right.png', 'onclick':function () { xbmc.Right(); } },
-                    { 'text': 'Select', 'class':'select', 'src':'img/buttons/select.png', 'onclick':function () { xbmc.Select(); } },
-                    { 'text': 'Back', 'class':'back', 'src':'img/buttons/back.png', 'onclick':function () { xbmc.Back(); } },
-                    { 'text': 'Information', 'class':'info', 'src':'img/buttons/info.png', 'onclick':function () { xbmc.Info(); } },
-                    { 'text': 'Menu', 'class':'menu', 'src':'img/buttons/menu.png', 'onclick':function () { xbmc.ContextMenu(); } },
-                    { 'text': 'Fullscreen', 'class':'fullscreen', 'src':'img/buttons/fullscreen.png', 'onclick':function () { xbmc.ToggleFullscreen(); } }
-				];
+	                /*{ 'text': 'Up', 'class':'up', 'onclick':function () { xbmc.Up(); } },
+	                { 'text': 'Down', 'class':'down', 'onclick':function () { xbmc.Down(); } },
+	                { 'text': 'Left', 'class':'left', 'onclick':function () { xbmc.Left(); } },
+	                { 'text': 'Right', 'class':'right', 'onclick':function () { xbmc.Right(); } },
+	                { 'text': 'Select', 'class':'select', 'onclick':function () { xbmc.Select(); } },
+	                { 'text': 'Back', 'class':'back', 'onclick':function () { xbmc.Back(); } },
+	                { 'text': 'Information', 'class':'info', 'onclick':function () { xbmc.Info(); } },
+	                { 'text': 'Menu', 'class':'menu', 'onclick':function () { xbmc.ContextMenu(); } },
+	                { 'text': 'Home', 'class':'home', 'onclick':function () { xbmc.Home(); } }*/
+                ];
 				callback({ 'title': 'Remote', 'class': 'remote', 'height': '340px', 'width': '340px', 'buttons': buttons });
+			},
+			'then': function (elem) {
+				//text input
+				var textContainer = document.createElement('div');
+				var textInput = document.createElement('input');
+				$(textInput).on('keyup', function (e) {
+					var fin = event.which === 13; //was the enter key pressed?
+					xbmc.SendText({ 'text': textInput.value, 'done': fin });
+					if (fin) textInput.value = '';
+				});
+				textContainer.classList.add('textInput');
+				textContainer.appendChild(textInput);
+				elem.appendChild(textContainer);
+
+				//gesture input
+				var gestureContainer = document.createElement('div');
+				var gestureInput = document.createElement('canvas');
+				elem.appendChild(gestureContainer);
+				gestureInput.width = $(gestureContainer).width()-18;
+				gestureInput.height = $(window).height()-120;
+				gestureContainer.classList.add('gestureInput');
+				gestureContainer.appendChild(gestureInput);
+				dollarCanvas(gestureInput, function (gesture, confidence) {
+					xbmc.Action(gesture);
+				});
+
+				/*var keymap = {
+					37: 'left', 38: 'up', 39: 'right', 40: 'down',
+					13: 'select', 8: 'back', 81: 'queue', 27: 'previousmenu', 73: 'info', 67: 'contextmenu',
+					80: 'play', 70: 'fastforward', 82: 'rewind', 32: 'pause', 88: 'stop', 190: 'skipnext', 188: 'skipprevious',
+					145: 'screenshot', 9: 'fullscreen', 220: 'togglefullscreen',
+					189: 'volumedown', 187: 'volumeup', 109: 'volumedown', 107: 'volumeup',
+					48: 'number0', 49: 'number1', 50: 'number2', 51: 'number3', 52: 'number4', 53: 'number5', 54: 'number6', 55: 'number7', 56: 'number8', 57: 'number9',
+					96: 'number0', 97: 'number1', 98: 'number2', 99: 'number3', 100: 'number4', 101: 'number5', 102: 'number6', 103: 'number7', 104: 'number8', 105: 'number9',
+					33: 'pageup', 34: 'pagedown', 36: 'firstpage', 35: 'lastpage'
+				};
+				var keyboardInput = document.createElement('input');
+				$(keyboardInput).on('keydown', function (e) {
+					if (keymap[e.which]) xbmc.Action(keymap[e.which]);
+					else console.log(e.which);
+					e.preventDefault();
+				});
+				elem.appendChild(keyboardInput);*/
+
 			}
-		},*/
+		},
 		'Menu': {
 			'view': 'list',
 			'data': function (callback) {
@@ -203,13 +247,13 @@ var xbmcLibraryFactory = (function ($) {
 					$.each(page.items, function (i, movie) {
 						movie.link = '#page=Movie&movieid='+movie.movieid;
 						movie.alpha = movie.label[0].toUpperCase();
-						if (movie.file) {
+						if (movie.movieid) {
 							movie.play = function () {
-								xbmc.Play(movie.file, 1);
+								xbmc.Play({ 'movieid': movie.movieid }, 1);
 								//xbmc.Open({ 'item': { 'path': xbmc.vfs2uri(movie.file) } });
 							};
 							movie.add = function () {
-								xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': movie.file } });
+								xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'movieid': movie.movieid } });
 							};
 						}
 						//if (movie.fanart) movie.thumbnail = movie.fanart; fanart takes too long to load
@@ -232,8 +276,9 @@ var xbmcLibraryFactory = (function ($) {
 			'parent': 'Movies',
 			'data': function (callback) {
 				var page = {}, q = Q();
+				var movieid = +getHash('movieid');
 				q.add(function (c) { //get movie details
-					xbmc.GetMovieDetails({ 'movieid': +getHash('movieid') }, function (d) {
+					xbmc.GetMovieDetails({ 'movieid': movieid }, function (d) {
 						page = d.moviedetails || {};
 						c();
 					});
@@ -241,12 +286,12 @@ var xbmcLibraryFactory = (function ($) {
 				q.add(function (c) { //format movie details
 					if (page.year) page.title += ' ('+page.year+')';
 					if (page.tagline) page.subtitle = page.tagline;
-					if (page.file) {
+					if (page.movieid) {
 						page.play = function () {
-							xbmc.Play(page.file, 1);
+							xbmc.Play({ 'movieid': page.movieid }, 1);
 						};
 						page.add = function () {
-							xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': page.file } });
+							xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'movieid': page.movieid } });
 						};
 					}
 					if (page.trailer) page.trailer = function () {
@@ -362,7 +407,7 @@ var xbmcLibraryFactory = (function ($) {
 					page.subtitle = (page.season>0 && page.episode>0 ? page.season+'x'+(page.episode<10 ? '0' : '')+page.episode+' ' : '')+(page.title || page.showtitle || '');
 					if (tvshowid) page.link = '#page=TV Show&tvshowid='+tvshowid;
 					if (page.showtitle) page.title = page.showtitle;
-					if (page.file) {
+					if (episodeid !== undefined) {
 						page.play = function () {
 							xbmc.Play({ 'episodeid': episodeid }, 1);
 						};
@@ -607,8 +652,8 @@ var xbmcLibraryFactory = (function ($) {
 						if (file.filetype === 'file') {
 							file.play = function () {
 								if (file.type === 'unknown' || !file.type) file.type = getHash('media');
-								//xbmc.Play(file.file, file.type === 'audio' ? 0 : file.type === 'video' ? 1 : 2);
-								xbmc.Open({ 'item': { 'file': xbmc.vfs2uri(file.file) } });
+								xbmc.Play(file.file, file.type === 'audio' ? 0 : file.type === 'video' ? 1 : 2);
+								//xbmc.Open({ 'item': { 'file': xbmc.vfs2uri(file.file) } });
 							};
 							file.add = function () {
 								xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': file.file } });
@@ -755,6 +800,7 @@ var xbmcLibraryFactory = (function ($) {
 			var p = $('<div class="page" data-page="'+title+'"></div>'),
 			v = $(template[getHash('view') || page.view].bind(data)).appendTo(p);
 			$('#content').empty().append(p);
+			if (page.then instanceof Function) page.then(p.get(0));
 			
 			//apply javascript UI hacks
 			$('body').scrollTop(0);

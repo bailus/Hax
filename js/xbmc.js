@@ -193,6 +193,15 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 			'params': { 'properties': [ 'volume', 'muted', 'name' ] },
 			'method': 'Application.GetProperties'
 		},
+		'SendText': {
+			'method': 'Input.SendText'
+		},
+		'ExecuteAction': {
+			'method': 'Input.ExecuteAction'
+		},
+		'Action': function (action, callback) {
+			pub.ExecuteAction({ 'action': action }, callback);
+		},
 		'Down': {
 			'method': 'Input.Down'
 		},

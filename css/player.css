@@ -118,7 +118,7 @@ body[data-status=playing] #player .PlayPause a { background-image:url('../img/bu
 #player .back a { background-image:url('../img/buttons/back.png'); }
 #player .info a { background-image:url('../img/buttons/info.png'); }
 #player .menu a { background-image:url('../img/buttons/menu.png'); }
-#player .fullscreen a { background-image:url('../img/buttons/fullscreen.png'); }
+#player .home a { background-image:url('../img/buttons/home.png'); }
 
 @media screen and (max-height: 330px) {
 	#player .buttons {
@@ -134,7 +134,7 @@ body[data-status=playing] #player .PlayPause a { background-image:url('../img/bu
 	#player .buttons .menu      { top:0px;  right:30px; }
 	#player .buttons .info      { top:0px;	 left: 80px; }
 	#player .buttons .back      { top:0px;	 right:80px; }
-	#player .buttons .fullscreen{ top:0px;	 left: 30px; }
+	#player .buttons .home{ top:0px;	 left: 30px; }
 	#player .buttons .up        { top:0px;  left: 50%;  }
 	#player .buttons .select    { top:50px; left: 50%;  }
 	#player .buttons .left      { top:50px; left: 50%; margin-left:-80px;  }
@@ -169,9 +169,9 @@ body[data-status=playing] #player .PlayPause a { background-image:url('../img/bu
 	#player .buttons .left      { top:110px; left: 50%; margin-left:-80px;  }
 	#player .buttons .right     { top:110px; right:50%; margin-right:-80px; }
 	#player .buttons .down      { top:160px; left: 50%;  }
-	#player .buttons .fullscreen{ top:160px; left: 30px; }
+	#player .buttons .home{ top:160px; left: 30px; }
 	#player .buttons .menu      { top:160px; right:30px; }
-	#player .info, #player .back, #player .up, #player .select, #player .left, #player .right, #player .down, #player .fullscreen, #player .menu {
+	#player .info, #player .back, #player .up, #player .select, #player .left, #player .right, #player .down, #player .home, #player .menu {
 		position:absolute;
 		margin-left:-25px;margin-right:-25px;
 		text-align:center;
@@ -209,7 +209,7 @@ body[data-status=playing] #player .PlayPause a { background-image:url('../img/bu
 
 	#player .buttons .menu      { top:105px; left: 155px; }
 	#player .buttons .info      { top:55px;  left: 205px; }
-	#player .buttons .fullscreen{ top:55px;  left: 255px; }
+	#player .buttons .home{ top:55px;  left: 255px; }
 	#player .buttons .back      { top:5px;   left: 155px; }
 
 	#player .buttons .GoPrevious{ top:55px; left: 355px; }

@@ -372,6 +372,7 @@ p {
 	top:0; left:0;
 	min-width:100%;
 	max-height:100%;
+	display: none;
 }
 .page > .thumbnail, .details .image {
 	max-width:30%;
@@ -393,7 +394,7 @@ header {
 
 
 
-/* REMOTE BUTTONS 
+/* REMOTE BUTTONS */
 .remote {
 	position:relative;
 	width:100%;
@@ -401,11 +402,22 @@ header {
 	height:340px;
 	margin:0 auto;
 }
+.remote a {
+	display:block;
+	width:100%;height:100%;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
 .remote > li {
 	position:absolute;
-	margin-left:-30px;margin-right:-30px;
-	width:60px;height:60px;
+	width:50px;height:50px;
+	margin-left:-25px;margin-right:-25px;
 	text-align:center;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+.remote span {
+	display: none;
 }
 .remote img { width:60px;height:60px; }
 .remote > li:active {
@@ -415,23 +427,26 @@ header {
 	background:url('../img/buttons/hover.png');
 	cursor:pointer;
 }
-.remote .music     { top:0; left: 50%;  }
-.remote .videos    { top:0; left: 50%; margin-left:-100px;  }
-.remote .pictures  { top:0; right:50%; margin-right:-100px; }
-.remote .info      { top:70px;	left: 30px; }
-.remote .back      { top:70px;	right:30px; }
-.remote .up        { top:70px;	left: 50%;  }
-.remote .select    { top:140px; left: 50%;  }
-.remote .left      { top:140px; left: 50%; margin-left:-100px;  }
-.remote .right     { top:140px; right:50%; margin-right:-100px; }
-.remote .down      { top:210px; left: 50%;  }
-.remote .fullscreen{ top:210px; left: 30px; }
-.remote .menu      { top:210px; right:30px; }
-.remote .stop      { top:280px; left: 50%;  }
-.remote .previous  { top:280px; left: 50%; margin-left:-100px;  }
-.remote .next      { top:280px; right:50%; margin-right:-100px; }
-.remote .settings  { top:280px; left: 50%; margin-left:-100px;  }
-.remote .playlists { top:280px; right:50%; margin-right:-100px; }*/
+.remote .home      { top:50px;	left: 30px; }
+.remote .back      { top:50px;	right:30px; }
+.remote .up        { top:50px;	left: 50%;  }
+.remote .select    { top:105px; left: 50%;  }
+.remote .left      { top:105px; left: 50%; margin-left:-80px;  }
+.remote .right     { top:105px; right:50%; margin-right:-80px; }
+.remote .down      { top:160px; left: 50%;  }
+.remote .info	   { top:160px; left: 30px; }
+.remote .menu      { top:160px; right:30px; }
+
+.remote .up a { background-image:url('../img/buttons/up.png'); }
+.remote .down a { background-image:url('../img/buttons/down.png'); }
+.remote .left a { background-image:url('../img/buttons/left.png'); }
+.remote .right a { background-image:url('../img/buttons/right.png'); }
+.remote .select a { background-image:url('../img/buttons/select.png'); }
+.remote .back a { background-image:url('../img/buttons/back.png'); }
+.remote .info a { background-image:url('../img/buttons/info.png'); }
+.remote .menu a { background-image:url('../img/buttons/menu.png'); }
+.remote .home a { background-image:url('../img/buttons/home.png'); }
+
 
 .homeButton, .backButton {
 	display:block;
@@ -478,4 +493,43 @@ header {
 	height: auto;
 	line-height: normal;
 	margin:0;padding:0;
+}
+
+
+.page[data-page="Remote"] .remote {
+	display: none;
+}
+.textInput {
+	width: 100%;
+	height: 40px;
+	clear: both;
+	position: relative;
+	margin: 10px 0;
+}
+.textInput input {
+	display: block;
+	padding: 0 10px;
+	margin: 0;
+	background: #444;
+	outline: none;
+	border: 4px solid #888;
+	height: 32px;
+	line-height: 32px;
+	font-size: 22px;
+	position: absolute;
+	left: 5px;
+	right: 5px;
+	top: 0;
+	color: white;
+}
+.gestureInput {
+	width: 100%;
+	position: relative;
+	margin: 10px 0;
+}
+.gestureInput canvas {
+	display: block;
+	margin: 5px;
+	background: #444;
+	border: 4px solid #888;
 }

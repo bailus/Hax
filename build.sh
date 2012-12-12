@@ -17,6 +17,8 @@ scripts=(
 	'js/time.js'
 	'js/Q.js'
 	'js/progress.js'
+	'js/dollar.js'
+	'js/dollarCanvas.js'
 	'templates/details.js'
 	'templates/list.js'
 	'templates/listdetails.js'
