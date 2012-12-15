@@ -3,36 +3,8 @@ var xbmcLibraryFactory = (function ($) {
 
 	var LAZYLOAD_OPTIONS = { },
 	  pub = {},
+	  cache = {},
 	  DEBUG = window.DEBUG || true,
-	  
-	groupItems = function (items, groupby) {
-		var o = [], temp = {};
-		if (!(items[0] && items[0][groupby])) return items;
-		$.each(items, function (i, item) {
-			var s = item[groupby];
-			if (item instanceof Object) {
-				if (!temp[s]) temp[s] = [];
-				temp[s].push(item);
-			}
-		});
-		$.each(temp, function (label, items) {
-			o.unshift({
-				'label': label,
-				'items': items
-			});
-		});
-		return o;
-	},
-	  
-	sortItems = function (items, sortby) {
-		if (!(items[0] && items[0][sortby])) return items;
-		return items.sort(function (a, b) {
-			var x = a[sortby], y = b[sortby];
-			if (x < y) return -1;
-			if (x > y) return +1;
-			return 0;
-		});
-	},
 	  
 	seconds2string = function (t) {
 		var str = function (n) {
@@ -41,7 +13,7 @@ var xbmcLibraryFactory = (function ($) {
 		if (t > 3600) return str(t/3600) +':'+ str((t%3600)/60) +':'+ str(t%60);
 		else return str(t/60) +':'+ str(t%60);
 	},
-	  
+
 	minutes2string = function (t) {
 		var str = function (n) {
 			return (n < 10 && n > -10 ? '0' : '')+Math.floor(n);
@@ -49,7 +21,7 @@ var xbmcLibraryFactory = (function ($) {
 		if (t > 60) return str(t/60) +':'+ str(t%60) + ':00';
 		return str(t) + ':00';
 	},
-	  
+
 	ymd2string = function (ymd) {
 		var x = ymd.split(' ')[0].split('-');
 		return [
@@ -58,7 +30,7 @@ var xbmcLibraryFactory = (function ($) {
 			x[0]
 		].join(' ');
 	},
-	  
+
 	pages = {
 		'Home': {
 			'view': 'list',
@@ -67,28 +39,18 @@ var xbmcLibraryFactory = (function ($) {
 					{ 'label': 'Videos', 'link': '#page=Menu&media=Videos', 'thumbnail': 'img/icon_video.png' },
 					{ 'label': 'Music', 'link': '#page=Menu&media=Music', 'thumbnail': 'img/icon_music.png' },
 					{ 'label': 'Pictures', 'link': '#page=Menu&media=Pictures', 'thumbnail': 'img/icon_pictures.png' },
-                    { 'label': 'Remote', 'link': '#page=Remote', 'thumbnail':'img/remote.png' },
+                    { 'label': 'Live', 'link': '#page=Live', 'thumbnail':'img/Live.png' },
                     { 'label': 'Playlists', 'link': '#page=Playlists', 'thumbnail':'img/playlist.png' },
+                    { 'label': 'Remote', 'link': '#page=Remote', 'thumbnail':'img/remote.png' },
                     //{ 'label': 'Settings', 'link': '#page=Settings', 'thumbnail':'img/settings.png' }
 				];
 				callback({ 'items': items, 'fanart': 'img/backgrounds/default.jpg', 'hideNavigation': true });
 			}
 		},
 		'Remote': {
-			'view': 'buttons',
+			'view': 'list',
 			'data': function (callback) {
-				var buttons = [
-	                /*{ 'text': 'Up', 'class':'up', 'onclick':function () { xbmc.Up(); } },
-	                { 'text': 'Down', 'class':'down', 'onclick':function () { xbmc.Down(); } },
-	                { 'text': 'Left', 'class':'left', 'onclick':function () { xbmc.Left(); } },
-	                { 'text': 'Right', 'class':'right', 'onclick':function () { xbmc.Right(); } },
-	                { 'text': 'Select', 'class':'select', 'onclick':function () { xbmc.Select(); } },
-	                { 'text': 'Back', 'class':'back', 'onclick':function () { xbmc.Back(); } },
-	                { 'text': 'Information', 'class':'info', 'onclick':function () { xbmc.Info(); } },
-	                { 'text': 'Menu', 'class':'menu', 'onclick':function () { xbmc.ContextMenu(); } },
-	                { 'text': 'Home', 'class':'home', 'onclick':function () { xbmc.Home(); } }*/
-                ];
-				callback({ 'title': 'Remote', 'class': 'remote', 'height': '340px', 'width': '340px', 'buttons': buttons });
+				callback({ 'title': 'Remote' });
 			},
 			'then': function (elem) {
 				//text input
@@ -114,25 +76,6 @@ var xbmcLibraryFactory = (function ($) {
 				dollarCanvas(gestureInput, function (gesture, confidence) {
 					xbmc.Action(gesture);
 				});
-
-				/*var keymap = {
-					37: 'left', 38: 'up', 39: 'right', 40: 'down',
-					13: 'select', 8: 'back', 81: 'queue', 27: 'previousmenu', 73: 'info', 67: 'contextmenu',
-					80: 'play', 70: 'fastforward', 82: 'rewind', 32: 'pause', 88: 'stop', 190: 'skipnext', 188: 'skipprevious',
-					145: 'screenshot', 9: 'fullscreen', 220: 'togglefullscreen',
-					189: 'volumedown', 187: 'volumeup', 109: 'volumedown', 107: 'volumeup',
-					48: 'number0', 49: 'number1', 50: 'number2', 51: 'number3', 52: 'number4', 53: 'number5', 54: 'number6', 55: 'number7', 56: 'number8', 57: 'number9',
-					96: 'number0', 97: 'number1', 98: 'number2', 99: 'number3', 100: 'number4', 101: 'number5', 102: 'number6', 103: 'number7', 104: 'number8', 105: 'number9',
-					33: 'pageup', 34: 'pagedown', 36: 'firstpage', 35: 'lastpage'
-				};
-				var keyboardInput = document.createElement('input');
-				$(keyboardInput).on('keydown', function (e) {
-					if (keymap[e.which]) xbmc.Action(keymap[e.which]);
-					else console.log(e.which);
-					e.preventDefault();
-				});
-				elem.appendChild(keyboardInput);*/
-
 			}
 		},
 		'Menu': {
@@ -457,16 +400,106 @@ var xbmcLibraryFactory = (function ($) {
 				q.start();
 			}
 		},
+		'Addons': {
+			'view': 'list',
+			'groupby': 'type',
+			'data': function (callback) {
+				var page = { title: 'Add-ons', items: [] }, q = Q();
+				q.add(function (c) {
+					xbmc.GetAddons({ 'type': 'xbmc.python.script' }, function (d) {
+						page.items = d.addons;
+						c();
+					});
+				});
+				q.add(function (c) {
+					var p = Q();
+					$.each(page.items, function (i, addon) {
+						p.add(function (C) {
+							xbmc.GetAddonDetails({ 'addonid': addon.addonid }, function (d) {
+								console.dir(d.addon)
+								page.items[i] = {
+									'label': d.addon.name+' '+d.addon.version,
+									'thumbnail': xbmc.vfs2uri(d.addon.thumbnail),
+									'details': d.addon.summary,
+									'type': d.addon.type
+								};
+								C();
+							});
+						});
+					});
+					p.onfinish(function () {
+						c();
+					});
+					p.start();
+				});
+				q.onfinish(function () {
+					callback(page);
+				});
+				q.start();
+			}
+		},
+		'Live': {
+			'view': 'list',
+			'data': function (callback) {
+				var page = { title: 'Live', items: [] }, q = Q();
+				$.each(['TV', 'Radio'], function (i, type) {
+					q.add(function (c) { //get groups
+						xbmc.GetChannelGroups({ 'channeltype': type.toLowerCase() }, function (d) {
+							page.items.push({
+								'label': type,
+								'items': (d.channelgroups||[]).map(function (g) {
+									g.link = '#page=Channels&id='+g.channelgroupid;
+									return g;
+								})
+							})
+							c();
+						});
+					});
+				});
+				q.onfinish(function () {
+					callback(page);
+				});
+				q.start();
+			}
+		},
+		'Channels': {
+			'view': 'list',
+			'data': function (callback) {
+				var page = { }, q = Q(),
+				groupid = +getHash('id');
+				q.add(function (c) { //get groups
+					xbmc.GetChannelGroupDetails({ 'channelgroupid': groupid }, function (d) {
+						page.title = d.channelgroupdetails.label || '';
+						c();
+					});
+				});
+				q.add(function (c) { //get groups
+					xbmc.GetChannels({ 'channelgroupid': groupid }, function (d) {
+						console.log(d)
+						page.items = (d.channels||[]).map(function (c) {
+							//c.link = '#page=Channel&id='+c.channelid;
+							c.thumbnail = xbmc.vfs2uri(c.thumbnail);
+							c.play = function () {
+								xbmc.Open({ 'item': { 'channelid': c.channelid }});
+							};
+							return c;
+						});
+						c();
+					});
+				});
+				q.onfinish(function () {
+					callback(page);
+				});
+				q.start();
+			}
+		},
 		'Artists': {
 			'view': 'list',
 			'groupby': 'alpha',
 			'data': function (callback) {
 				var page = { title: 'Artists' }, q = Q(),
 				genre = getHash('genre'),
-				alpha = getHash('alpha')//,
-				//filter = genre ? function (artist) { if (artist.genre.indexOf(genre) >= 0) return true; } :
-				//	alpha ? function (artist) { if (artist.artist[0] == alpha) return true; } :
-				//	function (artist) { return true; };
+				alpha = getHash('alpha');
 				q.add(function (c) { //get artists
 					xbmc.GetArtists(function (d) {
 						page.items = d.artists/*.filter(filter)*/ || [];
@@ -751,7 +784,33 @@ var xbmcLibraryFactory = (function ($) {
 			}
 		}
 	},
-	cache = {},
+	groupItems = function (items, groupby) {
+		var o = [], temp = {};
+		if (!(items[0] && items[0][groupby])) return items;
+		$.each(items, function (i, item) {
+			var s = item[groupby];
+			if (item instanceof Object) {
+				if (!temp[s]) temp[s] = [];
+				temp[s].push(item);
+			}
+		});
+		$.each(temp, function (label, items) {
+			o.unshift({
+				'label': label,
+				'items': items
+			});
+		});
+		return o;
+	},
+	sortItems = function (items, sortby) {
+		if (!(items[0] && items[0][sortby])) return items;
+		return items.sort(function (a, b) {
+			var x = a[sortby], y = b[sortby];
+			if (x < y) return -1;
+			if (x > y) return +1;
+			return 0;
+		});
+	},
 	renderPage = function (title) {
 		var data, page, defaultPage = 'Home', hash = document.location.hash.replace(/\W/g,'');
 		

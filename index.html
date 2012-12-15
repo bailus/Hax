@@ -3364,14 +3364,16 @@ function DollarRecognizer() // constructor
 	// one built-in unistroke per gesture type
 	//
 	this.Unistrokes = [
-		/*new Unistroke("right", [[0,0],[10,0],[20,0],[30,0],[40,0],[50,0],[60,0],[70,0],[80,0],[90,0],[100,0]]),
-		new Unistroke("left", [[100,0],[90,0],[80,0],[70,0],[60,0],[50,0],[40,0],[30,0],[20,0],[10,0],[0,0]]),
-		new Unistroke("down", [[0,0],[0,10],[0,20],[0,30],[0,40],[0,50],[0,60],[0,70],[0,80],[0,90],[0,100]]),
-		new Unistroke("up", [[0,100],[0,90],[0,80],[0,70],[0,60],[0,50],[0,40],[0,30],[0,20],[0,10],[0,0]]),*/
 		new Unistroke("right", [[49,108],[50,109],[55,110],[65,110],[82,110],[99,110],[137,110],[156,110],[173,110],[188,110],[201,110],[227,110],[238,110],[249,110],[252,110],[254,108]]),
+		new Unistroke("right", [[320,169],[321,169],[341,169],[356,169],[373,169],[394,169],[417,169],[440,169],[486,169],[528,169],[560,169],[565,169]]),
+		new Unistroke("right", [[201,129],[203,129],[212,129],[227,129],[246,129],[267,129],[290,129],[315,129],[363,129],[428,129],[456,129],[461,129]]),
 		new Unistroke("left", [[268,124],[264,123],[259,123],[245,123],[226,121],[205,121],[184,121],[161,121],[119,121],[102,121],[72,121],[52,121],[47,121],[43,121],[41,121],[39,121],[38,121]]),
+		new Unistroke("left", [[515,135],[514,135],[510,135],[502,137],[486,140],[469,142],[450,144],[394,146],[332,146],[272,146],[222,146],[192,146],[190,146]]),
 		new Unistroke("down", [[159,72],[159,74],[159,78],[159,88],[159,104],[156,121],[156,142],[156,163],[156,182],[159,212],[162,223]]),
+		new Unistroke("down", [[358,66],[358,67],[358,69],[358,73],[358,77],[358,84],[358,92],[358,111],[358,132],[358,156],[358,177],[358,185],[358,192],[358,200],[358,201],[358,202]]),
 		new Unistroke("up", [[166,189],[166,177],[166,164],[166,150],[166,138],[166,125],[166,111],[166,97],[166,84],[164,71],[160,54],[160,52],[160,51]]),
+		new Unistroke("up", [[330,219],[330,216],[330,206],[330,191],[330,172],[330,153],[330,115],[330,79],[330,64],[330,53],[333,33],[333,31],[334,27]]),
+		new Unistroke("up", [[356,213],[356,210],[356,200],[356,171],[356,135],[356,97],[356,80],[356,69],[359,49],[359,44],[359,38],[359,30],[360,26]]),
 		new Unistroke("back", [[183,43],[181,43],[180,43],[178,44],[174,47],[171,49],[165,52],[158,56],[137,68],[110,82],[88,99],[68,118],[64,122],[61,126],[57,129],[54,133],[53,134],[55,134],[57,134],[65,135],[74,138],[85,141],[95,144],[120,150],[141,152],[150,155],[151,155],[153,156],[157,157],[160,158],[164,161],[166,161],[168,162],[169,163],[172,165],[173,165],[175,165],[176,166],[177,167],[178,167],[179,168],[182,170],[185,171],[186,171],[187,172],[188,172],[191,173],[192,173]]),
 		new Unistroke("previousmenu", [[92,111],[92,110],[93,109],[95,107],[95,104],[104,88],[109,77],[110,67],[115,50],[119,41],[120,36],[125,29],[125,28],[126,27],[129,31],[130,34],[131,39],[137,48],[142,64],[144,72],[147,80],[152,97],[157,103],[160,111],[163,119],[165,121],[165,122],[166,123],[167,122]]),
 		new Unistroke("contextmenu", [[109,61],[109,62],[109,66],[114,76],[119,86],[124,99],[133,125],[135,138],[138,151],[142,180],[147,193],[147,197],[148,199],[148,201],[149,203],[150,204],[150,206],[150,207],[152,209],[153,207],[154,203],[156,193],[161,182],[168,157],[180,127],[182,114],[189,101],[199,77],[201,70],[202,59]]),
@@ -3381,11 +3383,6 @@ function DollarRecognizer() // constructor
 		new Unistroke("stop", [[74,36],[75,35],[76,35],[78,34],[79,34],[82,34],[84,34],[88,34],[102,34],[109,34],[119,34],[137,34],[151,30],[155,30],[158,29],[163,29],[164,29],[165,28],[166,28],[168,28],[170,29],[171,30],[171,31],[171,33],[171,38],[171,42],[171,48],[171,52],[171,56],[171,63],[171,67],[171,77],[171,82],[171,87],[171,92],[171,98],[171,101],[172,103],[170,103],[168,103],[167,103],[164,103],[162,103],[158,104],[153,104],[146,105],[128,105],[110,105],[103,105],[95,105],[93,105],[91,105],[89,106],[88,107],[86,107],[85,107],[84,108],[83,107],[83,105],[83,102],[83,98],[83,96],[83,92],[83,88],[80,75],[78,66],[77,58],[77,57],[76,55],[75,50],[75,47],[75,44],[75,43],[74,41]]),
 		new Unistroke("info", [[129,41],[128,41],[126,41],[119,44],[116,47],[111,52],[104,63],[99,84],[99,92],[99,100],[99,112],[103,120],[109,128],[125,136],[136,138],[144,138],[152,138],[166,134],[176,118],[181,110],[183,102],[183,86],[181,78],[178,69],[167,57],[163,52],[159,48],[151,45],[146,43],[144,43],[143,43],[141,43],[139,43],[137,43],[135,44]]),
 		new Unistroke("playpause", [[114,75],[116,75],[123,76],[131,78],[138,80],[148,82],[172,88],[197,95],[214,99],[217,100],[218,101],[218,102],[218,103],[208,107],[205,108],[196,110],[176,116],[147,126],[124,133],[117,135],[113,136],[112,137],[112,138],[111,139],[110,139],[109,139]]),
-		//new Unistroke("fastforward", [[89,30],[90,30],[93,29],[94,29],[98,29],[99,28],[104,28],[117,28],[126,28],[133,28],[144,26],[151,26],[152,26],[155,29],[156,33],[156,42],[159,62],[159,72],[159,79],[159,91],[159,95],[159,97],[160,103],[162,106],[162,107],[162,109],[163,112],[163,114],[163,115],[163,116],[163,117],[163,119],[163,121],[163,122],[163,124],[163,125],[162,126],[159,126],[155,126],[148,126],[133,126],[117,126],[109,126],[101,126],[91,126],[90,126],[88,126],[87,126],[86,126],[85,126],[83,126],[82,126]]),
-		//new Unistroke("rewind", [[157,30],[154,29],[148,29],[144,29],[139,29],[134,29],[125,29],[115,29],[100,30],[92,30],[87,34],[85,34],[84,34],[83,34],[80,35],[78,35],[77,35],[76,36],[76,38],[76,39],[77,44],[77,46],[79,51],[81,63],[83,70],[85,84],[85,90],[86,96],[86,100],[86,103],[86,106],[86,108],[86,110],[86,111],[86,112],[86,113],[86,116],[86,117],[86,118],[87,121],[87,122],[88,123],[89,123],[92,123],[94,123],[97,123],[101,123],[109,123],[112,123],[120,123],[123,123],[134,122],[137,122],[151,120],[158,119],[168,119],[169,117]]),
-		//new Unistroke("triangle", [[137,139],[135,141],[133,144],[132,146],[130,149],[128,151],[126,155],[123,160],[120,166],[116,171],[112,177],[107,183],[102,188],[100,191],[95,195],[90,199],[86,203],[82,206],[80,209],[75,213],[73,213],[70,216],[67,219],[64,221],[61,223],[60,225],[62,226],[65,225],[67,226],[74,226],[77,227],[85,229],[91,230],[99,231],[108,232],[116,233],[125,233],[134,234],[145,233],[153,232],[160,233],[170,234],[177,235],[179,236],[186,237],[193,238],[198,239],[200,237],[202,239],[204,238],[206,234],[205,230],[202,222],[197,216],[192,207],[186,198],[179,189],[174,183],[170,178],[164,171],[161,168],[154,160],[148,155],[143,150],[138,148],[136,148]]),
-		//new Unistroke("check", [[91,185],[93,185],[95,185],[97,185],[100,188],[102,189],[104,190],[106,193],[108,195],[110,198],[112,201],[114,204],[115,207],[117,210],[118,212],[120,214],[121,217],[122,219],[123,222],[124,224],[126,226],[127,229],[129,231],[130,233],[129,231],[129,228],[129,226],[129,224],[129,221],[129,218],[129,212],[129,208],[130,198],[132,189],[134,182],[137,173],[143,164],[147,157],[151,151],[155,144],[161,137],[165,131],[171,122],[174,118],[176,114],[177,112],[177,114],[175,116],[173,118]]),
-		//new Unistroke("delete", [[123,129],[123,131],[124,133],[125,136],[127,140],[129,142],[133,148],[137,154],[143,158],[145,161],[148,164],[153,170],[158,176],[160,178],[164,183],[168,188],[171,191],[175,196],[178,200],[180,202],[181,205],[184,208],[186,210],[187,213],[188,215],[186,212],[183,211],[177,208],[169,206],[162,205],[154,207],[145,209],[137,210],[129,214],[122,217],[118,218],[111,221],[109,222],[110,219],[112,217],[118,209],[120,207],[128,196],[135,187],[138,183],[148,167],[157,153],[163,145],[165,142],[172,133],[177,127],[179,127],[180,125]]),
 	];
 	//
 	// The $1 Gesture Recognizer API begins here -- 3 methods: Recognize(), AddGesture(), and DeleteUserGestures()
@@ -4950,6 +4947,33 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		'Version': {
 			'method': 'JSONRPC.Version'
 		},
+		'GetAddons': {
+			'method': 'Addons.GetAddons',
+			'cache': true
+		},
+		'GetAddonDetails': {
+			'method': 'Addons.GetAddonDetails',
+			'params': { 'properties': [ 'name', 'version', 'summary', 'author', 'thumbnail', 'broken', 'enabled' ] },
+			'cache': true
+		},
+		'GetChannelGroups': {
+			'method': 'PVR.GetChannelGroups',
+			'cache': true
+		},
+		'GetChannelGroupDetails': {
+			'method': 'PVR.GetChannelGroupDetails',
+			'cache': true
+		},
+		'GetChannels': {
+			'method': 'PVR.GetChannels',
+			'params': { 'properties': [ 'thumbnail', 'hidden', 'locked', 'channel' ] },
+			'cache': true
+		},
+		'GetChannel': {
+			'method': 'PVR.GetChannelDetails',
+			'params': { 'properties': [ 'thumbnail', 'hidden', 'locked', 'channel' ] },
+			'cache': true
+		},
 		'GetTVShows': {
 			'method': 'VideoLibrary.GetTVShows',
 			'params': { 'properties': [ 'thumbnail', 'art', 'year', 'studio', 'genre' ] },
@@ -5355,36 +5379,8 @@ var xbmcLibraryFactory = (function ($) {
 
 	var LAZYLOAD_OPTIONS = { },
 	  pub = {},
+	  cache = {},
 	  DEBUG = window.DEBUG || true,
-	  
-	groupItems = function (items, groupby) {
-		var o = [], temp = {};
-		if (!(items[0] && items[0][groupby])) return items;
-		$.each(items, function (i, item) {
-			var s = item[groupby];
-			if (item instanceof Object) {
-				if (!temp[s]) temp[s] = [];
-				temp[s].push(item);
-			}
-		});
-		$.each(temp, function (label, items) {
-			o.unshift({
-				'label': label,
-				'items': items
-			});
-		});
-		return o;
-	},
-	  
-	sortItems = function (items, sortby) {
-		if (!(items[0] && items[0][sortby])) return items;
-		return items.sort(function (a, b) {
-			var x = a[sortby], y = b[sortby];
-			if (x < y) return -1;
-			if (x > y) return +1;
-			return 0;
-		});
-	},
 	  
 	seconds2string = function (t) {
 		var str = function (n) {
@@ -5393,7 +5389,7 @@ var xbmcLibraryFactory = (function ($) {
 		if (t > 3600) return str(t/3600) +':'+ str((t%3600)/60) +':'+ str(t%60);
 		else return str(t/60) +':'+ str(t%60);
 	},
-	  
+
 	minutes2string = function (t) {
 		var str = function (n) {
 			return (n < 10 && n > -10 ? '0' : '')+Math.floor(n);
@@ -5401,7 +5397,7 @@ var xbmcLibraryFactory = (function ($) {
 		if (t > 60) return str(t/60) +':'+ str(t%60) + ':00';
 		return str(t) + ':00';
 	},
-	  
+
 	ymd2string = function (ymd) {
 		var x = ymd.split(' ')[0].split('-');
 		return [
@@ -5410,7 +5406,7 @@ var xbmcLibraryFactory = (function ($) {
 			x[0]
 		].join(' ');
 	},
-	  
+
 	pages = {
 		'Home': {
 			'view': 'list',
@@ -5419,28 +5415,18 @@ var xbmcLibraryFactory = (function ($) {
 					{ 'label': 'Videos', 'link': '#page=Menu&media=Videos', 'thumbnail': 'img/icon_video.png' },
 					{ 'label': 'Music', 'link': '#page=Menu&media=Music', 'thumbnail': 'img/icon_music.png' },
 					{ 'label': 'Pictures', 'link': '#page=Menu&media=Pictures', 'thumbnail': 'img/icon_pictures.png' },
-                    { 'label': 'Remote', 'link': '#page=Remote', 'thumbnail':'img/remote.png' },
+                    { 'label': 'Live', 'link': '#page=Live', 'thumbnail':'img/Live.png' },
                     { 'label': 'Playlists', 'link': '#page=Playlists', 'thumbnail':'img/playlist.png' },
+                    { 'label': 'Remote', 'link': '#page=Remote', 'thumbnail':'img/remote.png' },
                     //{ 'label': 'Settings', 'link': '#page=Settings', 'thumbnail':'img/settings.png' }
 				];
 				callback({ 'items': items, 'fanart': 'img/backgrounds/default.jpg', 'hideNavigation': true });
 			}
 		},
 		'Remote': {
-			'view': 'buttons',
+			'view': 'list',
 			'data': function (callback) {
-				var buttons = [
-	                /*{ 'text': 'Up', 'class':'up', 'onclick':function () { xbmc.Up(); } },
-	                { 'text': 'Down', 'class':'down', 'onclick':function () { xbmc.Down(); } },
-	                { 'text': 'Left', 'class':'left', 'onclick':function () { xbmc.Left(); } },
-	                { 'text': 'Right', 'class':'right', 'onclick':function () { xbmc.Right(); } },
-	                { 'text': 'Select', 'class':'select', 'onclick':function () { xbmc.Select(); } },
-	                { 'text': 'Back', 'class':'back', 'onclick':function () { xbmc.Back(); } },
-	                { 'text': 'Information', 'class':'info', 'onclick':function () { xbmc.Info(); } },
-	                { 'text': 'Menu', 'class':'menu', 'onclick':function () { xbmc.ContextMenu(); } },
-	                { 'text': 'Home', 'class':'home', 'onclick':function () { xbmc.Home(); } }*/
-                ];
-				callback({ 'title': 'Remote', 'class': 'remote', 'height': '340px', 'width': '340px', 'buttons': buttons });
+				callback({ 'title': 'Remote' });
 			},
 			'then': function (elem) {
 				//text input
@@ -5466,25 +5452,6 @@ var xbmcLibraryFactory = (function ($) {
 				dollarCanvas(gestureInput, function (gesture, confidence) {
 					xbmc.Action(gesture);
 				});
-
-				/*var keymap = {
-					37: 'left', 38: 'up', 39: 'right', 40: 'down',
-					13: 'select', 8: 'back', 81: 'queue', 27: 'previousmenu', 73: 'info', 67: 'contextmenu',
-					80: 'play', 70: 'fastforward', 82: 'rewind', 32: 'pause', 88: 'stop', 190: 'skipnext', 188: 'skipprevious',
-					145: 'screenshot', 9: 'fullscreen', 220: 'togglefullscreen',
-					189: 'volumedown', 187: 'volumeup', 109: 'volumedown', 107: 'volumeup',
-					48: 'number0', 49: 'number1', 50: 'number2', 51: 'number3', 52: 'number4', 53: 'number5', 54: 'number6', 55: 'number7', 56: 'number8', 57: 'number9',
-					96: 'number0', 97: 'number1', 98: 'number2', 99: 'number3', 100: 'number4', 101: 'number5', 102: 'number6', 103: 'number7', 104: 'number8', 105: 'number9',
-					33: 'pageup', 34: 'pagedown', 36: 'firstpage', 35: 'lastpage'
-				};
-				var keyboardInput = document.createElement('input');
-				$(keyboardInput).on('keydown', function (e) {
-					if (keymap[e.which]) xbmc.Action(keymap[e.which]);
-					else console.log(e.which);
-					e.preventDefault();
-				});
-				elem.appendChild(keyboardInput);*/
-
 			}
 		},
 		'Menu': {
@@ -5809,16 +5776,106 @@ var xbmcLibraryFactory = (function ($) {
 				q.start();
 			}
 		},
+		'Addons': {
+			'view': 'list',
+			'groupby': 'type',
+			'data': function (callback) {
+				var page = { title: 'Add-ons', items: [] }, q = Q();
+				q.add(function (c) {
+					xbmc.GetAddons({ 'type': 'xbmc.python.script' }, function (d) {
+						page.items = d.addons;
+						c();
+					});
+				});
+				q.add(function (c) {
+					var p = Q();
+					$.each(page.items, function (i, addon) {
+						p.add(function (C) {
+							xbmc.GetAddonDetails({ 'addonid': addon.addonid }, function (d) {
+								console.dir(d.addon)
+								page.items[i] = {
+									'label': d.addon.name+' '+d.addon.version,
+									'thumbnail': xbmc.vfs2uri(d.addon.thumbnail),
+									'details': d.addon.summary,
+									'type': d.addon.type
+								};
+								C();
+							});
+						});
+					});
+					p.onfinish(function () {
+						c();
+					});
+					p.start();
+				});
+				q.onfinish(function () {
+					callback(page);
+				});
+				q.start();
+			}
+		},
+		'Live': {
+			'view': 'list',
+			'data': function (callback) {
+				var page = { title: 'Live', items: [] }, q = Q();
+				$.each(['TV', 'Radio'], function (i, type) {
+					q.add(function (c) { //get groups
+						xbmc.GetChannelGroups({ 'channeltype': type.toLowerCase() }, function (d) {
+							page.items.push({
+								'label': type,
+								'items': (d.channelgroups||[]).map(function (g) {
+									g.link = '#page=Channels&id='+g.channelgroupid;
+									return g;
+								})
+							})
+							c();
+						});
+					});
+				});
+				q.onfinish(function () {
+					callback(page);
+				});
+				q.start();
+			}
+		},
+		'Channels': {
+			'view': 'list',
+			'data': function (callback) {
+				var page = { }, q = Q(),
+				groupid = +getHash('id');
+				q.add(function (c) { //get groups
+					xbmc.GetChannelGroupDetails({ 'channelgroupid': groupid }, function (d) {
+						page.title = d.channelgroupdetails.label || '';
+						c();
+					});
+				});
+				q.add(function (c) { //get groups
+					xbmc.GetChannels({ 'channelgroupid': groupid }, function (d) {
+						console.log(d)
+						page.items = (d.channels||[]).map(function (c) {
+							//c.link = '#page=Channel&id='+c.channelid;
+							c.thumbnail = xbmc.vfs2uri(c.thumbnail);
+							c.play = function () {
+								xbmc.Open({ 'item': { 'channelid': c.channelid }});
+							};
+							return c;
+						});
+						c();
+					});
+				});
+				q.onfinish(function () {
+					callback(page);
+				});
+				q.start();
+			}
+		},
 		'Artists': {
 			'view': 'list',
 			'groupby': 'alpha',
 			'data': function (callback) {
 				var page = { title: 'Artists' }, q = Q(),
 				genre = getHash('genre'),
-				alpha = getHash('alpha')//,
-				//filter = genre ? function (artist) { if (artist.genre.indexOf(genre) >= 0) return true; } :
-				//	alpha ? function (artist) { if (artist.artist[0] == alpha) return true; } :
-				//	function (artist) { return true; };
+				alpha = getHash('alpha');
 				q.add(function (c) { //get artists
 					xbmc.GetArtists(function (d) {
 						page.items = d.artists/*.filter(filter)*/ || [];
@@ -6103,7 +6160,33 @@ var xbmcLibraryFactory = (function ($) {
 			}
 		}
 	},
-	cache = {},
+	groupItems = function (items, groupby) {
+		var o = [], temp = {};
+		if (!(items[0] && items[0][groupby])) return items;
+		$.each(items, function (i, item) {
+			var s = item[groupby];
+			if (item instanceof Object) {
+				if (!temp[s]) temp[s] = [];
+				temp[s].push(item);
+			}
+		});
+		$.each(temp, function (label, items) {
+			o.unshift({
+				'label': label,
+				'items': items
+			});
+		});
+		return o;
+	},
+	sortItems = function (items, sortby) {
+		if (!(items[0] && items[0][sortby])) return items;
+		return items.sort(function (a, b) {
+			var x = a[sortby], y = b[sortby];
+			if (x < y) return -1;
+			if (x > y) return +1;
+			return 0;
+		});
+	},
 	renderPage = function (title) {
 		var data, page, defaultPage = 'Home', hash = document.location.hash.replace(/\W/g,'');
 		

@@ -12,6 +12,33 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		'Version': {
 			'method': 'JSONRPC.Version'
 		},
+		'GetAddons': {
+			'method': 'Addons.GetAddons',
+			'cache': true
+		},
+		'GetAddonDetails': {
+			'method': 'Addons.GetAddonDetails',
+			'params': { 'properties': [ 'name', 'version', 'summary', 'author', 'thumbnail', 'broken', 'enabled' ] },
+			'cache': true
+		},
+		'GetChannelGroups': {
+			'method': 'PVR.GetChannelGroups',
+			'cache': true
+		},
+		'GetChannelGroupDetails': {
+			'method': 'PVR.GetChannelGroupDetails',
+			'cache': true
+		},
+		'GetChannels': {
+			'method': 'PVR.GetChannels',
+			'params': { 'properties': [ 'thumbnail', 'hidden', 'locked', 'channel' ] },
+			'cache': true
+		},
+		'GetChannel': {
+			'method': 'PVR.GetChannelDetails',
+			'params': { 'properties': [ 'thumbnail', 'hidden', 'locked', 'channel' ] },
+			'cache': true
+		},
 		'GetTVShows': {
 			'method': 'VideoLibrary.GetTVShows',
 			'params': { 'properties': [ 'thumbnail', 'art', 'year', 'studio', 'genre' ] },
