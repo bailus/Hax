@@ -1,26 +1,31 @@
 var Progress = function (update) {
+
 	var requestAnimationFrame = window.requestAnimationFrame ||
-      window.webkitRequestAnimationFrame ||
-      window.mozRequestAnimationFrame ||
-      window.oRequestAnimationFrame ||
-      window.msRequestAnimationFrame ||
-      function(c){ window.setTimeout(c, 100); },
+	window.webkitRequestAnimationFrame ||
+	window.mozRequestAnimationFrame ||
+	window.oRequestAnimationFrame ||
+	window.msRequestAnimationFrame ||
+	function(c){ window.setTimeout(c, 100); },
+
 	start,
 	end,
 	paused,
 	duration,
+
 	position = function () {
 		var now = (new Date()).getTime();
 		return !start || !end || !duration ? 0 :
 			paused ? (paused-start)/duration : 
 			now <= end ? (now-start)/duration : 0;
 	},    
+
 	timer = function () {
 		var pos = position(),
 		d = duration/1e3 || 0;
 		update(pos, Math.floor(pos*d), Math.floor(d));
 		requestAnimationFrame(timer);
 	},
+
 	pub = {
 		start: function (totaltime, time) {
 			if (totaltime) pub.update(totaltime, time);
@@ -68,6 +73,7 @@ var Progress = function (update) {
 			end += diff;
 		}
 	};
+
 	timer();
 	return pub;
 };

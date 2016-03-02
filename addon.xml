@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!-- Kodi web skin configuration -->
 <addon
-	id="webinterface.Hax"
-	version="0.0.42"
+	id="webinterface.hax"
+	version="0.42.0"
 	name="Hax"
 	provider-name="bailus">
 	<requires>
-		<import addon="xbmc.json" version="4.00"/>
+		<import addon="xbmc.json" version="6.0.0"/>
 	</requires>
 	<extension point="xbmc.webinterface"/>
 	<extension point="xbmc.addon.metadata">
