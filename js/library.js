@@ -36,13 +36,13 @@ var xbmcLibraryFactory = (function ($) {
 			'view': 'list',
 			'data': function (callback) {
 				var items = [
-					{ 'label': 'Videos', 'link': '#page=Menu&media=Videos', 'thumbnail': 'img/icon_video.png' },
-					{ 'label': 'Music', 'link': '#page=Menu&media=Music', 'thumbnail': 'img/icon_music.png' },
-					{ 'label': 'Pictures', 'link': '#page=Menu&media=Pictures', 'thumbnail': 'img/icon_pictures.png' },
-                    { 'label': 'Live', 'link': '#page=Live', 'thumbnail':'img/Live.png' },
-                    { 'label': 'Playlists', 'link': '#page=Playlists', 'thumbnail':'img/playlist.png' },
-                    { 'label': 'Remote', 'link': '#page=Remote', 'thumbnail':'img/remote.png' },
-                    //{ 'label': 'Settings', 'link': '#page=Settings', 'thumbnail':'img/settings.png' }
+					{ 'label': 'Videos', 'link': '#page=Menu&media=Videos', 'thumbnail': 'img/icons/home/videos.png' },
+					{ 'label': 'Music', 'link': '#page=Menu&media=Music', 'thumbnail': 'img/icons/home/music.png' },
+					{ 'label': 'Pictures', 'link': '#page=Menu&media=Pictures', 'thumbnail': 'img/icons/home/pictures.png' },
+					//{ 'label': 'Live', 'link': '#page=Live', 'thumbnail':'img/icons/home/live.png' },
+					{ 'label': 'Playlists', 'link': '#page=Playlists', 'thumbnail':'img/icons/home/playlists.png' },
+					//{ 'label': 'Remote', 'link': '#page=Remote', 'thumbnail':'img/icons/home/remote.png' },
+					//{ 'label': 'Settings', 'link': '#page=Settings', 'thumbnail':'img/icons/home/settings.png' }
 				];
 				callback({ 'items': items, 'fanart': 'img/backgrounds/default.jpg', 'hideNavigation': true });
 			}
@@ -89,25 +89,25 @@ var xbmcLibraryFactory = (function ($) {
 					'items': ({
 						'Videos': [
 							{ 'label': 'Movies', 'items': [
-								{ 'label': 'By Year', 'link': '#page=Movies', 'thumbnail': 'img/DefaultMusicYears.png' },
-								{ 'label': 'By Title', 'link': '#page=Movies&group=alpha', 'thumbnail': 'img/DefaultMovies.png' },
-								{ 'label': 'By Genre', 'link': '#page=Genres&type=Movies', 'thumbnail': 'img/DefaultMusicGenres.png' }
+								{ 'label': 'By Year', 'link': '#page=Movies', 'thumbnail': 'img/icons/default/DefaultMusicYears.png' },
+								{ 'label': 'By Title', 'link': '#page=Movies&group=alpha', 'thumbnail': 'img/icons/default/DefaultMovies.png' },
+								{ 'label': 'By Genre', 'link': '#page=Genres&type=Movies', 'thumbnail': 'img/icons/default/DefaultMusicGenres.png' }
 							] },
 							{ 'label': 'TV Shows', 'items': [
-								{ 'label': 'By Title', 'link': '#page=TV Shows', 'thumbnail': 'img/DefaultTVShows.png' },
-								{ 'label': 'By Genre', 'link': '#page=Genres&type=TV Shows', 'thumbnail': 'img/DefaultMusicGenres.png' }
+								{ 'label': 'By Title', 'link': '#page=TV Shows', 'thumbnail': 'img/icons/default/DefaultTVShows.png' },
+								{ 'label': 'By Genre', 'link': '#page=Genres&type=TV Shows', 'thumbnail': 'img/icons/default/DefaultMusicGenres.png' }
 							] },
 							{ 'label': 'Music Videos', 'items': [
-								{ 'label': 'By Artist', 'link': '#page=Music Videos', 'thumbnail': 'img/DefaultMusicArtists.png' }
+								{ 'label': 'By Artist', 'link': '#page=Music Videos', 'thumbnail': 'img/icons/default/DefaultMusicArtists.png' }
 							] }
 						],
 						'Music': [
 							{ 'label': 'Artists', 'items': [
-								{ 'label': 'By Name', 'link': '#page=Artists', 'thumbnail': 'img/DefaultMusicArtists.png' },
-								{ 'label': 'By Genre', 'link': '#page=Artists&group=genre', 'thumbnail': 'img/DefaultMusicGenres.png' }
+								{ 'label': 'By Name', 'link': '#page=Artists', 'thumbnail': 'img/icons/default/DefaultMusicArtists.png' },
+								{ 'label': 'By Genre', 'link': '#page=Artists&group=genre', 'thumbnail': 'img/icons/default/DefaultMusicGenres.png' }
 							] },
 							{ 'label': 'Music Videos', 'items': [
-								{ 'label': 'By Artist', 'link': '#page=Music Videos', 'thumbnail': 'img/DefaultMusicArtists.png' }
+								{ 'label': 'By Artist', 'link': '#page=Music Videos', 'thumbnail': 'img/icons/default/DefaultMusicArtists.png' }
 							] }
 						],
 						'Pictures': [ ]
@@ -117,7 +117,7 @@ var xbmcLibraryFactory = (function ($) {
 					xbmc.GetSources({ 'media': m }, function (d) {
 						page.items.push({ 'label': 'Files', 'items': (d.sources || []).map(function (source) {
 							source.link = '#page=Directory&directory='+encodeURIComponent(source.file)+'&media='+m;
-							source.thumbnail = 'img/DefaultFolder.png';
+							source.thumbnail = 'img/icons/default/DefaultFolder.png';
 							source.thumbnailWidth = '50px';
 							return source;
 						})});
@@ -200,7 +200,7 @@ var xbmcLibraryFactory = (function ($) {
 							};
 						}
 						//if (movie.fanart) movie.thumbnail = movie.fanart; fanart takes too long to load
-						movie.thumbnail = movie.thumbnail ? xbmc.vfs2uri(movie.thumbnail) : 'img/DefaultVideo.png';
+						movie.thumbnail = movie.thumbnail ? xbmc.vfs2uri(movie.thumbnail) : 'img/icons/default/DefaultVideo.png';
 						movie.thumbnailWidth = '34px';
 						movie.details = [];
 						if (movie.genre) movie.details.push(movie.genre);
@@ -318,7 +318,7 @@ var xbmcLibraryFactory = (function ($) {
 						episode.link = '#page=Episode&episodeid='+episode.episodeid+'&tvshowid='+tvshowid;
 						episode.label = episode.title || '';
 						if (episode.episode) episode.number = episode.episode;
-						episode.thumbnail = episode.thumbnail ? xbmc.vfs2uri(episode.thumbnail) : 'img/DefaultVideo.png';
+						episode.thumbnail = episode.thumbnail ? xbmc.vfs2uri(episode.thumbnail) : 'img/icons/default/DefaultVideo.png';
 						episode.season = 'Season '+episode.season;
 						episode.thumbnailWidth = '89px';
 						episode.details = [];
@@ -510,7 +510,7 @@ var xbmcLibraryFactory = (function ($) {
 				  	$.each(page.items, function (i, artist) {
 				  		artist.alpha = artist.label[0].toUpperCase();
 						artist.link = '#page=Artist&artistid='+artist.artistid;
-						artist.thumbnail = artist.thumbnail ? xbmc.vfs2uri(artist.thumbnail) : 'img/DefaultArtist.png';
+						artist.thumbnail = artist.thumbnail ? xbmc.vfs2uri(artist.thumbnail) : 'img/icons/default/DefaultArtist.png';
 						artist.thumbnailWidth = '50px';
 						if (artist.genre instanceof Array) artist.genre.map(function (genre) { return genre.charAt(0).toUpperCase()+genre.charAt(0).toUpperCase()+genre.substr(1) });
 						artist.details = artist.genre || ' ';
@@ -550,7 +550,7 @@ var xbmcLibraryFactory = (function ($) {
 				  add(function (c) { //format albums
 					$.each(page.items, function (i, album) {
 						album.link = '#page=Album&albumid='+album.albumid;
-						album.thumbnail = album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : 'img/DefaultAudio.png';
+						album.thumbnail = album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : 'img/icons/default/DefaultAudio.png';
 						album.thumbnailWidth = '50px';
 						//if (album.year) album.details = album.year;
 						album.play = function () {
@@ -647,7 +647,7 @@ var xbmcLibraryFactory = (function ($) {
 					q.add(function (c) { //format sources
 						$.each(item.items, function (i, source) {
 							source.link = '#page=Directory&directory='+encodeURIComponent(source.file)+'&media='+item.media;
-							source.thumbnail = 'img/DefaultFolder.png';
+							source.thumbnail = 'img/icons/default/DefaultFolder.png';
 							source.thumbnailWidth = '50px';
 						});
 						c();
@@ -680,7 +680,7 @@ var xbmcLibraryFactory = (function ($) {
 						  filename = f.pop();
 						if (file.filetype === 'directory') {
 							file.link = '#page=Directory&directory='+encodeURIComponent(file.file)+'&media='+getHash('media');
-							if (!file.thumbnail) file.thumbnail = 'img/DefaultFolder.png';
+							if (!file.thumbnail) file.thumbnail = 'img/icons/default/DefaultFolder.png';
 						}
 						if (file.filetype === 'file') {
 							file.play = function () {
@@ -691,7 +691,7 @@ var xbmcLibraryFactory = (function ($) {
 							file.add = function () {
 								xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': file.file } });
 							};
-							file.thumbnail = file.thumbnail ? xbmc.vfs2uri(file.thumbnail) : 'img/DefaultFile.png';
+							file.thumbnail = file.thumbnail ? xbmc.vfs2uri(file.thumbnail) : 'img/icons/default/DefaultFile.png';
 							file.details = [];
 							file.details.push( Math.round((file.size||0)/1024)+'MB' );
 							if (file.mimetype) file.details.push( !file.type || (file.type === 'unknown') ? file.mimetype : file.type );
@@ -709,7 +709,7 @@ var xbmcLibraryFactory = (function ($) {
 					if (path.length > 2) page.items.unshift({
 						'link': '#page=Directory&directory='+back+'&media='+getHash('media'),
 						'label': ' . . ',
-						'thumbnail': 'img/DefaultFolderBack.png',
+						'thumbnail': 'img/icons/default/DefaultFolderBack.png',
 						'thumbnailWidth': '50px'
 					});
 					c();

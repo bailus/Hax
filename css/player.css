@@ -36,12 +36,12 @@
 	-moz-border-radius-topright: 5px;
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
-	background-image:url('../img/up.png');
+	background-image:url('../img/buttons/drawer_open.png');
 	background-position: center center;
 	background-repeat: no-repeat;
 }
 #player.visible > .show {
-	background-image:url('../img/down.png');
+	background-image:url('../img/buttons/drawer_close.png');
 }
 #progress {
 	border: none;

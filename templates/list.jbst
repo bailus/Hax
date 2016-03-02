@@ -1,8 +1,8 @@
 <%@ Control Name="template.list" Language="JavaScript" %>
 
 <header>
-	<a jbst:visible="<%= !this.data.hideNavigation %>" href="javascript:history.go(-1)" class="backButton"><img src="img/icon_back.png" height="32" width="32"></a>
-	<a jbst:visible="<%= !this.data.hideNavigation %>" href="#page=Home" class="homeButton"><img src="img/icon_home.png" height="32" width="32"></a>
+	<a jbst:visible="<%= !this.data.hideNavigation %>" href="javascript:history.go(-1)" class="backButton"><img src="img/buttons/icon_back.png" height="32" width="32"></a>
+	<a jbst:visible="<%= !this.data.hideNavigation %>" href="#page=Home" class="homeButton"><img src="img/buttons/icon_home.png" height="32" width="32"></a>
 
 	<h1 jbst:visible="<%= !this.data.banner %>">
 		<%= this.data.title %>
