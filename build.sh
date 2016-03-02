@@ -1,24 +1,22 @@
 #!/bin/bash
 
-# XBMC Simple Remote build script
+# Hax build script
 
 # config
 scripts=(
-	'js/jquery.min.js'
-	'js/jquery-ui.min.js'
-	'js/json.js'
+	'lib/jquery.js'
+	'lib/jquery-ui.full.js'
+	'lib/json.js'
 	'js/jsonrpc.js'
-	'js/jsonml.js'
-	'js/jsonml-jbst.js'
+	'lib/jsonml.js'
+	'lib/jsonml-jbst.js'
+	'lib/lazyload.js'
+	'lib/iscroll.js'
+	'lib/hashchange.js'
 	'js/hash.js'
-	'js/hashchange.js'
-	'js/lazyload.js'
-	'js/iscroll.js'
 	'js/time.js'
 	'js/Q.js'
 	'js/progress.js'
-	'js/dollar.js'
-	'js/dollarCanvas.js'
 	'templates/details.js'
 	'templates/list.js'
 	'templates/listdetails.js'

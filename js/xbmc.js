@@ -5,6 +5,9 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 	var VERSION, pub = {},
 	  DEBUG = window.DEBUG || true, socket = { 'q': {} }, events = {}, server;
 
+	//the map below describes the XBMC.* functions
+	//functions are added to the XBMC object
+	//objects are passed to makeFunction() before being added
 	var rpc = {
 		'Introspect': {
 			'method': 'JSONRPC.Introspect'
@@ -278,9 +281,9 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 	};
 	
 	
+	//Modifies parts of an url
 	//parseURL( '/' );
 	//parseURL( '/', { 'protocol': 'https', 'port': 8080 } );
-	//parseURL( '/', [ { 'protocol': 'https' }, { 'port': 8080 } ] );
 	//parseURL( '/', function () { this.protocol = 'https'; this.port = 8080; } );
 	//parseURL( '/', [ { 'protocol': 'https' }, function () { this.port = '8080'; } ] );
 	

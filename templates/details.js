@@ -25,7 +25,7 @@ template.details = JsonML.BST(
 			[
 				"img",
 				{
-					src: "img/icon_back.png",
+					src: "img/buttons/icon_back.png",
 					height: "32",
 					width: "32"
 				}
@@ -41,7 +41,7 @@ template.details = JsonML.BST(
 			[
 				"img",
 				{
-					src: "img/icon_home.png",
+					src: "img/buttons/icon_home.png",
 					height: "32",
 					width: "32"
 				}
