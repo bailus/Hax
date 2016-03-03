@@ -44,7 +44,7 @@ var xbmcLibraryFactory = (function ($) {
 					//{ 'label': 'Remote', 'link': '#page=Remote', 'thumbnail':'img/icons/home/remote.png' },
 					//{ 'label': 'Settings', 'link': '#page=Settings', 'thumbnail':'img/icons/home/settings.png' }
 				];
-				callback({ 'items': items, 'fanart': 'img/backgrounds/default.jpg', 'hideNavigation': true });
+				callback({ 'items': items, /*'fanart': 'img/backgrounds/default.jpg',*/ 'hideNavigation': true });
 			}
 		},
 		'Remote': {
@@ -386,7 +386,8 @@ var xbmcLibraryFactory = (function ($) {
 				  		mv.label = mv.title;
 				  		mv.details = (mv.album ? mv.album+(mv.year ? ' ('+mv.year+')' : '') : '');
 						mv.play = function () {
-							xbmc.Play({ 'file': mv.file }, 1);
+							xbmc.Open({ 'item': { 'file': xbmc.vfs2uri(mv.file) } });
+							//xbmc.Play({ 'file': mv.file }, 1);
 						};
 						mv.add = function () {
 							xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': mv.file } });
@@ -683,10 +684,11 @@ var xbmcLibraryFactory = (function ($) {
 							if (!file.thumbnail) file.thumbnail = 'img/icons/default/DefaultFolder.png';
 						}
 						if (file.filetype === 'file') {
+							var playlistid = file.type === 'audio' ? 0 : file.type === 'video' ? 1 : 2;
 							file.play = function () {
 								if (file.type === 'unknown' || !file.type) file.type = getHash('media');
-								xbmc.Play(file.file, file.type === 'audio' ? 0 : file.type === 'video' ? 1 : 2);
-								//xbmc.Open({ 'item': { 'file': xbmc.vfs2uri(file.file) } });
+								//xbmc.Play(file.file, playlistid);
+								xbmc.Open({ 'item': { 'file': xbmc.vfs2uri(file.file) } });
 							};
 							file.add = function () {
 								xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': file.file } });
@@ -841,7 +843,7 @@ var xbmcLibraryFactory = (function ($) {
 				if (getHash(groupby)) data.items = data.items.filter(function (x) {
 					return x.label === getHash(groupby);
 				});
-				else if (size > 50) {
+				else if (size > 100) {
 					data.collapsed = true;
 					data.items = data.items.map(function (x) {
 						return {
@@ -861,8 +863,7 @@ var xbmcLibraryFactory = (function ($) {
 			$('#content').empty().append(p);
 			if (page.then instanceof Function) page.then(p.get(0));
 			
-			//apply javascript UI hacks
-			$('body').scrollTop(0);
+			$('body').scrollTop(0); //scroll to the top of the page
 			$('#loading').stop(true).hide();
 			v.find('img').filter('[data-original]').lazyload(LAZYLOAD_OPTIONS); //initialize the lazyload plugin
 		});
