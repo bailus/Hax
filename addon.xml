@@ -1,17 +1,18 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<!-- XBMC web skin configuration -->
+<!-- Kodi web skin configuration -->
 <addon
-	id="webinterface.xbmc-simple-remote"
-	version="0.1.0"
-	name="XBMC Simple Remote"
-	provider-name="bailey.geek.nz">
+	id="webinterface.hax"
+	version="0.42.0"
+	name="Hax"
+	provider-name="bailus">
 	<requires>
-		<import addon="xbmc.gui" version="3.00"/>
-		<import addon="xbmc.json" version="4.00"/>
+		<import addon="xbmc.json" version="6.0.0"/>
 	</requires>
-	<extension point="xbmc.gui.webinterface"/>
+	<extension point="xbmc.webinterface"/>
 	<extension point="xbmc.addon.metadata">
-		<summary lang="en">An XBMC web interface that supports mobile devices. Designed to be simple, fast and easy to use.</summary>
+		<summary lang="en">
+			For mobile devices. Designed to be fast and easy to use.
+		</summary>
 		<platform>all</platform>
 	</extension>
 </addon>
