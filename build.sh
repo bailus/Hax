@@ -5,7 +5,6 @@
 # config
 scripts=(
 	'lib/jquery.js'
-	'lib/jquery-ui.full.js'
 	'lib/json.js'
 	'js/jsonrpc.js'
 	'lib/jsonml.js'
