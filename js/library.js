@@ -6,7 +6,7 @@ var xbmcLibraryFactory = (function ($) {
 	  cache = {},
 	  DEBUG = window.DEBUG || true,
 	  
-	seconds2string = function (t) {
+	seconds2shortstring = function (t) {
 		var str = function (n) {
 			return (n < 10 && n > -10 ? '0' : '')+Math.floor(n);
 		};
@@ -14,12 +14,17 @@ var xbmcLibraryFactory = (function ($) {
 		else return str(t/60) +':'+ str(t%60);
 	},
 
+	seconds2string = function (t) {
+		return minutes2string(Math.round(t/60));
+	},
+
 	minutes2string = function (t) {
-		var str = function (n) {
-			return (n < 10 && n > -10 ? '0' : '')+Math.floor(n);
-		};
-		if (t > 60) return str(t/60) +':'+ str(t%60) + ':00';
-		return str(t) + ':00';
+		var hours = Math.floor(t/60),
+		    mins  = Math.floor(t%60),
+		    out = [];
+		if (hours > 0) out.push(hours + ' hour' + (hours > 1 ? 's' : ''));
+		if (mins > 0) out.push(mins + ' minute' + (mins > 1 ? 's' : ''));
+		return out.join(' ');
 	},
 
 	ymd2string = function (ymd) {
@@ -203,8 +208,8 @@ var xbmcLibraryFactory = (function ($) {
 						movie.thumbnail = movie.thumbnail ? xbmc.vfs2uri(movie.thumbnail) : 'img/icons/default/DefaultVideo.png';
 						movie.thumbnailWidth = '34px';
 						movie.details = [];
-						if (movie.genre) movie.details.push(movie.genre);
-						//movie.details.push( minutes2string(movie.runtime || 0) );
+						//if (movie.genre) movie.details.push(movie.genre.join(', '));
+						movie.details.push( seconds2string(movie.runtime || 0) );
 					});
 					c();
 				});
@@ -322,9 +327,8 @@ var xbmcLibraryFactory = (function ($) {
 						episode.season = 'Season '+episode.season;
 						episode.thumbnailWidth = '89px';
 						episode.details = [];
-						if (episode.runtime) episode.details.push( minutes2string(episode.runtime) );
+						if (episode.runtime) episode.details.push( seconds2string(episode.runtime) );
 						if (episode.lastplayed) episode.details.push( 'Last played '+ymd2string(episode.lastplayed) );
-						//episode.details.push( minutes2string(episode.runtime || 0) );
 					});
 					c();
 				  }).
@@ -360,7 +364,8 @@ var xbmcLibraryFactory = (function ($) {
 					}
 					if (page.thumbnail) page.thumbnail = xbmc.vfs2uri(page.thumbnail);
 					if (page.fanart) page.fanart = xbmc.vfs2uri(page.fanart);
-					if (page.runtime) page.runtime += ' minutes';
+					//if (page.runtime) page.runtime += ' minutes';
+					if (page.runtime) page.runtime = seconds2string(page.runtime);
 					c();
 				  }).
 				  onfinish(function () {
@@ -591,7 +596,7 @@ var xbmcLibraryFactory = (function ($) {
 						xbmc.Play({ 'albumid': albumid }, 0);
 					};
 					page.add = function () {
-						xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'albumid': albumid } });
+						xbmc.AddToPlaylist({ 'playlistid': 0, 'item': { 'albumid': albumid } });
 					};
 					c();
 				  }).
@@ -609,14 +614,13 @@ var xbmcLibraryFactory = (function ($) {
 						song.thumbnailWidth = '50px';
 						if (song.file) {
 							song.play = function () {
-								//xbmc.Play(song.file, 0);
 								xbmc.Play({ 'albumid': albumid }, 0, song.track-1);
 							};
 							song.add = function () {
-								xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': song.file } });
+								xbmc.AddToPlaylist({ 'playlistid': 0, 'item': { 'file': song.file } });
 							};
 						}
-						if (song.duration) song.details = seconds2string(song.duration);
+						if (song.duration) song.details = seconds2shortstring(song.duration);
 					});
 					c();
 				  }).
@@ -665,11 +669,14 @@ var xbmcLibraryFactory = (function ($) {
 			'parent': 'Files',
 			'data': function (callback) {
 				var directory = getHash('directory'), page = {}, media = getHash('media') || '';
+				var pathSplit = function (path) {
+					return path.split(new RegExp('[\\/]'));
+				};
 				Q().
 				  add(function (c) { //get files
 					xbmc.GetDirectory({ 'directory': directory, 'media': media }, function (d) {
 						page.subtitle = directory.substring(0,12) === 'multipath://' ? decodeURIComponent(directory.substring(12, directory.length-1)) : directory;
-						var directoryArray = page.subtitle.split('/');
+						var directoryArray = pathSplit(page.subtitle);
 						page.title = directoryArray[directoryArray.length-2];
 						page.items = d.files || [];
 						c();
@@ -677,7 +684,7 @@ var xbmcLibraryFactory = (function ($) {
 				  }).
 				  add(function (c) { //format files
 					$.each(page.items, function (i, file) {
-						var f = file.file.split('/'),
+						var f = pathSplit(file.file),
 						  filename = f.pop();
 						if (file.filetype === 'directory') {
 							file.link = '#page=Directory&directory='+encodeURIComponent(file.file)+'&media='+getHash('media');
@@ -687,7 +694,6 @@ var xbmcLibraryFactory = (function ($) {
 							var playlistid = file.type === 'audio' ? 0 : file.type === 'video' ? 1 : 2;
 							file.play = function () {
 								if (file.type === 'unknown' || !file.type) file.type = getHash('media');
-								//xbmc.Play(file.file, playlistid);
 								xbmc.Open({ 'item': { 'file': xbmc.vfs2uri(file.file) } });
 							};
 							file.add = function () {
@@ -695,7 +701,7 @@ var xbmcLibraryFactory = (function ($) {
 							};
 							file.thumbnail = file.thumbnail ? xbmc.vfs2uri(file.thumbnail) : 'img/icons/default/DefaultFile.png';
 							file.details = [];
-							file.details.push( Math.round((file.size||0)/1024)+'MB' );
+							//file.details.push( Math.round((file.size||0)/1024)+'MB' ); //TODO: file.size is incorrect?
 							if (file.mimetype) file.details.push( !file.type || (file.type === 'unknown') ? file.mimetype : file.type );
 						}
 						if (!filename) filename = f.pop();
@@ -705,7 +711,8 @@ var xbmcLibraryFactory = (function ($) {
 					c();
 				  }).
 				  add(function (c) { //add back button
-					var path = directory.split('/'), back = '';
+					var path = pathSplit(directory),
+						   back = '';
 					if (!path.pop()) path.pop(); //remove the last part of the current directory
 					back = path.join('/');					
 					if (path.length > 2) page.items.unshift({
