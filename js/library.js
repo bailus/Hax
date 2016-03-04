@@ -186,6 +186,7 @@ var xbmcLibraryFactory = (function ($) {
 				q.add(function (c) { //format movie details
 					if (page.year) page.title += ' ('+page.year+')';
 					if (page.tagline) page.subtitle = page.tagline;
+					if (page.runtime) page.runtime = seconds2string(page.runtime);
 					if (page.movieid) {
 						page.play = function () {
 							xbmc.Play({ 'movieid': page.movieid }, 1);
@@ -622,9 +623,9 @@ var xbmcLibraryFactory = (function ($) {
 						  filename = f.pop();
 						if (file.filetype === 'directory') {
 							file.link = '#page=Directory&directory='+encodeURIComponent(file.file)+'&media='+getHash('media');
-							if (!file.thumbnail) file.thumbnail = 'img/icons/default/DefaultFolder.png';
+							file.thumbnail = file.thumbnail ? xbmc.vfs2uri(file.thumbnail) : 'img/icons/default/DefaultFolder.png';
 						}
-						if (file.filetype === 'file') {
+						else {
 							var playlistid = file.type === 'audio' ? 0 : file.type === 'video' ? 1 : 2;
 							file.play = function () {
 								if (file.type === 'unknown' || !file.type) file.type = getHash('media');
