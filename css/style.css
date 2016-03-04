@@ -56,6 +56,9 @@ a:active,
 h1 a, h2 a, h3 a, h4 a, h5 a {
 	color:inherit;
 }
+h3 {
+	color:#BBB;
+}
 .buttons .play, .buttons .add {
 	background:rgba(0,0,0,0.6);
 }
@@ -109,8 +112,7 @@ h2 {
 	font-size:16px;
 }
 h3 {
-	font-weight:bold;
-	font-size:15px;
+	font-size:14px;
 }
 p {
 	font-size:14px;
@@ -230,7 +232,7 @@ p {
 	height:28px;
 }
 .superListItem {
-	margin-bottom:15px;
+	margin-bottom:32px;
 }
 .listItem {
 	height:50px;

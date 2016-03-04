@@ -6,18 +6,6 @@ var xbmcLibraryFactory = (function ($) {
 	  cache = {},
 	  DEBUG = window.DEBUG || true,
 	  
-	seconds2shortstring = function (t) {
-		var str = function (n) {
-			return (n < 10 && n > -10 ? '0' : '')+Math.floor(n);
-		};
-		if (t > 3600) return str(t/3600) +':'+ str((t%3600)/60) +':'+ str(t%60);
-		else return str(t/60) +':'+ str(t%60);
-	},
-
-	seconds2string = function (t) {
-		return minutes2string(Math.round(t/60));
-	},
-
 	minutes2string = function (t) {
 		var hours = Math.floor(t/60),
 		    mins  = Math.floor(t%60),
@@ -25,6 +13,18 @@ var xbmcLibraryFactory = (function ($) {
 		if (hours > 0) out.push(hours + ' hour' + (hours > 1 ? 's' : ''));
 		if (mins > 0) out.push(mins + ' minute' + (mins > 1 ? 's' : ''));
 		return out.join(' ');
+	},
+
+	seconds2string = function (t) {
+		return minutes2string(Math.round(t/60));
+	},
+
+	seconds2shortstring = function (t) {
+		var str = function (n) {
+			return (n < 10 && n > -10 ? '0' : '')+Math.floor(n);
+		};
+		if (t > 3600) return str(t/3600) +':'+ str((t%3600)/60) +':'+ str(t%60);
+		else return str(t/60) +':'+ str(t%60);
 	},
 
 	ymd2string = function (ymd) {
@@ -50,37 +50,6 @@ var xbmcLibraryFactory = (function ($) {
 					//{ 'label': 'Settings', 'link': '#page=Settings', 'thumbnail':'img/icons/home/settings.png' }
 				];
 				callback({ 'items': items, /*'fanart': 'img/backgrounds/default.jpg',*/ 'hideNavigation': true });
-			}
-		},
-		'Remote': {
-			'view': 'list',
-			'data': function (callback) {
-				callback({ 'title': 'Remote' });
-			},
-			'then': function (elem) {
-				//text input
-				var textContainer = document.createElement('div');
-				var textInput = document.createElement('input');
-				$(textInput).on('keyup', function (e) {
-					var fin = event.which === 13; //was the enter key pressed?
-					xbmc.SendText({ 'text': textInput.value, 'done': fin });
-					if (fin) textInput.value = '';
-				});
-				textContainer.classList.add('textInput');
-				textContainer.appendChild(textInput);
-				elem.appendChild(textContainer);
-
-				//gesture input
-				var gestureContainer = document.createElement('div');
-				var gestureInput = document.createElement('canvas');
-				elem.appendChild(gestureContainer);
-				gestureInput.width = $(gestureContainer).width()-18;
-				gestureInput.height = $(window).height()-120;
-				gestureContainer.classList.add('gestureInput');
-				gestureContainer.appendChild(gestureInput);
-				dollarCanvas(gestureInput, function (gesture, confidence) {
-					xbmc.Action(gesture);
-				});
 			}
 		},
 		'Menu': {
@@ -141,15 +110,6 @@ var xbmcLibraryFactory = (function ($) {
 				q.start();
 			}
 		},
-		'Settings': {
-			'view': 'settings',
-			'data': {
-				'items': [
-					{ 'label': 'Fanart', 'type': 'checkbox' },
-					{ 'label': 'Thumbnails', 'type': 'checkbox' }
-				]
-			}
-		},
 		'Genres': {
 			'view': 'list',
 			'data': function (callback) {
@@ -198,18 +158,10 @@ var xbmcLibraryFactory = (function ($) {
 						if (movie.movieid) {
 							movie.play = function () {
 								xbmc.Play({ 'movieid': movie.movieid }, 1);
-								//xbmc.Open({ 'item': { 'path': xbmc.vfs2uri(movie.file) } });
-							};
-							movie.add = function () {
-								xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'movieid': movie.movieid } });
 							};
 						}
-						//if (movie.fanart) movie.thumbnail = movie.fanart; fanart takes too long to load
 						movie.thumbnail = movie.thumbnail ? xbmc.vfs2uri(movie.thumbnail) : 'img/icons/default/DefaultVideo.png';
 						movie.thumbnailWidth = '34px';
-						movie.details = [];
-						//if (movie.genre) movie.details.push(movie.genre.join(', '));
-						movie.details.push( seconds2string(movie.runtime || 0) );
 					});
 					c();
 				});
@@ -317,9 +269,6 @@ var xbmcLibraryFactory = (function ($) {
 						episode.play = function () {
 							xbmc.Play({ 'episodeid': episode.episodeid }, 1);
 						};
-						episode.add = function () {
-							xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'episodeid': episode.episodeid } });
-						};
 						episode.link = '#page=Episode&episodeid='+episode.episodeid+'&tvshowid='+tvshowid;
 						episode.label = episode.title || '';
 						if (episode.episode) episode.number = episode.episode;
@@ -327,7 +276,6 @@ var xbmcLibraryFactory = (function ($) {
 						episode.season = 'Season '+episode.season;
 						episode.thumbnailWidth = '89px';
 						episode.details = [];
-						if (episode.runtime) episode.details.push( seconds2string(episode.runtime) );
 						if (episode.lastplayed) episode.details.push( 'Last played '+ymd2string(episode.lastplayed) );
 					});
 					c();
@@ -393,9 +341,6 @@ var xbmcLibraryFactory = (function ($) {
 						mv.play = function () {
 							xbmc.Open({ 'item': { 'file': xbmc.vfs2uri(mv.file) } });
 							//xbmc.Play({ 'file': mv.file }, 1);
-						};
-						mv.add = function () {
-							xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': mv.file } });
 						};
 					});
 					c();
@@ -519,7 +464,6 @@ var xbmcLibraryFactory = (function ($) {
 						artist.thumbnail = artist.thumbnail ? xbmc.vfs2uri(artist.thumbnail) : 'img/icons/default/DefaultArtist.png';
 						artist.thumbnailWidth = '50px';
 						if (artist.genre instanceof Array) artist.genre.map(function (genre) { return genre.charAt(0).toUpperCase()+genre.charAt(0).toUpperCase()+genre.substr(1) });
-						artist.details = artist.genre || ' ';
 					});
 					c();
 				});
@@ -558,12 +502,8 @@ var xbmcLibraryFactory = (function ($) {
 						album.link = '#page=Album&albumid='+album.albumid;
 						album.thumbnail = album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : 'img/icons/default/DefaultAudio.png';
 						album.thumbnailWidth = '50px';
-						//if (album.year) album.details = album.year;
 						album.play = function () {
 							xbmc.Play({ 'albumid': album.albumid }, 0);
-						};
-						album.add = function () {
-							xbmc.AddToPlaylist({ 'playlistid': 0, 'item': { 'albumid': album.albumid } });
 						};
 					});
 					c();
@@ -595,9 +535,6 @@ var xbmcLibraryFactory = (function ($) {
 					page.play = function () {
 						xbmc.Play({ 'albumid': albumid }, 0);
 					};
-					page.add = function () {
-						xbmc.AddToPlaylist({ 'playlistid': 0, 'item': { 'albumid': albumid } });
-					};
 					c();
 				  }).
 				  add(function (c) { //get songs
@@ -615,9 +552,6 @@ var xbmcLibraryFactory = (function ($) {
 						if (song.file) {
 							song.play = function () {
 								xbmc.Play({ 'albumid': albumid }, 0, song.track-1);
-							};
-							song.add = function () {
-								xbmc.AddToPlaylist({ 'playlistid': 0, 'item': { 'file': song.file } });
 							};
 						}
 						if (song.duration) song.details = seconds2shortstring(song.duration);
@@ -696,13 +630,7 @@ var xbmcLibraryFactory = (function ($) {
 								if (file.type === 'unknown' || !file.type) file.type = getHash('media');
 								xbmc.Open({ 'item': { 'file': xbmc.vfs2uri(file.file) } });
 							};
-							file.add = function () {
-								xbmc.AddToPlaylist({ 'playlistid': 1, 'item': { 'file': file.file } });
-							};
 							file.thumbnail = file.thumbnail ? xbmc.vfs2uri(file.thumbnail) : 'img/icons/default/DefaultFile.png';
-							file.details = [];
-							//file.details.push( Math.round((file.size||0)/1024)+'MB' ); //TODO: file.size is incorrect?
-							if (file.mimetype) file.details.push( !file.type || (file.type === 'unknown') ? file.mimetype : file.type );
 						}
 						if (!filename) filename = f.pop();
 						file.label = filename;
