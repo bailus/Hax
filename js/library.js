@@ -339,6 +339,7 @@ var xbmcLibraryFactory = (function ($) {
 				  		mv.artist = mv.artist.join(', ');
 				  		mv.label = mv.title;
 				  		mv.details = (mv.album ? mv.album+(mv.year ? ' ('+mv.year+')' : '') : '');
+						if (mv.thumbnail) mv.thumbnail = xbmc.vfs2uri(mv.thumbnail);
 						mv.play = function () {
 							xbmc.Open({ 'item': { 'file': xbmc.vfs2uri(mv.file) } });
 							//xbmc.Play({ 'file': mv.file }, 1);
