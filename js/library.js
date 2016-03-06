@@ -792,7 +792,7 @@ var xbmcLibraryFactory = (function ($) {
 			}
 
 			data.id = title;
-			document.title = 'XBMC'+(data.title ? ' - '+data.title : ' Simple Remote');
+			document.title = 'Hax//'+(data.title ? data.title : 'Kodi');
 			
 			//render the data to the DOM via the template
 			var p = $('<div class="page" data-page="'+title+'"></div>'),
