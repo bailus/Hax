@@ -2,7 +2,7 @@
 <!-- Kodi web skin configuration -->
 <addon
 	id="webinterface.hax"
-	version="0.42.0"
+	version="0.1.0"
 	name="Hax"
 	provider-name="bailus">
 	<requires>
