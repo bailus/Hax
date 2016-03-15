@@ -650,7 +650,7 @@ var xbmcLibraryFactory = (function ($) {
 					page = d.albumdetails || {};
 					c();
 				});
-			}).
+			});
 
 			q.add(function (c) { //format album details
 				if (page.thumbnail) page.thumbnail = xbmc.vfs2uri(page.thumbnail);
@@ -662,14 +662,14 @@ var xbmcLibraryFactory = (function ($) {
 					xbmc.Play({ 'albumid': albumid }, 0);
 				};
 				c();
-			}).
+			});
 
 			q.add(function (c) { //get songs
 				xbmc.GetSongs({ 'filter': { 'albumid': albumid } }, function (d) {
 					page.items = d.songs || [];
 					c();
 				});
-			}).
+			});
 
 			q.add(function (c) { //format songs
 
@@ -687,11 +687,11 @@ var xbmcLibraryFactory = (function ($) {
 				});
 
 				c();
-			}).
+			});
 
 			q.onfinish(function () {
 				callback(page);
-			}).
+			});
 
 			q.start();
 		}

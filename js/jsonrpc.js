@@ -45,17 +45,21 @@ var JSONRPC = (function (window, undefined) {
 	transport,
 	
 	parseURL = function (url, func) {
+
 		var temp = document.createElement('a');
 		temp.href = url;
 		if (func instanceof Function) func.apply(temp);
+
 		return temp.href;
 	},
 	
 	connect = function (url) {
+
 		address = parseURL(url, function () {
 			if ((this.protocol === 'ws:') || (this.protocol === 'wss:')) transport = 'websocket';
 			if ((this.protocol === 'http:') || (this.protocol === 'https:')) transport = 'ajax';
 		});
+
 		if (transport) return $.extend({
 			'transport': transport,
 			'address': address,
@@ -82,7 +86,9 @@ var JSONRPC = (function (window, undefined) {
 	};
 
 	JSONRPC.ajax = function (url) {
-		  var send = function (message) {
+
+		var send = function (message) {
+
 			$.ajax({
 				'type': 'POST',
 				'dataType': 'json',
@@ -92,11 +98,16 @@ var JSONRPC = (function (window, undefined) {
 				'success': message.success,
 				'error': message.error
 			});
+
 			return true;
-		  },
-		  sendMessage = function (method, params, success, fail) {
+		};
+
+		var sendMessage = function (method, params, success, fail) {
+
 			if (params instanceof Function) { fail = success; success = params; params = {} } //shuffle variables
+
 			if (DEBUG) console.log('JSONRPC.ajax: MESSAGE SENT: '+method, params);
+
 			return send({
 				'data': {
 					'jsonrpc': '2.0',
@@ -113,9 +124,13 @@ var JSONRPC = (function (window, undefined) {
 					if (fail instanceof Function) fail(data);
 				}
 			});
-		  },
-		  sendNotification = function (method, params) {
+
+		};
+
+		var sendNotification = function (method, params) {
+
 			if (DEBUG) console.log('JSONRPC.ajax: NOTIFICATION SENT: '+method, params);
+
 			return send({
 				'data': {
 					'jsonrpc': '2.0',
@@ -123,7 +138,9 @@ var JSONRPC = (function (window, undefined) {
 					'params': params || {}
 				}
 			});
-		  };
+
+		};
+
 		return {
 			'sendMessage': sendMessage,
 			'sendNotification': sendNotification
@@ -131,37 +148,53 @@ var JSONRPC = (function (window, undefined) {
 	};
 
 	JSONRPC.websocket = function (url) {
-		var socket = {}, messages = {}, buffer = [], socketConnectionAttempts = 0,
-		  socketReady = function () {
+		var socket = {},
+			messages = {},
+			buffer = [],
+			socketConnectionAttempts = 0;
+
+		var socketReady = function () {
 			return socket.readyState === 1;
-		  },
-		  send = function (message) {
+		};
+
+		var send = function (message) {
 			var id = message.data.id;
 			if (socketReady()) {
+
 				if (id && (message.success instanceof Function)) {
 					message.timeout = window.setTimeout(function () {
+
 						if (DEBUG) console.log('JSONRPC.websocket: MESSAGE TIMEOUT: RE-SENDING: '+message.data.method, message);
+
 						if (messages[id]) {
 							delete messages[id];
 							send(message);
 							//socket.send(JSON.stringify(message.data));
 						}
+
 					}, WEBSOCKET_TIMEOUT);
 					messages[id] = message; //if its a message, save it in the message callback buffer
 				}
+
 				socket.send(JSON.stringify(message.data));
 				return true;
+
 			} else {
 				buffer.push(message);
 				return false;
 			}
-		  },
-		  sendNext = function () {
+		};
+
+		var sendNext = function () {
 		  	if (buffer.length) send(buffer.shift());
-		  },
-		  sendMessage = function (method, params, success, fail) {
+		};
+
+		var sendMessage = function (method, params, success, fail) {
+
 			if (params instanceof Function) { success = params; params = {} } //shuffle variables
+
 			if (DEBUG) console.log('JSONRPC.websocket: MESSAGE SENT: '+method, params);
+
 			return send({
 				'data': {
 					'jsonrpc': '2.0',
@@ -171,9 +204,12 @@ var JSONRPC = (function (window, undefined) {
 				},
 				'success': success
 			});
-		  },
-		  sendNotification = function (method, params) {
+		};
+
+		var sendNotification = function (method, params) {
+
 			if (DEBUG) console.log('JSONRPC.websocket: NOTIFICATION SENT: '+method, params);
+
 			return send({
 				'data': {
 					'jsonrpc': '2.0',
@@ -181,8 +217,9 @@ var JSONRPC = (function (window, undefined) {
 					'params': params || {}
 				}
 			});
-		  },
-		  connectSocket = function () {
+		};
+
+		var connectSocket = function () {
 			socket = new WebSocket(url);
 			socket.q = {};
 			socket.onmessage = function (message) {
@@ -220,9 +257,12 @@ var JSONRPC = (function (window, undefined) {
 				sendNext(); //re-start the buffer when the socket reconnects
 				$.each(onopen, function (i, o) { if (o instanceof Function) o(); });
 			};
-		  };
+		};
+
 		if (!('WebSocket' in window)) return;
+
 		connectSocket();
+
 		return {
 			'sendMessage': sendMessage,
 			'sendNotification': sendNotification
