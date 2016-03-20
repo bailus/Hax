@@ -260,7 +260,7 @@ var xbmcLibraryFactory = (function ($) {
 				$.each(page.items, function (i, tvshow) {
 					tvshow.link = '#page=TV Show&tvshowid='+tvshow.tvshowid;
 					if (tvshow.thumbnail) tvshow.thumbnail = xbmc.vfs2uri(tvshow.thumbnail);
-					if (tvshow.art && tvshow.art.banner) tvshow.thumbnail = xbmc.vfs2uri(tvshow.art.banner);
+					//if (tvshow.art && tvshow.art.banner) tvshow.thumbnail = xbmc.vfs2uri(tvshow.art.banner);
 					tvshow.alpha = tvshow.label[0].toUpperCase();
 				});
 
