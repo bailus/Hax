@@ -812,7 +812,7 @@ var xbmcLibraryFactory = (function ($) {
 	pages['Playlists'] = {
 		'view': 'list',
 		'data': function (callback) {
-			var page = { 'title': 'Playlists' }
+			var page = { 'title': 'Playlists' },
 				player,
 				q = Q();
 			
