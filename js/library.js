@@ -969,6 +969,8 @@ var xbmcLibraryFactory = (function ($) {
 		});
 	};
 
+	var previousPage;
+
 	var renderPage = function (title) {
 		var data,
 			page,
@@ -1017,6 +1019,8 @@ var xbmcLibraryFactory = (function ($) {
 				}
 			}
 
+			if (previousPage) pages[previousPage].scrollTop = $('html').scrollTop();
+
 			data.id = title;
 			document.title = 'Hax//'+(data.title || 'Kodi');
 			
@@ -1026,9 +1030,13 @@ var xbmcLibraryFactory = (function ($) {
 			$('#content').empty().append(p);
 			if (page.then instanceof Function) page.then(p.get(0));
 			
-			$('body').scrollTop(0); //scroll to the top of the page
 			$('#loading').stop(true).hide();
 			v.find('img').filter('[data-original]').lazyload(LAZYLOAD_OPTIONS); //initialize the lazyload plugin
+			
+			//scroll to the last position the page was at or to the top
+console.log(page.scrollTop)
+			$('html').scrollTop(page.scrollTop || 0);
+			previousPage = title;
 		});
 	};
 	
