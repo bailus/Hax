@@ -1,20 +1,15 @@
 var xbmc = (function () { //create the xbmc global object
 	"use strict";
 
-	let $ = {  //Dummy jQuery object TODO: remove
-		extend: jQuery.extend /*(a, b) => {
-			Object.getOwnPropertyNames(b).forEach(key => {
-				a[key] = b[key]
-			})
-			return a
-		}*/
+	let extend = (object, modification) => {
+		Object.keys(modification).forEach(key => {
+			object[key] = modification[key]
+		})
+		return object
 	}
 
 
-	let
-		VERSION = undefined,
-		DEBUG = window.DEBUG || true,
-		socket = { 'q': {} },
+	let socket = { 'q': {} },
 		events = {},
 		server = undefined
 
@@ -305,7 +300,10 @@ var xbmc = (function () { //create the xbmc global object
 			modifications.forEach(modification => {
 				if (modification instanceof Function) modification.apply(object);
 				else if (modification instanceof Array) object = modifyObject(object, modification);
-				else $.extend(object, modification);
+				else Object.keys(modification).forEach(key => {
+					object[key] = modification[key]
+				})
+
 			});
 			return object;
 		};
@@ -364,7 +362,7 @@ var xbmc = (function () { //create the xbmc global object
 	var makeFunction = function (item, index) { //make public functions from the rpc array
 		var template = params => new Promise((resolve, reject) => {
 			if (!params) params = {}
-			if (item.params) $.extend(true, params, item.params)
+			if (item.params) extend(params, item.params)
 			load(index, params, resolve)
 		})
 		if (item instanceof Function) { //if item is a function, just use that

@@ -42,7 +42,9 @@ var JSONRPC = (function (window, undefined) {
 			})
 			return a
 		},
-		each: jQuery.each
+		each: (o, callback) => {
+			Object.keys(o).forEach(key => callback(key, o[key]))
+		}
 	}
 	
 	var DEBUG = false,

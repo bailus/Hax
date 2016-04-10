@@ -1,9 +1,13 @@
-jQuery(function () { //on document load
+ready().then(function () { //on document load
+"use strict";
+
 	const body = document.body
 	
 	var failed = function () {
-		body.empty();
-		body.append('<h1>:(</h1><h2>Error</h2><p>Could not connect to Kodi</p>');
+		document.body.innerHTML = '' +
+			'<h1>:(</h1>' +
+			'<h2>Error</h2>' +
+			'<p>Could not connect to Kodi</p>'
 	};
 
 	var connected = function () {
@@ -23,6 +27,6 @@ jQuery(function () { //on document load
 		window.xbmc = xbmc(address, connected, failed);
 	};
 
-	connect();
+	connect(window.location.host);
 
 });
