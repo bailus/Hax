@@ -34,6 +34,16 @@ events: (websocket only)
 */
 var JSONRPC = (function (window, undefined) {
 	"use strict";
+
+	let $ = {  //dummy jQuery object TODO: get rid of this
+		extend: (a, b) => {
+			Object.getOwnPropertyNames(b).forEach(key => {
+				a[key] = b[key]
+			})
+			return a
+		},
+		each: jQuery.each
+	}
 	
 	var DEBUG = false,
 	WEBSOCKET_TIMEOUT = 3000, //3 seconds
@@ -89,7 +99,18 @@ var JSONRPC = (function (window, undefined) {
 
 		var send = function (message) {
 
-			$.ajax({
+			fetch(new Request(url, {
+				method: 'POST',
+				headers: new Headers({
+					'Content-Type': 'application/json'
+				}),
+				body: JSON.stringify(message.data)
+			}))
+			.then(response => response.json())
+			.then(message.success)
+			.catch(message.error)
+
+			/*$.ajax({
 				'type': 'POST',
 				'dataType': 'json',
 				'contentType': 'application/json',
@@ -97,7 +118,7 @@ var JSONRPC = (function (window, undefined) {
 				'data': JSON.stringify(message.data),
 				'success': message.success,
 				'error': message.error
-			});
+			});*/
 
 			return true;
 		};

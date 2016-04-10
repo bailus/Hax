@@ -1,9 +1,22 @@
-var xbmcFactory = (function ($) { //create the xbmc global object
+var xbmc = (function () { //create the xbmc global object
 	"use strict";
 
-	//globals
-	var VERSION, pub = {},
-	  DEBUG = window.DEBUG || true, socket = { 'q': {} }, events = {}, server;
+	let $ = {  //Dummy jQuery object TODO: remove
+		extend: jQuery.extend /*(a, b) => {
+			Object.getOwnPropertyNames(b).forEach(key => {
+				a[key] = b[key]
+			})
+			return a
+		}*/
+	}
+
+
+	let
+		VERSION = undefined,
+		DEBUG = window.DEBUG || true,
+		socket = { 'q': {} },
+		events = {},
+		server = undefined
 
 	//the map below describes the XBMC.* functions
 	//functions are added to the XBMC object
@@ -177,16 +190,16 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 			'method': 'Player.GetProperties',
 			'params': { 'properties': [ 'time', 'totaltime', 'speed', 'playlistid', 'position', 'repeat', 'type', 'partymode', 'shuffled', 'live' ] }
 		},
-		'GetActivePlayerProperties': function (callback) {
-			pub.GetActivePlayer(function (player) {
-				if (!player) { callback(); return; }
-				else pub.GetPlayerProperties({ 'playerid': player.playerid },
-					function (properties) {
-						callback(properties);
-					}
-				);
-			});
-		},
+		'GetActivePlayerProperties': () => new Promise((resolve, reject) => {
+			pub.GetActivePlayer()
+			.then(player => {
+				if (!player)
+					resolve()
+				else
+					pub.GetPlayerProperties({ 'playerid': player.playerid })
+					.then(resolve).catch(reject)
+			})
+		}),
 		'PlayPause': {
 			'requires': { 'name': 'playerid', 'value': 'GetActivePlayerID' },
 			'method': 'Player.PlayPause'
@@ -205,13 +218,10 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		'GoPrevious': function (callback) {
 			pub.GoTo({ 'to': 'previous' }, callback);
 		},
-		'Play': function (o, playlistid, position) {
-			pub.ClearPlaylist({ 'playlistid': playlistid }, function () {
-				pub.AddToPlaylist({ 'playlistid': playlistid, 'item': typeof o === 'string' ? { 'file': o } : o }, function () {
-					pub.Open({ 'item': { 'playlistid': playlistid, 'position': position||0 } });
-				});
-			});
-		},
+		'Play': (o, playlistid, position) => 
+			pub.ClearPlaylist({ 'playlistid': playlistid })
+			.then(data => pub.AddToPlaylist({ 'playlistid': playlistid, 'item': typeof o === 'string' ? { 'file': o } : o }))
+			.then(data => pub.Open({ 'item': { 'playlistid': playlistid, 'position': position||0 } })),
 		'Seek': {
 			'requires': { 'name': 'playerid', 'value': 'GetActivePlayerID' },
 			'method': 'Player.Seek'
@@ -292,7 +302,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		temp.href = url || '/';
 		var modifyObject = function (object, modifications) {
 			if (!(modifications instanceof Array)) modifications = [modifications];
-			$.each(modifications, function (i, modification) {
+			modifications.forEach(modification => {
 				if (modification instanceof Function) modification.apply(object);
 				else if (modification instanceof Array) object = modifyObject(object, modification);
 				else $.extend(object, modification);
@@ -304,7 +314,7 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 	};
 
 	//public functions
-	var pub = {
+	let pub = {
 		'vfs2uri': (function () { //converts xbmc virtual filesystem paths to URIs
 			var self, vfsurl = parseURL('/',{'protocol':'http'});
 			self = function (vfs) {
@@ -351,34 +361,35 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 	};
 	
 	
-	var makeFunction = function (index, item) { //make public functions from the rpc array
-		var template = function (params, callback) { //template for all the xbmc.* functions
-			if (params && params instanceof Function) {
-					callback = params;
-					params = {};
-			}
-			if (!params) params = {};
-			if (item.params) $.extend(true, params, item.params);
-			load(index, params, callback);
-		};
+	var makeFunction = function (item, index) { //make public functions from the rpc array
+		var template = params => new Promise((resolve, reject) => {
+			if (!params) params = {}
+			if (item.params) $.extend(true, params, item.params)
+			load(index, params, resolve)
+		})
 		if (item instanceof Function) { //if item is a function, just use that
-			pub[index] = item;
-			return;
-		};
-		if (item.requires) pub[index] = function (params, callback) { //wrap the template if there is a dependency
-			if (params instanceof Function) { callback = params; params = {}; }
-			if (!params) params = {};
-			//return the required function with the template as a callback
-			pub[item.requires.value]( {}, function (result) {
-				var newparams = {};
-				if (result !== undefined && item.requires.name) newparams[item.requires.name] = result;
-				$.extend(newparams, params);
-				template(newparams, callback);
-			});
-		};
+			pub[index] = item
+			return
+		}
+		if (item.requires) pub[index] = params => { //wrap the template if there is a dependency
+			return new Promise((resolve, reject) => {
+					if (params instanceof Function) {
+						callback = params
+						params = {}
+					}
+					if (!params) params = {}
+					//return the required function with the template as a callback
+					pub[item.requires.value]( {}, result => {
+						var newparams = {}
+						if (result !== undefined && item.requires.name) newparams[item.requires.name] = result
+						$.extend(newparams, params)
+						template(newparams).then(resolve).catch(reject)
+					})
+			})
+		}
 		else pub[index] = template; //just use the bare template if there is no dependency
 	};
-	$.each(rpc, makeFunction); //make public functions from the rpc array
+	Object.getOwnPropertyNames(rpc).forEach(key => makeFunction(rpc[key], key))  //make public functions from the rpc array
 	
 	var upgradeToSocket = function (address, callback) { //upgrade from ajax to websocket
 		var ws = JSONRPC(address), ajax = server;
@@ -439,4 +450,4 @@ var xbmcFactory = (function ($) { //create the xbmc global object
 		
 		return pub;
 	};
-})(jQuery);
+})();
