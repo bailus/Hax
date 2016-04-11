@@ -45,7 +45,7 @@ pages.add(new Page({
 		let directory = getHash('directory')
 		//TODO: reject if no directory
 		let media = getHash('media') || ''
-		let pathSplit = path => path.split(new RegExp('[\\/]'))
+		let pathSplit = path => path.split(new RegExp('[\\\\/]'))
 		
 		xbmc.GetDirectory({ 'directory': directory, 'media': media })
 		.then(data => data.files || [])
