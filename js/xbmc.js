@@ -342,9 +342,10 @@ var xbmc = (function () { //create the xbmc global object
 	};
 
 	var cache = {};
-	var load = function (name, params, callback) { //loads data from the JSON-RPC server using HTTP
+	var load = function (name, params, callback) { //loads data from the JSON-RPC server
 		var r = rpc[name], cb;
-		var hash = r.method+'_'+JSON.stringify(params).replace(/\W/g,''), cached = cache[hash];
+		var hash = r.method+'_'+JSON.stringify(params).replace(/\W/g,''),
+		cached = cache[hash];
 		if (cached) callback(JSON.parse(cached));
 		else {
 			if (r && r.method) server.sendMessage(r.method, params, callback ? function (result) {
@@ -371,17 +372,12 @@ var xbmc = (function () { //create the xbmc global object
 		}
 		if (item.requires) pub[index] = params => { //wrap the template if there is a dependency
 			return new Promise((resolve, reject) => {
-					if (params instanceof Function) {
-						callback = params
-						params = {}
-					}
-					if (!params) params = {}
 					//return the required function with the template as a callback
-					pub[item.requires.value]( {}, result => {
-						var newparams = {}
-						if (result !== undefined && item.requires.name) newparams[item.requires.name] = result
-						$.extend(newparams, params)
-						template(newparams).then(resolve).catch(reject)
+					return pub[item.requires.value]().then(result => {
+						if (!params) params = {}
+						if (result !== undefined)
+							params[item.requires.name] = result
+						return template(params)
 					})
 			})
 		}

@@ -60,16 +60,17 @@ var player = (function () {
 			oldString = string
 		})
 		progressElem.addEventListener('mouseup', function (e) { //enable seeking
-			//var value = (e.pageX - $progressElem.offset().left - 10) / ($progressElem.width())
 			let boundingRect = progressElem.getBoundingClientRect()
 			let value = (e.pageX - boundingRect.left - 10) / boundingRect.width
 			if (value > 1) value = 1
 			if (value < 0) value = 0
 			value = Math.round(value*100)
-			if (xbmc.transport() === 'ajax') { progress.updateFraction(value/100) }
-			xbmc.GetActivePlayer().then(function (player) {
- 				if (player) xbmc.Seek({ 'playerid': player.playerid, 'value': value })
-			})
+
+			//update the local progress bar
+			progress.updateFraction(value/100)
+
+			//send the command to kodi
+			xbmc.Seek({ 'value': value })
 		})
 
 		//toggle the player.visible class when the player.show button is clicked
@@ -137,7 +138,8 @@ var player = (function () {
 			var cancel = false
 			if (player && player.playlistid !== undefined && player.position !== undefined) {
 				if (!player.playlistid) player.playlistid = 0
-				xbmc.GetPlaylistItems({ 'playlistid': player.playlistid }, function (playlist) {
+				xbmc.GetPlaylistItems({ 'playlistid': player.playlistid })
+				.then(function (playlist) {
 					if (!playlist.items) return
 					var item = playlist.items[player.position]
 					//console.log('Current Playlist Item: ', item)
