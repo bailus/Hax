@@ -1,72 +1,58 @@
 pages.add(new Page({
 	'id': 'Live',
 	'view': 'list',
-	'data': function (callback) {
-		var page = { title: 'Live', items: [] },
-			q = Q();
+	'data': (resolve, reject) => {
 
-		$.each(['TV', 'Radio'], function (i, type) {
-			q.add(function (c) { //get groups
+		Promise.all((['TV', 'Radio']).map(type => {
 
-				xbmc.GetChannelGroups({ 'channeltype': type.toLowerCase() }, function (d) {
-					page.items.push({
-						'label': type,
-						'items': (d.channelgroups||[]).map(function (g) {
-							g.link = '#page=Channels&id='+g.channelgroupid;
-							return g;
-						})
-					})
-					c();
-				});
+			return xbmc.GetChannelGroups({ 'channeltype': type.toLowerCase() })
+			.then(result => result.channelgroups || [])
+			.then(channelgroups => channelgroups.map(g => {
+				g.link = '#page=Channels&id='+g.channelgroupid
+				return g
+			}))
+			.then(items => ({
+				label: type,
+				items: items
+			}))
 
-			});
-		});
+		}))
+		.then(items => ({
+			title: 'Live',
+			items: items
+		}))
+		.then(resolve)
 
-		q.onfinish(function () {
-			callback(page);
-		});
-
-		q.start();
 	}
 }));
 
 pages.add(new Page({
 	'id': 'Channels',
 	'view': 'list',
-	'data': function (callback) {
-		var page = { },
-			q = Q(),
-			groupid = +getHash('id');
+	'data': (resolve, reject) => {
 
-		q.add(function (c) { //get groups
-			xbmc.GetChannelGroupDetails({ 'channelgroupid': groupid }, function (d) {
-				page.title = d.channelgroupdetails.label || '';
-				c();
-			});
-		});
+		let groupid =  +getHash('id')
 
-		q.add(function (c) { //get groups
+		let channelgroupdetails = 
+		xbmc.GetChannelGroupDetails({ 'channelgroupid': groupid })
+		.then(data => data.channelgroupdetails || {})
 
-			xbmc.GetChannels({ 'channelgroupid': groupid }, function (d) {
+		let channels =
+		xbmc.GetChannels({ 'channelgroupid': groupid })
+		.then(data => data.channels || {})
 
-				page.items = (d.channels||[]).map(function (c) {
-					//c.link = '#page=Channel&id='+c.channelid;
-					c.thumbnail = xbmc.vfs2uri(c.thumbnail);
-					c.play = function () {
-						xbmc.Open({ 'item': { 'channelid': c.channelid }});
-					};
-					return c;
-				});
+		Promise.all([ channelgroupdetails, channels ])
+		.then(([ channelgroupdetails, channels ]) => ({
+			title: channelgroupdetails.label || 'Channels',
+			items: channels.map(channel => ({
+				label: channel.label,
+				hidden: channel.hidden,
+				locked: channel.locked,
+				thumbnail: xbmc.vfs2uri(channel.thumbnail),
+				play: () => xbmc.Open({ 'item': { 'channelid': channel.channelid }})
+			}))
+		}))
+		.then(resolve)
 
-				c();
-			});
-
-		});
-
-		q.onfinish(function () {
-			callback(page);
-		});
-
-		q.start();
 	}
 }));

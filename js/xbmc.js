@@ -1,4 +1,4 @@
-var xbmc = (function () { //create the xbmc global object
+let Kodi = (function () {
 	"use strict";
 
 	let extend = (object, modification) => {
@@ -16,7 +16,7 @@ var xbmc = (function () { //create the xbmc global object
 	//the map below describes the XBMC.* functions
 	//functions are added to the XBMC object
 	//objects are passed to makeFunction() before being added
-	var rpc = {
+	let rpc = {
 		'Introspect': {
 			'method': 'JSONRPC.Introspect'
 		},
@@ -292,10 +292,10 @@ var xbmc = (function () { //create the xbmc global object
 	//parseURL( '/', function () { this.protocol = 'https'; this.port = 8080; } );
 	//parseURL( '/', [ { 'protocol': 'https' }, function () { this.port = '8080'; } ] );
 	
-	var parseURL = function (url, m) {
-		var temp = document.createElement('a');
+	let parseURL = function (url, m) {
+		let temp = document.createElement('a');
 		temp.href = url || '/';
-		var modifyObject = function (object, modifications) {
+		let modifyObject = function (object, modifications) {
 			if (!(modifications instanceof Array)) modifications = [modifications];
 			modifications.forEach(modification => {
 				if (modification instanceof Function) modification.apply(object);
@@ -314,7 +314,7 @@ var xbmc = (function () { //create the xbmc global object
 	//public functions
 	let pub = {
 		'vfs2uri': (function () { //converts xbmc virtual filesystem paths to URIs
-			var self, vfsurl = parseURL('/',{'protocol':'http'});
+			let self, vfsurl = parseURL('/',{'protocol':'http'});
 			self = function (vfs) {
 				//if (vfs.substring(0,21) === 'image://http%3a%2f%2f') return decodeURIComponent( vfs.substring(8) ); //get image directly from the internet, bypassing the xbmc cache
 				return vfsurl + encodeURIComponent(vfs);
@@ -328,40 +328,46 @@ var xbmc = (function () { //create the xbmc global object
 			server.onNotification(method, callback);
 		},
 		'version': (function () {
-			var self, version;
-			self = function () { return version; }
-			self.set = function (v) { if (v >= 0) version = v; }
-			return self;
+			let version = undefined
+			let self = function () { return version }
+			self.set = function (v) { if (v >= 0) version = v }
+			return self
 		})(),
 		'transport': (function () {
-			var self, transport = 'ajax';
-			self = function () { return transport; }
-			self.set = function (t) { transport = t; }
-			return self;
-		})()
+			let transport = 'ajax'
+			let self = function () { return transport }
+			self.set = function (t) { transport = t }
+			return self
+		})(),
+		'sendMessage': ((method, params) => server.sendMessage(method, params))
 	};
 
-	var cache = {};
-	var load = function (name, params, callback) { //loads data from the JSON-RPC server
-		var r = rpc[name], cb;
-		var hash = r.method+'_'+JSON.stringify(params).replace(/\W/g,''),
-		cached = cache[hash];
-		if (cached) callback(JSON.parse(cached));
+
+
+	let cache = {};
+	function load (name, params, callback) { //loads data from the JSON-RPC server
+		let r = rpc[name]
+		let cb = undefined
+		let hash = r.method+'_'+JSON.stringify(params).replace(/\W/g,'')
+		let cached = cache[hash]
+		if (cached) callback(JSON.parse(cached))
 		else {
-			if (r && r.method) server.sendMessage(r.method, params, callback ? function (result) {
-			  	if (callback instanceof Function) {
-			  		cb = r.cache ? function (x) { cache[hash] = JSON.stringify(x); return callback(x); } : callback;
-					if (result.result) result = result.result;
-			  		if (r.wrapper) r.wrapper(result, cb);
-			  		else cb(result);
-				}
-			} : undefined);
+			if (r && r.method)
+				server.sendMessage(r.method, params)
+				.then(function (result) {
+				  	if (callback instanceof Function) {
+				  		cb = r.cache ? function (x) { cache[hash] = JSON.stringify(x); return callback(x); } : callback;
+						if (result.result) result = result.result;
+				  		if (r.wrapper) r.wrapper(result, cb);
+				  		else cb(result);
+					}
+				})
 		}
-	};
+	}
 	
 	
-	var makeFunction = function (item, index) { //make public functions from the rpc array
-		var template = params => new Promise((resolve, reject) => {
+	function makeFunction (item, index) { //make public functions from the rpc array
+		let template = params => new Promise((resolve, reject) => {
 			if (!params) params = {}
 			if (item.params) extend(params, item.params)
 			load(index, params, resolve)
@@ -381,67 +387,70 @@ var xbmc = (function () { //create the xbmc global object
 					})
 			})
 		}
-		else pub[index] = template; //just use the bare template if there is no dependency
-	};
+		else pub[index] = template //just use the bare template if there is no dependency
+	}
 	Object.getOwnPropertyNames(rpc).forEach(key => makeFunction(rpc[key], key))  //make public functions from the rpc array
 	
-	var upgradeToSocket = function (address, callback) { //upgrade from ajax to websocket
-		var ws = JSONRPC(address), ajax = server;
-		if (DEBUG) console.log('XBMC: Attempting to upgrade transport to websocket '+address);
+
+	function upgradeToSocket (address, callback) { //upgrade from ajax to websocket
+		let ws = JSONRPC(address)
+		let ajax = server
+		if (DEBUG) console.log('XBMC: Attempting to upgrade transport to websocket '+address)
 		if (!ws) { //ws is undefined if the browser has no websocket support
-			if (DEBUG) console.log('XBMC: No websocket support in this browser: '+navigator.userAgent);
-			return;
-		};
-		ws.notifications(ajax.notifications());
+			if (DEBUG) console.log('XBMC: No websocket support in this browser: '+navigator.userAgent)
+			return
+		}
+		ws.notifications(ajax.notifications())
 		ws.onConnect(function () {
-			if (DEBUG) console.log('XBMC: Transport upgraded to websocket');
-			server = ws; //replace ajax transport with websocket
-			pub.transport.set('websocket');
-			if (callback instanceof Function) callback();
-		});
+			if (DEBUG) console.log('XBMC: Transport upgraded to websocket')
+			server = ws //replace ajax transport with websocket
+			pub.transport.set('websocket')
+			if (callback instanceof Function) callback()
+		})
 		ws.onDisconnect(function () { //replace websocket transport with ajax
-			if (DEBUG) console.log('XBMC: Upgrading transport to websocket failed');
-			if (pub.transport() === 'websocket') server = ajax;
-			pub.transport.set('ajax');
-		});
-	};
+			if (DEBUG) console.log('XBMC: Upgrading transport to websocket failed')
+			if (pub.transport() === 'websocket') server = ajax
+			pub.transport.set('ajax')
+		})
+	}
 
-	return function (address, success, fail) {
-		
-		//set URL variables
-		var address = parseURL('/', { 'host': address });
-		var ajaxURL = parseURL(address, { 'protocol': 'http', 'pathname': 'jsonrpc', 'search': '' });
-		var wsURL = parseURL(address, { 'protocol': 'ws', 'pathname': 'jsonrpc', 'port': 9090 });
-		pub.vfs2uri.set(parseURL(address, [
-			{ 'protocol': 'http', 'pathname': 'vfs/' },
-			function () { if (this.port === 9090) this.port = 80 }
-		]));
-		
-		if (DEBUG) console.log('XBMC: Connecting to '+ajaxURL);
-	 
-	 	//create an ajax transport
-		server = JSONRPC(ajaxURL);
-		pub.transport.set('ajax');
-	
-		//get the version from the server, if it is over 5 the server supports websockets so we should upgrade the connection
-		server.sendMessage('JSONRPC.Version',
-		  function (data) { //success
-			if (data.result && data.result.version) {
-				if (DEBUG) console.log('XBMC: Connected: API Version '+data.result.version);
-				pub.version.set(data.result.version);
-				if (data.result.version >= 5) upgradeToSocket(wsURL);
-				if (success instanceof Function) success();
-			} else {
-				if (DEBUG) console.log('XBMC: Connection failure: Invalid version received', data);
-				if (fail instanceof Function) fail();
-			}
-		  },
-		  function (data, error) { //failure
-			if (DEBUG) console.log('XBMC: Connection failure: '+error, data);
-			if (fail instanceof Function) fail();
-		  });
+	return (addr => {
+		let address = parseURL('/', { 'host': addr })
 
+		return new Promise((resolve, reject) => {
+
+			//set URL variables
+			let ajaxURL = parseURL(address, { 'protocol': 'http', 'pathname': 'jsonrpc', 'search': '' })
+			let wsURL = parseURL(address, { 'protocol': 'ws', 'pathname': 'jsonrpc', 'port': 9090 })
+			pub.vfs2uri.set(parseURL(address, [
+				{ 'protocol': 'http', 'pathname': 'vfs/' }//,
+				//function () { if (this.port === 9090) this.port = 80 }
+			]))
+			
+			if (DEBUG) console.log('XBMC: Connecting to '+ajaxURL)
+		 
+		 	//create an ajax transport
+			server = JSONRPC(ajaxURL)
+			pub.transport.set('ajax')
 		
-		return pub;
-	};
-})();
+			//get the version from the server, if it is over 5 the server supports websockets so we should upgrade the connection
+			server.sendMessage('JSONRPC.Version')
+			.catch(error => {
+				if (DEBUG) console.log('XBMC: Connection failure: ', error)
+				reject()
+			})
+			.then(data => {
+				if (data.result && data.result.version) {
+					if (DEBUG) console.log('XBMC: Connected: API Version '+data.result.version)
+					pub.version.set(data.result.version)
+					if (data.result.version >= 5) upgradeToSocket(wsURL)
+					resolve(pub)
+				} else {
+					if (DEBUG) console.log('XBMC: Connection failure: Invalid version received', data.error)
+					reject()
+				}
+			})
+		})
+	})
+
+})()
