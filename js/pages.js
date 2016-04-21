@@ -1,8 +1,7 @@
+window.pages = (() => {
 
-var pages = (() => {
-
-	var pages = {},
-		public = {}
+	const pages = {}
+	const public = {}
 
 	public.add = (page) => {
 		pages[page.id] = page
@@ -17,8 +16,8 @@ var pages = (() => {
 	public.renderPage = () => {
 
 		//find the page to render
-		var title = (getHash('page') || '').replace('%20',' ') //some browsers replace spaces with %20
-		var page = public.getById(title) || public.getById(DEFAULT_PAGE)
+		let title = (getHash('page') || '').replace('%20',' ') //some browsers replace spaces with %20
+		let page = public.getById(title) || public.getById(DEFAULT_PAGE)
 
 		if (page) page.render()
 
@@ -31,37 +30,37 @@ var pages = (() => {
 
 	return public
 
-})();
+})()
 
 function minutes2string (t) {
-	var hours = Math.floor(t/60),
+	let hours = Math.floor(t/60),
 	    mins  = Math.floor(t%60),
-	    out = [];
-	if (hours > 0) out.push(hours + ' hour' + (hours > 1 ? 's' : ''));
-	if (mins > 0) out.push(mins + ' minute' + (mins > 1 ? 's' : ''));
-	return out.join(' ');
-};
+	    out = []
+	if (hours > 0) out.push(hours + ' hour' + (hours > 1 ? 's' : ''))
+	if (mins > 0) out.push(mins + ' minute' + (mins > 1 ? 's' : ''))
+	return out.join(' ')
+}
 
 function seconds2string (t) {
-	return minutes2string(Math.round(t/60));
-};
+	return minutes2string(Math.round(t/60))
+}
 
 function seconds2shortstring (t) {
-	var str = function (n) {
-		return (n < 10 && n > -10 ? '0' : '')+Math.floor(n);
-	};
-	if (t > 3600) return str(t/3600) +':'+ str((t%3600)/60) +':'+ str(t%60);
-	else return str(t/60) +':'+ str(t%60);
-};
+	function str (n) {
+		return (n < 10 && n > -10 ? '0' : '')+Math.floor(n)
+	}
+	if (t > 3600) return str(t/3600) +':'+ str((t%3600)/60) +':'+ str(t%60)
+	else return str(t/60) +':'+ str(t%60)
+}
 
 function ymd2string (ymd) {
-	var x = ymd.split(' ')[0].split('-');
+	let x = ymd.split(' ')[0].split('-')
 	return [
 		['January','February','March','April','May','June','July','August','September','October','November','December'][x[1]-1], 
 		+x[2]+((/1[1-3]$/).test(x[2]) ? 'th' : (/1$/).test(x[2]) ? 'st' : (/2$/).test(x[2]) ? 'nd' : (/3$/).test(x[2]) ? 'rd' : 'th')+',',
 		x[0]
-	].join(' ');
-};
+	].join(' ')
+}
 
 
 
@@ -69,7 +68,7 @@ class Page {
 	
 	constructor(obj) {
 		//copy obj.* to this.*
-		for (var attr in obj)
+		for (let attr in obj)
             if (obj.hasOwnProperty(attr))
             	this[attr] = obj[attr];
 	}
@@ -85,10 +84,10 @@ class Page {
 				//TODO: review and probably rewrite
 
 				function groupItems (items, groupby) {
-					var o = [], temp = {}
+					let o = [], temp = {}
 					if (!(items[0] && items[0][groupby])) return items
 					items.forEach((item, i) => {
-						var s = item[groupby]
+						let s = item[groupby]
 						if (item instanceof Object) {
 							if (!temp[s]) temp[s] = []
 							temp[s].push(item)
@@ -106,7 +105,7 @@ class Page {
 				function sortItems (items, sortby) {
 					if (!(items[0] && items[0][sortby])) return items
 					return items.sort(function (a, b) {
-						var x = a[sortby], y = b[sortby]
+						let x = a[sortby], y = b[sortby]
 						if (x < y) return -1
 						if (x > y) return +1
 						return 0
@@ -118,7 +117,7 @@ class Page {
 				if (getHash('sort') || this.sortby) data.items = sortItems(data.items, getHash('sort') || this.sortby)
 
 				if (groupby) {
-					var size = data.items.length
+					let size = data.items.length
 					data.groupby = groupby
 					data.items = sortItems(groupItems(data.items, groupby), 'label')
 					if (getHash(groupby)) data.items = data.items.filter(function (x) {

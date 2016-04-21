@@ -6,7 +6,7 @@ author: Samuel Bailey (sam@bailey.geek.nz)
 licence: To the extent possible under law, Samuel Bailey has waived all copyright and related or neighboring rights to this work. This work is published from: New Zealand.
 
 usage:
-	var server = JSONRPC( 'ws://localhost:9090/jsonrpc' );
+	let server = JSONRPC( 'ws://localhost:9090/jsonrpc' );
 	server.sendMessage('JSONRPC.Introspect', function (data) {
 		console.log('JSONRPC Introspect: ', data);
 	});
@@ -32,10 +32,10 @@ events: (websocket only)
 		Runs the function when the websocket disconnects.
 	
 */
-var JSONRPC = (function (window, undefined) {
+let JSONRPC = ((window, undefined) => {
 	"use strict";
 
-	let $ = {  //dummy jQuery object TODO: get rid of this
+	const $ = {  //dummy jQuery object TODO: get rid of this
 		extend: (a, b) => {
 			Object.getOwnPropertyNames(b).forEach(key => {
 				a[key] = b[key]
@@ -47,61 +47,99 @@ var JSONRPC = (function (window, undefined) {
 		}
 	}
 	
-	var DEBUG = false,
-	WEBSOCKET_TIMEOUT = 3000, //3 seconds
-	MAX_SOCKET_CONNECTION_ATTEMPTS = 3,
-	notifications = {},
-	onopen = [],
-	onclose = [],
-	address,
-	transport,
+	const DEBUG = false
+	const WEBSOCKET_TIMEOUT = 3000 //3 seconds
+	const MAX_SOCKET_CONNECTION_ATTEMPTS = 3
+	let notifications = {}
+	let onopen = []
+	let onclose = []
+	let address
+	let transport
 	
-	parseURL = function (url, func) {
+	function parseURL (url, func) {
 
-		var temp = document.createElement('a');
-		temp.href = url;
-		if (func instanceof Function) func.apply(temp);
+		let temp = document.createElement('a')
+		temp.href = url
+		if (func instanceof Function) func.apply(temp)
 
-		return temp.href;
-	},
+		return temp.href
+	}
 	
-	connect = function (url) {
+	function connect (url) {
 
 		address = parseURL(url, function () {
-			if ((this.protocol === 'ws:') || (this.protocol === 'wss:')) transport = 'websocket';
-			if ((this.protocol === 'http:') || (this.protocol === 'https:')) transport = 'ajax';
-		});
+			if ((this.protocol === 'ws:') || (this.protocol === 'wss:')) transport = 'websocket'
+			if ((this.protocol === 'http:') || (this.protocol === 'https:')) transport = 'ajax'
+		})
 
 		if (transport) return $.extend({
 			'transport': transport,
 			'address': address,
 			'connect': connect,
 			'onNotification': function (method, callback) {
-				if (!notifications[method]) notifications[method] = [];
-				notifications[method].push(callback);
+				if (!notifications[method]) notifications[method] = []
+				notifications[method].push(callback)
 			},
 			'onConnect': function (callback) {
-				if (callback instanceof Function) onopen.push(callback);
+				if (callback instanceof Function) onopen.push(callback)
 			},
 			'onDisconnect': function (callback) {
-				if (callback instanceof Function) onclose.push(callback);
+				if (callback instanceof Function) onclose.push(callback)
 			},
 			'notifications': function (n) {
-				if (n) notifications = n; return notifications;
+				if (n) notifications = n
+				return notifications
 			}
-		}, JSONRPC[transport](address));
+		}, JSONRPC[transport](address))
 	}
 
-	JSONRPC = function (url, debug) {
-		if (debug && window.console) DEBUG = true;
-		if (url) return connect(url);
-	};
+	function JSONRPC (url, debug) {
+		if (debug && window.console) DEBUG = true
+		if (url) return connect(url)
+	}
+
+	let nextId = 0
+	function sendMessage (method, params) {
+		if (DEBUG) console.log('JSONRPC.ajax: SENDING MESSAGE: '+method, params)
+
+		return this.send({
+			'data': {
+				'jsonrpc': '2.0',
+				'method': method,
+				'params': params || {},
+				'id': nextId++
+			}
+		})
+		.catch(error => {
+			if (DEBUG) console.log('JSONRPC.ajax: MESSAGE ERROR: '+method, error)
+			return error
+		})
+		.then(data => {
+			if (DEBUG) console.log('JSONRPC.ajax: RECEIVING MESSAGE: '+method, data)
+			return data
+		})
+	}
+
+
+	function sendNotification (method, params) {
+
+		if (DEBUG) console.log('JSONRPC.ajax: NOTIFICATION SENT: '+method, params);
+
+		return this.send({
+			'data': {
+				'jsonrpc': '2.0',
+				'method': method,
+				'params': params || {}
+			}
+		})
+
+	}
 
 	JSONRPC.ajax = function (url) {
 
-		var send = function (message) {
+		function send (message) {
 
-			fetch(new Request(url, {
+			return fetch(new Request(url, {
 				method: 'POST',
 				headers: new Headers({
 					'Content-Type': 'application/json'
@@ -109,188 +147,111 @@ var JSONRPC = (function (window, undefined) {
 				body: JSON.stringify(message.data)
 			}))
 			.then(response => response.json())
-			.then(message.success)
-			.catch(message.error)
 
-			/*$.ajax({
-				'type': 'POST',
-				'dataType': 'json',
-				'contentType': 'application/json',
-				'url': url,
-				'data': JSON.stringify(message.data),
-				'success': message.success,
-				'error': message.error
-			});*/
-
-			return true;
-		};
-
-		var sendMessage = function (method, params, success, fail) {
-
-			if (params instanceof Function) { fail = success; success = params; params = {} } //shuffle variables
-
-			if (DEBUG) console.log('JSONRPC.ajax: MESSAGE SENT: '+method, params);
-
-			return send({
-				'data': {
-					'jsonrpc': '2.0',
-					'method': method,
-					'params': params || {},
-					'id': +(new Date)
-				},
-				'success': function (data) {
-					if (DEBUG) console.log('JSONRPC.ajax: MESSAGE RECEIVED: '+method, data);
-					if (success instanceof Function) success(data);
-				},
-				'error': function (data) {
-					if (DEBUG) console.log('JSONRPC.ajax: MESSAGE ERROR: '+method, data);
-					if (fail instanceof Function) fail(data);
-				}
-			});
-
-		};
-
-		var sendNotification = function (method, params) {
-
-			if (DEBUG) console.log('JSONRPC.ajax: NOTIFICATION SENT: '+method, params);
-
-			return send({
-				'data': {
-					'jsonrpc': '2.0',
-					'method': method,
-					'params': params || {}
-				}
-			});
-
-		};
+		}
 
 		return {
+			'send': send,
 			'sendMessage': sendMessage,
 			'sendNotification': sendNotification
-		};
-	};
+		}
+	}
 
 	JSONRPC.websocket = function (url) {
-		var socket = {},
+		let socket = {},
 			messages = {},
 			buffer = [],
-			socketConnectionAttempts = 0;
+			socketConnectionAttempts = 0
 
-		var socketReady = function () {
-			return socket.readyState === 1;
-		};
+		function socketReady () {
+			return socket.readyState === 1
+		}
 
-		var send = function (message) {
-			var id = message.data.id;
-			if (socketReady()) {
+		function send (message) {
+			return new Promise((resolve, reject) => {
+				let id = message.data.id
+				message.success = resolve
+				if (socketReady()) {
 
-				if (id && (message.success instanceof Function)) {
-					message.timeout = window.setTimeout(function () {
+					if (id && (message.success instanceof Function)) {
+						message.timeout = window.setTimeout(function () {
 
-						if (DEBUG) console.log('JSONRPC.websocket: MESSAGE TIMEOUT: RE-SENDING: '+message.data.method, message);
+							if (DEBUG) console.log('JSONRPC.websocket: MESSAGE TIMEOUT: RE-SENDING: '+message.data.method, message)
 
-						if (messages[id]) {
-							delete messages[id];
-							send(message);
-							//socket.send(JSON.stringify(message.data));
-						}
+							if (messages[id]) {
+								delete messages[id]
+								send(message)
+							}
 
-					}, WEBSOCKET_TIMEOUT);
-					messages[id] = message; //if its a message, save it in the message callback buffer
+						}, WEBSOCKET_TIMEOUT)
+						messages[id] = message //if its a message, save it in the message callback buffer
+					}
+
+					socket.send(JSON.stringify(message.data))
+					return true
+
+				} else {
+					buffer.push(message)
+					return false
 				}
+			})
+		}
 
-				socket.send(JSON.stringify(message.data));
-				return true;
+		function sendNext () {
+		  	if (buffer.length) send(buffer.shift())
+		}
 
-			} else {
-				buffer.push(message);
-				return false;
-			}
-		};
-
-		var sendNext = function () {
-		  	if (buffer.length) send(buffer.shift());
-		};
-
-		var sendMessage = function (method, params, success, fail) {
-
-			if (params instanceof Function) { success = params; params = {} } //shuffle variables
-
-			if (DEBUG) console.log('JSONRPC.websocket: MESSAGE SENT: '+method, params);
-
-			return send({
-				'data': {
-					'jsonrpc': '2.0',
-					'method': method,
-					'params': params || {},
-					'id': +(new Date)
-				},
-				'success': success
-			});
-		};
-
-		var sendNotification = function (method, params) {
-
-			if (DEBUG) console.log('JSONRPC.websocket: NOTIFICATION SENT: '+method, params);
-
-			return send({
-				'data': {
-					'jsonrpc': '2.0',
-					'method': method,
-					'params': params || {}
-				}
-			});
-		};
-
-		var connectSocket = function () {
-			socket = new WebSocket(url);
-			socket.q = {};
+		function connectSocket () {
+			socket = new WebSocket(url)
+			socket.q = {}
 			socket.onmessage = function (message) {
-				var data = JSON.parse(message.data), m;
+				let data = JSON.parse(message.data)
+				let m
 			
 				if (data.id) { //json-rpc message
 					if (messages[data.id]) {
-						m = messages[data.id];
-						if (DEBUG) console.log('JSONRPC.websocket: MESSAGE RECEIVED: '+m.data.method, data);
-						if (m.success instanceof Function) m.success(data);
-						window.clearTimeout(m.timeout);
-						delete messages[data.id];
-					};
+						m = messages[data.id]
+						if (DEBUG) console.log('JSONRPC.websocket: MESSAGE RECEIVED: '+m.data.method, data)
+						if (m.success instanceof Function) m.success(data)
+						window.clearTimeout(m.timeout)
+						delete messages[data.id]
+					}
 				}
 				else { //json-rpc notification
-					if (DEBUG) console.log('JSONRPC.websocket: NOTIFICATION RECEIVED: '+data.method, data);
+					if (DEBUG) console.log('JSONRPC.websocket: NOTIFICATION RECEIVED: '+data.method, data)
 					if (notifications[data.method]) {
-						$.each(notifications[data.method], function (i, o) { if (o instanceof Function) o(data.params); });
-					};
+						$.each(notifications[data.method], function (i, o) { if (o instanceof Function) o(data.params); })
+					}
 				}
-				sendNext();
-			};
+				sendNext()
+			}
 			socket.onclose = function (close) {
-				if (DEBUG) console.log('JSONRPC.websocket: DISCONNECTED');
+				if (DEBUG) console.log('JSONRPC.websocket: DISCONNECTED')
 				if (socketConnectionAttempts < MAX_SOCKET_CONNECTION_ATTEMPTS) { //reconnect socket
 					window.setTimeout(function () {
-						if (socket.readyState === 3) connectSocket();
-					}, 1000); //retry after 1 second
+						if (socket.readyState === 3) connectSocket()
+					}, 1000) //retry after 1 second
 				}
-				else $.each(onclose, function (i, o) { if (o instanceof Function) o(); }); //too many connection attempts
-			};
+				else $.each(onclose, function (i, o) { if (o instanceof Function) o() }) //too many connection attempts
+			}
 			socket.onopen = function () {
-				if (DEBUG) console.log('JSONRPC.websocket: CONNECTED');
-				socketConnectionAttempts = 0;
+				if (DEBUG) console.log('JSONRPC.websocket: CONNECTED')
+				socketConnectionAttempts = 0
 				sendNext(); //re-start the buffer when the socket reconnects
-				$.each(onopen, function (i, o) { if (o instanceof Function) o(); });
-			};
-		};
+				$.each(onopen, function (i, o) { if (o instanceof Function) o() })
+			}
+		}
 
-		if (!('WebSocket' in window)) return;
+		if (!('WebSocket' in window)) return
 
-		connectSocket();
+		connectSocket()
 
 		return {
+			'send': send,
 			'sendMessage': sendMessage,
 			'sendNotification': sendNotification
-		};
-	};
+		}
+	}
 	
 	return JSONRPC;
 

@@ -1,16 +1,16 @@
 ready().then(function () { //on document load
 "use strict";
 
-	const body = document.body
-	
-	var failed = function () {
+	Kodi(window.location.host)
+	.catch(() => {
 		document.body.innerHTML = '' +
 			'<h1>:(</h1>' +
 			'<h2>Error</h2>' +
 			'<p>Could not connect to Kodi</p>'
-	};
+	})
+	.then(kodi => {
 
-	var connected = function () {
+		window.xbmc = kodi
 
 		document.body.innerHTML = '' +
 			'<div id=loading><span><img alt="Loading" src="img/loading.gif"></span></div>' +
@@ -19,14 +19,8 @@ ready().then(function () { //on document load
 
 		pages.renderPage();
 
-		player.init();
+		player.init(kodi);
 
-	};
+	})
 	
-	var connect = function (address) {
-		window.xbmc = xbmc(address, connected, failed);
-	};
-
-	connect(window.location.host);
-
 });
