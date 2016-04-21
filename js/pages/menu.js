@@ -7,8 +7,9 @@ pages.add(new Page({
 			{ 'label': 'Videos', 'link': '#page=Menu&media=Videos', 'thumbnail': 'img/icons/home/videos.png' },
 			{ 'label': 'Music', 'link': '#page=Menu&media=Music', 'thumbnail': 'img/icons/home/music.png' },
 			{ 'label': 'Pictures', 'link': '#page=Menu&media=Pictures', 'thumbnail': 'img/icons/home/pictures.png' },
-			//{ 'label': 'Live', 'link': '#page=Live', 'thumbnail':'img/icons/home/live.png' },
-			{ 'label': 'Playlists', 'link': '#page=Playlists', 'thumbnail':'img/icons/home/playlists.png' }
+			{ 'label': 'Live', 'link': '#page=Live', 'thumbnail':'img/icons/home/live.png' },
+			{ 'label': 'Playlists', 'link': '#page=Playlists', 'thumbnail':'img/icons/home/playlists.png' },
+			{ 'label': 'Addons', 'link':'#page=Addons', 'thumbnail':'img/icons/home/addons.png' }
 		];
 		resolve({ 'items': items, 'hideNavigation': true });
 	}
