@@ -9,7 +9,7 @@ pages.add(new Page({
 			{ 'label': 'Pictures', 'link': '#page=Menu&media=Pictures', 'thumbnail': 'img/icons/home/pictures.png' },
 			{ 'label': 'Live', 'link': '#page=Live', 'thumbnail':'img/icons/home/live.png' },
 			{ 'label': 'Playlists', 'link': '#page=Playlists', 'thumbnail':'img/icons/home/playlists.png' },
-			{ 'label': 'Addons', 'link':'#page=Addons', 'thumbnail':'img/icons/home/addons.png' }
+			//{ 'label': 'Addons', 'link':'#page=Addons', 'thumbnail':'img/icons/home/addons.png' }
 		];
 		resolve({ 'items': items, 'hideNavigation': true });
 	}
