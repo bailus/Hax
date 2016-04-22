@@ -25,7 +25,6 @@ pages.add(new Page({
 					movie.play = () => xbmc.Play({ 'movieid': movie.movieid }, 1)
 
 				movie.thumbnail = movie.thumbnail ? xbmc.vfs2uri(movie.thumbnail) : 'img/icons/default/DefaultVideo.png'
-				movie.thumbnailWidth = '34px'
 
 				return movie
 			})
