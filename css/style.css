@@ -285,11 +285,18 @@ p {
 	right:50px;
 }
 .listItem .thumbnail {
-	height:100%;
-	vertical-align:middle;
+	width:50px;
+	height:50px;
+	text-align:center;
+	line-height:50px;
 	float:left;
 }
-@media all and (max-width : 380px) {
+.listItem .thumbnail img {
+	max-width:100%;
+	max-height:100%;
+	vertical-align:middle;
+}
+@media all and (max-width : 300px) {
 	.listItem .thumbnail {
 		display:none !important;
 	}
@@ -464,6 +471,7 @@ header {
 .backButton { float:left; }
 .homeButton { float:right; }
 
+
 .page[data-page="Home"] {
 	max-width: 350px;
 }
@@ -481,9 +489,6 @@ header {
 	display: inline-block;
 	margin: 10px;
 }
-.page[data-page="Menu"] .thumbnail {
-	display: block !important;
-}
 .page[data-page="Home"] .thumbnail {
 	display: block !important;
 	float: none;
@@ -498,43 +503,4 @@ header {
 	height: auto;
 	line-height: normal;
 	margin:0;padding:0;
-}
-
-
-.page[data-page="Remote"] .remote {
-	display: none;
-}
-.textInput {
-	width: 100%;
-	height: 40px;
-	clear: both;
-	position: relative;
-	margin: 10px 0;
-}
-.textInput input {
-	display: block;
-	padding: 0 10px;
-	margin: 0;
-	background: #444;
-	outline: none;
-	border: 4px solid #888;
-	height: 32px;
-	line-height: 32px;
-	font-size: 22px;
-	position: absolute;
-	left: 5px;
-	right: 5px;
-	top: 0;
-	color: white;
-}
-.gestureInput {
-	width: 100%;
-	position: relative;
-	margin: 10px 0;
-}
-.gestureInput canvas {
-	display: block;
-	margin: 5px;
-	background: #444;
-	border: 4px solid #888;
 }

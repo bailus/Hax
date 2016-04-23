@@ -68,22 +68,25 @@ template.listitem = JsonML.BST(
 				"",
 				" ",
 				[
-					"img",
+					"div",
 					{
-						"jbst:visible": 
-							function() {
+						"class": "thumbnail"
+					},
+					" ",
+					[
+						"img",
+						{
+							"jbst:visible": 
+								function() {
 	return !!this.data.thumbnail;
 },
-						"class": "thumbnail",
-						src: 
-							function() {
+							src: 
+								function() {
 	return this.data.thumbnail;
-},
-						style: 
-							function() {
-	return this.data.thumbnailWidth ? 'width:'+this.data.thumbnailWidth : '';
 }
-					}
+						}
+					],
+					" "
 				],
 				" ",
 				[
@@ -144,3 +147,4 @@ template.listitem = JsonML.BST(
 	});
 			}
 ]);
+
