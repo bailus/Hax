@@ -4,26 +4,56 @@ pages.add(new Page({
 	'groupby': 'alpha',
 	'data': (resolve, reject) => {
 		let genre = getHash('genre')
-		let alpha = getHash('alpha')
 		
 		let params = {}
 		if (genre) params.filter = { genre: genre }
 
 		xbmc.GetArtists(params)
 		.then(data => data.artists || [])
-		.then(artists => artists.map((artist, i) => {
-			artist.alpha = artist.label[0].toUpperCase()
-			artist.link = '#page=Artist&artistid='+artist.artistid
-			artist.thumbnail = artist.thumbnail ? xbmc.vfs2uri(artist.thumbnail) : 'img/icons/default/DefaultArtist.png'
-			artist.thumbnailWidth = '50px'
-			if (artist.genre instanceof Array)
-				artist.genre.map(genre => genre.charAt(0).toUpperCase() + genre.substr(1) )
-
-			return artist
-		}))
 		.then(artists => ({
 			title: 'Artists',
-			items: artists
+			items: artists.map((artist, i) => ({
+					alpha: artist.label[0].toUpperCase(),
+					label: artist.label,
+					link: '#page=Artist&artistid='+artist.artistid,
+					thumbnail: artist.thumbnail ? xbmc.vfs2uri(artist.thumbnail) : 'img/icons/default/DefaultArtist.png'
+				}))
+		}))
+		.then(resolve)
+	}
+}));
+
+pages.add(new Page({
+	'id': 'Albums',
+	'view': 'list',
+	'groupby': 'alpha',
+	'data': (resolve, reject) => {
+
+		let filter = xbmc.makeFilter([
+			{ name: 'Genre', key: 'genre', type: String },
+			{ name: 'Artist', key: 'artist', type: String }
+		])
+
+		let group = getHash('group')
+
+		xbmc.sendMessage('AudioLibrary.GetAlbums', {
+			'properties': [ 'title', 'artist', 'year', 'thumbnail' ],
+			'filter': (filter || {}).filter
+		})
+		.then(data => (data.result || {}).albums || [])
+		.then(albums => ({
+			title: 'Albums',
+			subtitle: filter ? filter.name + ': ' + filter.value : 
+				group ? 'By '+group :
+				'By Title',
+			items: albums.map((album, i) => ({
+					alpha: album.label[0].toUpperCase(),
+					label: album.label,
+					details: album.artist,
+					year: album.year,
+					link: '#page=Album&albumid='+album.albumid,
+					thumbnail: album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : 'img/icons/default/DefaultArtist.png'
+				}))
 		}))
 		.then(resolve)
 	}
@@ -37,6 +67,7 @@ pages.add(new Page({
 		let artistid = +getHash('artistid')
 
 		let getArtistDetails = xbmc.GetArtistDetails({ 'artistid': artistid })
+		.then(data => data.artistdetails || [])
 		.then(artistdetails => { //format artist details
 			if (artistdetails.thumbnail) artistdetails.thumbnail = xbmc.vfs2uri(artistdetails.thumbnail)
 			artistdetails.title = artistdetails.label || 'Artist ' + artistid

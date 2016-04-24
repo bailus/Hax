@@ -1,15 +1,15 @@
 window.pages = (() => {
 
-	const pages = {}
+	const pages = new Map()
 	const public = {}
 
 	public.add = (page) => {
-		pages[page.id] = page
+		pages.set(page.id, page)
 		return page
 	}
 
 	public.getById = (id) => {
-		return pages[id]
+		return pages.get(id)
 	}
 
 	//render the current page
@@ -25,7 +25,7 @@ window.pages = (() => {
 
 	//render the page every time the hash changes
 	window.addEventListener("hashchange", () => {
-		public.renderPage(getHash('page'))
+		public.renderPage()
 	}, false)
 
 	return public
@@ -145,7 +145,10 @@ class Page {
 
 			let $page = document.createElement('div')
 			$page.setAttribute('class', 'page')
-			$page.setAttribute('data-page', this.id)
+
+			//copy key/value pairs from the URL to the data- attributes of the $page
+			window.getHashMap().forEach((value, key) => $page.setAttribute('data-'+key, value))
+			$page.setAttribute('data-page', this.id) //make sure the home page has a data-page attribute
 
 			$page.appendChild(template[ getHash('view') || this.view ].bind(data))
 

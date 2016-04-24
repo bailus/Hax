@@ -3,7 +3,12 @@ pages.add(new Page({
 	'view': 'list',
 	'data': (resolve, reject) => {
 
-		Promise.all((['TV', 'Radio']).map(type => {
+		let media = getHash('media')
+		if (media !== 'TV' && media !== 'Radio')
+			media = [ 'TV', 'Radio' ]
+		else media = [ media ]
+
+		Promise.all(media.map(type => {
 
 			return xbmc.GetChannelGroups({ 'channeltype': type.toLowerCase() })
 			.then(result => result.channelgroups || [])
@@ -17,7 +22,10 @@ pages.add(new Page({
 			}))
 
 		}))
-		.then(items => ({
+		.then(items => (media.length == 1 ? {
+			title: items[0].label,
+			items: items[0].items
+		} : {
 			title: 'Live',
 			items: items
 		}))

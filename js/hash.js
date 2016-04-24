@@ -5,6 +5,22 @@
 /* HASH FUNCTIONS */
 (function (window, document) {
 	"use strict";
+
+	window.getHashMap = () => {
+		let map = new Map()
+
+		if (!document.location.hash) return map
+
+		let hasharray = document.location.hash.substring(1).split(/\&/)
+		for (let y = 0; y < hasharray.length; y++) {  //for (y in hasharray) {
+			let z = hasharray[y].split(/\=/);
+			if (z && z.length == 2)
+				map.set(z[0], decodeURIComponent(z[1]))
+		}
+		return map
+
+	}
+
 	window.getHash = function(name) {
 		var y, z, hasharray;
 		if (!document.location.hash) { return false; }

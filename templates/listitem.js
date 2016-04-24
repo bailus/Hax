@@ -70,7 +70,11 @@ template.listitem = JsonML.BST(
 				[
 					"div",
 					{
-						"class": "thumbnail"
+						"class": "thumbnail",
+						"jbst:visible": 
+							function() {
+	return !!this.data.thumbnail;
+}
 					},
 					" ",
 					[

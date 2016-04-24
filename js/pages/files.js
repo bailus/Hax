@@ -47,8 +47,14 @@ pages.add(new Page({
 		let media = getHash('media') || ''
 		let pathSplit = path => path.split(new RegExp('[\\\\/]'))
 		
-		xbmc.GetDirectory({ 'directory': directory, 'media': media })
-		.then(data => data.files || [])
+		xbmc.sendMessage('Files.GetDirectory', {
+			'properties': [ 'duration', 'thumbnail', 'file', 'size', 'mimetype' ],
+			'sort': { 'method': 'file', 'order': 'ascending' },
+			'directory': directory,
+			'media': media
+		})
+		//xbmc.GetDirectory({ 'directory': directory, 'media': media })
+		.then(data => (data.result || {}).files || [])
 		.then(files => files.map(file => {
 			var f = pathSplit(file.file),
 			  filename = f.pop()
@@ -68,6 +74,11 @@ pages.add(new Page({
 
 			if (!filename) filename = f.pop()
 			file.label = filename
+
+			file.details = []
+			if (file.size) file.details.push((file.size/1024/1024).toFixed(2) + 'MB')
+			if (file.mimetype) file.details.push(file.mimetype)
+
 
 			file.thumbnailWidth = '50px'
 

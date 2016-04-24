@@ -20,6 +20,7 @@ a img,:link img,:visited img {
 }
 .list.collapsed[data-groupby="alpha"] .label {
 	padding:0;
+	font-weight:bold;
 }
 .list.collapsed[data-groupby="alpha"] .listItem {
 	width:50px;
@@ -40,17 +41,15 @@ body {
 }
 body,
 #header a {
-	color:#DDD;
+	color:#FFF;
 }
 a,
 #header a:hover,
 [data-role=button] {
-	color:#58B9DA;
+	color:#FFF;
 }
 a:hover,
-[data-role=button]:hover {
-	color:#E79A38;
-}
+[data-role=button]:hover,
 a:active,
 #header a:active,
 [data-role=button]:active {
@@ -58,12 +57,6 @@ a:active,
 }
 h1 a, h2 a, h3 a, h4 a, h5 a {
 	color:inherit;
-}
-h3 {
-	color:#BBB;
-}
-.buttons .play, .buttons .add {
-	background:rgba(0,0,0,0.6);
 }
 .listItem {
 	border-top-color:#222;
@@ -112,10 +105,11 @@ a {
 	text-decoration:none;
 }
 h2 {
-	font-size:16px;
+	font-size:14px;
 }
 h3 {
 	font-size:14px;
+	font-weight:bold;
 }
 p {
 	font-size:14px;
@@ -126,27 +120,31 @@ p {
 	white-space: nowrap;
 }
 .listItem {
-	font-size:15px;
+	font-size:14px;
+}
+.listItem .label,
+.listItem .line1 {
+	font-style:italic;
+}
+.listItem a .label,
+.listItem a .line1 {
+	font-style:normal;
 }
 .listItem .label,
 .listItem .line1,
 .listItem .line2 {
-	font-weight:bold;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
 .listItem .line2 {
 	font-size:12px;
-	font-weight:normal;
+	font-style:normal;
 }
 .listItem .play,
 .listItem .add,
 .listItem .remove {
 	font-size:30px;
 	text-align:center;
-}
-.listItem .number {
-	font-weight:bold;
 }
 .recentlyaddeditem .label {
 	font-size:12px;
@@ -160,16 +158,38 @@ p {
 	font-weight:bold;
 	text-align:center;
 }
-#loading span {
-	font-size:24px;
-	text-align:center;
-}
 
+@-moz-keyframes spin {
+	from { -moz-transform: rotate(0deg); }
+	to { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+	from { -webkit-transform: rotate(0deg); }
+	to { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+	from {transform:rotate(0deg);}
+	to {transform:rotate(360deg);}
+}
+.spin {
+	-webkit-animation-name: spin;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+	-moz-animation-name: spin;
+	-moz-animation-duration: 1s;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-timing-function: linear;
+	-ms-animation-name: spin;
+	-ms-animation-duration: 1s;
+	-ms-animation-iteration-count: infinite;
+	-ms-animation-timing-function: linear;
+}
 
 
 /* THE OTHER DIMENSION */
 #loading {
-	z-index:10000;
+	z-index:900;
 }
 #header {
 	z-index:40;
@@ -241,13 +261,6 @@ p {
 	height:50px;
 	overflow:hidden;
 	position:relative;
-	border-top-width:1px;
-	border-top-style:solid;
-	border-bottom-width:1px;
-	border-bottom-style:solid;
-}
-.listItem + .listItem {
-	border-top:none;
 }
 .listItem .label,
 .listItem .line1,
@@ -367,10 +380,10 @@ p {
 #loading img {
 	position:absolute;
 	display:block;
-	width:160px;height:24px;
+	width:64px;height:64px;
 	left:50%;top:50%;
-	margin-left:-80px;
-	margin-top:-12px;
+	margin-left:-32px;
+	margin-top:-32px;
 }
 .page {
 	margin:0 auto;
@@ -487,7 +500,7 @@ header {
 	text-align: center;
 	border:none;
 	display: inline-block;
-	margin: 10px;
+	margin: 5px;
 }
 .page[data-page="Home"] .thumbnail {
 	display: block !important;
@@ -503,4 +516,9 @@ header {
 	height: auto;
 	line-height: normal;
 	margin:0;padding:0;
+}
+
+
+.page[data-media="pictures"] {
+	
 }

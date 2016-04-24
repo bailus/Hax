@@ -1,22 +1,32 @@
 pages.add(new Page({
 	'id': 'Movies',
 	'view': 'list',
-	'groupby': 'year',
+	//'groupby': 'year',
 	'data': (resolve, reject) => {
 
-		let year = getHash('year')
-		let genre = getHash('genre')
+		let filter = xbmc.makeFilter([{ name: 'Year', key: 'year', type: Number }, { name: 'Genre', key: 'genre', type: String }, { name: 'Actor', key: 'actor', type: String }])
 
-		let filter = year ? movie => year == movie.year :
-			genre ? movie => movie.genre.indexOf(genre) >= 0 :
-			() => true
+		let showYear = (getHash('group') !== 'year') && (getHash('year') === undefined)
 		
-		xbmc.GetMovies()
-		.then(data => data.movies || [])
-		.then(movies => movies.filter(filter))
+		xbmc.sendMessage('VideoLibrary.GetMovies', {
+			'properties': [ 'title', 'originaltitle', 'runtime', 'year', 'thumbnail', 'file', 'genre' ],
+			'sort': { method: 'sorttitle', ignorearticle: true },
+			'filter': (filter || {}).filter
+		})
+		.then(data => data.result || {})
+		.then(result => result.movies || [])
 		.then(movies => ({ //format movies
 			title: 'Movies',
+			subtitle: filter ? filter.name + ': ' + filter.value : '',
 			items: movies.map((movie, i) => {
+
+				movie.details = []
+				if (showYear) movie.details.push('('+movie.year+')')
+				if (movie.runtime) movie.details.push(seconds2string(movie.runtime))
+
+				movie.label = movie.title || movie.label || ''
+				if (movie.originaltitle && movie.originaltitle != movie.title)
+					movie.label += ' [' + movie.originaltitle + ']'
 
 				movie.link = '#page=Movie&movieid='+movie.movieid
 				movie.alpha = movie.label[0].toUpperCase()

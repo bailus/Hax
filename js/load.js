@@ -13,7 +13,7 @@ ready().then(function () { //on document load
 		window.xbmc = kodi
 
 		document.body.innerHTML = '' +
-			'<div id=loading><span><img alt="Loading" src="img/loading.gif"></span></div>' +
+			'<div id=loading><span><img alt="Loading" src="img/busy.png" class="spin"></span></div>' +
 			'<div id=content></div>' +
 			'<div id=player></div>'
 

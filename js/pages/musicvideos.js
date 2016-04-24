@@ -18,6 +18,7 @@ pages.add(new Page({
 				mv.play = function () {
 					xbmc.Open({ 'item': { 'file': xbmc.vfs2uri(mv.file) } })
 				}
+				return mv
 			})
 		}))
 		.then(resolve)

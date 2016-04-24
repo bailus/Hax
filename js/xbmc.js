@@ -93,7 +93,11 @@ let Kodi = (function () {
 		},
 		'GetRecentlyAddedMovies': {
 			'method': 'VideoLibrary.GetRecentlyAddedMovies',
-			'params': { "properties": [ "title", "originaltitle", "runtime", "year", "thumbnail", "file" ], 'limits': { 'end': 5 } }
+			'params': { "properties": [ "title", "originaltitle", "runtime", "year", "thumbnail" ], 'limits': { 'end': 5 } }
+		},
+		'GetRecentlyAddedMusicVideos': {
+			'method': 'VideoLibrary.GetRecentlyAddedMusicVideos',
+			'params': { "properties": [ "title", "runtime", "artist", "year", "thumbnail" ], 'limits': { 'end': 5 } }
 		},
 		'GetMovieDetails': {
 			'method': 'VideoLibrary.GetMovieDetails',
@@ -311,6 +315,19 @@ let Kodi = (function () {
 		return temp.href;
 	};
 
+	//like Array.some but returns the value of the function instead of true/false
+	let first_ = func => array => {
+		let out = undefined
+		Array.prototype.some.call(array, (elem, i) => {
+			const value = func(elem, i)
+			if (value) {
+				out = value
+				return true
+			}
+		})
+		return out
+	}
+
 	//public functions
 	let pub = {
 		'vfs2uri': (function () { //converts xbmc virtual filesystem paths to URIs
@@ -324,6 +341,18 @@ let Kodi = (function () {
 			};
 			return self;
 		})(),
+		'makeFilter': first_(filter => {
+			let value = getHash(filter.key)
+			if (value === undefined) return
+
+			let out = {
+				'filter': {},
+				'name': filter.name,
+				'value': new filter.type(value)
+			}
+			out.filter[filter.key] = out.value
+			return out
+		}),
 		'onNotification': function (method, callback) {
 			server.onNotification(method, callback);
 		},
@@ -344,19 +373,20 @@ let Kodi = (function () {
 
 
 
-	let cache = {};
+	let cache = new Map();
 	function load (name, params, callback) { //loads data from the JSON-RPC server
 		let r = rpc[name]
 		let cb = undefined
-		let hash = r.method+'_'+JSON.stringify(params).replace(/\W/g,'')
-		let cached = cache[hash]
-		if (cached) callback(JSON.parse(cached))
+		//let hash = r.method+'_'+JSON.stringify(params).replace(/\W/g,'')
+		//let cached = cache[hash]
+		let cached = cache.get(params)
+		if (cached) callback(cached)
 		else {
 			if (r && r.method)
 				server.sendMessage(r.method, params)
 				.then(function (result) {
 				  	if (callback instanceof Function) {
-				  		cb = r.cache ? function (x) { cache[hash] = JSON.stringify(x); return callback(x); } : callback;
+				  		cb = r.cache ? function (x) { cache.set(params, x); return callback(x); } : callback;
 						if (result.result) result = result.result;
 				  		if (r.wrapper) r.wrapper(result, cb);
 				  		else cb(result);
@@ -395,9 +425,9 @@ let Kodi = (function () {
 	function upgradeToSocket (address, callback) { //upgrade from ajax to websocket
 		let ws = JSONRPC(address)
 		let ajax = server
-		if (DEBUG) console.log('XBMC: Attempting to upgrade transport to websocket '+address)
+		if (DEBUG) console.log('XBMC: Attempting to upgrade transport to websocket', address)
 		if (!ws) { //ws is undefined if the browser has no websocket support
-			if (DEBUG) console.log('XBMC: No websocket support in this browser: '+navigator.userAgent)
+			if (DEBUG) console.log('XBMC: No websocket support in this browser', navigator.userAgent)
 			return
 		}
 		ws.notifications(ajax.notifications())
@@ -427,7 +457,7 @@ let Kodi = (function () {
 				//function () { if (this.port === 9090) this.port = 80 }
 			]))
 			
-			if (DEBUG) console.log('XBMC: Connecting to '+ajaxURL)
+			if (DEBUG) console.log('XBMC: Connecting to ', ajaxURL)
 		 
 		 	//create an ajax transport
 			server = JSONRPC(ajaxURL)
@@ -441,9 +471,9 @@ let Kodi = (function () {
 			})
 			.then(data => {
 				if (data.result && data.result.version) {
-					if (DEBUG) console.log('XBMC: Connected: API Version '+data.result.version)
-					pub.version.set(data.result.version)
-					if (data.result.version >= 5) upgradeToSocket(wsURL)
+					if (DEBUG) console.log('XBMC: Connected: API Version ', data.result.version)
+					pub.version.set(data.result.version.major || data.result.version || undefined)
+					if (pub.version() >= 5) upgradeToSocket(wsURL)
 					resolve(pub)
 				} else {
 					if (DEBUG) console.log('XBMC: Connection failure: Invalid version received', data.error)

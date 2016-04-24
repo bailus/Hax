@@ -83,18 +83,18 @@ var player = (function () {
 	
 	let onNotification = {
 		'Player.OnPlay': function (data) {
-			document.body.attr('data-status','playing');
+			document.body.setAttribute('data-status','playing');
 			xbmc.GetPlayerProperties({ 'playerid': data.data.player.playerid })
 			.then(player => {
 				progress.start(timeObjToSeconds(player.totaltime), timeObjToSeconds(player.time))
 			})
 		},
 		'Player.OnPause': function (data) {
-			document.body.attr('data-status','paused')
+			document.body.setAttribute('data-status','paused')
 			progress.pause()
 		},
 		'Player.OnStop': function (data) {
-			document.body.attr('data-status','stopped')
+			document.body.setAttribute('data-status','stopped')
 			progress.stop()
 		},
 		'Player.OnSeek': function (data) {

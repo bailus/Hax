@@ -5,25 +5,24 @@ pages.add(new Page({
 	'view': 'list',
 	'groupby': 'alpha',
 	'data': function (resolve) {
-		let year = getHash('year')
-		let genre = getHash('genre')
-		let filter = year ? show => (year == show.year) :
-					genre ? show => (show.genre.indexOf(genre) >= 0) :
-					() => true
 
-		xbmc.GetTVShows()
-		.then(data => data.tvshows || [])
-		.then(tvshows => tvshows.filter(filter)) //filter items
-		.then(tvshows => tvshows.map(tvshow => { //format items
+		let filter = xbmc.makeFilter([{ name: 'Year', key: 'year', type: Number }, { name: 'Genre', key: 'genre', type: String }, { name: 'Actor', key: 'actor', type: String }])
 
-			tvshow.link = '#page=TV Show&tvshowid=' + tvshow.tvshowid
-			if (tvshow.thumbnail) tvshow.thumbnail = xbmc.vfs2uri(tvshow.thumbnail)
-			tvshow.alpha = tvshow.label[0].toUpperCase()
-
-			return tvshow
-		}))
+		xbmc.sendMessage('VideoLibrary.GetTVShows', {
+			'properties': [ 'title', 'originaltitle', 'sorttitle', 'thumbnail', 'episode' ],
+			'filter': (filter || {}).filter
+		})
+		.then(data => (data.result || {}).tvshows || [])
+		.then(tvshows => tvshows.map(tvshow => ({ //format items
+			label: tvshow.title + (tvshow.originaltitle && tvshow.originaltitle != tvshow.title ? ' ['+tvshow.originaltitle+']' : ''),
+			details: [ tvshow.episode + ' episodes' ],
+			link: '#page=TV Show&tvshowid=' + tvshow.tvshowid,
+			thumbnail: tvshow.thumbnail ? xbmc.vfs2uri(tvshow.thumbnail) : 'img/icons/default/DefaultVideo.png',
+			alpha: (tvshow.sorttitle || tvshow.title)[0].toUpperCase()
+		})))
 		.then(items => ({
 			title: 'TV Shows',
+			subtitle: filter ? filter.name + ': ' + filter.value : '',
 			items: items
 		}))
 		.then(resolve)
@@ -49,24 +48,22 @@ pages.add(new Page({
 		})
 		
 
-		let getEpisodes = xbmc.GetTVEpisodes({ 'tvshowid': tvshowid })
-		.then(data => data.episodes || {})
-		.then(episodes => episodes.map(episode => {
-
-			episode.link = '#page=Episode&episodeid='+episode.episodeid+'&tvshowid='+tvshowid;
-			episode.label = episode.title || '';
-			episode.thumbnail = episode.thumbnail ? xbmc.vfs2uri(episode.thumbnail) : 'img/icons/default/DefaultVideo.png';
-			episode.season = 'Season '+episode.season;
-			episode.thumbnailWidth = '89px';
-			episode.details = [];
-
-			if (episode.episode) episode.number = episode.episode;
-			if (episode.lastplayed) episode.details.push( 'Last played '+ymd2string(episode.lastplayed) );
-
-			episode.play = () => xbmc.Play({ 'episodeid': episode.episodeid }, 1);
-
-			return episode
-		}))
+		let getEpisodes = xbmc.sendMessage('VideoLibrary.GetEpisodes', {
+			'properties': [ 'tvshowid', 'title', 'thumbnail', 'episode', 'season', 'runtime', 'lastplayed' ],
+			'tvshowid': tvshowid
+		})
+		.then(data => data.result || {})
+		.then(result => result.episodes || {})
+		.then(episodes => episodes.map(episode => ({
+			link: '#page=Episode&episodeid='+episode.episodeid+'&tvshowid='+tvshowid,
+			label: episode.title || '',
+			thumbnail: episode.thumbnail ? xbmc.vfs2uri(episode.thumbnail) : 'img/icons/default/DefaultVideo.png',
+			season: 'Season ' + episode.season,
+			thumbnailWidth: '89px',
+			details: [ seconds2string(episode.runtime), episode.lastplayed ? 'Last played '+ymd2string(episode.lastplayed) : undefined ],
+			number: episode.episode,
+			play: () => xbmc.Play({ 'episodeid': episode.episodeid }, 1)
+		})))
 
 		Promise.all([ getShowDetails, getEpisodes ])
 		.then(([ page, items ]) => {
@@ -86,8 +83,12 @@ pages.add(new Page({
 		let tvshowid = +getHash('tvshowid')
 		let episodeid = +getHash('episodeid')
 
-		xbmc.GetEpisodeDetails({ 'episodeid': episodeid })
-		.then(data => data.episodedetails || {})
+		xbmc.sendMessage('VideoLibrary.GetEpisodeDetails', {
+			'properties': [ 'title', 'plot', 'writer', 'firstaired', 'playcount', 'runtime', 'director', 'season', 'episode', 'showtitle', 'cast', 'lastplayed', 'thumbnail', 'fanart', 'file', 'tvshowid' ],
+			'episodeid': episodeid
+		})
+		.then(data => data.result || {})
+		.then(result => result.episodedetails || {})
 		.then(page => {
 
 			page.subtitle = (page.season>0 && page.episode>0 ? page.season+'x'+(page.episode<10 ? '0' : '') + page.episode + ' ' : '') + 
