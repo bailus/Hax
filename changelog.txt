@@ -4,3 +4,14 @@ v0.1.0 - 2016-03-06
 v0.1.1 - 2016-03-21
  - Bug fixes
  - Other changes - see https://sourceforge.net/p/xbmc/mailman/message/34950368/
+
+v0.2.0 - 2016-04-22
+ - Ported from JavaScript to ES7
+ - Removed most libraries
+ - More concurrency
+
+v0.3.0 - 2016-04-25
+ - New icons (from estouchy skin)
+ - Added actors view for movies/tv shows
+ - Added "recently added" to movies/tv/music videos
+ - Menu redesign
