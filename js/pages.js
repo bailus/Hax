@@ -1,23 +1,25 @@
-window.pages = (() => {
+"use strict";
+
+const pages = (() => {
 
 	const pages = new Map()
-	const public = {}
+	const pub = {}
 
-	public.add = (page) => {
+	pub.add = (page) => {
 		pages.set(page.id, page)
 		return page
 	}
 
-	public.getById = (id) => {
+	pub.getById = (id) => {
 		return pages.get(id)
 	}
 
 	//render the current page
-	public.renderPage = () => {
+	pub.renderPage = () => {
 
 		//find the page to render
 		let title = (getHash('page') || '').replace('%20',' ') //some browsers replace spaces with %20
-		let page = public.getById(title) || public.getById(DEFAULT_PAGE)
+		let page = pub.getById(title) || pub.getById(DEFAULT_PAGE)
 
 		if (page) page.render()
 
@@ -25,10 +27,10 @@ window.pages = (() => {
 
 	//render the page every time the hash changes
 	window.addEventListener("hashchange", () => {
-		public.renderPage()
+		pub.renderPage()
 	}, false)
 
-	return public
+	return pub
 
 })()
 

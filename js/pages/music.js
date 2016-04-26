@@ -1,23 +1,30 @@
+"use strict";
+
 pages.add(new Page({
 	'id': 'Artists',
 	'view': 'list',
 	'groupby': 'alpha',
 	'data': (resolve, reject) => {
-		let genre = getHash('genre')
-		
-		let params = {}
-		if (genre) params.filter = { genre: genre }
+		const filter = xbmc.makeFilter([
+			{ name: 'Genre', key: 'genre', type: String }
+		])
 
-		xbmc.GetArtists(params)
-		.then(data => data.artists || [])
-		.then(artists => ({
+		xbmc.get({
+			'method': 'AudioLibrary.GetArtists',
+			'params': { 
+				'properties': [ 'thumbnail' ],
+				'albumartistsonly': true,
+				'filter': filter.filter
+			}
+		})
+		.then(result => ({
 			title: 'Artists',
-			items: artists.map((artist, i) => ({
-					alpha: artist.label[0].toUpperCase(),
-					label: artist.label,
-					link: '#page=Artist&artistid='+artist.artistid,
-					thumbnail: artist.thumbnail ? xbmc.vfs2uri(artist.thumbnail) : 'img/icons/default/DefaultArtist.png'
-				}))
+			items: result.artists.map(artist => ({
+				alpha: artist.label[0].toUpperCase(),
+				label: artist.label,
+				link: '#page=Artist&artistid='+artist.artistid,
+				thumbnail: artist.thumbnail ? xbmc.vfs2uri(artist.thumbnail) : 'img/icons/default/DefaultArtist.png'
+			}))
 		}))
 		.then(resolve)
 	}
@@ -36,17 +43,19 @@ pages.add(new Page({
 
 		let group = getHash('group')
 
-		xbmc.sendMessage('AudioLibrary.GetAlbums', {
-			'properties': [ 'title', 'artist', 'year', 'thumbnail' ],
-			'filter': (filter || {}).filter
+		xbmc.get({
+			method: 'AudioLibrary.GetAlbums',
+			params: {
+				'properties': [ 'title', 'artist', 'year', 'thumbnail' ],
+				'filter': filter.filter
+			}
 		})
-		.then(data => (data.result || {}).albums || [])
-		.then(albums => ({
+		.then(result => ({
 			title: 'Albums',
 			subtitle: filter ? filter.name + ': ' + filter.value : 
 				group ? 'By '+group :
 				'By Title',
-			items: albums.map((album, i) => ({
+			items: result.albums.map((album, i) => ({
 					alpha: album.label[0].toUpperCase(),
 					label: album.label,
 					details: album.artist,
@@ -66,37 +75,50 @@ pages.add(new Page({
 	'data': (resolve, reject) => {
 		let artistid = +getHash('artistid')
 
-		let getArtistDetails = xbmc.GetArtistDetails({ 'artistid': artistid })
-		.then(data => data.artistdetails || [])
-		.then(artistdetails => { //format artist details
+		//let getArtistDetails = xbmc.GetArtistDetails({ 'artistid': artistid })
+		let getArtistDetails = xbmc.get({
+			'method': 'AudioLibrary.GetArtistDetails',
+			'params': {
+				'properties': [ 'thumbnail', 'genre', 'born', 'formed', 'died', 'disbanded' ],
+				'artistid': artistid
+			},
+			'cache': true
+		})
+		.then(result => { //format artist details
+			const artistdetails = result.artistdetails
+
 			if (artistdetails.thumbnail) artistdetails.thumbnail = xbmc.vfs2uri(artistdetails.thumbnail)
 			artistdetails.title = artistdetails.label || 'Artist ' + artistid
 
 			return artistdetails
 		})
 
-		let getAlbums = xbmc.GetAlbums({ 'filter': { 'artistid': artistid } })
-		.then(data => data.albums || [])
-		.then(albums => { //format albums
-			return albums.map((album) => {
-				album.link = '#page=Album&albumid=' + album.albumid
-				album.thumbnail = album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : 'img/icons/default/DefaultAudio.png'
-				album.thumbnailWidth = '50px'
-
-				album.play = function () {
-					xbmc.Play({ 'albumid': album.albumid }, 0)
-				}
-
-				return album;
-			})
+		let getAlbums = xbmc.get({
+			'params': {
+				'properties': [ 'title', 'artist', 'year', 'thumbnail' ]
+			},
+			'method': 'AudioLibrary.GetAlbums',
+			'cache': true,
+			'filter': { 'artistid': artistid }
 		})
+		.then(result => result.albums.map(album => {
+			album.link = '#page=Album&albumid=' + album.albumid
+			album.thumbnail = album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : 'img/icons/default/DefaultAudio.png'
+			album.thumbnailWidth = '50px'
+
+			album.play = function () {
+				xbmc.Play({ 'albumid': album.albumid }, 0)
+			}
+
+			return album;
+		}))
 
 		Promise.all([ getArtistDetails, getAlbums ])      //wait for the above to finish
-			.then( ( [ page, items ] ) => { //create the page
-				page.items = items
-				return page
-			})
-			.then(resolve)
+		.then( ( [ page, items ] ) => { //create the page
+			page.items = items
+			return page
+		})
+		.then(resolve)
 	}
 }));
 
@@ -108,8 +130,14 @@ pages.add(new Page({
 
 		let albumid = +getHash('albumid')
 
-		let getAlbumDetails = xbmc.GetAlbumDetails({ 'albumid': albumid })
-		.then(data => data.albumdetails || {})
+		let getAlbumDetails = xbmc.get({
+			'method': 'AudioLibrary.GetAlbumDetails',
+			'params': {
+				'properties': [ 'title', 'artist', 'genre', 'albumlabel', 'year', 'fanart', 'thumbnail' ],
+				'albumid': albumid
+			}
+		})
+		.then(result => result.albumdetails)
 		.then(albumdetails => { //format album details
 			if (albumdetails.thumbnail) albumdetails.thumbnail = xbmc.vfs2uri(albumdetails.thumbnail)
 			if (albumdetails.fanart) albumdetails.fanart = xbmc.vfs2uri(albumdetails.fanart)
@@ -120,27 +148,28 @@ pages.add(new Page({
 			return albumdetails
 		})
 
-		let getSongs = xbmc.GetSongs({ 'filter': { 'albumid': albumid } })
-		.then(data => data.songs || [])
-		.then(songs => { //format songs
-
-			return songs.map(song => {
-				song.thumbnail = undefined
-				song.thumbnailWidth = '50px'
-				if (song.track <= 10000) song.number = song.track
-				if (song.duration) song.details = seconds2shortstring(song.duration)
-				if (song.file) song.play = () => xbmc.Play({ 'albumid': albumid }, 0, song.track-1)
-				return song
-			})
-
-		});
+		let getSongs = xbmc.get({
+			'method': 'AudioLibrary.GetSongs',
+			'params': {
+				'properties': [ 'file', 'title', 'track', 'duration' ],
+				'filter': { 'albumid': albumid }
+			}
+		})
+		.then(result => result.songs.map(song => {
+			song.thumbnail = undefined
+			song.thumbnailWidth = '50px'
+			if (song.track <= 10000) song.number = song.track
+			if (song.duration) song.details = seconds2shortstring(song.duration)
+			if (song.file) song.play = () => xbmc.Play({ 'albumid': albumid }, 0, song.track-1)
+			return song
+		}));
 
 		Promise.all([ getAlbumDetails, getSongs ])      //wait for the above to finish
-			.then( ( [ page, items ] ) => { //create the page
-				page.items = items
-				return page
-			})
-			.then(resolve)
+		.then( ( [ page, items ] ) => { //create the page
+			page.items = items
+			return page
+		})
+		.then(resolve)
 
 	}
 }));

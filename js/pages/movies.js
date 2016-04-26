@@ -1,3 +1,5 @@
+"use strict";
+
 pages.add(new Page({
 	'id': 'Movies',
 	'view': 'list',
@@ -11,7 +13,7 @@ pages.add(new Page({
 		xbmc.sendMessage('VideoLibrary.GetMovies', {
 			'properties': [ 'title', 'originaltitle', 'runtime', 'year', 'thumbnail', 'file', 'genre' ],
 			'sort': { method: 'sorttitle', ignorearticle: true },
-			'filter': (filter || {}).filter
+			'filter': filter.filter
 		})
 		.then(data => data.result || {})
 		.then(result => result.movies || [])
@@ -52,9 +54,15 @@ pages.add(new Page({
 
 		let movieid = +getHash('movieid')
 
-		xbmc.GetMovieDetails({ 'movieid': movieid })
-		.then(data => data.moviedetails || {})
-		.then(page => { //format movie details
+		xbmc.get({
+			'method': 'VideoLibrary.GetMovieDetails',
+			'params': {
+				'properties': [ 'title', 'genre', 'year', 'director', 'tagline', 'plot', 'runtime', 'fanart', 'thumbnail', 'writer', 'file' ],
+				'movieid': movieid
+			}
+		})
+		.then(result => { //format movie details
+			const page = result.moviedetails
 
 			if (page.year)
 				page.title += ' ('+page.year+')'

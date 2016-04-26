@@ -1,175 +1,23 @@
-let Kodi = (function () {
+const Kodi = (function () {
 	"use strict";
 
-	let extend = (object, modification) => {
+	const UPGRADETOSOCKET = true
+	const socket = { 'q': {} }
+	const events = {}
+	let server = undefined
+
+	const extend = (object, modification) => {
 		Object.keys(modification).forEach(key => {
 			object[key] = modification[key]
 		})
 		return object
 	}
 
-
-	let socket = { 'q': {} },
-		events = {},
-		server = undefined
-
-	//the map below describes the XBMC.* functions
-	//functions are added to the XBMC object
+	//the map below describes the xbmc.* functions
 	//objects are passed to makeFunction() before being added
-	let rpc = {
-		'Introspect': {
-			'method': 'JSONRPC.Introspect'
-		},
-		'Version': {
-			'method': 'JSONRPC.Version'
-		},
-		'GetAddons': {
-			'method': 'Addons.GetAddons',
-			'cache': true
-		},
-		'GetAddonDetails': {
-			'method': 'Addons.GetAddonDetails',
-			'params': { 'properties': [ 'name', 'version', 'summary', 'author', 'thumbnail', 'broken', 'enabled' ] },
-			'cache': true
-		},
-		'GetChannelGroups': {
-			'method': 'PVR.GetChannelGroups',
-			'cache': true
-		},
-		'GetChannelGroupDetails': {
-			'method': 'PVR.GetChannelGroupDetails',
-			'cache': true
-		},
-		'GetChannels': {
-			'method': 'PVR.GetChannels',
-			'params': { 'properties': [ 'thumbnail', 'hidden', 'locked', 'channel' ] },
-			'cache': true
-		},
-		'GetChannel': {
-			'method': 'PVR.GetChannelDetails',
-			'params': { 'properties': [ 'thumbnail', 'hidden', 'locked', 'channel' ] },
-			'cache': true
-		},
-		'GetTVShows': {
-			'method': 'VideoLibrary.GetTVShows',
-			'params': { 'properties': [ 'thumbnail', 'art', 'year', 'studio', 'genre' ] },
-			'cache': true
-		},
-		'GetTVShowDetails': {
-			'method': 'VideoLibrary.GetTVShowDetails',
-			'params': { 'properties': [ 'title', 'art', 'thumbnail' ] },
-			'cache': true
-		},
-		'GetTVEpisodes': {
-			'method': 'VideoLibrary.GetEpisodes',
-			'params': { 'properties': [ 'tvshowid', 'title', 'thumbnail', 'episode', 'season', 'file', 'showtitle', 'runtime', 'lastplayed' ] },
-			'cache': true
-		},
-		'GetEpisodeDetails': {
-			'method': 'VideoLibrary.GetEpisodeDetails',
-			'params': { 'properties': [ 'title', 'plot', 'writer', 'firstaired', 'playcount', 'runtime', 'director', 'season', 'episode', 'showtitle', 'cast', 'streamdetails', 'lastplayed', 'thumbnail', 'fanart', 'file', 'tvshowid' ] }
-		},
-		'GetRecentlyAddedEpisodes': {
-			'method': 'VideoLibrary.GetRecentlyAddedEpisodes',
-			'params': { 'properties': [ 'tvshowid', 'title', 'thumbnail', 'episode', 'season', 'file', 'showtitle' ], 'limits': { 'end': 5 } }
-		},
-		'GetMovies': {
-			'method': 'VideoLibrary.GetMovies',
-			'params': { "properties": [ "title", "originaltitle", "runtime", "year", "thumbnail", "file", "genre" ], "sort": { "method": "sorttitle", "ignorearticle": true } },
-			'cache': true
-		},
-		'GetMovieYears': {
-			'method': 'VideoLibrary.GetMovies',
-			'params': { "properties": [ "year" ] },
-			'cache': true
-		},
-		'GetVideoGenres': {
-			'method': 'VideoLibrary.GetGenres',
-			'cache': true
-		},
-		'GetAudioGenres': {
-			'method': 'AudioLibrary.GetGenres',
-			'cache': true
-		},
-		'GetRecentlyAddedMovies': {
-			'method': 'VideoLibrary.GetRecentlyAddedMovies',
-			'params': { "properties": [ "title", "originaltitle", "runtime", "year", "thumbnail" ], 'limits': { 'end': 5 } }
-		},
-		'GetRecentlyAddedMusicVideos': {
-			'method': 'VideoLibrary.GetRecentlyAddedMusicVideos',
-			'params': { "properties": [ "title", "runtime", "artist", "year", "thumbnail" ], 'limits': { 'end': 5 } }
-		},
-		'GetMovieDetails': {
-			'method': 'VideoLibrary.GetMovieDetails',
-			'params': { 'properties': [ 'title', 'genre', 'year', 'director', 'tagline', 'plot', 'runtime', 'fanart', 'thumbnail', 'writer', 'file' ] }
-		},
-		'GetArtists': {
-			'params': { 'properties': [ 'thumbnail', 'genre' ], 'albumartistsonly': true },
-			'method': 'AudioLibrary.GetArtists',
-			'cache': true
-		},
-		'GetArtistDetails': {
-			'params': { 'properties': [ 'thumbnail', 'genre', 'born', 'formed', 'died', 'disbanded' ] },
-			'method': 'AudioLibrary.GetArtistDetails',
-			'cache': true
-		},
-		'GetSongs': {
-			'params': { 'properties': [ 'file', 'title', 'track', 'duration' ] },
-			'method': 'AudioLibrary.GetSongs'
-		},
-		'GetRecentlyAddedAlbums': {
-			'params': { 'properties': [ 'title', 'artist', 'albumlabel', 'year', 'thumbnail' ], 'limits': { 'end': 5 } },
-			'method': 'AudioLibrary.GetRecentlyAddedAlbums'
-		},
-		'GetAlbums': {
-			'params': {
-				'properties': [ 'title', 'artist', 'year', 'thumbnail' ]
-			},
-			'method': 'AudioLibrary.GetAlbums',
-			'cache': true
-		},
-		'GetAlbumDetails': {
-			'params': { 'properties': [ 'title', 'artist', 'genre', 'albumlabel', 'year', 'fanart', 'thumbnail' ] },
-			'method': 'AudioLibrary.GetAlbumDetails'
-		},
-		'GetMusicVideos': {
-			'params': { 'properties': [ 'title', 'runtime', 'year', 'album', 'artist', 'track', 'thumbnail', 'file' ] },
-			'method': 'VideoLibrary.GetMusicVideos',
-			'cache': true
-		},
-		'GetMusicVideo': {
-			'params': { 'properties': [ 'title', 'runtime', 'year', 'album', 'artist', 'track', 'thumbnail', 'file' ] },
-			'method': 'VideoLibrary.GetMusicVideo'
-		},
-		'GetSources': {
-			'method': 'Files.GetSources',
-			'cache': true
-		},
-		'GetDirectory': {
-			'params': {
-				'properties': [ 'title', 'duration', 'originaltitle', 'thumbnail', 'file', 'size', 'mimetype' ],
-				'sort': { 'method': 'file', 'order': 'ascending' }
-			},
-			'method': 'Files.GetDirectory'
-		},
+	const rpc = {
 		'Open': {
 			'method': 'Player.Open'
-		},
-		'GetPlaylists': {
-			'method': 'Playlist.GetPlaylists'
-		},
-		'GetPlaylistItems': {
-			'method': 'Playlist.GetItems',
-			'params': { 'properties': [ 'title', 'showtitle', 'artist', 'season', 'episode', 'file', 'thumbnail', 'runtime', 'duration' ] }
-		},
-		'AddToPlaylist': {
-			'method': 'Playlist.Add'
-		},
-		'RemoveFromPlaylist': {
-			'method': 'Playlist.Remove'
-		},
-		'ClearPlaylist': {
-			'method': 'Playlist.Clear'
 		},
 		'GetActivePlayer': {
 			'method': 'Player.GetActivePlayers',
@@ -185,108 +33,49 @@ let Kodi = (function () {
 				callback(players[0].playerid); //run callback with the id of the active player
 			}
 		},
-		'GetPlayerProperties': {
-			'method': 'Player.GetProperties',
-			'params': { 'properties': [ 'time', 'totaltime', 'speed', 'playlistid', 'position', 'repeat', 'type', 'partymode', 'shuffled', 'live' ] }
-		},
 		'GetActivePlayerProperties': () => new Promise((resolve, reject) => {
 			pub.GetActivePlayer()
 			.then(player => {
 				if (!player)
 					resolve()
 				else
-					pub.GetPlayerProperties({ 'playerid': player.playerid })
+					pub.get({
+						'method': 'Player.GetProperties',
+						'params': {
+							'properties': [ 'time', 'totaltime', 'speed', 'playlistid', 'position', 'repeat', 'type', 'partymode', 'shuffled', 'live' ],
+							'playerid': player.playerid
+						}
+					})
 					.then(resolve).catch(reject)
 			})
 		}),
-		'PlayPause': {
-			'requires': { 'name': 'playerid', 'value': 'GetActivePlayerID' },
-			'method': 'Player.PlayPause'
-		},
-		'Stop': {
-			'requires': { 'name': 'playerid', 'value': 'GetActivePlayerID' },
-			'method': 'Player.Stop'
-		},
 		'GoTo': {
 			'requires': { 'name': 'playerid', 'value': 'GetActivePlayerID' },
 			'method': 'Player.GoTo'
 		},
-		'GoNext': function (callback) {
-			pub.GoTo({ 'to': 'next' }, callback);
-		},
-		'GoPrevious': function (callback) {
-			pub.GoTo({ 'to': 'previous' }, callback);
-		},
-		'Play': (o, playlistid, position) => 
-			pub.ClearPlaylist({ 'playlistid': playlistid })
-			.then(data => pub.AddToPlaylist({ 'playlistid': playlistid, 'item': typeof o === 'string' ? { 'file': o } : o }))
-			.then(data => pub.Open({ 'item': { 'playlistid': playlistid, 'position': position||0 } })),
 		'Seek': {
 			'requires': { 'name': 'playerid', 'value': 'GetActivePlayerID' },
 			'method': 'Player.Seek'
 		},
-		'Volume': {
-			'method': 'Application.SetVolume'
-		},
-		'GetApplicationProperties': {
-			'params': { 'properties': [ 'volume', 'muted', 'name' ] },
-			'method': 'Application.GetProperties'
-		},
-		'SendText': {
-			'method': 'Input.SendText'
-		},
-		'ExecuteAction': {
-			'method': 'Input.ExecuteAction'
-		},
-		'Action': function (action, callback) {
-			pub.ExecuteAction({ 'action': action }, callback);
-		},
-		'Down': {
-			'method': 'Input.Down'
-		},
-		'Up': {
-			'method': 'Input.Up'
-		},
-		'Left': {
-			'method': 'Input.Left'
-		},
-		'Right': {
-			'method': 'Input.Right'
-		},
-		'Back': {
-			'method': 'Input.Back'
-		},
-		'Home': {
-			'method': 'Input.Home'
-		},
-		'Select': {
-			'method': 'Input.Select'
-		},
-		'Info': {
-			'method': 'Input.Info'
-		},
-		'ContextMenu': {
-			'method': 'Input.ContextMenu'
-		},
-		'GetGUIProperties': {
-			'params': { 'properties': [ "currentwindow", "currentcontrol", "skin", "fullscreen" ] },
-			'method': 'GUI.GetProperties'
-		},
-		'GetGUIPropertiesFullscreen': {
-			'params': { 'properties': [ "fullscreen" ] },
-			'method': 'GUI.GetProperties'
-		},
-		'ToggleFullscreen': function (callback) {
-			pub.GetGUIPropertiesFullscreen(function (properties) {
-				pub.Fullscreen( { 'fullscreen': !properties.fullscreen }, callback );
-			});
-		},
-		'Fullscreen': {
-			'method': 'GUI.SetFullscreen'
-		},
-		'Eject': {
-			'method': 'System.EjectOpticalDrive'
-		}
+		'Play': (o, playlistid, position) => 
+			pub.get({
+				method: 'Playlist.Clear',
+				params: { 'playlistid': playlistid }
+			})
+			.then(result => pub.get({
+				method: 'Playlist.Add',
+				params: {
+					'playlistid': playlistid,
+					'item': typeof o === 'string' ? { 'file': o } : o
+				}
+			}))
+			.then(result => pub.get({
+				'method': 'Player.Open',
+				'params': {
+					'item': { 'playlistid': playlistid, 'position': position||0 }
+				}
+			}))
+
 	};
 	
 	
@@ -296,10 +85,10 @@ let Kodi = (function () {
 	//parseURL( '/', function () { this.protocol = 'https'; this.port = 8080; } );
 	//parseURL( '/', [ { 'protocol': 'https' }, function () { this.port = '8080'; } ] );
 	
-	let parseURL = function (url, m) {
+	const parseURL = function (url, m) {
 		let temp = document.createElement('a');
 		temp.href = url || '/';
-		let modifyObject = function (object, modifications) {
+		const modifyObject = function (object, modifications) {
 			if (!(modifications instanceof Array)) modifications = [modifications];
 			modifications.forEach(modification => {
 				if (modification instanceof Function) modification.apply(object);
@@ -307,7 +96,6 @@ let Kodi = (function () {
 				else Object.keys(modification).forEach(key => {
 					object[key] = modification[key]
 				})
-
 			});
 			return object;
 		};
@@ -316,7 +104,7 @@ let Kodi = (function () {
 	};
 
 	//like Array.some but returns the value of the function instead of true/false
-	let first_ = func => array => {
+	const first_ = func => array => {
 		let out = undefined
 		Array.prototype.some.call(array, (elem, i) => {
 			const value = func(elem, i)
@@ -329,7 +117,7 @@ let Kodi = (function () {
 	}
 
 	//public functions
-	let pub = {
+	const pub = {
 		'vfs2uri': (function () { //converts xbmc virtual filesystem paths to URIs
 			let self, vfsurl = parseURL('/',{'protocol':'http'});
 			self = function (vfs) {
@@ -343,7 +131,7 @@ let Kodi = (function () {
 		})(),
 		'makeFilter': first_(filter => {
 			let value = getHash(filter.key)
-			if (value === undefined) return
+			if (value === undefined) return {}
 
 			let out = {
 				'filter': {},
@@ -368,7 +156,35 @@ let Kodi = (function () {
 			self.set = function (t) { transport = t }
 			return self
 		})(),
-		'sendMessage': ((method, params) => server.sendMessage(method, params))
+		'sendMessageCached': (() => {
+			const messageCache = new Map()
+			return o => {
+				if (o.cache === true) {
+					const cacheResult = messageCache.get(o.params)
+					if (cacheResult)
+						return Promise.resolve(cacheResult)
+					return server.sendMessage(o.method, o.params).then(data => {
+						messageCache.set(o, data)
+						return data
+					})
+				}
+				else {
+					return server.sendMessage(o.method, o.params)
+				}
+			}
+		})(),
+		// get({ method: String, params: Object, cache: Boolean })
+		// returns Promise<Object>
+		'get': (o => {
+			return pub.sendMessageCached(o).then(data => {
+				if (data.result !== undefined)
+					return data.result
+				else
+					throw data.error
+			})
+
+		}),
+		'sendMessage': ((method, params) => server.sendMessage(method, params)) //simple version of the above without caching
 	};
 
 
@@ -473,7 +289,7 @@ let Kodi = (function () {
 				if (data.result && data.result.version) {
 					if (DEBUG) console.log('XBMC: Connected: API Version ', data.result.version)
 					pub.version.set(data.result.version.major || data.result.version || undefined)
-					if (pub.version() >= 5) upgradeToSocket(wsURL)
+					if (pub.version() >= 5 && UPGRADETOSOCKET) upgradeToSocket(wsURL)
 					resolve(pub)
 				} else {
 					if (DEBUG) console.log('XBMC: Connection failure: Invalid version received', data.error)

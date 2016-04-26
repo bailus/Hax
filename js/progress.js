@@ -29,7 +29,7 @@ var Progress = function (update) {
 	pub = {
 		start: function (totaltime, time) {
 			if (totaltime) pub.update(totaltime, time);
-			else unpause();
+			else pub.unpause();
 		},
 		pause: function () {
 			if (!paused) {

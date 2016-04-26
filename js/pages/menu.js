@@ -1,3 +1,4 @@
+"use strict";
 
 pages.add(new Page({
 	'id': 'Home',
@@ -10,6 +11,7 @@ pages.add(new Page({
 			{ 'label': 'Music', 'link': '#page=Menu&media=Music', 'thumbnail': 'img/icons/home/music.png' },
 			{ 'label': 'Radio', 'link': '#page=Live&media=Radio', 'thumbnail':'img/icons/home/radio.png' },
 			{ 'label': 'Live TV', 'link': '#page=Live&media=TV', 'thumbnail':'img/icons/home/livetv.png' },
+			{ 'label': 'Music Videos', 'link': '#page=Menu&media=Music Videos', 'thumbnail':'img/icons/default/DefaultMusicVideos.png' },
 			{ 'label': 'Pictures', 'link': '#page=Menu&media=Pictures', 'thumbnail': 'img/icons/home/pictures.png' },
 			{ 'label': 'Playlists', 'link': '#page=Playlists', 'thumbnail':'img/icons/home/playlists.png' },
 			{ 'label': 'Addons', 'link':'#page=Addons', 'thumbnail':'img/icons/home/addons.png' }
@@ -174,12 +176,14 @@ pages.add(new Page({
 
 		let getGenres = undefined
 		if (videoType !== undefined)
-			getGenres = xbmc.GetVideoGenres({ 'type': videoType })
+			getGenres = xbmc.sendMessage('VideoLibrary.GetGenres', { 'type': videoType })
+			//getGenres = xbmc.GetVideoGenres({ 'type': videoType })
 		if (audioType !== undefined)
-			getGenres = xbmc.GetAudioGenres()
+			getGenres = xbmc.sendMessage('AudioLibrary.GetGenres')
+			//getGenres = xbmc.GetAudioGenres()
 		
 		if (getGenres !== undefined) getGenres
-		.then(data => data.genres || [])
+		.then(data => (data.result || {}).genres || [])
 		.then(genres => genres.map(genre => ({ 'label': genre.label, 'link': '#page=' + type + '&genre=' + genre.label })))
 		.then(items => ({
 			title: type,

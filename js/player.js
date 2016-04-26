@@ -1,5 +1,6 @@
+"use strict";
+
 var player = (function () {
-	"use strict";
 
 	let progress = undefined
 
@@ -18,22 +19,24 @@ var player = (function () {
 	function renderPlayer(player) {
 		var slider, volume, data
 		
+		const actionHref = action => "javascript: (() => { xbmc.get({ 'method': 'Input.ExecuteAction', 'params': { 'action': '"+action+"' } }) } )()"
+
 		//construct data
 		data = {
 			'buttons': [
-				{ 'text': 'Previous', 'class':'GoPrevious', 'onclick':function () { xbmc.GoPrevious(); } },
-				{ 'text': 'Play / Pause', 'class': 'PlayPause', 'onclick': function () { xbmc.PlayPause(); } },
-				{ 'text': 'Stop', 'class':'Stop', 'onclick':function () { xbmc.Stop(); } },
-				{ 'text': 'Next', 'class':'GoNext', 'onclick':function () { xbmc.GoNext(); } },
-				{ 'text': 'Up', 'class':'up', 'onclick':function () { xbmc.Up(); } },
-				{ 'text': 'Down', 'class':'down', 'onclick':function () { xbmc.Down(); } },
-				{ 'text': 'Left', 'class':'left', 'onclick':function () { xbmc.Left(); } },
-				{ 'text': 'Right', 'class':'right', 'onclick':function () { xbmc.Right(); } },
-				{ 'text': 'Select', 'class':'select', 'onclick':function () { xbmc.Select(); } },
-				{ 'text': 'Back', 'class':'back', 'onclick':function () { xbmc.Back(); } },
-				{ 'text': 'Information', 'class':'info', 'onclick':function () { xbmc.Info(); } },
-				{ 'text': 'Menu', 'class':'menu', 'onclick':function () { xbmc.ContextMenu(); } },
-				{ 'text': 'Home', 'class':'home', 'onclick':function () { xbmc.Home(); } }
+				{ 'text': 'Previous', 'class':'GoPrevious', 'href': actionHref('skipprevious') },
+				{ 'text': 'Next', 'class':'GoNext', 	'href': actionHref('skipnext') },
+				{ 'text': 'Play / Pause', 'class': 'PlayPause', 'href': actionHref('playpause') },
+				{ 'text': 'Stop', 'class':'Stop', 		'href': actionHref('stop') },
+				{ 'text': 'Up', 'class':'up', 			'href': actionHref('up') },
+				{ 'text': 'Down', 'class':'down', 		'href': actionHref('down') },
+				{ 'text': 'Left', 'class':'left', 		'href': actionHref('left') },
+				{ 'text': 'Right', 'class':'right', 	'href': actionHref('right') },
+				{ 'text': 'Select', 'class':'select', 	'href': actionHref('select') },
+				{ 'text': 'Back', 'class':'back', 		'href': actionHref('back') },
+				{ 'text': 'Information', 'class':'info','href': actionHref('info') },
+				{ 'text': 'Menu', 'class':'menu', 		'href': actionHref('contextmenu') },
+				{ 'text': 'Home', 'class':'home', 		'href': actionHref('home') },
 			],
 			'hideNavigation': true
 		}
@@ -84,7 +87,13 @@ var player = (function () {
 	let onNotification = {
 		'Player.OnPlay': function (data) {
 			document.body.setAttribute('data-status','playing');
-			xbmc.GetPlayerProperties({ 'playerid': data.data.player.playerid })
+			xbmc.get({
+				'method': 'Player.GetProperties',
+				'params': {
+					'properties': [ 'time', 'totaltime', 'speed', 'playlistid', 'position', 'repeat', 'type', 'partymode', 'shuffled', 'live' ],
+					'playerid': data.data.player.playerid
+				}
+			})
 			.then(player => {
 				progress.start(timeObjToSeconds(player.totaltime), timeObjToSeconds(player.time))
 			})
@@ -138,7 +147,13 @@ var player = (function () {
 			var cancel = false
 			if (player && player.playlistid !== undefined && player.position !== undefined) {
 				if (!player.playlistid) player.playlistid = 0
-				xbmc.GetPlaylistItems({ 'playlistid': player.playlistid })
+				xbmc.get({
+					'method': 'Playlist.GetItems',
+					'params': {
+						'properties': [ 'title', 'showtitle', 'artist', 'season', 'episode', 'file', 'thumbnail', 'runtime', 'duration' ],
+						'playlistid': player.playlistid
+					}
+				})
 				.then(function (playlist) {
 					if (!playlist.items) return
 					var item = playlist.items[player.position]

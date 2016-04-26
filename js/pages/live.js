@@ -1,3 +1,5 @@
+"use strict";
+
 pages.add(new Page({
 	'id': 'Live',
 	'view': 'list',
@@ -9,13 +11,16 @@ pages.add(new Page({
 		else media = [ media ]
 
 		Promise.all(media.map(type => {
-
-			return xbmc.GetChannelGroups({ 'channeltype': type.toLowerCase() })
-			.then(result => result.channelgroups || [])
-			.then(channelgroups => channelgroups.map(g => {
+			return xbmc.get({
+				'method': 'PVR.GetChannelGroups',
+				'params': { 'channeltype': type.toLowerCase() },
+				'cache': true
+			})
+			.then(result => result.channelgroups.map(g => {
 				g.link = '#page=Channels&id='+g.channelgroupid
 				return g
 			}))
+			.catch(() => [])
 			.then(items => ({
 				label: type,
 				items: items

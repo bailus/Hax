@@ -1,16 +1,21 @@
+"use strict";
+
 pages.add(new Page({
 	'id': 'Music Videos',
 	'view': 'list',
 	'groupby': 'artist',
 	'data': (resolve, reject) => {
 
-		let page = { title: 'Music Videos' }
-		
-		xbmc.GetMusicVideos()
-		.then(data => data.musicvideos || [])
-		.then(musicvideos => ({
+		xbmc.get({
+			'params': {
+				'properties': [ 'title', 'runtime', 'year', 'album', 'artist', 'track', 'thumbnail', 'file' ]
+			},
+			'method': 'VideoLibrary.GetMusicVideos',
+			'cache': true
+		})
+		.then(result => ({
 			title: 'Music Videos',
-			items: musicvideos.map((mv) => {
+			items: result.musicvideos.map((mv) => {
 				mv.artist = mv.artist.join(', ')
 				mv.label = mv.title
 				mv.details = (mv.album ? mv.album+(mv.year ? ' ('+mv.year+')' : '') : '')

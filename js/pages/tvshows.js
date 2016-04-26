@@ -1,4 +1,4 @@
-
+"use strict";
 
 pages.add(new Page({
 	'id': 'TV Shows',
@@ -39,7 +39,14 @@ pages.add(new Page({
 	'data': (resolve, reject) => {
 		let tvshowid = +getHash('tvshowid')
 
-		let getShowDetails = xbmc.GetTVShowDetails({ 'tvshowid': tvshowid })
+		let getShowDetails = xbmc.get({
+			'method': 'VideoLibrary.GetTVShowDetails',
+			'params': {
+				'properties': [ 'title', 'art', 'thumbnail' ],
+				'tvshowid': tvshowid
+			},
+			'cache': true
+		})
 		.then(data => data.tvshowdetails || {})
 		.then(details => {  //format show details
 			if (details.art) details.banner = xbmc.vfs2uri(details.art.banner);

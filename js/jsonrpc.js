@@ -1,3 +1,4 @@
+"use strict";
 /*
 JSON-RPC v2.0 javascript client.
 Supports websocket and ajax (http) transports.
@@ -32,8 +33,7 @@ events: (websocket only)
 		Runs the function when the websocket disconnects.
 	
 */
-let JSONRPC = ((window, undefined) => {
-	"use strict";
+const JSONRPC = ((window, undefined) => {
 
 	const $ = {  //dummy jQuery object TODO: get rid of this
 		extend: (a, b) => {
@@ -138,7 +138,6 @@ let JSONRPC = ((window, undefined) => {
 	JSONRPC.ajax = function (url) {
 
 		function send (message) {
-
 			return fetch(new Request(url, {
 				method: 'POST',
 				headers: new Headers({

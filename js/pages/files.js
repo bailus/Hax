@@ -1,4 +1,4 @@
-
+"use strict";
 
 pages.add(new Page({
 	'id': 'Files',
@@ -15,7 +15,11 @@ pages.add(new Page({
 
 		if (media) types = types.filter(type => type.label == media);
 
-		Promise.all(types.map(type => xbmc.GetSources({ 'media': type.media })))
+		Promise.all(types.map(type => xbmc.get({
+			'method': 'Files.GetSources',
+			'params': { 'media': type.media },
+			'cache': true
+		})))
 		.then(datas => datas.map(data => data.sources || []))
 		.then(datas => datas.map(sources => sources.map(source => {
 			source.link = '#page=Directory&directory=' + encodeURIComponent(source.file) + '&media=' + source.media

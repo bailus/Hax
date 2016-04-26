@@ -1,3 +1,5 @@
+"use strict";
+
 pages.add(new Page({
 	'id': 'Actors',
 	'view': 'list',
