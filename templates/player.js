@@ -20,10 +20,28 @@ template.player = JsonML.BST(
 	[
 		"div",
 		{
+			"class": "imageBox"
+		},
+		[
+			"img",
+			{
+				"class": "thumbnail"
+			}
+		]
+	],
+	"\n",
+	[
+		"div",
+		{
+			"class": "details"
+		}
+	],
+	"\n",
+	[
+		"div",
+		{
 			"class": "player"
 		},
-		" ",
-		""/* <progress max="1000"></progress> */,
 		" ",
 		[
 			"div",

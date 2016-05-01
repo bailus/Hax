@@ -18,26 +18,31 @@ var player = (function () {
 
 	function renderPlayer(player) {
 		var slider, volume, data
-		
-		const actionHref = action => "javascript: (() => { xbmc.get({ 'method': 'Input.ExecuteAction', 'params': { 'action': '"+action+"' } }) } )()"
 
 		//construct data
 		data = {
-			'buttons': [
-				{ 'text': 'Previous', 'class':'GoPrevious', 'href': actionHref('skipprevious') },
-				{ 'text': 'Next', 'class':'GoNext', 	'href': actionHref('skipnext') },
-				{ 'text': 'Play / Pause', 'class': 'PlayPause', 'href': actionHref('playpause') },
-				{ 'text': 'Stop', 'class':'Stop', 		'href': actionHref('stop') },
-				{ 'text': 'Up', 'class':'up', 			'href': actionHref('up') },
-				{ 'text': 'Down', 'class':'down', 		'href': actionHref('down') },
-				{ 'text': 'Left', 'class':'left', 		'href': actionHref('left') },
-				{ 'text': 'Right', 'class':'right', 	'href': actionHref('right') },
-				{ 'text': 'Select', 'class':'select', 	'href': actionHref('select') },
-				{ 'text': 'Back', 'class':'back', 		'href': actionHref('back') },
-				{ 'text': 'Information', 'class':'info','href': actionHref('info') },
-				{ 'text': 'Menu', 'class':'menu', 		'href': actionHref('contextmenu') },
-				{ 'text': 'Home', 'class':'home', 		'href': actionHref('home') },
-			],
+			'buttons': ([
+				{ 'text': 'Previous',		'action': 'skipprevious' },
+				{ 'text': 'Play / Pause',	'action': 'playpause' },
+				{ 'text': 'Stop', 			'action':'stop' },
+				{ 'text': 'Next',			'action':'skipnext' },
+				{ 'text': 'Up',				'action':'up' },
+				{ 'text': 'Down',			'action':'down' },
+				{ 'text': 'Left',			'action':'left' },
+				{ 'text': 'Right',			'action':'right' },
+				{ 'text': 'Select',			'action':'select' },
+				{ 'text': 'Back',			'action':'back' },
+				{ 'text': 'Information',	'action':'info' },
+				{ 'text': 'Menu',			'action':'contextmenu' },
+				{ 'text': 'Home',			'action':'previousmenu' },
+				//{ 'text': 'Mute',			'action':'mute' },
+				//{ 'text': 'Volume Down',	'action':'volumedown' },
+				//{ 'text': 'Volume Up',		'action':'volumeup' }
+			]).map(o => ({
+				'text': o.text,
+				'class': o.action,
+				'href': "javascript: (() => { xbmc.get({ 'method': 'Input.ExecuteAction', 'params': { 'action': '"+o.action+"' } }) } )()"
+			})),
 			'hideNavigation': true
 		}
 		
@@ -107,37 +112,52 @@ var player = (function () {
 			progress.stop()
 		},
 		'Player.OnSeek': function (data) {
-			xbmc.GetPlayerProperties({ 'playerid': data.data.player.playerid }, function (player) {
-				progress.update(timeObjToSeconds(player.totaltime), timeObjToSeconds(data.data.player.time))
-			})
+			const player = data.data.player
+			progress.update(progress.getTotaltime(), timeObjToSeconds(player.time))
 		}
 	}
+
+	let playerStatus = 'stopped'
 	
 	function tick() {
 		let progressElem = document.getElementById('progress')
 		let statusElem = progressElem.querySelector('.status')
+		let thumbnailElem = document.querySelector('#player .thumbnail')
+		let detailsElem = document.querySelector('#player .details')
 
 		let player = {}
 
 		new Promise((resolve, reject) => {
 			var cancel = false
 			xbmc.GetActivePlayerProperties()
+			.then(x =>  new Promise(resolve => window.requestAnimationFrame(() => resolve(x))))
 			.then(p => {
+				
 				if (cancel) return
 				player = p
 				if (player) {
 					progress.update(timeObjToSeconds(player.totaltime), timeObjToSeconds(player.time))
 					if (player.speed > 0) {
-						progress.unpause()
-						document.body.setAttribute('data-status','playing')
-					} else if (player.speed === 0) {
-						progress.pause()
-						document.body.setAttribute('data-status','paused')
+						if (playerStatus !== 'playing') {
+							progress.unpause()
+							playerStatus = 'playing'
+							document.body.setAttribute('data-status','playing')
+						}
+					} else if (player.speed !== 0) {
+						if (playerStatus !== 'paused') {
+							progress.pause('paused')
+							playerStatus = 'paused'
+							document.body.setAttribute('data-status','paused')
+						}
 					}
 				} else {
-					document.body.setAttribute('data-status','stopped')
-					statusElem.innerHTML = ''
-					progress.stop()
+					if (playerStatus !== 'stopped') {
+						progress.stop()
+						playerStatus = 'stopped'
+						document.body.setAttribute('data-status','stopped')
+
+						statusElem.innerHTML = ''
+					}
 				}
 				window.setTimeout(resolve, 1e3)
 			})
@@ -146,23 +166,45 @@ var player = (function () {
 		.then(() => new Promise((resolve, reject) => {
 			var cancel = false
 			if (player && player.playlistid !== undefined && player.position !== undefined) {
-				if (!player.playlistid) player.playlistid = 0
 				xbmc.get({
 					'method': 'Playlist.GetItems',
 					'params': {
-						'properties': [ 'title', 'showtitle', 'artist', 'season', 'episode', 'file', 'thumbnail', 'runtime', 'duration' ],
+						'properties': [ 'title', 'art', 'tagline', 'showtitle', 'album', 'artist', 'season', 'episode', 'file', 'thumbnail', 'runtime', 'duration' ],
 						'playlistid': player.playlistid
 					}
 				})
+				.then(x =>  new Promise(resolve => window.requestAnimationFrame(() => resolve(x))))
 				.then(function (playlist) {
+
 					if (!playlist.items) return
+
 					var item = playlist.items[player.position]
-					//console.log('Current Playlist Item: ', item)
-					if (item) statusElem.innerHTML = ''+
-						(item.showtitle ? item.showtitle+' ' : '')+
-						(item.season>=0 && item.episode>=0 ? item.season+'x'+item.episode+' ' : '')+
-						(item.artist && item.artist.length ? item.artist.join(', ')+' - ' : '')+
-						(item.title||item.label)
+console.log(item)
+					if (item) {
+						if (item.art !== undefined)
+							thumbnailElem.src = xbmc.vfs2uri(
+								item.art['tvshow.poster'] ||
+								item.art['season.poster'] ||
+								item.art['tvshow.fanart'] ||
+								item.art['album.thumb'] ||
+								item.art.poster ||
+								item.art.thumb ||
+								item.art.fanart)
+
+						statusElem.innerHTML = ''+
+							(item.showtitle ? item.showtitle+' ' : '')+
+							(item.season>=0 && item.episode>=0 ? item.season+'x'+item.episode+' ' : '')+
+							(item.artist && item.artist.length ? item.artist.join(', ')+' - '+(item.album || '') : '')+
+							(item.title||item.label)
+
+						detailsElem.innerHTML = ''+
+							'<h1>'+(item.title || item.file)+'</h1>'+
+							'<h2>'+(
+								(item.showtitle ? item.showtitle+(item.season>=0 && item.episode>=0 ? item.season+'x'+item.episode+' ' : '') : '') ||
+								(item.artist && item.artist.length ? item.artist.join(', ')+' - '+(item.album || '') : '') ||
+								(item.tagline ? '<p>'+item.tagline+'</p>' : '')
+							)+'</h2>'
+					}
 					else statusElem.innerHTML = ''
 
 					window.setTimeout(resolve, 1e3)
@@ -172,6 +214,7 @@ var player = (function () {
 			}
 			window.setTimeout(resolve, 3e3)
 		}))
+		.catch(tick)
 		.then(tick)
 	}
 	

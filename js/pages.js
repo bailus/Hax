@@ -14,14 +14,32 @@ const pages = (() => {
 		return pages.get(id)
 	}
 
+	const scrollStack = new Map()
+	let previousPageUrl = undefined
+
 	//render the current page
 	pub.renderPage = () => {
+		const state = getHashMap()
+		const url = hashMapToURL(state)
 
 		//find the page to render
-		let title = (getHash('page') || '').replace('%20',' ') //some browsers replace spaces with %20
-		let page = pub.getById(title) || pub.getById(DEFAULT_PAGE)
+		const title = (state.get('page') || '').replace('%20',' ') //some browsers replace spaces with %20
+		const page = pub.getById(title) || pub.getById(DEFAULT_PAGE)
 
-		if (page) page.render()
+		if (!page) return Promise.reject()
+
+		return Promise.resolve()
+		.then(() => {
+			//store the scroll position of the previous page
+			if (previousPageUrl !== undefined)
+				scrollStack.set(''+previousPageUrl, document.documentElement.scrollTop || document.body.scrollTop)
+			previousPageUrl = ''+url
+		})
+		.then(() => new Promise(resolve => window.requestAnimationFrame(resolve)))
+		.then(() => page.render(state))
+		.then(() => ready())
+		.then(() => new Promise(resolve => window.requestAnimationFrame(resolve)))
+		.then(() => { window.scroll(0, scrollStack.get(url) || 0) })
 
 	}
 
@@ -35,7 +53,7 @@ const pages = (() => {
 })()
 
 function minutes2string (t) {
-	let hours = Math.floor(t/60),
+	const hours = Math.floor(t/60),
 	    mins  = Math.floor(t%60),
 	    out = []
 	if (hours > 0) out.push(hours + ' hour' + (hours > 1 ? 's' : ''))
@@ -56,15 +74,13 @@ function seconds2shortstring (t) {
 }
 
 function ymd2string (ymd) {
-	let x = ymd.split(' ')[0].split('-')
+	const x = ymd.split(' ')[0].split('-')
 	return [
 		['January','February','March','April','May','June','July','August','September','October','November','December'][x[1]-1], 
 		+x[2]+((/1[1-3]$/).test(x[2]) ? 'th' : (/1$/).test(x[2]) ? 'st' : (/2$/).test(x[2]) ? 'nd' : (/3$/).test(x[2]) ? 'rd' : 'th')+',',
 		x[0]
 	].join(' ')
 }
-
-
 
 class Page {
 	
@@ -75,11 +91,42 @@ class Page {
             	this[attr] = obj[attr];
 	}
 
-	render() {
+	crumbs(state) {
+		if (this.parentState === undefined)
+			return []
+
+		const parentState = this.parentState(state)
+		const parentPage = pages.getById(parentState.get('page'))
+		const crumbs = parentPage.crumbs(parentState)
+		if (parentPage.icon) crumbs.push({
+			'label': parentPage['id'],
+			'icon': parentPage.icon(parentState),
+			'link': hashMapToURL(parentState)
+		})
+		return crumbs
+	}
+
+	render(state) {
 		let $loading = document.getElementById('loading')
 		$loading.className = ''
 
-		new Promise(this.data)   //get the page data, this.data should be an async function that returns the page data
+		const page = this
+
+		return page.data(state)   //get the page data
+		.catch(error => {
+			const e = 'PAGE DATA: '+error
+			console.error(e, state)
+			throw e
+		})
+		.then(data => {
+			data.crumbs = page.crumbs(state)
+			data.crumbs.push({
+				'icon': page.icon ? page.icon(state) : undefined,
+				'label': data.pageName || page.name || page.id,
+				'link': hashMapToURL(state)
+			})
+			return data
+		})
 		.then(data => {
 
 				//sort and group the data
@@ -114,26 +161,40 @@ class Page {
 					})
 				}
 				
-				let groupby = getHash('group') || this.groupby
+				//if (state.get('sort') || this.sortby) data.items = sortItems(data.items, state.get('sort') || this.sortby)
 				
-				if (getHash('sort') || this.sortby) data.items = sortItems(data.items, getHash('sort') || this.sortby)
-
-				if (groupby) {
+				const groupbyKey = state.get('group') || this.groupby
+				const groupbyValue = state.get(groupbyKey)
+				if (groupbyKey) {
 					let size = data.items.length
-					data.groupby = groupby
-					data.items = sortItems(groupItems(data.items, groupby), 'label')
-					if (getHash(groupby)) data.items = data.items.filter(function (x) {
-						return x.label === getHash(groupby)
-					})
-					else if (size > 100) {
-						data.collapsed = true
-						data.items = data.items.map(function (x) {
+					const showItems = !(!groupbyValue && size > GROUPING_THRESHOLD)
+
+					//sort and group the items
+					data.items = sortItems(groupItems(data.items, groupbyKey), 'label')
+
+					//create groups
+					if (size > GROUPING_THRESHOLD)
+						data.groups = data.items.map(x => {
+							const s = new Map(state)
+							s.set(groupbyKey, x.label)
 							return {
 								'label': x.label,
-								'link': document.location.hash+'&'+groupby+'='+x.label
+								'link': hashMapToURL(s),
+								'selected': x.label === groupbyValue
 							}
 						})
-					}
+
+					//filter
+					if (groupbyValue)
+						data.items = data.items.filter(x => x.label === groupbyValue)
+
+					//don't show the full list
+					if (!showItems)
+						data.items = undefined
+
+					if (showItems && data.groups && data.groups.length > 40)
+						data.groups = []
+
 				}
 
 				return data
@@ -149,18 +210,20 @@ class Page {
 			$page.setAttribute('class', 'page')
 
 			//copy key/value pairs from the URL to the data- attributes of the $page
-			window.getHashMap().forEach((value, key) => $page.setAttribute('data-'+key, value))
+			state.forEach((value, key) => $page.setAttribute('data-'+key, value))
 			$page.setAttribute('data-page', this.id) //make sure the home page has a data-page attribute
 
-			$page.appendChild(template[ getHash('view') || this.view ].bind(data))
+			$page.appendChild(template[ state.get('view') || this.view ].bind(data))
 
 			let $content = document.getElementById('content')
 			while ($content.firstChild) $content.removeChild($content.firstChild)  // $content.removeAllChildElements()
 
-			$content.appendChild($page)
-
 			let $loading = document.getElementById('loading')
 			$loading.className = 'hidden'
+
+			$content.appendChild($page)
+
+			$page
 
 		})
 

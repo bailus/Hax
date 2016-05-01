@@ -52,6 +52,9 @@ var Progress = function (update) {
 			paused = undefined;
 			duration = undefined;
 		},
+		getTotaltime: function () {
+			return duration/1e3
+		},
 		update: function (totaltime, time) {
 			var now = (new Date()).getTime();
 			var pause = paused-start;

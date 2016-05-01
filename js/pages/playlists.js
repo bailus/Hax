@@ -3,9 +3,11 @@
 pages.add(new Page({
 	'id': 'Playlists',
 	'view': 'list',
-	'data': function (resolve, reject) {
+	'icon': state => 'img/icons/home/playlists.png',
+	'parentState': state => new Map([[ 'page', 'Home' ]]),
+	'data': state => {
 		
-		xbmc.get({
+		return xbmc.get({
 			'method': 'Playlist.GetPlaylists'
 		})
 		.then(playlists => playlists.map(playlist => {
@@ -23,8 +25,8 @@ pages.add(new Page({
 					item.details = ''
 					if (item.file) item.label = item.file.split('/')[--item.file.split('/').length]
 					//if (player.playlistid === playlistid && player.position === i) item.playing = true //TODO: get the item that's currently playing
-					if (item.thumbnail) item.thumbnail = xbmc.vfs2uri(item.thumbnail)
-					if (item.runtime) item.details = minutes2string(item.runtime)
+					item.thumbnail = item.thumbnail ? xbmc.vfs2uri(item.thumbnail) : 'img/icons/default/DefaultVideo.png'
+					if (item.runtime) item.details = seconds2string(item.runtime)
 					if (item.duration) item.details = seconds2string(item.duration)
 
 					if (!item.playing) {
@@ -55,10 +57,8 @@ pages.add(new Page({
 		})).
 		then(playlistItems => Promise.all(playlistItems)).  //wait for the playlists to finish loading
 		then(playlists => ({
-			title: 'Playlists',
 			items: playlists
-		})).
-		then(resolve)
+		}))
 
 			
 	}

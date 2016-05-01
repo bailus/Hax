@@ -18,7 +18,14 @@
 				map.set(z[0], decodeURIComponent(z[1]))
 		}
 		return map
+	}
 
+	window.hashMapToURL = map => {
+		let pairs = []
+		map.forEach((value, key) => {
+			pairs.push(key + '=' + encodeURIComponent(value))
+		})
+		return '#' + pairs.join('&')
 	}
 
 	window.getHash = function(name) {

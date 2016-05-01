@@ -1,48 +1,49 @@
-#player {
-	position:fixed;
-	z-index:1000;
-	bottom:0;left:5%;
-	width:90%; height:0;
+
+#player .buttons a {
 	display:block;
-	-webkit-border-top-left-radius: 5px;
-	-webkit-border-top-right-radius: 5px;
-	-moz-border-radius-topleft: 5px;
-	-moz-border-radius-topright: 5px;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
-	font-size:14px;
-}
-#player > * {
-	display: none;
-}
-#player.visible > * {
-	display:block;
-}
-#player.visible {
-	height:auto;
-}
-#player > .show {
-	background: inherit;
-	position: absolute;
-	top: -42px;
-	height: 42px;
-	width: 80px;
-	margin-left: -40px;
-	left: 50%;
-	display:block;
-	-webkit-border-top-left-radius: 5px;
-	-webkit-border-top-right-radius: 5px;
-	-moz-border-radius-topleft: 5px;
-	-moz-border-radius-topright: 5px;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
-	background-image:url('../img/buttons/drawer_open.png');
-	background-position: center center;
+	width:100%;height:100%;
 	background-repeat: no-repeat;
+	background-position: center center;
 }
-#player.visible > .show {
-	background-image:url('../img/buttons/drawer_close.png');
+#player .buttons span {
+	display:none;
 }
+#player .buttons > li {
+	width:50px;height:50px;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+#player .buttons img { width:60px;height:60px; }
+#player .buttons > li:active {
+	background:url('../img/buttons/active.png');
+}
+#player .buttons > li:hover {
+	background:url('../img/buttons/hover.png');
+	cursor:pointer;
+}
+#player .skipprevious a { background-image:url('../img/buttons/skipprevious.png'); }
+#player .skipnext a { background-image:url('../img/buttons/skipnext.png'); }
+#player .playpause a { background-image:url('../img/buttons/play.png'); }
+body[data-status=playing] #player .playpause a { background-image:url('../img/buttons/pause.png'); }
+#player .stop a { background-image:url('../img/buttons/stop.png'); }
+
+#player .up a { background-image:url('../img/buttons/up.png'); }
+#player .down a { background-image:url('../img/buttons/down.png'); }
+#player .left a { background-image:url('../img/buttons/left.png'); }
+#player .right a { background-image:url('../img/buttons/right.png'); }
+#player .enter a,
+#player .select a { background-image:url('../img/buttons/select.png'); }
+
+#player .back a { background-image:url('../img/buttons/back.png'); }
+#player .info a { background-image:url('../img/buttons/info.png'); }
+#player .contextmenu a { background-image:url('../img/buttons/menu.png'); }
+#player .previousmenu a { background-image:url('../img/buttons/home.png'); }
+
+#player .mute a { background-image:url('../img/buttons/mute.png'); }
+#player .volumedown a { background-image:url('../img/buttons/volumedown.png'); }
+#player .volumeup a { background-image:url('../img/buttons/volumeup.png'); }
+
+
 #progress {
 	border: none;
 	height: 40px;
@@ -51,9 +52,6 @@
 	margin-top:10px;
 	margin-bottom:10px;
 	background-color: #4D4D4D;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
 	overflow:hidden;
 	position: relative;
 }
@@ -77,146 +75,177 @@
 	white-space: nowrap;
 }
 
-#player .buttons {
-	position:relative;
-	width:100%;
-	margin:0 auto;
-	text-align:center;
-}
-#player .buttons a {
-	display:block;
-	width:100%;height:100%;
-	background-repeat: no-repeat;
-	background-position: center center;
-}
-#player .buttons span {
-	display:none;
-}
-#player .buttons > li {
-	width:50px;height:50px;
-	background-repeat: no-repeat;
-	background-position: center center;
-}
-#player .buttons img { width:60px;height:60px; }
-#player .buttons > li:active {
-	background:url('../img/buttons/active.png');
-}
-#player .buttons > li:hover {
-	background:url('../img/buttons/hover.png');
-	cursor:pointer;
-}
-#player .PlayPause a { background-image:url('../img/buttons/play.png'); }
-body[data-status=playing] #player .PlayPause a { background-image:url('../img/buttons/pause.png'); }
-#player .Stop a { background-image:url('../img/buttons/stop.png'); }
-#player .GoNext a { background-image:url('../img/buttons/next.png'); }
-#player .GoPrevious a { background-image:url('../img/buttons/previous.png'); }
-#player .up a { background-image:url('../img/buttons/up.png'); }
-#player .down a { background-image:url('../img/buttons/down.png'); }
-#player .left a { background-image:url('../img/buttons/left.png'); }
-#player .right a { background-image:url('../img/buttons/right.png'); }
-#player .select a { background-image:url('../img/buttons/select.png'); }
-#player .back a { background-image:url('../img/buttons/back.png'); }
-#player .info a { background-image:url('../img/buttons/info.png'); }
-#player .menu a { background-image:url('../img/buttons/menu.png'); }
-#player .home a { background-image:url('../img/buttons/home.png'); }
 
-@media screen and (max-height: 330px) {
-	#player .buttons {
-		max-width: 400px;
-		height: 165px;
-		margin-top:10px;
-	}
-	#player .buttons > li {
-		position:absolute;
-		margin-left:-25px;margin-right:-25px;
-		text-align:center;
-	}
-	#player .buttons .menu      { top:0px;  right:30px; }
-	#player .buttons .info      { top:0px;	 left: 80px; }
-	#player .buttons .back      { top:0px;	 right:80px; }
-	#player .buttons .home{ top:0px;	 left: 30px; }
-	#player .buttons .up        { top:0px;  left: 50%;  }
-	#player .buttons .select    { top:50px; left: 50%;  }
-	#player .buttons .left      { top:50px; left: 50%; margin-left:-80px;  }
-	#player .buttons .right     { top:50px; right:50%; margin-right:-80px; }
-	#player .buttons .down      { top:100px; left: 50%;  }
-	#player .buttons .GoPrevious{ top:100px; left: 30px; }
-	#player .buttons .GoNext	{ top:100px; left: 80px; }
-	#player .buttons .PlayPause { top:100px; right:30px; }
-	#player .buttons .Stop      { top:100px; right:80px; }
-	#player.visible .show {
-		height: 42px;
-		width: 42px;
-		border-radius: 0;
-		right: 0;
-		left: auto;
-		top:10px;
-		right: 10px;
-	}
-	#progress {
-		margin-right: 60px;
-	}
-}
-@media screen and (min-height: 330px)/* and (max-width: 900px)*/  {
-	#player .buttons {
-		max-width:340px;
-		height:225px;
-	}
-	#player .buttons .info      { top:60px;	left: 30px; }
-	#player .buttons .back      { top:60px;	right:30px; }
-	#player .buttons .up        { top:60px;	left: 50%;  }
-	#player .buttons .select    { top:110px; left: 50%;  }
-	#player .buttons .left      { top:110px; left: 50%; margin-left:-80px;  }
-	#player .buttons .right     { top:110px; right:50%; margin-right:-80px; }
-	#player .buttons .down      { top:160px; left: 50%;  }
-	#player .buttons .home{ top:160px; left: 30px; }
-	#player .buttons .menu      { top:160px; right:30px; }
-	#player .info, #player .back, #player .up, #player .select, #player .left, #player .right, #player .down, #player .home, #player .menu {
-		position:absolute;
-		margin-left:-25px;margin-right:-25px;
-		text-align:center;
-	}
-	#player .PlayPause, #player .Stop, #player .GoNext, #player .GoPrevious {
-		position: static !important;
-		display:inline-block !important;
-	}
-}
-/*@media screen and (min-height: 330px) and (min-width: 900px) {
+@media screen and (min-width: 950px) {
+
 	#player {
-		border-radius: 0;
-		width: 100%; left:0;
-		height:160px;
+		background-color: black;
+		position:fixed;
+		width:350px;
+		right:0;
+		top:0;
+		bottom:0;
+		border-left:1px solid gray;
+		z-index:1000;
 	}
-	#player > * {
-		display:block;
+
+	header {
+		right: 351px;
 	}
+
+	#content {
+		position: absolute;
+		right: 351px;
+		left: 0;
+		top: 0;
+	}
+
 	#player .show {
 		display: none;
 	}
-	#player .buttons {
-		position: static;
-	}
+
 	#player .buttons > li {
-		position:absolute;
-		text-align:center;
+		display: inline-block;
 	}
 
-	#player .buttons .up        { top:5px;   left: 55px;  }
-	#player .buttons .left      { top:55px;  left: 5px;   }
-	#player .buttons .select    { top:55px;  left: 55px;  }
-	#player .buttons .right     { top:55px;  left: 105px; }
-	#player .buttons .down      { top:105px; left: 55px;  }
+	#player .player {
+		position: absolute;
+		left: 0;
+		width: 100%;
+		height: 275px;
+		bottom: 0;
+		z-index: 100;
+		background-color: black;
+	}
 
-	#player .buttons .menu      { top:105px; left: 155px; }
-	#player .buttons .info      { top:55px;  left: 205px; }
-	#player .buttons .home{ top:55px;  left: 255px; }
-	#player .buttons .back      { top:5px;   left: 155px; }
-
-	#player .buttons .GoPrevious{ top:55px; left: 355px; }
-	#player .buttons .PlayPause { top:55px; left: 405px; }
-	#player .buttons .Stop      { top:55px; left: 455px; }
-	#player .buttons .GoNext	{ top:55px; left: 505px; }
 	#progress {
-		margin-left: 205px;
+		border-left: 10px solid black;
+		border-right: 10px solid black;
 	}
-}*/
+
+	#progress .status {
+		display: none;
+	}
+
+	#player .details {
+		position: absolute;
+		padding: 0 5px;
+		bottom: 275px;
+		height: 100px;
+		left: 0;
+		right: 0;
+	}
+
+	#player .imageBox {
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 375px;
+		width: 100%;
+		text-align: center;
+	}
+
+	#player .imageBox img {
+		max-width: 100%;
+		max-height: 100%;
+	}
+
+	#player h1 {
+		margin-top:5px;
+	}
+
+}
+
+@media screen and (max-width: 949px) {
+	#player {
+		display:block;
+		position:fixed;
+		z-index:1000;
+		bottom:0;
+		background-color: #222;
+	}
+	#player {
+		left:5%;
+		width:90%; height:0;
+		font-size:14px;
+	}
+	#player > * {
+		display: none;
+	}
+	#player.visible > * {
+		display:block;
+	}
+	#player.visible {
+		height:auto;
+	}
+	#player > .show {
+		background: inherit;
+		position: absolute;
+		top: -42px;
+		height: 42px;
+		width: 80px;
+		margin-left: -40px;
+		left: 50%;
+		display:block;
+		background: url('../img/buttons/drawer_open.png') center center no-repeat;
+	}
+	#player.visible > .show {
+		background: url('../img/buttons/drawer_close.png') center center no-repeat;
+	}
+	#player .imageBox,
+	#player .details {
+		display: none;
+	}
+
+}
+
+#player .buttons {
+	max-width:300px;
+	height:225px;
+	width:100%;
+	margin:0 auto;
+	padding: 0;
+	position:relative;
+	text-align:center;
+}
+
+#player .buttons .info      { top:50px; left: 25px; }
+#player .buttons .back      { top:50px;	right: 25px; }
+#player .buttons .previousmenu		{ top:150px; left: 25px; }
+#player .buttons .contextmenu { top:150px; right: 25px; }
+
+#player .buttons .enter,
+#player .buttons .select    { top:100px; left: 50%;  }
+
+#player .buttons .left      { top:100px; left: 50%; margin-left:-75px;  }
+#player .buttons .right     { top:100px; right:50%; margin-right:-75px; }
+#player .buttons .up        { top:50px;	left: 50%;  }
+#player .buttons .down      { top:150px; left: 50%;  }
+
+#player .buttons .volumeup    { top:0; left: 25px;  }
+#player .buttons .volumedown    { top:50px; left: 25px;  }
+
+#player .info,
+#player .back,
+#player .up,
+#player .down,
+#player .left,
+#player .right,
+#player .select,
+#player .enter,
+#player .previousmenu,
+#player .contextmenu,
+#player .volumeup,
+#player .volumedown {
+	position:absolute;
+	margin-left:-25px;margin-right:-25px;
+	text-align:center;
+}
+#player .skipnext,
+#player .skipprevious,
+#player .playpause,
+#player .stop,
+#player .mute {
+	position: static !important;
+	display: inline-block !important;
+}

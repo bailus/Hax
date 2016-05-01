@@ -1,7 +1,6 @@
 const Kodi = (function () {
 	"use strict";
 
-	const UPGRADETOSOCKET = true
 	const socket = { 'q': {} }
 	const events = {}
 	let server = undefined
@@ -131,7 +130,7 @@ const Kodi = (function () {
 		})(),
 		'makeFilter': first_(filter => {
 			let value = getHash(filter.key)
-			if (value === undefined) return {}
+			if (!value) return
 
 			let out = {
 				'filter': {},
@@ -159,32 +158,28 @@ const Kodi = (function () {
 		'sendMessageCached': (() => {
 			const messageCache = new Map()
 			return o => {
-				if (o.cache === true) {
-					const cacheResult = messageCache.get(o.params)
-					if (cacheResult)
-						return Promise.resolve(cacheResult)
-					return server.sendMessage(o.method, o.params).then(data => {
-						messageCache.set(o, data)
-						return data
-					})
-				}
-				else {
-					return server.sendMessage(o.method, o.params)
-				}
+				const cacheResult = messageCache.get(JSON.stringify(o.params))
+				if (cacheResult)
+					return Promise.resolve(cacheResult)
+				return server.sendMessage(o.method, o.params).then(data => {
+					messageCache.set(JSON.stringify(o.params), data)
+					return data
+				})
 			}
 		})(),
+		'sendMessage': ((method, params) => server.sendMessage(method, params)), //simple version of the above without caching,
 		// get({ method: String, params: Object, cache: Boolean })
 		// returns Promise<Object>
 		'get': (o => {
-			return pub.sendMessageCached(o).then(data => {
-				if (data.result !== undefined)
-					return data.result
-				else
+			return ( (o.cache === true) ? pub.sendMessageCached(o) : pub.sendMessage(o.method, o.params) )
+			.then(data => {
+				if (data.result === undefined) {
+					console.error(data.error)
 					throw data.error
+				}
+				return data.result
 			})
-
-		}),
-		'sendMessage': ((method, params) => server.sendMessage(method, params)) //simple version of the above without caching
+		})
 	};
 
 

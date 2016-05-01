@@ -4,7 +4,9 @@ pages.add(new Page({
 	'id': 'Actors',
 	'view': 'list',
 	'groupby': 'alpha',
-	'data': (resolve, reject) => {
+	'icon': () => 'img/icons/default/DefaultActor.png',
+	'parentState': state => new Map([[ 'page', 'Menu' ],[ 'media', state.get('media') ]]),
+	'data': state => {
 
 		//higher order map functions (for use in promise api .then() calls)
 		const map_ = func => array => Array.prototype.map.call(array, func)
@@ -27,31 +29,33 @@ pages.add(new Page({
 			}
 		}
 
-		const mediaType = mediaTypes[getHash('media')]
+		const mediaType = mediaTypes[state.get('media')]
 		const m = mediaType ? [mediaType] :
 			Object.keys(mediaTypes).map(key => mediaTypes[key]) //mediaTypes.toArray()
 
-		Promise.all(m.map(media => {
-			return xbmc.sendMessage(media.method, {
-				'properties': [ 'cast' ]
+		return Promise.all(m.map(media => {
+			return xbmc.get({
+				method: media.method,
+				params: {
+					'properties': [ 'cast' ]
+				},
+				cache: true
 			})
-			.then(data => data.result || {})
 			.then(result => result[media.resultProperty] || [])
 			.then(flatMap_(mediaInfo => mediaInfo.cast))
 			.then(map_(actor => ({
 				label: actor.name,
 				alpha: actor.name[0].toUpperCase(),
-				link: '#page='+media.page+'&actor='+actor.name,
+				link: '#page='+media.page+'&actor='+encodeURIComponent(actor.name),
 				thumbnail: actor.thumbnail ? xbmc.vfs2uri(actor.thumbnail) : 'img/icons/default/DefaultActor.png'
 			})))
 		}))
 		.then(flatten)
 		.then(actors => ({
-			title: (mediaType && mediaType.name) || 'Actors',
-			subtitle: mediaType ? 'By Actor' : undefined,
+			pageName: !(mediaType && mediaType.name) ? 'Actors' :
+					mediaType.name + ' by Actor',
 			items: actors
 		}))
-		.then(resolve)
 
 	}
 }));

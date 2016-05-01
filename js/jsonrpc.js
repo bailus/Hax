@@ -186,7 +186,12 @@ const JSONRPC = ((window, undefined) => {
 						messages[id] = message //if its a message, save it in the message callback buffer
 					}
 
-					socket.send(JSON.stringify(message.data))
+					try {
+						socket.send(JSON.stringify(message.data))
+					} catch(e) {
+						console.error('JSONRPC.websocket: ERROR SENDING DATA: '+e, message.data)
+						throw e
+					}
 					return true
 
 				} else {
