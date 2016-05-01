@@ -179,7 +179,6 @@ var player = (function () {
 					if (!playlist.items) return
 
 					var item = playlist.items[player.position]
-console.log(item)
 					if (item) {
 						if (item.art !== undefined)
 							thumbnailElem.src = xbmc.vfs2uri(
@@ -189,7 +188,8 @@ console.log(item)
 								item.art['album.thumb'] ||
 								item.art.poster ||
 								item.art.thumb ||
-								item.art.fanart)
+								item.art.fanart ||
+								'img/icons/default/DefaultVideo.png')
 
 						statusElem.innerHTML = ''+
 							(item.showtitle ? item.showtitle+' ' : '')+

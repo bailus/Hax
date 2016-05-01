@@ -78,7 +78,7 @@ pages.add(new Page({
 					details: album.artist,
 					year: album.year,
 					link: '#page=Album&albumid='+album.albumid,
-					thumbnail: album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : 'img/icons/default/DefaultArtist.png',
+					thumbnail: album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : 'img/icons/default/DefaultAlbumCover.png',
 					play: () => { xbmc.Play({ 'albumid': album.albumid }, 0) }
 				}))
 		}))
