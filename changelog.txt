@@ -22,3 +22,4 @@ v0.3.1 - 2016-05-02
  - Tablet (large screen) mode
  - Removed mobile landscape mode
  - Added sorting options and a new path selector to the directory page
+ - Info button now brings up the OSD when Kodi is in fullscreen mode
