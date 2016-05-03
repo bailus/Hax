@@ -32,7 +32,7 @@ var player = (function () {
 				{ 'text': 'Right',			'action':'right' },
 				{ 'text': 'Select',			'action':'select' },
 				{ 'text': 'Back',			'action':'back' },
-				{ 'text': 'Information',	'action':'info' },
+				//{ 'text': 'Information',	'action':'info' },
 				{ 'text': 'Menu',			'action':'contextmenu' },
 				{ 'text': 'Home',			'action':'previousmenu' },
 				//{ 'text': 'Mute',			'action':'mute' },
@@ -45,6 +45,11 @@ var player = (function () {
 			})),
 			'hideNavigation': true
 		}
+		data.buttons.push({
+			'text': 'Information',
+			'class': 'info',
+			'href': "javascript: (() => { xbmc.get({method: 'GUI.GetProperties', params: { properties: [ 'fullscreen' ] }}).then(result => xbmc.sendMessage('Input.ExecuteAction', { action: result.fullscreen ? 'osd' : 'info' })) })()"
+		})
 		
 		//render the data to the DOM via the player template
 		while (player.firstChild) player.removeChild(player.firstChild) //remove child elements
