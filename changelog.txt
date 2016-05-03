@@ -3,7 +3,7 @@ v0.1.0 - 2016-03-06
 
 v0.1.1 - 2016-03-21
  - Bug fixes
- - Other changes - see https://sourceforge.net/p/xbmc/mailman/message/34950368/
+ - Added to Kodi add-ons repository - see https://sourceforge.net/p/xbmc/mailman/message/34950368/
 
 v0.2.0 - 2016-04-22
  - Ported from JavaScript to ES7
@@ -19,6 +19,6 @@ v0.3.0 - 2016-04-25
 v0.3.1 - 2016-05-02
  - Added music video details page
  - Added top navigation bar
- - Desktop (large screen) mode
+ - Tablet (large screen) mode
  - Removed mobile landscape mode
  - Added sorting options and a new path selector to the directory page
