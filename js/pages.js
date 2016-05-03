@@ -14,7 +14,8 @@ const pages = (() => {
 		return pages.get(id)
 	}
 
-	const scrollStack = new Map()
+	const backStack = []
+	let forwardStack = []
 	let previousPageUrl = undefined
 
 	//render the current page
@@ -28,18 +29,38 @@ const pages = (() => {
 
 		if (!page) return Promise.reject()
 
+		let scroll = undefined
 		return Promise.resolve()
 		.then(() => {
+			if (previousPageUrl === undefined) {
+				previousPageUrl = ''+url
+				scroll = 0
+				return
+			}
+
 			//store the scroll position of the previous page
-			if (previousPageUrl !== undefined)
-				scrollStack.set(''+previousPageUrl, document.documentElement.scrollTop || document.body.scrollTop)
+			const previousPageScroll = window.scrollY// || document.documentElement.scrollTop || document.body.scrollTop || 0
+			if (backStack.length > 0 && backStack[backStack.length-1].url === url) { //if the back button was pressed
+				scroll = backStack.pop().scroll
+				forwardStack.push({ url: previousPageUrl, scroll: previousPageScroll })
+			}
+			else if (forwardStack.length > 0 && forwardStack[forwardStack.length-1].url === url) { //if the forward button was pressed
+				scroll = forwardStack.pop().scroll
+				backStack.push({ url: previousPageUrl, scroll: previousPageScroll })
+			}
+			else { //if the user clicked a link
+				forwardStack = []
+				scroll = 0
+				backStack.push({ url: previousPageUrl, scroll: previousPageScroll })
+			}
+
 			previousPageUrl = ''+url
 		})
-		.then(() => new Promise(resolve => window.requestAnimationFrame(resolve)))
+		.then(() => new Promise(window.requestAnimationFrame))
 		.then(() => page.render(state))
-		.then(() => ready())
-		.then(() => new Promise(resolve => window.requestAnimationFrame(resolve)))
-		.then(() => { window.scroll(0, scrollStack.get(url) || 0) })
+		.then(() => {
+			window.scroll(0,scroll || 0)
+		})
 
 	}
 
