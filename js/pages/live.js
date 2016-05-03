@@ -35,6 +35,7 @@ pages.add(new Page({
 		} : {
 			items: items
 		}))
+		.catch(e => { title: e })
 
 	}
 }));

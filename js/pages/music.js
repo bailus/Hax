@@ -33,7 +33,7 @@ pages.add(new Page({
 				label: artist.label,
 				link: '#page=Artist&artistid='+artist.artistid,
 				thumbnail: artist.thumbnail ? xbmc.vfs2uri(artist.thumbnail) : 'img/icons/default/DefaultArtist.png',
-				play: xbmc.Play({ 'artistid': "+x.artistid+" }, 0)
+				play: () => xbmc.Play({ 'artistid': "+x.artistid+" }, 0)
 			}))
 		}))
 	}
@@ -182,7 +182,7 @@ pages.add(new Page({
 			const page = {
 				title: albumdetails.displayartist || albumdetails.artist.join(', ') || '',
 				subtitle: albumdetails.label || '',
-				thumbnail: xbmc.vfs2uri(albumdetails.thumbnail),
+				thumbnail: albumdetails.thumbnail && xbmc.vfs2uri(albumdetails.thumbnail),
 				fanart: xbmc.vfs2uri(albumdetails.fanart),
 				details: [
 					{ name: 'Year', value: albumdetails.year },

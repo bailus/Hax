@@ -188,6 +188,9 @@ body, li, ul {
 }
 h1, h2, h3, h4, h5 {
 	margin:0;padding:0;
+	margin-left:10px;
+	margin-bottom:0.5em;
+	margin-top:0.5em;
 	overflow:hidden;
 }
 body[data-status=paused] #content,
@@ -195,17 +198,30 @@ body[data-status=playing] #content {
 	margin-bottom:76px;
 }
 h1 {
-	margin:5px 0;
-	line-height: 32px;
+	margin-top:0.5em;
+	margin-left:5px;
 }
 h1 img {
 	width: 100%;
 }
-h2 {
-	margin-bottom:10px;
+dt, h3 {
+	margin: 0;
+	margin-bottom: 0.3333em;
+	margin-top: 1em;
+	margin-left: 5px;
+	font-size: 12px;
+	font-weight: bold;
 }
-.superListItem {
-	margin-bottom:32px;
+dd, p {
+	margin: 0;
+	margin-left: 10px;
+	margin-bottom: 1em;
+}
+dl {
+	margin: 1em 0;
+}
+p {
+	margin-top:1em;
 }
 .listItem {
 	height:50px;
@@ -324,8 +340,8 @@ h2 {
 }
 #loading {
 	position:fixed;
-	top:0;left:0;
-	height:100%;width:100%;
+	top:43px;bottom:0;
+	left:0;right:0;
 }
 #loading img {
 	position:absolute;
@@ -497,19 +513,6 @@ header {
 	font-weight: bold;
 	background-color: transparent;
 	max-width: 90%;
-}
-
-dt, h3 {
-	margin: 0;
-	margin-bottom: 3px;
-	margin-left: 5px;
-	font-size: 12px;
-	font-weight: bold;
-}
-dd, p {
-	margin: 0;
-	margin-left: 10px;
-	margin-bottom: 1em;
 }
 
 

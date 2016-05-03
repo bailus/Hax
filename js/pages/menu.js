@@ -115,7 +115,7 @@ pages.add(new Page({
 					link: '#page=Episode&episodeid='+item.episodeid,
 					play: () => xbmc.Play({ 'episodeid': item.episodeid }, 1),
 					label: item.showtitle + ' - ' + item.title,
-					details: [ 'Season '+item.season, 'Episdoe '+item.episode ]
+					details: [ 'Season '+item.season, 'Episode '+item.episode ]
 				})
 			},
 			'Movies': {

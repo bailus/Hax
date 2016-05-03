@@ -155,7 +155,7 @@ var player = (function () {
 						progress.stop()
 						playerStatus = 'stopped'
 						document.body.setAttribute('data-status','stopped')
-
+						
 						statusElem.innerHTML = ''
 					}
 				}
@@ -193,16 +193,20 @@ var player = (function () {
 
 						statusElem.innerHTML = ''+
 							(item.showtitle ? item.showtitle+' ' : '')+
-							(item.season>=0 && item.episode>=0 ? item.season+'x'+item.episode+' ' : '')+
+							(item.season>=0 ? item.episode>=0 && item.season+'x'+item.episode+' ' : '')+
 							(item.artist && item.artist.length ? item.artist.join(', ')+' - '+(item.album || '') : '')+
-							(item.title||item.label)
+							(item.label||item.title||item.file)
 
 						detailsElem.innerHTML = ''+
-							'<h1>'+(item.title || item.file)+'</h1>'+
+							'<h1>'+(
+								(item.showtitle && item.showtitle+' '+item.season+'x'+item.episode) || //tv show
+								(item.artist && item.artist.length && item.artist.join(', ')) || //music
+								(item.tagline && item.title) || //movie
+								''
+							)+'</h1>'+
 							'<h2>'+(
-								(item.showtitle ? item.showtitle+(item.season>=0 && item.episode>=0 ? item.season+'x'+item.episode+' ' : '') : '') ||
-								(item.artist && item.artist.length ? item.artist.join(', ')+' - '+(item.album || '') : '') ||
-								(item.tagline ? '<p>'+item.tagline+'</p>' : '')
+								(item.album ? item.album+' - ' : '')+
+								(item.tagline||item.label||item.title||item.file)
 							)+'</h2>'
 					}
 					else statusElem.innerHTML = ''

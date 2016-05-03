@@ -78,6 +78,10 @@ body[data-status=playing] #player .playpause a { background-image:url('../img/bu
 
 @media screen and (min-width: 950px) {
 
+	#loading {
+		right: 351px;
+	}
+
 	#player {
 		background-color: black;
 		position:fixed;
@@ -91,6 +95,12 @@ body[data-status=playing] #player .playpause a { background-image:url('../img/bu
 
 	header {
 		right: 351px;
+	}
+
+
+	body[data-status="stopped"] #player .details,
+	body[data-status="stopped"] #player .imageBox {
+		display: none;
 	}
 
 	#content {
@@ -134,6 +144,7 @@ body[data-status=playing] #player .playpause a { background-image:url('../img/bu
 		height: 100px;
 		left: 0;
 		right: 0;
+		text-align: center;
 	}
 
 	#player .imageBox {

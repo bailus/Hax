@@ -175,7 +175,7 @@ const Kodi = (function () {
 			.then(data => {
 				if (data.result === undefined) {
 					console.error(data.error)
-					throw data.error
+					return Promise.reject(data.error)
 				}
 				return data.result
 			})

@@ -113,11 +113,6 @@ class Page {
 		const page = this
 
 		return page.data(state)   //get the page data
-		.catch(error => {
-			const e = 'PAGE DATA: '+error
-			console.error(e, state)
-			throw e
-		})
 		.then(data => {
 			data.crumbs = page.crumbs(state)
 			data.crumbs.push({
@@ -129,77 +124,84 @@ class Page {
 		})
 		.then(data => {
 
-				//sort and group the data
-				//TODO: review and probably rewrite
+			//sort and group the data
+			//TODO: review and probably rewrite
 
-				function groupItems (items, groupby) {
-					let o = [], temp = {}
-					if (!(items[0] && items[0][groupby])) return items
-					items.forEach((item, i) => {
-						let s = item[groupby]
-						if (item instanceof Object) {
-							if (!temp[s]) temp[s] = []
-							temp[s].push(item)
+			function groupItems (items, groupby) {
+				let o = [], temp = {}
+				if (!(items[0] && items[0][groupby])) return items
+				items.forEach((item, i) => {
+					let s = item[groupby]
+					if (item instanceof Object) {
+						if (!temp[s]) temp[s] = []
+						temp[s].push(item)
+					}
+				})
+				Object.getOwnPropertyNames(temp).forEach(label => {
+					o.unshift({
+						'label': label,
+						'items': temp[label]
+					})
+				})
+				return o
+			}
+
+			function sortItems (items, sortby) {
+				if (!(items[0] && items[0][sortby])) return items
+				return items.sort(function (a, b) {
+					let x = a[sortby], y = b[sortby]
+					if (x < y) return -1
+					if (x > y) return +1
+					return 0
+				})
+			}
+			
+			//if (state.get('sort') || this.sortby) data.items = sortItems(data.items, state.get('sort') || this.sortby)
+			
+			const groupbyKey = state.get('group') || this.groupby
+			const groupbyValue = state.get(groupbyKey)
+			if (groupbyKey) {
+				let size = data.items.length
+				const showItems = !(!groupbyValue && size > GROUPING_THRESHOLD)
+
+				//sort and group the items
+				data.items = sortItems(groupItems(data.items, groupbyKey), 'label')
+
+				//create groups
+				if (size > GROUPING_THRESHOLD)
+					data.groups = data.items.map(x => {
+						const s = new Map(state)
+						s.set(groupbyKey, x.label)
+						return {
+							'label': x.label,
+							'link': hashMapToURL(s),
+							'selected': x.label === groupbyValue
 						}
 					})
-					Object.getOwnPropertyNames(temp).forEach(label => {
-						o.unshift({
-							'label': label,
-							'items': temp[label]
-						})
-					})
-					return o
-				}
 
-				function sortItems (items, sortby) {
-					if (!(items[0] && items[0][sortby])) return items
-					return items.sort(function (a, b) {
-						let x = a[sortby], y = b[sortby]
-						if (x < y) return -1
-						if (x > y) return +1
-						return 0
-					})
-				}
-				
-				//if (state.get('sort') || this.sortby) data.items = sortItems(data.items, state.get('sort') || this.sortby)
-				
-				const groupbyKey = state.get('group') || this.groupby
-				const groupbyValue = state.get(groupbyKey)
-				if (groupbyKey) {
-					let size = data.items.length
-					const showItems = !(!groupbyValue && size > GROUPING_THRESHOLD)
+				//filter
+				if (groupbyValue)
+					data.items = data.items.filter(x => x.label === groupbyValue)
 
-					//sort and group the items
-					data.items = sortItems(groupItems(data.items, groupbyKey), 'label')
+				//don't show the full list
+				if (!showItems)
+					data.items = undefined
 
-					//create groups
-					if (size > GROUPING_THRESHOLD)
-						data.groups = data.items.map(x => {
-							const s = new Map(state)
-							s.set(groupbyKey, x.label)
-							return {
-								'label': x.label,
-								'link': hashMapToURL(s),
-								'selected': x.label === groupbyValue
-							}
-						})
+				if (showItems && data.groups && data.groups.length > 40)
+					data.groups = []
 
-					//filter
-					if (groupbyValue)
-						data.items = data.items.filter(x => x.label === groupbyValue)
+			}
 
-					//don't show the full list
-					if (!showItems)
-						data.items = undefined
-
-					if (showItems && data.groups && data.groups.length > 40)
-						data.groups = []
-
-				}
-
-				return data
+			return data
 
 
+		})
+		.catch(error => {
+			console.error(error)
+			return {
+				title: 'Error getting page data :(',
+				subtitle: error.message || ''
+			}
 		})
 		.then(data => {
 			//render the data to the DOM via the template
