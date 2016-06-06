@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <addon
 	id="webinterface.hax"
-	version="0.3.1~alpha"
+	version="0.3.2~alpha"
 	name="Hax"
 	provider-name="bailus">
 	<requires>
