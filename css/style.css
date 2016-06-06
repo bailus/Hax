@@ -514,10 +514,7 @@ header {
 }
 .options > li > ul > li {
 	display: inline-block;
-	line-height: 32px;
-	height: 32px;
 	background-color: #333;
-	padding: 0 0.25em;
 	margin: 0.25em;
 	margin-right: 0;
 	max-width: 12em;
@@ -529,6 +526,12 @@ header {
 	font-weight: bold;
 	background-color: transparent;
 	max-width: 90%;
+}
+.options .label {
+	line-height: 32px;
+	height: 32px;
+	padding: 0 0.25em;
+	display: inline;
 }
 
 
