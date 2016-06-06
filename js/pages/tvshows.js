@@ -34,7 +34,7 @@ pages.add(new Page({
 			details: [ tvshow.episode + ' episodes' ],
 			link: '#page=TV Show&tvshowid=' + tvshow.tvshowid,
 			thumbnail: tvshow.thumbnail ? xbmc.vfs2uri(tvshow.thumbnail) : 'img/icons/default/DefaultVideo.png',
-			title: (tvshow.sorttitle || tvshow.title || tvshow.originaltitle)[0].toUpperCase(),
+			title: (tvshow.sorttitle || tvshow.title || tvshow.originaltitle)[0].toUpperCase()
 		})))
 		.then(items => ({
 			pageName: 'TV Shows' + (
@@ -101,7 +101,9 @@ pages.add(new Page({
 			thumbnailWidth: '89px',
 			details: [ seconds2string(episode.runtime), episode.lastplayed ? 'Last played '+ymd2string(episode.lastplayed) : undefined ],
 			number: episode.episode,
-			play: () => xbmc.Play({ 'episodeid': episode.episodeid }, 1)
+			actions: [
+				{ label: '▶', link: `javascript: xbmc.Play({ 'episodeid': ${episode.episodeid} }, 1)` }
+			]
 		})))
 
 		return Promise.all([ getShowDetails, getEpisodes ])

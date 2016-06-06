@@ -1,0 +1,98 @@
+<header>
+
+	<div class="crumbs">
+		{{#crumbs}}
+			<a href="{{link}}" class="crumb">
+				{{#icon}}<img src="{{.}}">{{/icon}}
+				{{#label}}<span class="label">{{.}}</span>{{/label}}
+			</a>
+		{{/crumbs}}
+	</div>
+
+	<a href="javascript:history.go(-1)" class="backButton"><img src="img/buttons/icon_back.png" height="32" width="32"></a>
+
+</header>
+
+{{#thumbnail}}
+	<img class="thumbnail" src="{{.}}" alt="">
+{{/thumbnail}}
+
+
+<h1>
+	{{#banner}}
+		<img src="{{.}}" alt="{{title}}" title="{{title}}">
+	{{/banner}}
+	{{#title}}
+		<span>{{.}}</span>
+	{{/title}}
+</h1>
+
+{{#subtitle}}
+	<h2>{{.}}</h2>
+{{/subtitle}}
+
+{{#if actions}}
+	<ul class="actions">
+		{{#actions}}
+			<li class="action">
+				{{>listItem}}
+			</li>
+		{{/actions}}
+	</ul>
+{{/if}}
+
+{{#if details}}
+	<ul class="details">
+		{{#details}}
+			{{#if value}}
+				<li>
+					<h3>{{name}}</h3>
+					<p>
+
+						{{#link}}<a href="{{.}}">{{/link}}
+
+							{{#thumbnail}}<span class="thumbnail"><img src="{{.}}"></span>{{/thumbnail}}
+							{{#value}}<span>{{.}}</span>{{/value}}
+
+						{{#link}}</a>{{/link}}
+
+					</p>
+				</li>
+			{{/if}}
+		{{/details}}
+	</ul>
+{{/if}}
+
+{{#if options}}
+	<ul class="options">
+		{{#options}}
+			<li class="option">
+				{{>listItem}}
+			</li>
+		{{/options}}
+	</ul>
+{{/if}}
+
+{{#if groups}}
+	<ul class="groups">
+		{{#groups}}
+			<li class="group">
+				{{>listItem}}
+			</li>
+		{{/groups}}
+	</ul>
+{{/if}}
+
+{{#if timeline}}
+	<div class="timeline">
+		{{#timeline}}
+			<span class="{{class}}" style="{{style}}">{{label}}</span>
+		{{/timeline}}
+	</div>
+{{/if}}
+
+{{>listItems}}
+
+{{#fanart}}
+	<img class="fanart" src="{{.}}" />
+{{/fanart}}

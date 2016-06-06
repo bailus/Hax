@@ -31,23 +31,26 @@ pages.add(new Page({
 
 					if (!item.playing) {
 
-						let playlistid = playlist.playlistid
-
-						item.play = function () {
-							xbmc.get({
-								'method': 'Player.Open',
-								'params': { 'item': { 'playlistid': playlistid, 'position': i } }
-							})
-							.then(pages.renderPage)  //refresh the playlist
-						}
-
-						item.remove = function () { //TODO: should be disabled on the currently playing item
-							xbmc.get({
-								'method': 'Playlist.Remove',
-								'params': { 'playlistid': playlistid, 'position': i }
-							})
-							.then(pages.renderPage)  //refresh the playlist
-						}
+						item.actions = [
+							{
+								label: '▶',
+								link: `javascript: 
+									xbmc.get({
+										'method': 'Player.Open',
+										'params': { 'item': { 'playlistid': ${playlist.playlistid}, 'position': ${i} } }
+									})
+									.then(pages.renderPage)`
+							},
+							{ //TODO: should be disabled on the currently playing item
+								label: '-',
+								link: `javascript: 
+									xbmc.get({
+										'method': 'Playlist.Remove',
+										'params': { 'playlistid': ${playlist.playlistid}, 'position': ${i} }
+									})
+									.then(pages.renderPage)`
+							}
+						]
 
 					}
 

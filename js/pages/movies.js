@@ -45,8 +45,10 @@ pages.add(new Page({
 					year: movie.year,
 					link: '#page=Movie&movieid='+movie.movieid,
 					alpha: movie.label[0].toUpperCase(),
-					play: () => xbmc.Play({ 'movieid': movie.movieid }, 1),
-					thumbnail: movie.thumbnail ? xbmc.vfs2uri(movie.thumbnail) : 'img/icons/default/DefaultVideo.png'
+					thumbnail: movie.thumbnail ? xbmc.vfs2uri(movie.thumbnail) : 'img/icons/default/DefaultVideo.png',
+					actions: [
+						{ label: '▶', link: `javascript: xbmc.Play({ 'movieid': ${movie.movieid} }, 1)` }
+					]
 				}
 			})
 		}))

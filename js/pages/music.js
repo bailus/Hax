@@ -79,7 +79,9 @@ pages.add(new Page({
 					year: album.year,
 					link: '#page=Album&albumid='+album.albumid,
 					thumbnail: album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : 'img/icons/default/DefaultAlbumCover.png',
-					play: () => { xbmc.Play({ 'albumid': album.albumid }, 0) }
+					actions: [
+						{ label: '▶', link: `javascript: xbmc.Play({ 'albumid': ${album.albumid} }, 0)` }
+					]
 				}))
 		}))
 	}
@@ -147,7 +149,9 @@ pages.add(new Page({
 			thumbnail: album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : 'img/icons/default/DefaultAudio.png',
 			thumbnailWidth: '50px',
 			year: album.year,
-			play: () => { xbmc.Play({ 'albumid': album.albumid }, 0) }
+			actions: [
+				{ label: '▶', link: `javascript: xbmc.Play({ 'albumid': ${album.albumid} }, 0)` }
+			]
 		})))
 
 		return Promise.all([ getArtistDetails, getAlbums ])      //wait for the above to finish
@@ -221,14 +225,14 @@ pages.add(new Page({
 			},
 			cache: true
 		})
-		.then(result => result.songs.map(song => {
-			song.thumbnail = undefined
-			song.thumbnailWidth = '50px'
-			if (song.track <= 10000) song.number = song.track
-			if (song.duration) song.details = seconds2shortstring(song.duration)
-			if (song.file) song.play = () => xbmc.Play({ 'albumid': albumid }, 0, song.track-1)
-			return song
-		}));
+		.then(result => result.songs.map(song => ({
+			label: song.label,
+			number: song.track,
+			details: seconds2shortstring(song.duration),
+			actions: [
+				{ label: '▶', link: `javascript: xbmc.Play({ 'albumid': ${albumid} }, 0, ${song.track-1})` }
+			]
+		})));
 
 		return Promise.all([ getAlbumDetails, getSongs ])      //wait for the above to finish
 		.then( ( [ page, items ] ) => { //create the page

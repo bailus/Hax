@@ -101,6 +101,9 @@ pages.add(new Page({
 					if (file.type === 'unknown' || !file.type) file.type = media
 					xbmc.Open({ 'item': { 'file': xbmc.vfs2uri(file.file) } })
 				}
+
+				if (media === 'pictures')
+					file.thumbnail = file.thumbnail || file.file
 				file.thumbnail = file.thumbnail ? xbmc.vfs2uri(file.thumbnail) : 'img/icons/default/DefaultFile.png'
 			}
 
@@ -165,7 +168,7 @@ pages.add(new Page({
 							{ label: 'Name', sortby: 'label', order: 'ascending' },
 							{ label: 'Size', sortby: 'size', order: 'descending' },
 							{ label: 'Date', sortby: 'date', order: 'descending' },
-							{ label: 'File', sortby: 'file', order: 'ascending' }
+							{ label: 'File', sortby: 'type', order: 'ascending' }
 						].map(item => ({
 								label: item.label + (sortby === item.sortby ? { 'ascending': ' ↑', 'descending': ' ↓' }[order] : ''),
 								selected: sortby === item.sortby,

@@ -5,6 +5,9 @@
 	background-repeat: no-repeat;
 	background-position: center center;
 }
+#player .buttons img + span {
+	display: none;
+}
 #player .buttons span {
 	display:none;
 }
@@ -101,13 +104,6 @@ body[data-status=playing] #player .playpause a { background-image:url('../img/bu
 	body[data-status="stopped"] #player .details,
 	body[data-status="stopped"] #player .imageBox {
 		display: none;
-	}
-
-	#content {
-		position: absolute;
-		right: 351px;
-		left: 0;
-		top: 0;
 	}
 
 	#player .show {

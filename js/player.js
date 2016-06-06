@@ -32,28 +32,29 @@ var player = (function () {
 				{ 'text': 'Right',			'action':'right' },
 				{ 'text': 'Select',			'action':'select' },
 				{ 'text': 'Back',			'action':'back' },
-				//{ 'text': 'Information',	'action':'info' },
-				{ 'text': 'Menu',			'action':'contextmenu' },
+				{ 'text': 'Information',	'action':'info' },
+				//{ 'text': 'Menu',			'action':'contextmenu' },
 				{ 'text': 'Home',			'action':'previousmenu' },
 				//{ 'text': 'Mute',			'action':'mute' },
 				//{ 'text': 'Volume Down',	'action':'volumedown' },
 				//{ 'text': 'Volume Up',		'action':'volumeup' }
 			]).map(o => ({
-				'text': o.text,
+				'label': o.text,
 				'class': o.action,
-				'href': "javascript: (() => { xbmc.get({ 'method': 'Input.ExecuteAction', 'params': { 'action': '"+o.action+"' } }) } )()"
+				'link': "javascript: (() => { xbmc.get({ 'method': 'Input.ExecuteAction', 'params': { 'action': '"+o.action+"' } }) } )()"
 			})),
 			'hideNavigation': true
 		}
 		data.buttons.push({
-			'text': 'Information',
-			'class': 'info',
-			'href': "javascript: (() => { xbmc.get({method: 'GUI.GetProperties', params: { properties: [ 'fullscreen' ] }}).then(result => xbmc.sendMessage('Input.ExecuteAction', { action: result.fullscreen ? 'osd' : 'info' })) })()"
+			'label': 'Menu',
+			'class': 'contextmenu',
+			'link': "javascript: (() => { xbmc.get({method: 'GUI.GetProperties', params: { properties: [ 'fullscreen' ] }}).then(result => xbmc.sendMessage('Input.ExecuteAction', { action: result.fullscreen ? 'osd' : 'contextmenu' })) })()"
 		})
 		
 		//render the data to the DOM via the player template
 		while (player.firstChild) player.removeChild(player.firstChild) //remove child elements
-		player.appendChild(template.player.bind(data))
+			console.log(templates.player(data))
+		player.innerHTML = templates.player(data)
 		
 		//make the progress bar work
 		var oldString

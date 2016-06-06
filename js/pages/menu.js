@@ -11,8 +11,8 @@ pages.add(new Page({
 			{ 'label': 'Movies', 'link': '#page=Menu&media=Movies', 'thumbnail': 'img/icons/home/movies.png' },
 			{ 'label': 'TV Shows', 'link': '#page=Menu&media=TV Shows', 'thumbnail': 'img/icons/home/tv.png' },
 			{ 'label': 'Music', 'link': '#page=Menu&media=Music', 'thumbnail': 'img/icons/home/music.png' },
-			{ 'label': 'Radio', 'link': '#page=Live&media=radio', 'thumbnail':'img/icons/home/radio.png' },
-			{ 'label': 'Live TV', 'link': '#page=Live&media=tv', 'thumbnail':'img/icons/home/livetv.png' },
+			{ 'label': 'Radio', 'link': '#page=Menu&media=Radio', 'thumbnail': 'img/icons/home/radio.png' },
+			{ 'label': 'TV', 'link': '#page=Menu&media=TV', 'thumbnail': 'img/icons/home/livetv.png' },
 			{ 'label': 'Music Videos', 'link': '#page=Menu&media=Music Videos', 'thumbnail':'img/icons/home/musicvideos.png' },
 			{ 'label': 'Pictures', 'link': '#page=Menu&media=Pictures', 'thumbnail': 'img/icons/home/pictures.png' },
 			{ 'label': 'Playlists', 'link': '#page=Playlists', 'thumbnail':'img/icons/home/playlists.png' },
@@ -32,7 +32,9 @@ pages.add(new Page({
 		'TV Shows': 'img/icons/home/tv.png',
 		'Music Videos': 'img/icons/home/musicvideos.png',
 		'Music': 'img/icons/home/music.png',
-		'Pictures': 'img/icons/home/pictures.png'
+		'Pictures': 'img/icons/home/pictures.png',
+		'TV': 'img/icons/home/livetv.png',
+		'Radio': 'img/icons/home/radio.png'
 	}[state ? state.get('media') : 'Default']),
 	'parentState': state => {
 		const m = new Map()
@@ -101,7 +103,23 @@ pages.add(new Page({
 						{ 'label': 'By Genre', 'link': '#page=Genres&type=Music Videos', 'thumbnail': 'img/icons/default/DefaultGenre.png' }
 					] }*/
 				],
-				'Pictures': [ ]
+				'Pictures': [ ],
+				'TV': [
+					{ 'label': '', 'items': [
+						{ 'label': 'Channels', 'link': '#page=Channels&media=TV', 'thumbnail': 'img/icons/home/livetv.png' },
+						{ 'label': 'Guide', 'link': '#page=Channels&media=TV&nextpage=Guide', 'thumbnail': 'img/icons/home/livetv.png' }/*,
+						{ 'label': 'Recordings', 'link': '#', 'thumbnail': 'img/icons/home/livetv.png' },
+						{ 'label': 'Timers', 'link': '#page=Timers&media=TV', 'thumbnail': 'img/icons/home/livetv.png' }*/
+					] }
+				],
+				'Radio': [
+					{ 'label': '', 'items': [
+						{ 'label': 'Channels', 'link': '#page=Channels&media=Radio', 'thumbnail': 'img/icons/home/radio.png' },
+						{ 'label': 'Guide', 'link': '#page=Channels&media=Radio&nextpage=Guide', 'thumbnail': 'img/icons/home/radio.png' }/*,
+						{ 'label': 'Recordings', 'link': '#', 'thumbnail': 'img/icons/home/radio.png' },
+						{ 'label': 'Timers', 'link': '#page=Timers&media=Radio', 'thumbnail': 'img/icons/home/radio.png' }*/
+					] }
+				]
 			})[media]
 		})
 
@@ -113,9 +131,11 @@ pages.add(new Page({
 				defaultThumbnail: 'img/icons/default/DefaultVideo.png',
 				transformItem: item => ({
 					link: '#page=Episode&episodeid='+item.episodeid,
-					play: () => xbmc.Play({ 'episodeid': item.episodeid }, 1),
 					label: item.showtitle + ' - ' + item.title,
-					details: [ 'Season '+item.season, 'Episode '+item.episode ]
+					details: [ 'Season '+item.season, 'Episode '+item.episode ],
+					actions: [
+						{ label: '▶', link: `javascript: xbmc.Play({ 'episodeid': ${item.episodeid} }, 1)` }
+					]
 				})
 			},
 			'Movies': {
@@ -125,9 +145,11 @@ pages.add(new Page({
 				defaultThumbnail: 'img/icons/default/DefaultVideo.png',
 				transformItem: item => ({
 					link: '#page=Movie&movieid='+item.movieid,
-					play: () => xbmc.Play({ 'movieid': item.movieid }, 1),
 					label: item.title + (item.originaltitle && item.originaltitle != item.title ? ' ['+item.originaltitle+']' : ''),
-					details: [ '('+item.year+')', seconds2string(item.runtime) ]
+					details: [ '('+item.year+')', seconds2string(item.runtime) ],
+					actions: [
+						{ label: '▶', link: `javascript: xbmc.Play({ 'movieid': ${item.movieid} }, 1)` }
+					]
 				})
 			},
 			'Music Videos': {
@@ -137,9 +159,11 @@ pages.add(new Page({
 				defaultThumbnail: 'img/icons/default/DefaultVideo.png',
 				transformItem: item => ({
 					link: '#page=Music Video&musicvideoid='+item.musicvideoid,
-					play: () => xbmc.Play({ 'musicvideoid': item.musicvideoid }, 1),
 					label: item.artist + ' - ' + item.title,
-					details: [ item.album + ' (' + item.year + ')', seconds2string(item.runtime) ]
+					details: [ item.album + ' (' + item.year + ')', seconds2string(item.runtime) ],
+					actions: [
+						{ label: '▶', link: `javascript: xbmc.Play({ 'musicvideoid': ${item.musicvideoid} }, 1)` }
+					]
 				})
 			},
 		})[media]

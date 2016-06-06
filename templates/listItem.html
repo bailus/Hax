@@ -1,0 +1,37 @@
+{{#link}}<a href="{{.}}">{{/link}}
+
+	{{#thumbnail}}
+		<span class="thumbnail"><img src="{{.}}"></span>
+	{{/thumbnail}}
+
+
+	{{#if details}}
+		<span class="label">
+			{{#label}}
+				<span class="line1">{{.}}</span>
+			{{/label}}
+			<span class="line2">
+				{{#details}}
+					<span>{{.}}</span>
+				{{/details}}
+			</span>
+		</span>
+	{{else}}
+		{{#label}}
+			<span class="label">{{.}}</span>
+		{{/label}}
+	{{/if}}
+
+{{#link}}</a>{{/link}}
+
+{{#actions}}
+	<a href="{{link}}" class="listAction">
+
+		{{#if thumbnail}}
+			<span class="thumbnail"><img src="{{thumbnail}}"></span>
+		{{else}}
+			{{label}}
+		{{/if}}
+
+	</a>
+{{/actions}}

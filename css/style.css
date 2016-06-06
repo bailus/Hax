@@ -124,9 +124,7 @@ dl, dd, dt {
 	font-size:12px;
 	font-style:normal;
 }
-.listItem .play,
-.listItem .add,
-.listItem .remove {
+.listItem .listAction {
 	font-size:24px;
 	text-align:center;
 }
@@ -193,10 +191,6 @@ h1, h2, h3, h4, h5 {
 	margin-top:0.5em;
 	overflow:hidden;
 }
-body[data-status=paused] #content,
-body[data-status=playing] #content {
-	margin-bottom:76px;
-}
 h1 {
 	margin-top:0.5em;
 	margin-left:5px;
@@ -207,14 +201,17 @@ h1 img {
 dt, h3 {
 	margin: 0;
 	margin-bottom: 0.3333em;
-	margin-top: 1em;
+	margin-top: 2em;
 	margin-left: 5px;
+	height: 20px;
+	line-height: 20px;
 	font-size: 12px;
-	font-weight: bold;
+	font-weight: normal;
+	font-style: italic;
 }
 dd, p {
 	margin: 0;
-	margin-left: 10px;
+	margin-left: 5px;
 	margin-bottom: 1em;
 }
 dl {
@@ -223,45 +220,59 @@ dl {
 p {
 	margin-top:1em;
 }
+#content {
+	top:43px;
+	bottom:0;
+	left:0;
+	right:0;
+	overflow:auto;
+	position: fixed;
+}
+@media screen and (min-width: 950px) {
+	#content {
+		right: 351px;
+	}
+}
 .listItem {
+	clear:both;
+}
+.listItem  {
+	clear:both;
+}
+.listItem .listItem {
 	height:50px;
 	overflow:hidden;
 	position:relative;
 }
-.listItem .label,
-.listItem .line1,
-.listItem .line2 {
-	padding-left:10px;
-	overflow:hidden;
-}
 .listItem .label {
 	line-height:50px;
 	height:50px;
+	padding-left:10px;
+	overflow:hidden;
+	display: inline-block;
+}
+.listItem .line1,
+.listItem .line2 {
+	display: block;
 }
 .listItem .line1 {
-	margin-top:8px;
-	height:18px;
+	line-height:20px;
+	height:20px;
+	margin-top:5px;
 }
 .listItem .line2 {
-	height:15px;
+	line-height:20px;
+	height:20px;
 }
 .listItem .line2 span + span {
 	margin-left:10px;
 }
-.listItem .play,
-.listItem .add,
-.listItem .remove {
-	width:50px;height:50px;
-	line-height:50px;
+.listItem .listAction {
 	float:right;
 	display:block;
-}
-.listItem .play {
-	right:0;
-	line-height:46px;
-}
-.listItem .add, .listItem .remove {
-	right:50px;
+	width:50px;
+	height:50px;
+	line-height:50px;
 }
 .listItem .thumbnail {
 	width:50px;
@@ -352,7 +363,8 @@ p {
 	margin-top:-32px;
 }
 .page {
-	margin:43px auto;
+	margin: 0 auto;
+	padding-bottom: 43px;
 	max-width:758px;
 	text-align: center;
 }
@@ -438,6 +450,10 @@ header {
 }
 
 .actions {
+	margin-top: 2em;
+}
+
+.action {
 	line-height: 32px;
 	height: 32px;
 }
@@ -447,14 +463,15 @@ header {
 .action img {
 	width: 24px;
 	height: 24px;
-	margin-right: 5px;
+	padding: 0;
+	padding-right:10px;
 }
 .action {
 	display: inline-block;
-	line-height: 32px;
-	height: 32px;
-	padding: 2px 8px;
-	background-color: #222;
+	line-height: 50px;
+	height: 50px;
+	padding: 0;
+	text-align: center;
 }
 .action + .action {
 	margin-left: 15px;
@@ -463,7 +480,7 @@ header {
 .groups {
 	padding: 0; margin: 0;
 }
-.group {
+.groups li {
 	display: inline-block;
 	line-height: 32px;
 	height: 32px;
@@ -475,7 +492,7 @@ header {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-.group.selected {
+.groups li.selected {
 	font-weight: bold;
 	background-color: transparent;
 	max-width: 100%;
@@ -503,7 +520,6 @@ header {
 	padding: 0 0.25em;
 	margin: 0.25em;
 	margin-right: 0;
-	margin-left: 0;
 	max-width: 12em;
 	white-space: nowrap;
 	overflow: hidden;
@@ -602,4 +618,133 @@ header {
 	line-height: 18px;
 	margin:0;padding:0;
 	white-space: inherit;
+}
+
+.page[data-page="Guide"] .options {
+	margin-left: -50px;
+}
+
+.page[data-page="Guide"] {
+	max-width: none;
+	position: relative;
+	margin-left: 50px;
+	padding-top: 26px;
+}
+
+.page[data-page="Guide"] > .items > .listItem {
+	height: 50px;
+	margin-bottom: 2px;
+	position: relative;
+}
+
+.page[data-page="Guide"] > .items > .listItem > .thumbnail {
+	position: absolute;
+	top:0;
+	left: -50px;
+	width: 50px;
+	height: 50px;
+}
+
+.page[data-page="Guide"] .listItem > .thumbnail > img {
+	width: 50px;
+	height: 50px;
+}
+
+.page[data-page="Guide"] > .items > .listItem > .label {
+	display: none;
+}
+
+.page[data-page="Guide"] .listItem > .label {
+	position: absolute;
+	left: -50px;
+	top: 0;
+	width: 50px;
+	height: 50px;
+	margin: 0;
+}
+.page[data-page="Guide"] .listItem > ul {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 50px;
+}
+
+.page[data-page="Guide"] .listItem .listItem {
+	background-color: #444;
+	position: absolute;
+	width: auto;
+	margin-left: 2px;
+	padding-left: 2px;
+	height:50px;
+}
+
+.page[data-page="Guide"] .listItem.finished .line1,
+.page[data-page="Guide"] .listItem.finished .line2 {
+	color: #CCC;
+}
+
+.page[data-page="Guide"] .listItem.finished {
+	background-color: #222;
+}
+
+.page[data-page="Guide"] .listItem span {
+	height: 100%;
+}
+
+
+.page[data-page="Guide"] .listItem .listItem .label {
+	padding: 2px;
+	margin: 0;
+}
+.page[data-page="Guide"] .listItem .line1 {
+	height: 32px;
+	line-height: 16px;
+	word-wrap: break-word;
+	white-space: normal;
+}
+.page[data-page="Guide"] .listItem .line2 {
+	position: absolute;
+	bottom: 0;
+	left: 2px;
+	right: 2px;
+	height: 14px;
+	line-height: 14px;
+	font-size: 11px;
+}
+.page[data-page="Guide"] .listItem .line2 > span:last-child {
+	float: right;
+}
+
+.page[data-page="Guide"] .timeline {
+	position: static;
+	overflow: visible;
+	width: 0;
+	height: 0;
+}
+
+.page[data-page="Guide"] .timeline > span {
+	position: absolute;
+	width: 0;
+	height: 16px;
+	line-height: 32px;
+	top: 0;
+	border-left: 1px solid gray;
+	padding-left: 2px;
+	color: #BBB;
+	overflow: visible;
+    margin-left: 3px;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.page[data-page="Guide"] .timeline > .minor {
+	height: 9px;
+}
+
+.page[data-page="Guide"] .timeline > .present {
+	position: absolute;
+	border-left: 1px solid #F00;
+	z-index: 100;
+	height: 100%;
 }
