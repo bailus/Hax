@@ -56,7 +56,7 @@ const pages = (() => {
 
 			previousPageUrl = ''+url
 		})
-		.then(() => new Promise(window.requestAnimationFrame))
+		//.then(() => new Promise(window.requestAnimationFrame))
 		.then(() => page.render(state))
 		.then(() => {
 			window.scroll(0,scroll || 0)

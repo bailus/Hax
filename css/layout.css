@@ -1,0 +1,192 @@
+
+
+.hidden {
+	display:none !important;
+}
+li {
+	list-style-type:none;
+}
+a img,:link img,:visited img {
+	border:none
+}
+
+
+
+/* Loading Screen */
+
+	#loading {
+		z-index: 1000;
+		position: fixed;
+		top: 43px;
+		bottom: 0;
+		left: 0;
+		right: 0;
+	}
+
+	#loading img {
+		position: absolute;
+		display: block;
+		width: 64px;
+		height: 64px;
+		left: 50%;
+		top: 50%;
+		margin-left: -32px;
+		margin-top: -32px;
+	}
+
+
+
+/* Main Screen Layout */
+
+	header {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 351px;
+	}
+
+	#content {
+		z-index: 400;
+		position: fixed;
+		top: 43px;
+		bottom: 0;
+		left: 0;
+		right: 351px;
+		overflow: auto;
+		overflow-y: scroll;
+	}
+
+
+
+/* header */
+
+	/* Size */
+	header {
+		height: 42px;
+	}
+	.page {
+		padding-top: 43px;
+	}
+	header img,
+	.crumb {
+		width: 42px;
+		height: 42px;
+	}
+	header .label {
+		height: 42px;
+		line-height: 42px;
+	}
+
+	header {
+		display: flex;
+	}
+
+	.backButton {
+		flex-grow: 0;
+		flex-shrink: 0;
+	}
+	.crumbs {
+		flex-grow: 1;
+		flex-shrink: 1;
+		display: inline-flex;
+		overflow: hidden;
+	}
+	.crumb .label {
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
+	.crumb + .crumb {
+		padding-left: 9px;
+		background-image: url('../img/buttons/crumb_seperator.png');
+		background-repeat: no-repeat;
+		background-position: left center;
+	}
+	.crumb .label {
+		display:none;
+	}
+	.crumb:last-child {
+		width: auto;
+	}
+	.crumb:last-child .label {
+		display:inline;
+	}
+
+
+
+/* Page */
+
+	.page > .thumbnail,
+	.details .image {
+		max-width:100%;
+		max-height: 500px;
+	}
+
+
+
+/* List Items */
+
+	.items {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		flex-shrink:0;
+	}
+
+	.listItem {
+		display: flex;
+		width: 100%;
+	}
+
+	/* Size */
+	.listItem .listAction,
+	.listItem .thumbnail {
+		width: 50px;
+		height: 50px;
+		line-height: 50px;
+	}
+	.listItem .label {
+		line-height:50px;
+		height:50px;
+		display: flex-inline;
+		flex-direction: column;
+		align-items: center;
+	}
+	.listItem .line1,
+	.listItem .line2 {
+		line-height:20px;
+		height:20px;
+	}
+
+	/* Thumbnail */
+	.listItem .thumbnail {
+		display:block;
+		text-align:center;
+		flex-shrink:0;
+	}
+	.listItem .thumbnail img {
+		max-width:100%;
+		max-height:100%;
+		vertical-align:middle;
+	}
+
+	/* Label */
+	.listItem .label {
+		padding-left:10px;
+		overflow:hidden;
+		flex-grow:1;
+	}
+	.listItem .line1,
+	.listItem .line2 {
+		display: block;
+		overflow:hidden;
+	}
+	.listItem .line2 span + span {
+		margin-left:10px;
+	}
+
+	/* Actions */
+	.listItem .listAction {
+		display: block;
+		flex-shrink: 0;
+	}

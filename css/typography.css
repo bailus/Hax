@@ -1,0 +1,47 @@
+
+/* Fonts */
+
+	body {
+		font-family:sans-serif;
+		font-size:14px;
+	}
+
+	h1, h2, h3, h4, h5 {
+		font-weight: bold;
+	}
+	h1 { font-size:160%; }
+	h2 { font-size:140%; }
+	h3 { font-size:120%; }
+	h4 { font-size:120%; }
+	h5 { font-size:100%; }
+
+	a, a:hover, a:visited {
+		outline:none;
+		text-decoration:none;
+	}
+
+
+
+/* Color */
+
+	/* Foreground */
+	body,
+	a, a:hover, a:visited {
+		color:#FFF;
+	}
+
+	/* Background */
+	body,
+	header,
+	#player {
+		background-color:#000;
+	}
+
+
+/* Borders */
+	header {
+		border-bottom: 1px solid gray;
+	}
+	#player {
+		border-top: 1px solid gray;
+	}

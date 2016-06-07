@@ -8,9 +8,6 @@ a, [data-role=button] {
 a img,:link img,:visited img {
 	border:none
 }
-.fanart {
-	opacity:0.2;
-}
 .list.collapsed[data-groupby="alpha"] .label,
 .list.collapsed[data-groupby="title"] .label {
 	padding:0;
@@ -114,7 +111,6 @@ dl, dd, dt {
 .listItem a .line1 {
 	font-style:normal;
 }
-.listItem .label,
 .listItem .line1,
 .listItem .line2 {
 	white-space: nowrap;
@@ -225,8 +221,8 @@ p {
 	bottom:0;
 	left:0;
 	right:0;
-	overflow:auto;
 	position: fixed;
+	overflow-y: scroll;
 }
 @media screen and (min-width: 950px) {
 	#content {
@@ -236,24 +232,23 @@ p {
 .listItem {
 	clear:both;
 }
-.listItem  {
-	clear:both;
-}
 .listItem .listItem {
 	height:50px;
 	overflow:hidden;
 	position:relative;
+	display: flex;
 }
 .listItem .label {
 	line-height:50px;
 	height:50px;
 	padding-left:10px;
 	overflow:hidden;
-	display: inline-block;
+	flex-grow:1;
 }
 .listItem .line1,
 .listItem .line2 {
 	display: block;
+	overflow:hidden;
 }
 .listItem .line1 {
 	line-height:20px;
@@ -268,18 +263,19 @@ p {
 	margin-left:10px;
 }
 .listItem .listAction {
-	float:right;
 	display:block;
 	width:50px;
 	height:50px;
 	line-height:50px;
+	flex-shrink:0;
 }
 .listItem .thumbnail {
+	display:block;
 	width:50px;
 	height:50px;
 	text-align:center;
 	line-height:50px;
-	float:left;
+	flex-shrink:0;
 }
 .listItem .thumbnail img {
 	max-width:100%;
