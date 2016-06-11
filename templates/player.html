@@ -1,6 +1,9 @@
-<div class="show"></div>
-<div class="imageBox"><img class="thumbnail"></div>
-<div class="details"></div>
+
+
+<!--<div class="thumbnailWrapper">
+	<img class="thumbnail">
+</div>-->
+
 <div class="player">
 
 <div id="progress">
@@ -9,7 +12,7 @@
 	<div class="time"></div>
 </div>
 
-<ul class="buttons">
+<ul class="player buttons">
 	{{#buttons}}
 
 		<li class="{{class}}">
@@ -22,3 +25,17 @@
 </ul>
 
 </div>
+
+<ul class="nav buttons">
+	{{#navbuttons}}
+
+		<li class="{{class}}">
+			<a href="{{link}}">
+				<span>{{label}}</span>
+			</a>
+		</li>
+
+	{{/navbuttons}}
+</ul>
+
+<div class="show"></div>

@@ -1,0 +1,35 @@
+
+/* Foreground */
+body,
+a, a:hover, a:visited {
+	color: #FFF;
+}
+
+
+/* Background */
+body,
+header,
+#player,
+#loading {
+	background-color: #000;
+}
+
+
+/* Borders */
+header,
+#player {
+	border-color: gray;
+}
+
+
+/* Button background */
+.group,
+.option > ul > li,
+.action {
+	background-color: #333;
+}
+
+.group.selected,
+.option .selected {
+	background-color: inherit;
+}

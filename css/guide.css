@@ -1,0 +1,132 @@
+
+.page[data-page="Guide"] > article {
+	align-items: flex-start;
+    padding-left: 50px;
+    overflow: scroll;
+}
+
+.page[data-page="Guide"] > article,
+.page[data-page="Guide"] .timeline
+{
+	max-width: auto;
+	flex-shrink: 0;
+}
+
+
+
+
+
+.page[data-page="Guide"] .options {
+	margin-left: -50px;
+}
+
+.page[data-page="Guide"] > article > .items > .listItem {
+	display: block;
+	position: relative;
+	height: 50px;
+	margin-bottom: 2px;
+}
+
+.page[data-page="Guide"] > article > .items > .listItem > .thumbnail {
+	position: absolute;
+	top:0;
+	left: -50px;
+	width: 50px;
+	height: 50px;
+}
+
+.page[data-page="Guide"] .listItem > .thumbnail > img {
+	width: 50px;
+	height: 50px;
+}
+
+.page[data-page="Guide"] > article > .items > .listItem > .label {
+	display: none;
+}
+.page[data-page="Guide"] .listItem > ul {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 50px;
+}
+
+.page[data-page="Guide"] .listItem .listItem {
+	background-color: #444;
+	position: absolute;
+	width: auto;
+	margin-left: 2px;
+	padding-left: 2px;
+	height:50px;
+}
+
+.page[data-page="Guide"] .listItem.finished .line1,
+.page[data-page="Guide"] .listItem.finished .line2 {
+	color: #CCC;
+}
+
+.page[data-page="Guide"] .listItem.finished {
+	background-color: #222;
+}
+
+.page[data-page="Guide"] .listItem span {
+	height: 100%;
+}
+
+
+.page[data-page="Guide"] .listItem .listItem .label {
+	padding: 2px;
+	margin: 0;
+}
+.page[data-page="Guide"] .listItem .line1 {
+	height: 32px;
+	line-height: 16px;
+	word-wrap: break-word;
+	white-space: normal;
+}
+.page[data-page="Guide"] .listItem .line2 {
+	position: absolute;
+	bottom: 0;
+	left: 2px;
+	right: 2px;
+	height: 14px;
+	line-height: 14px;
+	font-size: 11px;
+}
+.page[data-page="Guide"] .listItem .line2 > span:last-child {
+	float: right;
+}
+
+.page[data-page="Guide"] .timeline {
+	overflow: visible;
+	height: 24px;
+	position: relative;thg7 
+	border-top: 1px solid gray;
+	width: 100%;
+}
+
+.page[data-page="Guide"] .timeline > span {
+	position: absolute;
+	width: 0;
+	height: 16px;
+	line-height: 32px;
+	top: 0;
+	border-left: 1px solid gray;
+	padding-left: 2px;
+	color: #BBB;
+	overflow: visible;
+    margin-left: 3px;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.page[data-page="Guide"] .timeline > .minor {
+	height: 9px;
+}
+
+.page[data-page="Guide"] .timeline > .present {
+	position: absolute;
+	border-left: 1px solid #F00;
+	z-index: 100;
+	height: 100%;
+}

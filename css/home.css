@@ -1,0 +1,38 @@
+.page[data-page="Home"] .titlebar {
+	display: none;
+}
+.page[data-page="Home"] .items {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	justify-content: center;
+	align-content: center;
+    flex-grow: 1;
+
+	width: 500px;
+	height: 100%;
+	margin: 0;
+}
+.page[data-page="Home"] .listItem {
+	flex-direction: column;
+	align-items: center;
+	width:90px;
+	text-align: center;
+	margin:5px;
+	margin-top:10px;
+}
+.page[data-page="Home"] .thumbnail {
+	display: block !important;
+	width: 64px;
+	height: 64px;
+	line-height: normal;
+}
+.page[data-page="Home"] .label {
+	display: block !important;
+	font-size: 12px;
+	float: none;
+	height: 36px;
+	line-height: 18px;
+	margin:0;padding:0;
+	white-space: inherit;
+}

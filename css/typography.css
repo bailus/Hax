@@ -1,47 +1,80 @@
+/* Font style */
 
-/* Fonts */
+	body
+	{ font-family:sans-serif; }
 
-	body {
-		font-family:sans-serif;
-		font-size:14px;
+	h1, h2, h3, h4, h5,
+	.listItem
+	{ font-weight: bold; }
+
+	h2
+	{
+		font-weight: normal;
+		font-style: italic;
 	}
 
-	h1, h2, h3, h4, h5 {
-		font-weight: bold;
-	}
-	h1 { font-size:160%; }
-	h2 { font-size:140%; }
-	h3 { font-size:120%; }
-	h4 { font-size:120%; }
-	h5 { font-size:100%; }
+	.listItem.leaf
+	{ font-weight: normal; }
 
-	a, a:hover, a:visited {
+	a, a:hover, a:visited
+	{
 		outline:none;
 		text-decoration:none;
 	}
 
+	.group.selected
+	{ font-weight: bold; }
 
 
-/* Color */
+/* Font size */
+	
+	body
+	{ font-size: 13px; }
 
-	/* Foreground */
-	body,
-	a, a:hover, a:visited {
-		color:#FFF;
+	h1
+	{ font-size: 118%; }
+	
+	h2
+	{ font-size: 115%; }
+	
+	h3
+	{ font-size: 111%; }
+	
+	h4
+	{ font-size: 105%; }
+	
+	.listItem,
+	h5
+	{ font-size: 100%; }
+
+	.listItem.leaf
+	{ font-size: 100%; }
+
+	.line2
+	{ font-size:  89%; }
+
+
+/* White space */
+	h3, h4, h5,
+	.listItem > .label,
+	.titles,
+	.actions,
+	.options,
+	.details,
+	article > .items
+	{
+		margin-top: 1.2em;
+		margin-bottom: 0.4em;
 	}
 
-	/* Background */
-	body,
-	header,
-	#player {
-		background-color:#000;
-	}
+	.details,
+	h1.banner
+	{ margin-top: 0; }
 
+	h2
+	{ margin-top: 0.4em; }
 
-/* Borders */
-	header {
-		border-bottom: 1px solid gray;
-	}
-	#player {
-		border-top: 1px solid gray;
+	.listItem.leaf > .label
+	{
+		margin-top: 0;
 	}

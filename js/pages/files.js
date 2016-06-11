@@ -97,10 +97,13 @@ pages.add(new Page({
 			}
 			else {
 				var playlistid = file.type === 'audio' ? 0 : file.type === 'video' ? 1 : 2
-				file.play = function () {
+				file.actions = [
+					{ label: '▶', link: `javascript: xbmc.Open({ 'item': { 'file': '${xbmc.vfs2uri(file.file)}'  } })` }
+				]
+				/*file.play = function () {
 					if (file.type === 'unknown' || !file.type) file.type = media
 					xbmc.Open({ 'item': { 'file': xbmc.vfs2uri(file.file) } })
-				}
+				}*/
 
 				if (media === 'pictures')
 					file.thumbnail = file.thumbnail || file.file
@@ -153,7 +156,8 @@ pages.add(new Page({
 			}
 			p.unshift({
 				'link': '#page=Directory&media='+media+'&sortby='+sortby+'&order='+order+'&root='+encodeURIComponent(root),
-				'label': ''+root
+				'label': ''+root,
+				'class': 'root'
 			})
 			p[p.length-1].selected = true
 
@@ -161,6 +165,11 @@ pages.add(new Page({
 			return {
 				items: items,
 				options: [
+					{
+						id: 'path',
+						label: 'Path',
+						items: p
+					},
 					{
 						id: 'sort',
 						label: 'Sort By',
@@ -171,16 +180,11 @@ pages.add(new Page({
 							{ label: 'File', sortby: 'type', order: 'ascending' }
 						].map(item => ({
 								label: item.label + (sortby === item.sortby ? { 'ascending': ' ↑', 'descending': ' ↓' }[order] : ''),
-								selected: sortby === item.sortby,
+								'class': sortby === item.sortby ? 'selected' : undefined,
 								link: sortby === item.sortby ?
 										'#page=Directory&media='+media+'&sortby='+item.sortby+'&order='+inverseOrder+'&root='+encodeURIComponent(root)+'&path='+encodeURIComponent(pathString) :
 										'#page=Directory&media='+media+'&sortby='+item.sortby+'&order='+item.order+'&root='+encodeURIComponent(root)+'&path='+encodeURIComponent(pathString)
 						}))
-					},
-					{
-						id: 'path',
-						label: 'Path',
-						items: p
 					}
 				]
 			}

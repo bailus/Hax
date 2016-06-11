@@ -23,3 +23,8 @@ v0.3.1 - 2016-05-02
  - Removed mobile landscape mode
  - Added sorting options and a new path selector to the directory page
  - Info button now brings up the OSD when Kodi is in fullscreen mode
+
+v0.3.2 - 2016-06-07
+ - Addendum to the above change: Menu button brings up the OSD now
+ - Replaced JSONML-JBST templating with Handlebars.js
+ - Added TV/radio guide page

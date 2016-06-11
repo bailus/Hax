@@ -185,11 +185,10 @@ pages.add(new Page({
 		.then(albumdetails => { //format album details
 			const page = {
 				title: albumdetails.displayartist || albumdetails.artist.join(', ') || '',
-				subtitle: albumdetails.label || '',
+				subtitle: (albumdetails.label || '') + (albumdetails.year ? ' (' + albumdetails.year + ')' : ''),
 				thumbnail: albumdetails.thumbnail && xbmc.vfs2uri(albumdetails.thumbnail),
 				fanart: xbmc.vfs2uri(albumdetails.fanart),
 				details: [
-					{ name: 'Year', value: albumdetails.year },
 					{ name: 'Genre', value: albumdetails.genre },
 					{ name: 'Description', value: albumdetails.description },
 					{ name: 'Theme', value: albumdetails.theme },
@@ -226,6 +225,7 @@ pages.add(new Page({
 			cache: true
 		})
 		.then(result => result.songs.map(song => ({
+			thumbnail: 'img/icons/default/DefaultAudio.png',
 			label: song.label,
 			number: song.track,
 			details: seconds2shortstring(song.duration),

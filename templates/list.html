@@ -13,87 +13,108 @@
 
 </header>
 
-{{#thumbnail}}
-	<img class="thumbnail" src="{{.}}" alt="">
-{{/thumbnail}}
+<article>
 
-
-<h1>
 	{{#banner}}
-		<img src="{{.}}" alt="{{title}}" title="{{title}}">
+		<h1 class="banner"><img src="{{.}}" alt="{{title}}" title="{{title}}"></h1>
 	{{/banner}}
-	{{#title}}
-		<span>{{.}}</span>
-	{{/title}}
-</h1>
 
-{{#subtitle}}
-	<h2>{{.}}</h2>
-{{/subtitle}}
+	{{#thumbnail}}
+		<div class="thumbnail">
+			<img src="{{.}}">
+		</div>
+	{{/thumbnail}}
 
-{{#if actions}}
-	<ul class="actions">
-		{{#actions}}
-			<li class="action">
-				{{>listItem}}
-			</li>
-		{{/actions}}
-	</ul>
-{{/if}}
 
-{{#if details}}
-	<ul class="details">
-		{{#details}}
-			{{#if value}}
-				<li>
-					<h3>{{name}}</h3>
-					<p>
 
-						{{#link}}<a href="{{.}}">{{/link}}
+	
+	{{#if title}}<div class="titlebar">{{/if}}
 
-							{{#thumbnail}}<span class="thumbnail"><img src="{{.}}"></span>{{/thumbnail}}
-							{{#value}}<span>{{.}}</span>{{/value}}
+		{{#if title}}<div class="titles">{{/if}}
+		
+			{{#title}}
+				<h1>{{.}}</h1>
+			{{/title}}
 
-						{{#link}}</a>{{/link}}
+			{{#subtitle}}
+				<h2>{{.}}</h2>
+			{{/subtitle}}
 
-					</p>
+		{{#if title}}</div>{{/if}}
+
+		{{#if actions}}
+			<ul class="actions">
+				{{#actions}}
+					<li class="action">
+						{{>listItem}}
+					</li>
+				{{/actions}}
+			</ul>
+		{{/if}}
+
+	{{#if title}}</div>{{/if}}
+
+	{{#if details}}
+		<ul class="details">
+			{{#details}}
+				{{#if value}}
+					<li>
+						<h5>{{name}}</h5>
+						<p>
+
+							{{#link}}<a href="{{.}}">{{/link}}
+
+								{{#thumbnail}}<span class="thumbnail"><img src="{{.}}"></span>{{/thumbnail}}
+								{{#value}}<span>{{.}}</span>{{/value}}
+
+							{{#link}}</a>{{/link}}
+
+						</p>
+					</li>
+				{{/if}}
+			{{/details}}
+		</ul>
+	{{/if}}
+
+	{{#if options}}
+		<ul class="options">
+			{{#options}}
+				<li class="option {{id}}">
+					<h5>{{label}}</h5>
+					<ul>
+						{{#items}}
+							<li class="{{class}}">
+								{{>listItem}}
+							</li>
+						{{/items}}
+					</ul>
 				</li>
-			{{/if}}
-		{{/details}}
-	</ul>
-{{/if}}
+			{{/options}}
+		</ul>
+	{{/if}}
 
-{{#if options}}
-	<ul class="options">
-		{{#options}}
-			<li class="option">
-				<h4>{{label}}</h4>
-				{{>listItems}}
-			</li>
-		{{/options}}
-	</ul>
-{{/if}}
+	{{#if groups}}
+		<ul class="groups">
+			{{#groups}}
+				<li class="group {{#if selected}}selected{{/if}}">
+					{{>listItem}}
+				</li>
+			{{/groups}}
+		</ul>
+	{{/if}}
 
-{{#if groups}}
-	<ul class="groups">
-		{{#groups}}
-			<li class="group">
-				{{>listItem}}
-			</li>
-		{{/groups}}
-	</ul>
-{{/if}}
+	{{#if timeline}}
+		<div class="timeline">
+			{{#timeline}}
+				<span class="{{class}}" style="{{style}}">{{label}}</span>
+			{{/timeline}}
+		</div>
+	{{/if}}
 
-{{#if timeline}}
-	<div class="timeline">
-		{{#timeline}}
-			<span class="{{class}}" style="{{style}}">{{label}}</span>
-		{{/timeline}}
-	</div>
-{{/if}}
+	{{>listItems}}
 
-{{>listItems}}
+	{{#fanart}}
+		<img class="fanart" src="{{.}}" />
+	{{/fanart}}
 
-{{#fanart}}
-	<img class="fanart" src="{{.}}" />
-{{/fanart}}
+</article>

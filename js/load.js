@@ -22,8 +22,10 @@ ready().then(function () { //on document load
 	function createSkeleton() {
 		document.body.innerHTML = `
 			<div id=loading><span><img alt="Loading" src="img/busy.png" class="spin"></span></div>
-			<div id=content></div>
-			<div id=player></div>
+			<div id=main>
+				<div id=content></div>
+				<div id=player></div>
+			</div>
 		`
 	}
 
@@ -55,7 +57,6 @@ ready().then(function () { //on document load
 
 	Promise.all([ connectToKodi, loadTemplates ])
 	.then(([ kodi, templates ]) => {
-		console.log(templates)
 
 		window.xbmc = kodi
 

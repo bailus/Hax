@@ -19,6 +19,14 @@ var player = (function () {
 	function renderPlayer(player) {
 		var slider, volume, data
 
+		function makeButton(o) {
+			return {
+				'label': o.text,
+				'class': o.action,
+				'link': "javascript: (() => { xbmc.get({ 'method': 'Input.ExecuteAction', 'params': { 'action': '"+o.action+"' } }) } )()"
+			}
+		}
+
 		//construct data
 		data = {
 			'buttons': ([
@@ -26,6 +34,11 @@ var player = (function () {
 				{ 'text': 'Play / Pause',	'action': 'playpause' },
 				{ 'text': 'Stop', 			'action':'stop' },
 				{ 'text': 'Next',			'action':'skipnext' },
+				//{ 'text': 'Mute',			'action':'mute' },
+				{ 'text': 'Volume Down',	'action':'volumedown' },
+				{ 'text': 'Volume Up',		'action':'volumeup' }
+			]).map(makeButton),
+			'navbuttons': ([
 				{ 'text': 'Up',				'action':'up' },
 				{ 'text': 'Down',			'action':'down' },
 				{ 'text': 'Left',			'action':'left' },
@@ -34,18 +47,11 @@ var player = (function () {
 				{ 'text': 'Back',			'action':'back' },
 				{ 'text': 'Information',	'action':'info' },
 				//{ 'text': 'Menu',			'action':'contextmenu' },
-				{ 'text': 'Home',			'action':'previousmenu' },
-				//{ 'text': 'Mute',			'action':'mute' },
-				//{ 'text': 'Volume Down',	'action':'volumedown' },
-				//{ 'text': 'Volume Up',		'action':'volumeup' }
-			]).map(o => ({
-				'label': o.text,
-				'class': o.action,
-				'link': "javascript: (() => { xbmc.get({ 'method': 'Input.ExecuteAction', 'params': { 'action': '"+o.action+"' } }) } )()"
-			})),
+				{ 'text': 'Home',			'action':'previousmenu' }
+			]).map(makeButton),
 			'hideNavigation': true
 		}
-		data.buttons.push({
+		data.navbuttons.push({ //the context menu button is a bit more complicated, since it does different things depending on the state of kodi
 			'label': 'Menu',
 			'class': 'contextmenu',
 			'link': "javascript: (() => { xbmc.get({method: 'GUI.GetProperties', params: { properties: [ 'fullscreen' ] }}).then(result => xbmc.sendMessage('Input.ExecuteAction', { action: result.fullscreen ? 'osd' : 'contextmenu' })) })()"
@@ -53,7 +59,6 @@ var player = (function () {
 		
 		//render the data to the DOM via the player template
 		while (player.firstChild) player.removeChild(player.firstChild) //remove child elements
-			console.log(templates.player(data))
 		player.innerHTML = templates.player(data)
 		
 		//make the progress bar work
@@ -89,7 +94,7 @@ var player = (function () {
 
 		//toggle the player.visible class when the player.show button is clicked
 		player.querySelector('.show').addEventListener('click', () => {
-			player.className = player.className ? '' : 'visible'
+			player.className = player.className ? '' : 'minimize'
 		}, false)
 
 	}
@@ -129,7 +134,6 @@ var player = (function () {
 		let progressElem = document.getElementById('progress')
 		let statusElem = progressElem.querySelector('.status')
 		let thumbnailElem = document.querySelector('#player .thumbnail')
-		let detailsElem = document.querySelector('#player .details')
 
 		let player = {}
 
@@ -202,18 +206,6 @@ var player = (function () {
 							(item.season>=0 ? item.episode>=0 && item.season+'x'+item.episode+' ' : '')+
 							(item.artist && item.artist.length ? item.artist.join(', ')+' - '+(item.album || '') : '')+
 							(item.label||item.title||item.file)
-
-						detailsElem.innerHTML = ''+
-							'<h1>'+(
-								(item.showtitle && item.showtitle+' '+item.season+'x'+item.episode) || //tv show
-								(item.artist && item.artist.length && item.artist.join(', ')) || //music
-								(item.tagline && item.title) || //movie
-								''
-							)+'</h1>'+
-							'<h2>'+(
-								(item.album ? item.album+' - ' : '')+
-								(item.tagline||item.label||item.title||item.file)
-							)+'</h2>'
 					}
 					else statusElem.innerHTML = ''
 
