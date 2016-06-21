@@ -1,7 +1,8 @@
+import Page from '../js/page'
+
 const SETTINGS = new Map();
 
-
-pages.add(new Page({
+export default (new Page({
 	'id': 'Settings',
 	'view': 'settings',
 	'data': state => {

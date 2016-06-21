@@ -1,6 +1,8 @@
+import Progress from './progress'
+
+export default (function () {
 "use strict";
 
-var player = (function () {
 
 	let progress = undefined
 
@@ -33,10 +35,7 @@ var player = (function () {
 				{ 'text': 'Previous',		'action': 'skipprevious' },
 				{ 'text': 'Play / Pause',	'action': 'playpause' },
 				{ 'text': 'Stop', 			'action':'stop' },
-				{ 'text': 'Next',			'action':'skipnext' },
-				//{ 'text': 'Mute',			'action':'mute' },
-				{ 'text': 'Volume Down',	'action':'volumedown' },
-				{ 'text': 'Volume Up',		'action':'volumeup' }
+				{ 'text': 'Next',			'action':'skipnext' }
 			]).map(makeButton),
 			'navbuttons': ([
 				{ 'text': 'Up',				'action':'up' },
@@ -48,6 +47,11 @@ var player = (function () {
 				{ 'text': 'Information',	'action':'info' },
 				//{ 'text': 'Menu',			'action':'contextmenu' },
 				{ 'text': 'Home',			'action':'previousmenu' }
+			]).map(makeButton),
+			'rightbuttons': ([
+				//{ 'text': 'Mute',			'action':'mute' },
+				{ 'text': 'Volume Up',		'action':'volumeup' },
+				{ 'text': 'Volume Down',	'action':'volumedown' }
 			]).map(makeButton),
 			'hideNavigation': true
 		}
@@ -68,6 +72,7 @@ var player = (function () {
 		let statusElem = progressElem.querySelector('.status')
 		let timeElem = progressElem.querySelector('.time')
 		let barElem = progressElem.querySelector('.bar')
+		let backgroundElem = progressElem.querySelector('.background')
 
 		progress = Progress(function (position, time, duration) {
 			var value = Math.round(position*10000)
@@ -79,8 +84,8 @@ var player = (function () {
 			oldString = string
 		})
 		progressElem.addEventListener('mouseup', function (e) { //enable seeking
-			let boundingRect = progressElem.getBoundingClientRect()
-			let value = (e.pageX - boundingRect.left - 10) / boundingRect.width
+			let boundingRect = backgroundElem.getBoundingClientRect()
+			let value = (e.pageX - boundingRect.left) / boundingRect.width
 			if (value > 1) value = 1
 			if (value < 0) value = 0
 			value = Math.round(value*100)
@@ -133,7 +138,6 @@ var player = (function () {
 	function tick() {
 		let progressElem = document.getElementById('progress')
 		let statusElem = progressElem.querySelector('.status')
-		let thumbnailElem = document.querySelector('#player .thumbnail')
 
 		let player = {}
 
@@ -153,7 +157,7 @@ var player = (function () {
 							playerStatus = 'playing'
 							document.body.setAttribute('data-status','playing')
 						}
-					} else if (player.speed !== 0) {
+					} else {
 						if (playerStatus !== 'paused') {
 							progress.pause('paused')
 							playerStatus = 'paused'
@@ -190,17 +194,6 @@ var player = (function () {
 
 					var item = playlist.items[player.position]
 					if (item) {
-						if (item.art !== undefined)
-							thumbnailElem.src = xbmc.vfs2uri(
-								item.art['tvshow.poster'] ||
-								item.art['season.poster'] ||
-								item.art['tvshow.fanart'] ||
-								item.art['album.thumb'] ||
-								item.art.poster ||
-								item.art.thumb ||
-								item.art.fanart ||
-								'img/icons/default/DefaultVideo.png')
-
 						statusElem.innerHTML = ''+
 							(item.showtitle ? item.showtitle+' ' : '')+
 							(item.season>=0 ? item.episode>=0 && item.season+'x'+item.episode+' ' : '')+

@@ -1,0 +1,60 @@
+
+/* Size */
+header,
+.crumb,
+.crumb > img,
+.crumb > .label,
+header .backButton img {
+	height: 38px;
+}
+.crumb,
+.crumb > img,
+header .backButton img {
+	width: 38px;
+}
+.crumb .label {
+	line-height: 38px;
+}
+
+/* Flexbox */
+header {
+	display: flex;
+}
+header > .backButton {
+	flex-grow: 0;
+	flex-shrink: 0;
+}
+header > .crumbs {
+	flex-grow: 1;
+	flex-shrink: 1;
+	display: inline-flex;
+}
+
+/* Show the label only on the last crumb */
+.crumb .label {
+	display:none;
+}
+.crumb:last-child {
+	width: auto;
+}
+.crumb:last-child .label {
+	display:inline;
+}
+
+/* Insert the seperator between crumbs */
+.crumb + .crumb {
+	padding-left: 9px;
+	background-image: url('../img/buttons/crumb_seperator.png');
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+
+/* Keep everything tidy */
+.crumb > img,
+.crumb > .label,
+header > .crumbs {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	vertical-align: middle;
+}

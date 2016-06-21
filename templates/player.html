@@ -6,23 +6,23 @@
 
 <div class="player">
 
-<div id="progress">
-	<div class="bar"></div>
-	<div class="status"></div>
-	<div class="time"></div>
-</div>
+	<ul class="player buttons">
+		{{#buttons}}
 
-<ul class="player buttons">
-	{{#buttons}}
+			<li class="{{class}}">
+				<a href="{{link}}">
+					<span>{{label}}</span>
+				</a>
+			</li>
 
-		<li class="{{class}}">
-			<a href="{{link}}">
-				<span>{{label}}</span>
-			</a>
-		</li>
+		{{/buttons}}
+	</ul>
 
-	{{/buttons}}
-</ul>
+	<div id="progress">
+		<div class="status"></div>
+		<div class="background"><div class="bar"></div></div>
+		<div class="time"></div>
+	</div>
 
 </div>
 
@@ -38,4 +38,16 @@
 	{{/navbuttons}}
 </ul>
 
-<div class="show"></div>
+<ul class="right buttons">
+	{{#rightbuttons}}
+
+		<li class="{{class}}">
+			<a href="{{link}}">
+				<span>{{label}}</span>
+			</a>
+		</li>
+
+	{{/rightbuttons}}
+
+	<li class="show"><div>&nbsp;</div></li>
+</ul>

@@ -1,5 +1,9 @@
-const Kodi = (function () {
+import JSONRPC from './jsonrpc'
+
+export default (function () {
 	"use strict";
+
+	let DEBUG = !!(window.advancedSettings && window.advancedSettings.xbmc && window.advancedSettings.xbmc.debug)
 
 	const socket = { 'q': {} }
 	const events = {}
@@ -284,7 +288,7 @@ const Kodi = (function () {
 				if (data.result && data.result.version) {
 					if (DEBUG) console.log('XBMC: Connected: API Version ', data.result.version)
 					pub.version.set(data.result.version.major || data.result.version || undefined)
-					if (pub.version() >= 5 && UPGRADETOSOCKET) upgradeToSocket(wsURL)
+					if (pub.version() >= 5 && advancedSettings.upgradeToSocket) upgradeToSocket(wsURL)
 					resolve(pub)
 				} else {
 					if (DEBUG) console.log('XBMC: Connection failure: Invalid version received', data.error)

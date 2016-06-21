@@ -1,6 +1,7 @@
-"use strict";
+import Page from '../js/page'
+import { seconds2string } from '../js/util'
 
-pages.add(new Page({
+export default (new Page({
 	'id': 'Playlists',
 	'view': 'list',
 	'icon': state => 'img/icons/home/playlists.png',

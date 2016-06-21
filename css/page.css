@@ -1,0 +1,126 @@
+.page > article > .thumbnail {
+	text-align: center;
+}
+.page > article > .thumbnail > img {
+	max-width: 100%;
+	max-height: 500px;
+}
+
+
+/* titlebar */
+article > .titlebar {
+	display: flex;
+	flex-direction: row;
+	flex-shrink: 0;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+}
+article > .titlebar > .titles {
+	flex-grow: 1;
+	flex-shrink: 0;
+	margin-left: 5px;
+	max-width: 100%;
+}
+h1 > img {
+	max-width: 100%;
+}
+h1 > img + span {
+	display: none;
+}
+
+
+/* actions */
+.actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: flex-end;
+	flex-grow: 0;
+	flex-shrink: 0;
+}
+.action {
+	display: flex;
+	align-items: center;
+	padding: 1ch;
+	margin: 0 5px;
+}
+.action + .action {
+	margin-left: 0;
+}
+.action > a {
+	display: block;
+}
+.action img {
+	width: 24px;
+	height: 24px;
+}
+.action > .label {
+	margin-left: 1ch;
+}
+
+
+/* details */
+article > .details > li {
+	margin-left: 5px;
+}
+article > .details > li > p {
+	margin-left: 45px;
+	margin-right: 5px;
+	text-align: justify;
+}
+article > .details > li > p > span + span::before {
+	content: ", ";
+}
+
+/* groups and options */
+.groups {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	flex-shrink: 0;
+}
+.options {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	flex-shrink: 0;
+}
+.option > ul {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	flex-shrink: 1;
+}
+.group {
+	flex-grow: 1;
+	text-align: center;
+}
+.groups > .group,
+.option > ul > li {
+	white-space: nowrap;
+	display: block;
+	line-height: 38px;
+	height: 38px;
+	padding: 0 1em;
+	margin: 0.2em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	flex-shrink: 1;
+}
+.option {
+	max-width: 100%;
+}
+.option.path > ul > li {
+	flex-grow: 1;
+	padding: 0 0.2em;
+}
+.option.path > ul > li:last-child {
+	flex-grow: 1000;
+}
+
+.option.path {
+	flex-grow: 1;
+}
+.option.sort > ul {
+	flex-wrap: nowrap;
+}

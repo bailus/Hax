@@ -1,3 +1,10 @@
+import { ready } from './util'
+import XBMC from './xbmc'
+import Handlebars from 'handlebars'
+import loadPages from './loadPages'
+import player from './player'
+
+
 ready().then(function () { //on document load
 "use strict";
 
@@ -24,13 +31,13 @@ ready().then(function () { //on document load
 			<div id=loading><span><img alt="Loading" src="img/busy.png" class="spin"></span></div>
 			<div id=main>
 				<div id=content></div>
-				<div id=player></div>
+				<div id=player class=minimize></div>
 			</div>
 		`
 	}
 
 	const connectToKodi =
-		Kodi(window.location.host)
+		XBMC(window.location.host)
 		.catch(e => error({ details: [ 'Could not connect to Kodi', e ] }))
 
 	function loadTemplate(templateFile) {
@@ -55,8 +62,8 @@ ready().then(function () { //on document load
 			return global.templates
 		})
 
-	Promise.all([ connectToKodi, loadTemplates ])
-	.then(([ kodi, templates ]) => {
+	Promise.all([ connectToKodi, loadTemplates, loadPages ])
+	.then(([ kodi, templates, pages ]) => {
 
 		window.xbmc = kodi
 

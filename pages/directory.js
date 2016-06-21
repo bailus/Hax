@@ -1,50 +1,9 @@
-"use strict";
+import Page from '../js/page'
 
-pages.add(new Page({
-	'id': 'Files',
-	'view': 'list',
-	'icon': state => 'img/icons/default/DefaultFolder.png',
-	'data': state => {
-		const media = state.get('media')
-		
-		const types = [
-			{ 'media': 'video', 'label': 'Video' },
-			{ 'media': 'music', 'label': 'Music' },
-			{ 'media': 'pictures', 'label': 'Pictures' },
-			{ 'media': 'files', 'label': 'Files' }
-		]
-
-		if (media) types = types.filter(type => type.label == media);
-
-		return Promise.all(types.map(type => xbmc.get({
-			'method': 'Files.GetSources',
-			'params': { 'media': type.media },
-			'cache': true
-		})))
-		.then(datas => datas.map(data => data.sources || []))
-		.then(datas => datas.map(sources => sources.map(source => {
-			source.link = '#page=Directory&directory=' + encodeURIComponent(source.file) + '&media=' + source.media
-			source.thumbnail = 'img/icons/default/DefaultFolder.png'
-			source.thumbnailWidth = '50px'
-			return source
-		})))
-		.then(datas => types.map((type, i) => {
-			type.items = datas[i]
-			return type
-		}))
-		.then(items => ({
-			title: 'Files',
-			items: items
-		}))
-
-	}
-}));
-
-pages.add(new Page({
+export default (new Page({
 	'id': 'Directory',
 	'view': 'list',
 	'parent': 'Files',
-	//'groupby': 'filetype',
 	'icon': state => 'img/icons/default/DefaultFolder.png',
 	'parentState': state => {
 		const m = {
@@ -122,9 +81,9 @@ pages.add(new Page({
 
 			return file
 		}))
-		/*.then(items => { //add back button
+		/*.then(items => { //add up button
 
-			//don't put a back button on top level directories
+			//don't put an up button on top level directories
 			if (!path) return items
 			
 			let parentPath = pathSplit(path)
@@ -176,8 +135,7 @@ pages.add(new Page({
 						items: [
 							{ label: 'Name', sortby: 'label', order: 'ascending' },
 							{ label: 'Size', sortby: 'size', order: 'descending' },
-							{ label: 'Date', sortby: 'date', order: 'descending' },
-							{ label: 'File', sortby: 'type', order: 'ascending' }
+							{ label: 'Date', sortby: 'date', order: 'descending' }
 						].map(item => ({
 								label: item.label + (sortby === item.sortby ? { 'ascending': ' ↑', 'descending': ' ↓' }[order] : ''),
 								'class': sortby === item.sortby ? 'selected' : undefined,

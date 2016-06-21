@@ -1,0 +1,81 @@
+.items {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	flex-shrink:0;
+}
+
+.listItem {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.listItem.leaf {
+	flex-direction: row;
+}
+
+/* Size */
+.listItem .listAction,
+.listItem .thumbnail {
+	width: 50px;
+	height: 50px;
+	line-height: 50px;
+}
+.listItem.leaf .label {
+	height: 50px;
+	line-height: 50px;
+}
+.listItem .line1,
+.listItem .line2 {
+	line-height: 20px;
+	height: 20px;
+}
+
+/* Thumbnail */
+.listItem .thumbnail {
+	display: block;
+	text-align: center;
+	flex-shrink: 0;
+}
+.listItem .thumbnail img {
+	max-width: 100%;
+	max-height: 100%;
+	vertical-align: middle;
+}
+@media all and (max-width : 300px) {
+	.listItem .thumbnail {
+		display: none !important;
+	}
+}
+
+/* Label */
+.listItem .label {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding-left: 1ch;
+	flex-grow: 1;
+}
+.listItem .line1,
+.listItem .line2 {
+	display: block;		
+}
+.listItem .label,
+.listItem .line1,
+.listItem .line2 {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.listItem .line2 span + span {
+	margin-left: 10px;
+}
+
+/* Actions */
+.listItem .listAction {
+	display: block;
+	flex-shrink: 0;
+	text-align: center;
+	font-size: 32px;
+}

@@ -1,12 +1,12 @@
-"use strict";
 /*
-JSON-RPC v2.0 javascript client.
+JSON-RPC v2.0 javascript client. (es2015 module)
 Supports websocket and ajax (http) transports.
 
 author: Samuel Bailey (sam@bailey.geek.nz)
 licence: To the extent possible under law, Samuel Bailey has waived all copyright and related or neighboring rights to this work. This work is published from: New Zealand.
 
 usage:
+	import JSONRPC from 'jsonrpc.js';
 	let server = JSONRPC( 'ws://localhost:9090/jsonrpc' );
 	server.sendMessage('JSONRPC.Introspect', function (data) {
 		console.log('JSONRPC Introspect: ', data);
@@ -33,7 +33,8 @@ events: (websocket only)
 		Runs the function when the websocket disconnects.
 	
 */
-const JSONRPC = ((window, undefined) => {
+export default ((window, undefined) => {
+"use strict";
 
 	const $ = {  //dummy jQuery object TODO: get rid of this
 		extend: (a, b) => {
@@ -47,7 +48,7 @@ const JSONRPC = ((window, undefined) => {
 		}
 	}
 	
-	const DEBUG = false
+	let DEBUG = !!(window.advancedSettings && window.advancedSettings.jsonRPC && window.advancedSettings.jsonRPC.debug)
 	const WEBSOCKET_TIMEOUT = 3000 //3 seconds
 	const MAX_SOCKET_CONNECTION_ATTEMPTS = 3
 	let notifications = {}

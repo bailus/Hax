@@ -8,22 +8,19 @@
 }
 #player > .player {
 	display: flex;
-    flex-direction: column;
-	flex-shrink: 0;
-	flex-grow: 1e6;
-    justify-content: space-between;
+	flex-direction: column;
+	flex-shrink: 1;
+	flex-grow: 1;
+	justify-content: space-between;
+	max-width: 100%;
 }
-#player > .player > .buttons {
+#player .buttons {
     display: flex;
-    flex-direction: row;
-    flex-grow: 0;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
 }
-#player #progress {
+#player .buttons.right {
+	flex-direction: column;
 	flex-shrink: 0;
-	min-width: 300px;
+	
 }
 #player > .nav {
 	flex-shrink: 0;
@@ -65,7 +62,7 @@
 		height: 150px;
 	}
 
-	#player > .show {
+	#player .show > div {
 		height: 50px;
 		width: 50px;
 		flex-shrink: 0;
@@ -78,39 +75,76 @@
 		display: none;
 	}
 	#player.minimize,
+	#player.minimize > .right.buttons,
 	#player.minimize > .player,
 	#player.minimize > .player > .buttons {
-		justify-content: stretch;
-		display: inline-flex;
+		justify-content: flex-end;
+		display: flex;
 		flex-direction: row;
 		flex-wrap: nowrap;
-    	justify-items: stretch;
 	}
 	#player.minimize #progress {
 		min-width: auto;
 		flex-basis: 300px;
 		flex-grow: 1;
-		flex-shrink: 1;
+		flex-shrink: 1e9;
+		flex-direction: column;
 	}
 	#player.minimize {
 		display: flex;
+		width: 100%;
+		flex-wrap: nowrap;
 	}
 	#player.minimize > .player,
-	#player.minimize > .player > .buttons {
-		flex-shrink: 1;
+	#player.minimize > .player > .nav.buttons {
+		flex-shrink: 1e6;
+		overflow: hidden;
 	}
-	#player.minimize > .show {
+	#player.minimize .show > div {
 		background-image: url('../img/buttons/drawer_open.png');
 		display: block;
+	}
+	#player.minimize .volumedown {
+		order: -10;
 	}
 	#player.minimize > .player > * {
 		flex-shrink: 1;
 	}
 
 
-	@media (max-width: 600px) {
-		#player.minimize > .player > .buttons {
+	@media (max-width: 270px) {
+		#player .buttons.right {
+			flex-direction: row;
+			flex-wrap: nowrap;
+		}
+		#player .buttons.right .volumedown {
+			order: -1;
+		}
+	}
+
+
+	@media (max-width: 800px) {
+		#player.minimize .buttons > * {
 			display: none;
+		}
+		#player.minimize .buttons > .show {
+			display: block;
+		}
+	}	
+	@media (min-width: 300px) {
+		#player.minimize .buttons > .playpause {
+			display: block;
+		}
+	}	
+	@media (min-width: 500px) {
+		#player.minimize .buttons > .volumeup,
+		#player.minimize .buttons > .volumedown {
+			display: block;
+		}
+	}
+	@media (min-width: 700px) {
+		#player.minimize .buttons > .skipnext {
+			display: block;
 		}
 	}
 
@@ -166,36 +200,62 @@ body[data-status=playing] #player .playpause a { background-image:url('../img/bu
 
 
 #progress {
-	border: none;
-	height: 40px;
-	border-left:10px solid #000;
-	border-right:10px solid #000;
-	margin-top:5px;
-	margin-bottom:5px;
-	background-color: #4D4D4D;
+	display: flex;
+	justify-content: space-around;
 	overflow:hidden;
-	position: relative;
+	height: 46px;
+	max-width: 100%;
+	padding: 2px 12px;
+	color: white;
+	flex-direction: column;
+}
+#progress > * {
+	z-index: 100;
 }
 #progress .bar {
-	background-color: #1C657D;
 	height: 100%;
-	position: absolute; top: 0; left: 0;
+	width: 0;
+
+	background-color: white;
+}
+#progress .background {
+	height: 7px;
+	width: 100%;
+	background-color: hsl(203, 34%, 44%);
 }
 #progress .status {
-	position: absolute;
-	left: 7px;
-	top: 4px;
+    max-width: 100%;
+
+    align-self: flex-start;
+    flex-shrink: 1e3;
+    
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 #progress .time {
-	position: absolute;
-	right: 7px;
-	bottom: 4px;
+	flex-grow: 0;
+	align-self: flex-end;
 }
 #nowPlaying {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
 
+#player .buttons .info,
+#player .buttons .back,
+#player .buttons .up,
+#player .buttons .down,
+#player .buttons .left,
+#player .buttons .right,
+#player .buttons .select,
+#player .buttons .enter,
+#player .buttons .previousmenu,
+#player .buttons .contextmenu {
+	position:absolute;
+	margin-left:-25px;margin-right:-25px;
+	text-align:center;
+}
 
 #player .buttons .info         { top:0; left: 25px; }
 #player .buttons .back         { top:0;	right: 25px; }
@@ -210,17 +270,12 @@ body[data-status=playing] #player .playpause a { background-image:url('../img/bu
 #player .buttons .up        { top:0;	left: 50%;  }
 #player .buttons .down      { top:100px; left: 50%;  }
 
-#player .info,
-#player .back,
-#player .up,
-#player .down,
-#player .left,
-#player .right,
-#player .select,
-#player .enter,
-#player .previousmenu,
-#player .contextmenu {
-	position:absolute;
-	margin-left:-25px;margin-right:-25px;
-	text-align:center;
+
+
+@media (orientation: landscape) {
+
+	#player {
+		flex-wrap: nowrap;
+	}
+
 }

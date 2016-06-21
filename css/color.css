@@ -8,17 +8,19 @@ a, a:hover, a:visited {
 
 /* Background */
 body,
-header,
-#player,
 #loading {
 	background-color: #000;
+}
+header,
+#player {
+	background-color: hsl(203, 64%, 24%);
 }
 
 
 /* Borders */
 header,
 #player {
-	border-color: gray;
+	border-color:;
 }
 
 
@@ -26,7 +28,7 @@ header,
 .group,
 .option > ul > li,
 .action {
-	background-color: #333;
+	background-color: hsl(203, 24%, 12%);
 }
 
 .group.selected,

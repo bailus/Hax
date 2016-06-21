@@ -1,12 +1,12 @@
-"use strict";
+import Page from '../js/page'
 
-pages.add(new Page({
+export default (new Page({
 	'id': 'Actors',
 	'view': 'list',
 	'groupby': 'alpha',
 	'icon': () => 'img/icons/default/DefaultActor.png',
 	'parentState': state => new Map([[ 'page', 'Menu' ],[ 'media', state.get('media') ]]),
-	'data': state => {
+	'data': function (state) {
 
 		//higher order map functions (for use in promise api .then() calls)
 		const map_ = func => array => Array.prototype.map.call(array, func)

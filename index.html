@@ -8,46 +8,25 @@
 <link rel=stylesheet href=css/typography.css>
 <link rel=stylesheet href=css/color.css>
 <link rel=stylesheet href=css/layout.css>
+<link rel=stylesheet href=css/header.css>
+<link rel=stylesheet href=css/page.css>
+<link rel=stylesheet href=css/list.css>
 <link rel=stylesheet href=css/spin.css>
-<!--<link rel=stylesheet href=css/style.css>-->
 <link rel=stylesheet href=css/player.css>
 
 <link rel=stylesheet href=css/home.css>
 <link rel=stylesheet href=css/guide.css>
 
-<script>
-"use strict";
-const DEBUG = true
-const DEFAULT_PAGE = 'Home'
-const GROUPING_THRESHOLD = 50
-const UPGRADETOSOCKET = false
-const EPG_WIDTH = 20
-const EPG_PADDING = 4
-</script>
-<script src="js/jsonrpc.js"></script>
-<script src="lib/moment.js"></script>
-<script src="lib/handlebars.js"></script>
-
-<script src="js/hash.js"></script>
-<script src="js/time.js"></script>
-<script src="js/progress.js"></script>
-
-<script src="js/xbmc.js"></script>
-<script src="js/ready.js"></script>
-<script src="js/pages.js"></script>
-<script src="js/pages/menu.js"></script>
-<script src="js/pages/files.js"></script>
-<script src="js/pages/actors.js"></script>
-<script src="js/pages/movies.js"></script>
-<script src="js/pages/music.js"></script>
-<script src="js/pages/musicvideos.js"></script>
-<script src="js/pages/playlists.js"></script>
-<script src="js/pages/addons.js"></script>
-<script src="js/pages/tvshows.js"></script>
-<script src="js/pages/live.js"></script>
-
-<script src="js/player.js"></script>
-
 <body lang=en>
 <div id=loading><span><img alt="Loading" src="img/busy.png" class="spin"></span></div>
-<script src="js/load.js"></script>
+
+<script src="https://jspm.io/system@0.19.js"></script>
+<script>
+	System.import('./advancedSettings.json!')
+	.then(advancedSettings => {
+		window.advancedSettings = advancedSettings
+		System.config(advancedSettings.systemJS)
+		if (advancedSettings.debug = true) console.info('advancedSettings.json', advancedSettings)
+		System.import(advancedSettings.mainModule)
+	})
+</script>

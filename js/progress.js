@@ -1,4 +1,4 @@
-var Progress = function (update) {
+export default function (update) {
 
 	var requestAnimationFrame = window.requestAnimationFrame ||
 	window.webkitRequestAnimationFrame ||
