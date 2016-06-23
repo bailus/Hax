@@ -20,5 +20,10 @@
 <body lang=en>
 <div id=loading><span><img alt="Loading" src="img/busy.png" class="spin"></span></div>
 
+<script src="https://jspm.io/system@0.19.js"></script>
 <script src="advancedSettings.js"></script>
-<script src="build.js"></script>
+<script>	
+	System.config(advancedSettings.systemJS)
+	if (advancedSettings.debug = true) console.info('advancedSettings.json', advancedSettings)
+	System.import(advancedSettings.mainModule)
+</script>

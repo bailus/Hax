@@ -1,0 +1,26 @@
+{
+  "jspm": {
+    "dependencies": {
+      "babel-plugin-transform-es2015-arrow-functions": "npm:babel-plugin-transform-es2015-arrow-functions@^6.8.0",
+      "babel-preset-es2015": "npm:babel-preset-es2015@^6.9.0",
+      "handlebars": "github:components/handlebars.js@^4.0.5",
+      "json": "github:systemjs/plugin-json@^0.1.2",
+      "moment": "npm:moment@^2.13.0"
+    },
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "core-js": "npm:core-js@^1.1.4",
+      "traceur": "github:jmcriffey/bower-traceur@0.0.93",
+      "traceur-runtime": "github:jmcriffey/bower-traceur-runtime@0.0.93",
+      "typescript": "npm:typescript@^1.6.2"
+    },
+    "buildConfig": {
+      "transpileES6": true,
+      "minify": true
+    }
+  },
+  "devDependencies": {
+    "jspm": "^0.16.39"
+  }
+}

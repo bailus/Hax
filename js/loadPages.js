@@ -1,7 +1,6 @@
 import pages from "./pages"
+import pageData from "../pages/loadAll.js"
 
-const files = advancedSettings.pages.files.map( filename => System.import('../pages/'+filename).then( page => pages.add(page.default) ) )
+pageData.forEach( page => pages.add(page) )
 
-const pagesLoaded = Promise.all(files)
-
-export default pagesLoaded.then( () => pages )
+export default pages
