@@ -1,3 +1,5 @@
+import 'babel-polyfill'
+import 'whatwg-fetch'
 import { ready } from './util'
 import XBMC from './xbmc'
 import Handlebars from 'handlebars'

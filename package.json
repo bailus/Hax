@@ -2,10 +2,12 @@
   "jspm": {
     "dependencies": {
       "babel-plugin-transform-es2015-arrow-functions": "npm:babel-plugin-transform-es2015-arrow-functions@^6.8.0",
+      "babel-polyfill": "npm:babel-polyfill@^6.9.1",
       "babel-preset-es2015": "npm:babel-preset-es2015@^6.9.0",
       "handlebars": "github:components/handlebars.js@^4.0.5",
       "json": "github:systemjs/plugin-json@^0.1.2",
-      "moment": "npm:moment@^2.13.0"
+      "moment": "npm:moment@^2.13.0",
+      "whatwg-fetch": "npm:whatwg-fetch@^1.0.0"
     },
     "devDependencies": {
       "babel": "npm:babel-core@^5.8.24",

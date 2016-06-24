@@ -132,8 +132,8 @@ export default (function () {
 			};
 			return self;
 		})(),
-		'makeFilter': first_(filter => {
-			let value = getHash(filter.key)
+		'makeFilter': first_((state, filter) => {
+			let value = state.get(filter.key)
 			if (!value) return
 
 			let out = {

@@ -6,17 +6,11 @@ System.config({
     "optional": [
       "runtime",
       "optimisation.modules.system"
-    ],
-    "presets": [ "es2015" ]
+    ]
   },
   paths: {
     "github:*": "jspm_packages/github/*",
     "npm:*": "jspm_packages/npm/*"
-  },
-  meta: {
-    '*.js': {
-      format: 'es6'
-    }
   },
 
   depCache: {
@@ -164,6 +158,7 @@ System.config({
   map: {
     "babel": "npm:babel-core@5.8.38",
     "babel-plugin-transform-es2015-arrow-functions": "npm:babel-plugin-transform-es2015-arrow-functions@6.8.0",
+    "babel-polyfill": "npm:babel-polyfill@6.9.1",
     "babel-preset-es2015": "npm:babel-preset-es2015@6.9.0",
     "babel-runtime": "npm:babel-runtime@5.8.38",
     "core-js": "npm:core-js@1.2.6",
@@ -173,6 +168,7 @@ System.config({
     "traceur": "github:jmcriffey/bower-traceur@0.0.93",
     "traceur-runtime": "github:jmcriffey/bower-traceur-runtime@0.0.93",
     "typescript": "npm:typescript@1.8.10",
+    "whatwg-fetch": "npm:whatwg-fetch@1.0.0",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.4.1"
     },
@@ -434,6 +430,12 @@ System.config({
     "npm:babel-plugin-transform-strict-mode@6.8.0": {
       "babel-runtime": "npm:babel-runtime@6.9.2",
       "babel-types": "npm:babel-types@6.10.2"
+    },
+    "npm:babel-polyfill@6.9.1": {
+      "babel-runtime": "npm:babel-runtime@6.9.2",
+      "core-js": "npm:core-js@2.4.0",
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "regenerator-runtime": "npm:regenerator-runtime@0.9.5"
     },
     "npm:babel-preset-es2015@6.9.0": {
       "babel-plugin-check-es2015-constants": "npm:babel-plugin-check-es2015-constants@6.8.0",

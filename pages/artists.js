@@ -7,7 +7,7 @@ export default (new Page({
 	'icon': () => 'img/icons/default/DefaultMusicArtists.png',
 	'parentState': state => new Map([[ 'page', 'Menu' ],[ 'media', 'Music' ]]),
 	'data': function (state) {
-		const filter = xbmc.makeFilter([
+		const filter = xbmc.makeFilter(state, [
 			{ name: 'Genre', key: 'genre', type: String }
 		])
 

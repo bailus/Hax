@@ -4,7 +4,6 @@ export default (new Page({
 	'id': 'Albums',
 	'view': 'list',
 	'groupby': 'title',
-	'icon': state => 'img/icons/default/DefaultMusicAlbums.png',
 	'icon': state => 
 			state.get('group') === 'genre' || state.get('genre') ? 'img/icons/default/DefaultMusicGenres.png' :
 			state.get('group') === 'year' || state.get('year') ? 'img/icons/default/DefaultYear.png' :
@@ -12,7 +11,7 @@ export default (new Page({
 	'parentState': state => new Map([[ 'page', 'Menu' ],[ 'media', 'Music' ]]),
 	'data': function (state) {
 
-		let filter = xbmc.makeFilter([
+		let filter = xbmc.makeFilter(state, [
 			{ name: 'Genre', key: 'genre', type: String },
 			{ name: 'Artist', key: 'artist', type: String }
 		])

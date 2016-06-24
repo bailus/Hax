@@ -13,7 +13,7 @@ export default (new Page({
 	'parentState': state => new Map([[ 'page', 'Menu' ],[ 'media', 'Movies' ]]),
 	'data': function (state) {
 
-		let filter = xbmc.makeFilter([
+		let filter = xbmc.makeFilter(state, [
 			{ name: 'Genre', key: 'genre', type: String },
 			{ name: 'Actor', key: 'actor', type: String }
 		])
