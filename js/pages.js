@@ -1,4 +1,4 @@
-import { getHashMap } from './hash'
+import { getHashMap, hashMapToURL } from './hash'
 
 export default (() => {
 "use strict";

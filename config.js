@@ -6,11 +6,17 @@ System.config({
     "optional": [
       "runtime",
       "optimisation.modules.system"
-    ]
+    ],
+    "presets": [ "es2015" ]
   },
   paths: {
     "github:*": "jspm_packages/github/*",
     "npm:*": "jspm_packages/npm/*"
+  },
+  meta: {
+    '*.js': {
+      format: 'es6'
+    }
   },
 
   depCache: {

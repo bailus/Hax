@@ -1,3 +1,5 @@
+import { hashMapToURL } from './hash'
+
 export default class {
 	
 	constructor(obj) {
