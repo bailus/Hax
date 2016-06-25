@@ -1,29 +1,35 @@
 {
-	"version": "0.3.3",
-	"name": "Hax",
-	"description": "A fast and simple remote control for mobile devices.",
-	"keywords": [ "Kodi", "XBMC" ],
-	"homepage": "http://bailey.geek.nz/remote",
-	"author": "Samuel Bailey <sam@bailey.geek.nz> (http://bailey.geek.nz)",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/bailus/hax"
-	},
+  "version": "0.3.3",
+  "name": "Hax",
+  "description": "A fast and simple remote control for mobile devices.",
+  "keywords": [
+    "Kodi",
+    "XBMC"
+  ],
+  "homepage": "http://bailey.geek.nz/remote",
+  "author": "Samuel Bailey <sam@bailey.geek.nz> (http://bailey.geek.nz)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bailus/hax"
+  },
   "bugs": {
     "url": "https://github.com/bailus/hax/issues"
   },
-
   "scripts": {
-  	"lint": "jshint **.js",
-  	"build:js": "jspm bundle-sfx js/main",
-  	"build:css": "",
-  	"build": "npm run build:css && npm run build:js"
+    "lint": "jshint **.js",
+    "clean": "rm -r build && mkdir build",
+    "build:js": "jspm bundle-sfx js/main build/script.js",
+    "build:css": "postcss -u postcss-import -u postcss-cssnext -i css/style.css -o build/style.css",
+    "build:html": "cp templates/index.html build/",
+    "build:assets": "cp -r img templates addon.xml advancedSettings.js LICENSE.txt icon.png favicon.ico fanart.jpg build/",
+    "build": "npm run clean && npm run build:css && npm run build:js && npm run build:html && npm run build:assets"
   },
-
   "devDependencies": {
-    "jspm": "^0.16.39"
+    "jspm": "^0.16.39",
+    "postcss-cli": "^2.5.2",
+    "postcss-cssnext": "^2.6.0",
+    "postcss-import": "^8.1.2"
   },
-
   "jspm": {
     "dependencies": {
       "babel-plugin-transform-es2015-arrow-functions": "npm:babel-plugin-transform-es2015-arrow-functions@^6.8.0",
