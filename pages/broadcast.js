@@ -1,4 +1,5 @@
 import Page from '../js/page'
+import { makeJsLink } from '../js/util'
 
 export default (new Page({
 	'id': 'Broadcast',
@@ -23,7 +24,7 @@ export default (new Page({
 			actions: [ {
 				label: 'Play',
 				thumbnail: 'img/buttons/play.png',
-				link: "javascript:(() => { xbmc.Open({ 'item': { 'channelid': "+broadcastid+" } }) })()"
+				link: makeJsLink(`xbmc.Open({ 'item': { 'channelid': ${ broadcastid } } })`)
 			} ]
 		}))
 

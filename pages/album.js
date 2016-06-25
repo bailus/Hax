@@ -1,5 +1,5 @@
 import Page from '../js/page'
-import { seconds2shortstring } from '../js/util'
+import { seconds2shortstring, makeJsLink } from '../js/util'
 
 export default (new Page({
 	'id': 'Album',
@@ -40,12 +40,12 @@ export default (new Page({
 					{
 						label: 'Play',
 						thumbnail: 'img/buttons/play.png',
-						link: "javascript:(() => { xbmc.Play({ 'albumid': "+albumid+" }, 0) })()"
+						link: makeJsLink(`xbmc.Play({ 'albumid': (${ albumid }) }, 0)`)
 					},
 					{
 						label: 'Add to playlist',
 						thumbnail: 'img/buttons/add.png',
-						link: "javascript:(() => { xbmc.sendMessage('Playlist.add', { 'playlistid': 0, 'item': { 'albumid': "+albumid+" } }) })()"
+						link: makeJsLink(`xbmc.sendMessage('Playlist.add', { 'playlistid': 0, 'item': { 'albumid': (${ albumid }) } })`)
 					}
 				]
 			}
@@ -69,7 +69,10 @@ export default (new Page({
 			number: song.track,
 			details: seconds2shortstring(song.duration),
 			actions: [
-				{ label: '▶', link: `javascript: xbmc.Play({ 'albumid': ${albumid} }, 0, ${song.track-1})` }
+				{
+					label: '▶',
+					link: makeJsLink(`xbmc.Play({ 'albumid': ${albumid} }, 0, ${song.track-1})`)
+				}
 			]
 		})));
 

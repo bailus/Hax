@@ -1,4 +1,5 @@
 import Page from '../js/page'
+import { makeJsLink } from '../js/util'
 
 export default (new Page({
 	'id': 'Addon',
@@ -27,11 +28,11 @@ export default (new Page({
 				'actions': [
 					addon.enabled && {
 						'label': 'Run',
-						'link': "javascript:( () => { xbmc.sendMessage('Addons.ExecuteAddon', { 'addonid': '"+addonid+"' }) } )()"
+						'link': makeJsLink(`xbmc.sendMessage('Addons.ExecuteAddon', { 'addonid': '${ addonid }' })`)
 					},
 					{
 						'label': addon.enabled ? 'Disable' : 'Enable',
-						'link': "javascript:( () => { xbmc.sendMessage('Addons.SetAddonEnabled', { 'addonid': '"+addonid+"', 'enabled': 'toggle' }); pages.renderPage() } )()"
+						'link': makeJsLink(`xbmc.sendMessage('Addons.SetAddonEnabled', { 'addonid': '${ addonid }', 'enabled': 'toggle' }); pages.renderPage()`)
 					}
 				]
 			}))

@@ -1,6 +1,5 @@
 window.advancedSettings = {
-	"debug": true,
-	"mainModule": "./js/main",
+	"debug": false,
 	"upgradeToSocket": false,
 	"pages": {
 		"default": "Home",
@@ -10,18 +9,10 @@ window.advancedSettings = {
 		"width": 20,
 		"padding": 4
 	},
-	"systemJS": {
-		"transpiler": "babel",
-		"meta": {
-			"*.ts": {
-				"format": "es6"
-			}
-		}
-	},
 	"jsonRPC": {
 		"debug": false
 	},
 	"xbmc": {
-		"debug": true
+		"debug": false
 	}
 };

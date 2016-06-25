@@ -15,8 +15,8 @@ export default (new Page({
 			{ 'label': 'TV', 'link': '#page=Menu&media=TV', 'thumbnail': 'img/icons/home/livetv.png' },
 			{ 'label': 'Music Videos', 'link': '#page=Menu&media=Music Videos', 'thumbnail':'img/icons/home/musicvideos.png' },
 			{ 'label': 'Pictures', 'link': '#page=Menu&media=Pictures', 'thumbnail': 'img/icons/home/pictures.png' },
-			{ 'label': 'Playlists', 'link': '#page=Playlists', 'thumbnail':'img/icons/home/playlists.png' },
-			{ 'label': 'Addons', 'link':'#page=Addons', 'thumbnail':'img/icons/home/addons.png' }
+			{ 'label': 'Playlists', 'link': '#page=Playlists', 'thumbnail':'img/icons/home/playlists.png' }//,
+			//{ 'label': 'Addons', 'link':'#page=Addons', 'thumbnail':'img/icons/home/addons.png' }
 		];
 		return Promise.resolve({ 'items': items, 'hideNavigation': true })
 	}

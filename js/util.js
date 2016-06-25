@@ -1,4 +1,3 @@
-"use strict";
 /* Various useful functions */
 
 
@@ -46,4 +45,8 @@ export function ymd2string (ymd) {
 		+x[2]+((/1[1-3]$/).test(x[2]) ? 'th' : (/1$/).test(x[2]) ? 'st' : (/2$/).test(x[2]) ? 'nd' : (/3$/).test(x[2]) ? 'rd' : 'th')+',',
 		x[0]
 	].join(' ')
+}
+
+export function makeJsLink(script) {
+	return `javascript: (function () { ${ script } })()`
 }

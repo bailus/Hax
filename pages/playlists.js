@@ -1,5 +1,5 @@
 import Page from '../js/page'
-import { seconds2string } from '../js/util'
+import { seconds2string, makeJsLink } from '../js/util'
 
 export default (new Page({
 	'id': 'Playlists',
@@ -35,21 +35,21 @@ export default (new Page({
 						item.actions = [
 							{
 								label: '▶',
-								link: `javascript: 
+								link: makeJsLink(`
 									xbmc.get({
 										'method': 'Player.Open',
-										'params': { 'item': { 'playlistid': ${playlist.playlistid}, 'position': ${i} } }
+										'params': { 'item': { 'playlistid': ${ playlist.playlistid }, 'position': ${i} } }
 									})
-									.then(pages.renderPage)`
+								`)
 							},
 							{ //TODO: should be disabled on the currently playing item
 								label: '-',
-								link: `javascript: 
+								link: makeJsLink(`
 									xbmc.get({
 										'method': 'Playlist.Remove',
-										'params': { 'playlistid': ${playlist.playlistid}, 'position': ${i} }
+										'params': { 'playlistid': ${ playlist.playlistid }, 'position': ${i} }
 									})
-									.then(pages.renderPage)`
+								`)
 							}
 						]
 

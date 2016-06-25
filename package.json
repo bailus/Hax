@@ -1,4 +1,29 @@
 {
+	"version": "0.3.3",
+	"name": "Hax",
+	"description": "A fast and simple remote control for mobile devices.",
+	"keywords": [ "Kodi", "XBMC" ],
+	"homepage": "http://bailey.geek.nz/remote",
+	"author": "Samuel Bailey <sam@bailey.geek.nz> (http://bailey.geek.nz)",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/bailus/hax"
+	},
+  "bugs": {
+    "url": "https://github.com/bailus/hax/issues"
+  },
+
+  "scripts": {
+  	"lint": "jshint **.js",
+  	"build:js": "jspm bundle-sfx js/main",
+  	"build:css": "",
+  	"build": "npm run build:css && npm run build:js"
+  },
+
+  "devDependencies": {
+    "jspm": "^0.16.39"
+  },
+
   "jspm": {
     "dependencies": {
       "babel-plugin-transform-es2015-arrow-functions": "npm:babel-plugin-transform-es2015-arrow-functions@^6.8.0",
@@ -12,17 +37,11 @@
     "devDependencies": {
       "babel": "npm:babel-core@^5.8.24",
       "babel-runtime": "npm:babel-runtime@^5.8.24",
-      "core-js": "npm:core-js@^1.1.4",
-      "traceur": "github:jmcriffey/bower-traceur@0.0.93",
-      "traceur-runtime": "github:jmcriffey/bower-traceur-runtime@0.0.93",
-      "typescript": "npm:typescript@^1.6.2"
+      "core-js": "npm:core-js@^1.1.4"
     },
     "buildConfig": {
       "transpileES6": true,
-      "minify": true
+      "minify": false
     }
-  },
-  "devDependencies": {
-    "jspm": "^0.16.39"
   }
 }

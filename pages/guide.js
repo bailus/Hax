@@ -1,5 +1,5 @@
 import Page from '../js/page'
-import { minutes2string } from '../js/util'
+import { minutes2string, makeJsLink } from '../js/util'
 import moment from 'moment'
 
 export default (new Page({
@@ -56,7 +56,7 @@ export default (new Page({
 					actions: [ {
 						label: 'Play '+channel.label,
 						thumbnail: 'img/buttons/play.png',
-						link: "javascript:(() => { xbmc.Open({ 'item': { 'channelid': "+channel.channelid+" } }) })()"
+						link: makeJsLink(`xbmc.Open({ 'item': { 'channelid': (${ channel.channelid }) } })`)
 					} ],
 					items: items
 				}))

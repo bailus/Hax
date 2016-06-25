@@ -1,4 +1,5 @@
 import Page from '../js/page'
+import { makeJsLink } from '../js/util'
 
 export default (new Page({
 	'id': 'Artist',
@@ -38,12 +39,12 @@ export default (new Page({
 				{
 					label: 'Play',
 					thumbnail: 'img/buttons/play.png',
-					link: "javascript:(() => { xbmc.Play({ 'artistid': "+x.artistid+" }, 0) })()"
+					link: makeJsLink(`xbmc.Play({ 'artistid': (${ x.artistid }) }, 0)`)
 				},
 				{
 					label: 'Add to playlist',
 					thumbnail: 'img/buttons/add.png',
-					link: "javascript:(() => { xbmc.sendMessage('Playlist.add', { 'playlistid': 0, 'item': { 'artistid': "+x.artistid+" } }) })()"
+					link: makeJsLink(`xbmc.sendMessage('Playlist.add', { 'playlistid': 0, 'item': { 'artistid': (${ x.artistid }) } })`)
 				}
 			]
 		}))
@@ -63,7 +64,10 @@ export default (new Page({
 			thumbnailWidth: '50px',
 			year: album.year,
 			actions: [
-				{ label: '▶', link: `javascript: xbmc.Play({ 'albumid': ${album.albumid} }, 0)` }
+				{
+					label: '▶',
+					link: makeJsLink(`xbmc.Play({ 'albumid': ${album.albumid} }, 0)`)
+				}
 			]
 		})))
 

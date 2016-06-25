@@ -1,5 +1,5 @@
 import Page from '../js/page'
-import { seconds2string } from '../js/util'
+import { seconds2string, makeJsLink } from '../js/util'
 
 export default (new Page({
 	'id': 'Movies',
@@ -48,7 +48,10 @@ export default (new Page({
 					alpha: movie.label[0].toUpperCase(),
 					thumbnail: movie.thumbnail ? xbmc.vfs2uri(movie.thumbnail) : 'img/icons/default/DefaultVideo.png',
 					actions: [
-						{ label: '▶', link: `javascript: xbmc.Play({ 'movieid': ${movie.movieid} }, 1)` }
+						{
+							label: '▶',
+							link: makeJsLink(`xbmc.Play({ 'movieid': ${movie.movieid} }, 1)`)
+						}
 					]
 				}
 			})

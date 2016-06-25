@@ -1,0 +1,33 @@
+.page[data-page="Directory"][data-media="pictures"] .items {
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+.page[data-page="Directory"][data-media="pictures"] .listItem.leaf {
+	width: 120px;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	margin: 5px;
+}
+.page[data-page="Directory"][data-media="pictures"] .listItem.leaf .thumbnail {
+	height: 120px;
+}
+.page[data-page="Directory"][data-media="pictures"] .listItem.leaf > * {
+	width: 100%;
+	flex-shrink: 0;
+}
+.page[data-page="Directory"][data-media="pictures"] .listItem.leaf .listActions {
+    display: flex;
+    justify-content: flex-end;
+	order: -1;
+	height: 0;
+	overflow: visible;
+	flex-grow: 0;
+	z-index: 10;
+
+}
+.page[data-page="Directory"][data-media="pictures"] .listItem.leaf .label {
+	text-align: center;
+}
+.page[data-page="Directory"][data-media="pictures"] .listItem.leaf .line2 {
+	display: none;
+}

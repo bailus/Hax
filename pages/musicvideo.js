@@ -1,5 +1,5 @@
 import Page from '../js/page'
-import { seconds2string, ymd2string } from '../js/util'
+import { seconds2string, ymd2string, makeJsLink } from '../js/util'
 
 export default (new Page({
 	'id': 'Music Video',
@@ -37,11 +37,11 @@ export default (new Page({
 			actions: [
 				{	label: 'Play',
 					thumbnail: 'img/buttons/play.png',
-					link: "javascript:(() => { xbmc.Play({ 'musicvideoid': "+details.musicvideoid+" }, 1) })()"
+					link: makeJsLink(`xbmc.Play({ 'musicvideoid': ${ details.musicvideoid } }, 1)`)
 				},
 				{	label: 'Add to Playlist',
 					thumbnail: 'img/buttons/add.png',
-					link: "javascript:(() => { xbmc.sendMessage('Playlist.Add',{ 'playlistid': 1, 'item': { 'musicvideoid': "+details.musicvideoid+" } }) })()"
+					link: makeJsLink(`xbmc.sendMessage('Playlist.Add',{ 'playlistid': 1, 'item': { 'musicvideoid': ${ details.musicvideoid } } })`)
 				}
 			]
 		}))

@@ -132,18 +132,18 @@ export default (function () {
 			};
 			return self;
 		})(),
-		'makeFilter': first_((state, filter) => {
-			let value = state.get(filter.key)
-			if (!value) return
-
-			let out = {
-				'filter': {},
-				'name': filter.name,
-				'value': new filter.type(value)
-			}
-			out.filter[filter.key] = out.value
-			return out
-		}),
+		'makeFilter': (state, filter) => (first_((filter) => {
+					let value = state.get(filter.key)
+					if (!value) return
+		
+					let out = {
+						'filter': {},
+						'name': filter.name,
+						'value': new filter.type(value)
+					}
+					out.filter[filter.key] = out.value
+					return out
+				}))(filter),
 		'onNotification': function (method, callback) {
 			server.onNotification(method, callback);
 		},
