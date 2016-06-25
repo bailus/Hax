@@ -1,4 +1,5 @@
 import Page from '../js/page'
+import { makeJsLink } from '../js/util'
 
 export default (new Page({
 	'id': 'Directory',
@@ -57,7 +58,10 @@ export default (new Page({
 			else {
 				var playlistid = file.type === 'audio' ? 0 : file.type === 'video' ? 1 : 2
 				file.actions = [
-					{ label: '▶', link: `javascript: xbmc.Open({ 'item': { 'file': '${xbmc.vfs2uri(file.file)}'  } })` }
+					{
+						label: '▶',
+						link: makeJsLink(`xbmc.Open({ 'item': { 'file': '${xbmc.vfs2uri(file.file)}'  } })`)
+					}
 				]
 				/*file.play = function () {
 					if (file.type === 'unknown' || !file.type) file.type = media

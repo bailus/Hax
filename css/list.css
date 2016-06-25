@@ -73,6 +73,10 @@
 }
 
 /* Actions */
+.listItem .listActions {
+	display: flex;
+	flex-wrap: nowrap;
+}
 .listItem .listAction {
 	display: block;
 	flex-shrink: 0;

@@ -9129,7 +9129,7 @@ $__System.register("133", ["132"], function(exports_1, context_1) {
                         };
                         return self;
                     })(),
-                    'makeFilter': first_(function (state, filter) {
+                    'makeFilter': function (state, filter) { return (first_(function (filter) {
                         var value = state.get(filter.key);
                         if (!value)
                             return;
@@ -9140,7 +9140,7 @@ $__System.register("133", ["132"], function(exports_1, context_1) {
                         };
                         out.filter[filter.key] = out.value;
                         return out;
-                    }),
+                    }))(filter); },
                     'onNotification': function (method, callback) {
                         server.onNotification(method, callback);
                     },
@@ -14476,14 +14476,17 @@ $__System.register("138", ["139"], function(exports_1, context_1) {
     }
 });
 
-$__System.register("13a", ["139"], function(exports_1, context_1) {
+$__System.register("13a", ["139", "13b"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var page_1;
+    var page_1, util_1;
     return {
         setters:[
             function (page_1_1) {
                 page_1 = page_1_1;
+            },
+            function (util_1_1) {
+                util_1 = util_1_1;
             }],
         execute: function() {
             exports_1("default",(new page_1.default({
@@ -14511,11 +14514,11 @@ $__System.register("13a", ["139"], function(exports_1, context_1) {
                         'actions': [
                             addon.enabled && {
                                 'label': 'Run',
-                                'link': "javascript:( () => { xbmc.sendMessage('Addons.ExecuteAddon', { 'addonid': '" + addonid + "' }) } )()"
+                                'link': util_1.makeJsLink("xbmc.sendMessage('Addons.ExecuteAddon', { 'addonid': '" + addonid + "' })")
                             },
                             {
                                 'label': addon.enabled ? 'Disable' : 'Enable',
-                                'link': "javascript:( () => { xbmc.sendMessage('Addons.SetAddonEnabled', { 'addonid': '" + addonid + "', 'enabled': 'toggle' }); pages.renderPage() } )()"
+                                'link': util_1.makeJsLink("xbmc.sendMessage('Addons.SetAddonEnabled', { 'addonid': '" + addonid + "', 'enabled': 'toggle' }); pages.renderPage()")
                             }
                         ]
                     }); });
@@ -14525,7 +14528,7 @@ $__System.register("13a", ["139"], function(exports_1, context_1) {
     }
 });
 
-$__System.register("13b", ["139"], function(exports_1, context_1) {
+$__System.register("13c", ["139"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var page_1;
@@ -14565,7 +14568,7 @@ $__System.register("13b", ["139"], function(exports_1, context_1) {
     }
 });
 
-$__System.register("13c", ["139", "13d"], function(exports_1, context_1) {
+$__System.register("13d", ["139", "13b"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var page_1, util_1;
@@ -14615,12 +14618,12 @@ $__System.register("13c", ["139", "13d"], function(exports_1, context_1) {
                                 {
                                     label: 'Play',
                                     thumbnail: 'img/buttons/play.png',
-                                    link: "javascript:(() => { xbmc.Play({ 'albumid': " + albumid + " }, 0) })()"
+                                    link: util_1.makeJsLink("xbmc.Play({ 'albumid': (" + albumid + ") }, 0)")
                                 },
                                 {
                                     label: 'Add to playlist',
                                     thumbnail: 'img/buttons/add.png',
-                                    link: "javascript:(() => { xbmc.sendMessage('Playlist.add', { 'playlistid': 0, 'item': { 'albumid': " + albumid + " } }) })()"
+                                    link: util_1.makeJsLink("xbmc.sendMessage('Playlist.add', { 'playlistid': 0, 'item': { 'albumid': (" + albumid + ") } })")
                                 }
                             ]
                         };
@@ -14642,7 +14645,10 @@ $__System.register("13c", ["139", "13d"], function(exports_1, context_1) {
                         number: song.track,
                         details: util_1.seconds2shortstring(song.duration),
                         actions: [
-                            { label: '▶', link: "javascript: xbmc.Play({ 'albumid': " + albumid + " }, 0, " + (song.track - 1) + ")" }
+                            {
+                                label: '▶',
+                                link: util_1.makeJsLink("xbmc.Play({ 'albumid': " + albumid + " }, 0, " + (song.track - 1) + ")")
+                            }
                         ]
                     }); }); });
                     return Promise.all([getAlbumDetails, getSongs]) //wait for the above to finish
@@ -14657,14 +14663,17 @@ $__System.register("13c", ["139", "13d"], function(exports_1, context_1) {
     }
 });
 
-$__System.register("13e", ["139"], function(exports_1, context_1) {
+$__System.register("13e", ["139", "13b"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var page_1;
+    var page_1, util_1;
     return {
         setters:[
             function (page_1_1) {
                 page_1 = page_1_1;
+            },
+            function (util_1_1) {
+                util_1 = util_1_1;
             }],
         execute: function() {
             exports_1("default",(new page_1.default({
@@ -14704,7 +14713,7 @@ $__System.register("13e", ["139"], function(exports_1, context_1) {
                             link: '#page=Album&albumid=' + album.albumid,
                             thumbnail: album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : 'img/icons/default/DefaultAlbumCover.png',
                             actions: [
-                                { label: '▶', link: "javascript: xbmc.Play({ 'albumid': " + album.albumid + " }, 0)" }
+                                { label: '▶', link: util_1.makeJsLink("xbmc.Play({ 'albumid': " + album.albumid + " }, 0)") }
                             ]
                         }); })
                     }); });
@@ -14714,14 +14723,17 @@ $__System.register("13e", ["139"], function(exports_1, context_1) {
     }
 });
 
-$__System.register("13f", ["139"], function(exports_1, context_1) {
+$__System.register("13f", ["139", "13b"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var page_1;
+    var page_1, util_1;
     return {
         setters:[
             function (page_1_1) {
                 page_1 = page_1_1;
+            },
+            function (util_1_1) {
+                util_1 = util_1_1;
             }],
         execute: function() {
             exports_1("default",(new page_1.default({
@@ -14761,12 +14773,12 @@ $__System.register("13f", ["139"], function(exports_1, context_1) {
                             {
                                 label: 'Play',
                                 thumbnail: 'img/buttons/play.png',
-                                link: "javascript:(() => { xbmc.Play({ 'artistid': " + x.artistid + " }, 0) })()"
+                                link: util_1.makeJsLink("xbmc.Play({ 'artistid': (" + x.artistid + ") }, 0)")
                             },
                             {
                                 label: 'Add to playlist',
                                 thumbnail: 'img/buttons/add.png',
-                                link: "javascript:(() => { xbmc.sendMessage('Playlist.add', { 'playlistid': 0, 'item': { 'artistid': " + x.artistid + " } }) })()"
+                                link: util_1.makeJsLink("xbmc.sendMessage('Playlist.add', { 'playlistid': 0, 'item': { 'artistid': (" + x.artistid + ") } })")
                             }
                         ]
                     }); });
@@ -14785,7 +14797,10 @@ $__System.register("13f", ["139"], function(exports_1, context_1) {
                         thumbnailWidth: '50px',
                         year: album.year,
                         actions: [
-                            { label: '▶', link: "javascript: xbmc.Play({ 'albumid': " + album.albumid + " }, 0)" }
+                            {
+                                label: '▶',
+                                link: util_1.makeJsLink("xbmc.Play({ 'albumid': " + album.albumid + " }, 0)")
+                            }
                         ]
                     }); }); });
                     return Promise.all([getArtistDetails, getAlbums]) //wait for the above to finish
@@ -14849,14 +14864,17 @@ $__System.register("140", ["139"], function(exports_1, context_1) {
     }
 });
 
-$__System.register("141", ["139"], function(exports_1, context_1) {
+$__System.register("141", ["139", "13b"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var page_1;
+    var page_1, util_1;
     return {
         setters:[
             function (page_1_1) {
                 page_1 = page_1_1;
+            },
+            function (util_1_1) {
+                util_1 = util_1_1;
             }],
         execute: function() {
             exports_1("default",(new page_1.default({
@@ -14881,7 +14899,7 @@ $__System.register("141", ["139"], function(exports_1, context_1) {
                             actions: [{
                                     label: 'Play',
                                     thumbnail: 'img/buttons/play.png',
-                                    link: "javascript:(() => { xbmc.Open({ 'item': { 'channelid': " + broadcastid + " } }) })()"
+                                    link: util_1.makeJsLink("xbmc.Open({ 'item': { 'channelid': " + broadcastid + " } })")
                                 }]
                         });
                     });
@@ -14944,14 +14962,17 @@ $__System.register("142", ["139"], function(exports_1, context_1) {
     }
 });
 
-$__System.register("143", ["139"], function(exports_1, context_1) {
+$__System.register("143", ["139", "13b"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var page_1;
+    var page_1, util_1;
     return {
         setters:[
             function (page_1_1) {
                 page_1 = page_1_1;
+            },
+            function (util_1_1) {
+                util_1 = util_1_1;
             }],
         execute: function() {
             exports_1("default",(new page_1.default({
@@ -14976,7 +14997,7 @@ $__System.register("143", ["139"], function(exports_1, context_1) {
                         actions: [{
                                 label: 'Play',
                                 thumbnail: 'img/buttons/play.png',
-                                link: "javascript:(() => { xbmc.Open({ 'item': { 'channelid': " + channelid + " } }) })()"
+                                link: util_1.makeJsLink("xbmc.Open({ 'item': { 'channelid': " + channelid + " } })")
                             }]
                     }); });
                 }
@@ -15038,14 +15059,17 @@ $__System.register("144", ["139"], function(exports_1, context_1) {
     }
 });
 
-$__System.register("145", ["139"], function(exports_1, context_1) {
+$__System.register("145", ["139", "13b"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var page_1;
+    var page_1, util_1;
     return {
         setters:[
             function (page_1_1) {
                 page_1 = page_1_1;
+            },
+            function (util_1_1) {
+                util_1 = util_1_1;
             }],
         execute: function() {
             exports_1("default",(new page_1.default({
@@ -15100,7 +15124,10 @@ $__System.register("145", ["139"], function(exports_1, context_1) {
                         else {
                             var playlistid = file.type === 'audio' ? 0 : file.type === 'video' ? 1 : 2;
                             file.actions = [
-                                { label: '▶', link: "javascript: xbmc.Open({ 'item': { 'file': '" + xbmc.vfs2uri(file.file) + "'  } })" }
+                                {
+                                    label: '▶',
+                                    link: util_1.makeJsLink("xbmc.Open({ 'item': { 'file': '" + xbmc.vfs2uri(file.file) + "'  } })")
+                                }
                             ];
                             /*file.play = function () {
                                 if (file.type === 'unknown' || !file.type) file.type = media
@@ -15172,7 +15199,7 @@ $__System.register("145", ["139"], function(exports_1, context_1) {
     }
 });
 
-$__System.register("146", ["139", "13d"], function(exports_1, context_1) {
+$__System.register("146", ["139", "13b"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var page_1, util_1;
@@ -15223,11 +15250,11 @@ $__System.register("146", ["139", "13d"], function(exports_1, context_1) {
                         actions: [
                             { label: 'Play',
                                 thumbnail: 'img/buttons/play.png',
-                                link: "javascript:(() => { xbmc.Play({ 'episodeid': " + x.episodeid + " }, 1) })()"
+                                link: util_1.makeJsLink("xbmc.Play({ 'episodeid': (" + x.episodeid + ") }, 1)")
                             },
                             { label: 'Add to Playlist',
                                 thumbnail: 'img/buttons/add.png',
-                                link: "javascript:(() => { xbmc.sendMessage('Playlist.Add',{ 'playlistid': 1, 'item': { 'episodeid': " + x.episodeid + " } }) })()"
+                                link: util_1.makeJsLink("xbmc.sendMessage('Playlist.Add',{ 'playlistid': 1, 'item': { 'episodeid': (" + x.episodeid + ") } })")
                             }
                         ],
                         items: [
@@ -18374,7 +18401,7 @@ define("14a", ["149"], function(main) {
 });
 
 })();
-$__System.register("14b", ["139", "13d", "14a"], function(exports_1, context_1) {
+$__System.register("14b", ["139", "13b", "14a"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var page_1, util_1, moment_1;
@@ -18447,7 +18474,7 @@ $__System.register("14b", ["139", "13d", "14a"], function(exports_1, context_1) 
                                 actions: [{
                                         label: 'Play ' + channel.label,
                                         thumbnail: 'img/buttons/play.png',
-                                        link: "javascript:(() => { xbmc.Open({ 'item': { 'channelid': " + channel.channelid + " } }) })()"
+                                        link: util_1.makeJsLink("xbmc.Open({ 'item': { 'channelid': (" + channel.channelid + ") } })")
                                     }],
                                 items: items
                             }); });
@@ -18574,8 +18601,7 @@ $__System.register("14c", ["139"], function(exports_1, context_1) {
                         { 'label': 'TV', 'link': '#page=Menu&media=TV', 'thumbnail': 'img/icons/home/livetv.png' },
                         { 'label': 'Music Videos', 'link': '#page=Menu&media=Music Videos', 'thumbnail': 'img/icons/home/musicvideos.png' },
                         { 'label': 'Pictures', 'link': '#page=Menu&media=Pictures', 'thumbnail': 'img/icons/home/pictures.png' },
-                        { 'label': 'Playlists', 'link': '#page=Playlists', 'thumbnail': 'img/icons/home/playlists.png' },
-                        { 'label': 'Addons', 'link': '#page=Addons', 'thumbnail': 'img/icons/home/addons.png' }
+                        { 'label': 'Playlists', 'link': '#page=Playlists', 'thumbnail': 'img/icons/home/playlists.png' } //,
                     ];
                     return Promise.resolve({ 'items': items, 'hideNavigation': true });
                 }
@@ -18584,7 +18610,7 @@ $__System.register("14c", ["139"], function(exports_1, context_1) {
     }
 });
 
-$__System.register("14d", ["139", "13d"], function(exports_1, context_1) {
+$__System.register("14d", ["139", "13b"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var page_1, util_1;
@@ -18707,7 +18733,7 @@ $__System.register("14d", ["139", "13d"], function(exports_1, context_1) {
                                 label: item.showtitle + ' - ' + item.title,
                                 details: ['Season ' + item.season, 'Episode ' + item.episode],
                                 actions: [
-                                    { label: '▶', link: "javascript: xbmc.Play({ 'episodeid': " + item.episodeid + " }, 1)" }
+                                    { label: '▶', link: util_1.makeJsLink("xbmc.Play({ 'episodeid': " + item.episodeid + " }, 1)") }
                                 ]
                             }); }
                         },
@@ -18721,7 +18747,7 @@ $__System.register("14d", ["139", "13d"], function(exports_1, context_1) {
                                 label: item.title + (item.originaltitle && item.originaltitle != item.title ? ' [' + item.originaltitle + ']' : ''),
                                 details: ['(' + item.year + ')', util_1.seconds2string(item.runtime)],
                                 actions: [
-                                    { label: '▶', link: "javascript: xbmc.Play({ 'movieid': " + item.movieid + " }, 1)" }
+                                    { label: '▶', link: util_1.makeJsLink("xbmc.Play({ 'movieid': " + item.movieid + " }, 1)") }
                                 ]
                             }); }
                         },
@@ -18735,7 +18761,7 @@ $__System.register("14d", ["139", "13d"], function(exports_1, context_1) {
                                 label: item.artist + ' - ' + item.title,
                                 details: [item.album + ' (' + item.year + ')', util_1.seconds2string(item.runtime)],
                                 actions: [
-                                    { label: '▶', link: "javascript: xbmc.Play({ 'musicvideoid': " + item.musicvideoid + " }, 1)" }
+                                    { label: '▶', link: util_1.makeJsLink("xbmc.Play({ 'musicvideoid': " + item.musicvideoid + " }, 1)") }
                                 ]
                             }); }
                         },
@@ -18791,7 +18817,7 @@ $__System.register("14d", ["139", "13d"], function(exports_1, context_1) {
     }
 });
 
-$__System.register("14e", ["139", "13d"], function(exports_1, context_1) {
+$__System.register("14e", ["139", "13b"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var page_1, util_1;
@@ -18837,11 +18863,11 @@ $__System.register("14e", ["139", "13d"], function(exports_1, context_1) {
                         actions: [
                             { label: 'Play',
                                 thumbnail: 'img/buttons/play.png',
-                                link: "javascript:(() => { xbmc.Play({ 'movieid': " + moviedetails.movieid + " }, 1) })()"
+                                link: util_1.makeJsLink("xbmc.Play({ 'movieid': " + moviedetails.movieid + " }, 1)")
                             },
                             { label: 'Add to Playlist',
                                 thumbnail: 'img/buttons/add.png',
-                                link: "javascript:(() => { xbmc.sendMessage('Playlist.Add',{ 'playlistid': 1, 'item': { 'movieid': " + moviedetails.movieid + " } }) })()"
+                                link: util_1.makeJsLink("xbmc.sendMessage('Playlist.Add',{ 'playlistid': 1, 'item': { 'movieid': " + moviedetails.movieid + " } })")
                             }
                         ],
                         items: [
@@ -18861,7 +18887,7 @@ $__System.register("14e", ["139", "13d"], function(exports_1, context_1) {
     }
 });
 
-$__System.register("14f", ["139", "13d"], function(exports_1, context_1) {
+$__System.register("14f", ["139", "13b"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var page_1, util_1;
@@ -18917,7 +18943,10 @@ $__System.register("14f", ["139", "13d"], function(exports_1, context_1) {
                                 alpha: movie.label[0].toUpperCase(),
                                 thumbnail: movie.thumbnail ? xbmc.vfs2uri(movie.thumbnail) : 'img/icons/default/DefaultVideo.png',
                                 actions: [
-                                    { label: '▶', link: "javascript: xbmc.Play({ 'movieid': " + movie.movieid + " }, 1)" }
+                                    {
+                                        label: '▶',
+                                        link: util_1.makeJsLink("xbmc.Play({ 'movieid': " + movie.movieid + " }, 1)")
+                                    }
                                 ]
                             };
                         })
@@ -18928,7 +18957,7 @@ $__System.register("14f", ["139", "13d"], function(exports_1, context_1) {
     }
 });
 
-$__System.register("150", ["139", "13d"], function(exports_1, context_1) {
+$__System.register("150", ["139", "13b"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var page_1, util_1;
@@ -18975,11 +19004,11 @@ $__System.register("150", ["139", "13d"], function(exports_1, context_1) {
                         actions: [
                             { label: 'Play',
                                 thumbnail: 'img/buttons/play.png',
-                                link: "javascript:(() => { xbmc.Play({ 'musicvideoid': " + details.musicvideoid + " }, 1) })()"
+                                link: util_1.makeJsLink("xbmc.Play({ 'musicvideoid': " + details.musicvideoid + " }, 1)")
                             },
                             { label: 'Add to Playlist',
                                 thumbnail: 'img/buttons/add.png',
-                                link: "javascript:(() => { xbmc.sendMessage('Playlist.Add',{ 'playlistid': 1, 'item': { 'musicvideoid': " + details.musicvideoid + " } }) })()"
+                                link: util_1.makeJsLink("xbmc.sendMessage('Playlist.Add',{ 'playlistid': 1, 'item': { 'musicvideoid': " + details.musicvideoid + " } })")
                             }
                         ]
                     }); });
@@ -19037,7 +19066,7 @@ $__System.register("151", ["139"], function(exports_1, context_1) {
     }
 });
 
-$__System.register("152", ["139", "13d"], function(exports_1, context_1) {
+$__System.register("152", ["139", "13b"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var page_1, util_1;
@@ -19084,11 +19113,11 @@ $__System.register("152", ["139", "13d"], function(exports_1, context_1) {
                                     item.actions = [
                                         {
                                             label: '▶',
-                                            link: "javascript: \n\t\t\t\t\t\t\t\t\txbmc.get({\n\t\t\t\t\t\t\t\t\t\t'method': 'Player.Open',\n\t\t\t\t\t\t\t\t\t\t'params': { 'item': { 'playlistid': " + playlist.playlistid + ", 'position': " + i + " } }\n\t\t\t\t\t\t\t\t\t})\n\t\t\t\t\t\t\t\t\t.then(pages.renderPage)"
+                                            link: util_1.makeJsLink("\n\t\t\t\t\t\t\t\t\txbmc.get({\n\t\t\t\t\t\t\t\t\t\t'method': 'Player.Open',\n\t\t\t\t\t\t\t\t\t\t'params': { 'item': { 'playlistid': " + playlist.playlistid + ", 'position': " + i + " } }\n\t\t\t\t\t\t\t\t\t})\n\t\t\t\t\t\t\t\t")
                                         },
                                         {
                                             label: '-',
-                                            link: "javascript: \n\t\t\t\t\t\t\t\t\txbmc.get({\n\t\t\t\t\t\t\t\t\t\t'method': 'Playlist.Remove',\n\t\t\t\t\t\t\t\t\t\t'params': { 'playlistid': " + playlist.playlistid + ", 'position': " + i + " }\n\t\t\t\t\t\t\t\t\t})\n\t\t\t\t\t\t\t\t\t.then(pages.renderPage)"
+                                            link: util_1.makeJsLink("\n\t\t\t\t\t\t\t\t\txbmc.get({\n\t\t\t\t\t\t\t\t\t\t'method': 'Playlist.Remove',\n\t\t\t\t\t\t\t\t\t\t'params': { 'playlistid': " + playlist.playlistid + ", 'position': " + i + " }\n\t\t\t\t\t\t\t\t\t})\n\t\t\t\t\t\t\t\t")
                                         }
                                     ];
                                 }
@@ -19106,64 +19135,7 @@ $__System.register("152", ["139", "13d"], function(exports_1, context_1) {
     }
 });
 
-$__System.register("13d", [], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
-    /* Various useful functions */
-    // Promise that resolves when the DOM is loaded
-    function ready() {
-        // Credit to Jake Archibald
-        // https://github.com/jakearchibald/svgomg/blob/master/src/js/page/utils.js#L7
-        return new Promise(function (resolve, reject) {
-            function checkState() {
-                if (document.readyState !== 'loading')
-                    resolve();
-            }
-            document.addEventListener('readystatechange', checkState);
-            checkState();
-        });
-    }
-    exports_1("ready", ready);
-    function minutes2string(t) {
-        var hours = Math.floor(t / 60), mins = Math.floor(t % 60), out = [];
-        if (hours > 0)
-            out.push(hours + ' hour' + (hours > 1 ? 's' : ''));
-        if (mins > 0)
-            out.push(mins + ' minute' + (mins > 1 ? 's' : ''));
-        return out.join(' ');
-    }
-    exports_1("minutes2string", minutes2string);
-    function seconds2string(t) {
-        return minutes2string(Math.round(t / 60));
-    }
-    exports_1("seconds2string", seconds2string);
-    function seconds2shortstring(t) {
-        function str(n) {
-            return (n < 10 && n > -10 ? '0' : '') + Math.floor(n);
-        }
-        if (t > 3600)
-            return str(t / 3600) + ':' + str((t % 3600) / 60) + ':' + str(t % 60);
-        else
-            return str(t / 60) + ':' + str(t % 60);
-    }
-    exports_1("seconds2shortstring", seconds2shortstring);
-    function ymd2string(ymd) {
-        var x = ymd.split(' ')[0].split('-');
-        return [
-            ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][x[1] - 1],
-            +x[2] + ((/1[1-3]$/).test(x[2]) ? 'th' : (/1$/).test(x[2]) ? 'st' : (/2$/).test(x[2]) ? 'nd' : (/3$/).test(x[2]) ? 'rd' : 'th') + ',',
-            x[0]
-        ].join(' ');
-    }
-    exports_1("ymd2string", ymd2string);
-    return {
-        setters:[],
-        execute: function() {
-        }
-    }
-});
-
-$__System.register("153", ["139", "13d"], function(exports_1, context_1) {
+$__System.register("153", ["139", "13b"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var page_1, util_1;
@@ -19197,7 +19169,7 @@ $__System.register("153", ["139", "13d"], function(exports_1, context_1) {
                         .then(function (data) { return data.tvshowdetails || {}; })
                         .then(function (details) { return ({
                         title: details.title,
-                        banner: details.art && details.art.banner ? xbmc.vfs2uri(details.art.banner) : undefined,
+                        banner: details.art && details.art.banner ? xbmc.vfs2uri(details.art.banner) : undefined
                     }); })
                         .then(function (details) {
                         if (details.art)
@@ -19223,7 +19195,10 @@ $__System.register("153", ["139", "13d"], function(exports_1, context_1) {
                         details: [util_1.seconds2string(episode.runtime), episode.lastplayed ? 'Last played ' + util_1.ymd2string(episode.lastplayed) : undefined],
                         number: episode.episode,
                         actions: [
-                            { label: '▶', link: "javascript: xbmc.Play({ 'episodeid': " + episode.episodeid + " }, 1)" }
+                            {
+                                label: '▶',
+                                link: util_1.makeJsLink("xbmc.Play({ 'episodeid': " + episode.episodeid + " }, 1)")
+                            }
                         ]
                     }); }); });
                     return Promise.all([getShowDetails, getEpisodes])
@@ -19476,7 +19451,7 @@ $__System.register("154", ["139"], function(exports_1, context_1) {
     }
 });
 
-$__System.register("155", ["138", "13a", "13b", "13c", "13e", "13f", "140", "141", "142", "143", "144", "145", "146", "147", "148", "14b", "14c", "14d", "14e", "14f", "150", "151", "152", "153", "154"], function(exports_1, context_1) {
+$__System.register("155", ["138", "13a", "13c", "13d", "13e", "13f", "140", "141", "142", "143", "144", "145", "146", "147", "148", "14b", "14c", "14d", "14e", "14f", "150", "151", "152", "153", "154"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var actors_js_1, addon_js_1, addons_js_1, album_js_1, albums_js_1, artist_js_1, artists_js_1, broadcast_js_1, channelgroup_js_1, channel_js_1, channels_js_1, directory_js_1, episode_js_1, files_js_1, genres_js_1, guide_js_1, home_js_1, menu_js_1, movie_js_1, movies_js_1, musicvideo_js_1, musicvideos_js_1, playlists_js_1, tvshow_js_1, tvshows_js_1;
@@ -19694,14 +19669,78 @@ $__System.register("157", [], function(exports_1, context_1) {
     }
 });
 
-$__System.register("158", ["157"], function(exports_1, context_1) {
+/* Various useful functions */
+$__System.register("13b", [], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var progress_1;
+    // Promise that resolves when the DOM is loaded
+    function ready() {
+        // Credit to Jake Archibald
+        // https://github.com/jakearchibald/svgomg/blob/master/src/js/page/utils.js#L7
+        return new Promise(function (resolve, reject) {
+            function checkState() {
+                if (document.readyState !== 'loading')
+                    resolve();
+            }
+            document.addEventListener('readystatechange', checkState);
+            checkState();
+        });
+    }
+    exports_1("ready", ready);
+    function minutes2string(t) {
+        var hours = Math.floor(t / 60), mins = Math.floor(t % 60), out = [];
+        if (hours > 0)
+            out.push(hours + ' hour' + (hours > 1 ? 's' : ''));
+        if (mins > 0)
+            out.push(mins + ' minute' + (mins > 1 ? 's' : ''));
+        return out.join(' ');
+    }
+    exports_1("minutes2string", minutes2string);
+    function seconds2string(t) {
+        return minutes2string(Math.round(t / 60));
+    }
+    exports_1("seconds2string", seconds2string);
+    function seconds2shortstring(t) {
+        function str(n) {
+            return (n < 10 && n > -10 ? '0' : '') + Math.floor(n);
+        }
+        if (t > 3600)
+            return str(t / 3600) + ':' + str((t % 3600) / 60) + ':' + str(t % 60);
+        else
+            return str(t / 60) + ':' + str(t % 60);
+    }
+    exports_1("seconds2shortstring", seconds2shortstring);
+    function ymd2string(ymd) {
+        var x = ymd.split(' ')[0].split('-');
+        return [
+            ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][x[1] - 1],
+            +x[2] + ((/1[1-3]$/).test(x[2]) ? 'th' : (/1$/).test(x[2]) ? 'st' : (/2$/).test(x[2]) ? 'nd' : (/3$/).test(x[2]) ? 'rd' : 'th') + ',',
+            x[0]
+        ].join(' ');
+    }
+    exports_1("ymd2string", ymd2string);
+    function makeJsLink(script) {
+        return "javascript: (function () { " + script + " })()";
+    }
+    exports_1("makeJsLink", makeJsLink);
+    return {
+        setters:[],
+        execute: function() {
+        }
+    }
+});
+
+$__System.register("158", ["157", "13b"], function(exports_1, context_1) {
+    "use strict";
+    var __moduleName = context_1 && context_1.id;
+    var progress_1, util_1;
     return {
         setters:[
             function (progress_1_1) {
                 progress_1 = progress_1_1;
+            },
+            function (util_1_1) {
+                util_1 = util_1_1;
             }],
         execute: function() {
             exports_1("default",(function () {
@@ -19710,22 +19749,13 @@ $__System.register("158", ["157"], function(exports_1, context_1) {
                 function timeObjToSeconds(o) {
                     return ((((o.hours * 60) + o.minutes) * 60) + o.seconds) + (o.milliseconds / 1e3);
                 }
-                function seconds2string(t) {
-                    var str = function (n) {
-                        return (n < 10 && n > -10 ? '0' : '') + Math.floor(n);
-                    };
-                    if (t > 3600)
-                        return str(t / 3600) + ':' + str((t % 3600) / 60) + ':' + str(t % 60);
-                    else
-                        return str(t / 60) + ':' + str(t % 60);
-                }
                 function renderPlayer(player) {
                     var slider, volume, data;
                     function makeButton(o) {
                         return {
                             'label': o.text,
                             'class': o.action,
-                            'link': "javascript: (() => { xbmc.get({ 'method': 'Input.ExecuteAction', 'params': { 'action': '" + o.action + "' } }) } )()"
+                            'link': util_1.makeJsLink("\n\t\t\t\t\txbmc.get({\n\t\t\t\t\t\t'method': 'Input.ExecuteAction',\n\t\t\t\t\t\t'params': {\n\t\t\t\t\t\t\t'action': '" + o.action + "'\n\t\t\t\t\t\t}\n\t\t\t\t\t})\n\t\t\t\t")
                         };
                     }
                     //construct data
@@ -19757,7 +19787,7 @@ $__System.register("158", ["157"], function(exports_1, context_1) {
                     data.navbuttons.push({
                         'label': 'Menu',
                         'class': 'contextmenu',
-                        'link': "javascript: (() => { xbmc.get({method: 'GUI.GetProperties', params: { properties: [ 'fullscreen' ] }}).then(result => xbmc.sendMessage('Input.ExecuteAction', { action: result.fullscreen ? 'osd' : 'contextmenu' })) })()"
+                        'link': util_1.makeJsLink("\n\t\t\t\txbmc.get({\n\t\t\t\t\tmethod: 'GUI.GetProperties',\n\t\t\t\t\tparams: {\n\t\t\t\t\t\tproperties: [ 'fullscreen' ] \n\t\t\t\t\t}\n\t\t\t\t})\n\t\t\t\t.then(result => xbmc.sendMessage('Input.ExecuteAction', {\n\t\t\t\t\taction: result.fullscreen ? 'osd' : 'contextmenu'\n\t\t\t\t}))\n\t\t\t")
                     });
                     //render the data to the DOM via the player template
                     while (player.firstChild)
@@ -19772,7 +19802,7 @@ $__System.register("158", ["157"], function(exports_1, context_1) {
                     var backgroundElem = progressElem.querySelector('.background');
                     progress = progress_1.default(function (position, time, duration) {
                         var value = Math.round(position * 10000);
-                        var string = seconds2string(time) + '/' + seconds2string(duration);
+                        var string = util_1.seconds2string(time) + '/' + util_1.seconds2string(duration);
                         if (string !== oldString) {
                             timeElem.innerHTML = string;
                             barElem.setAttribute('style', 'width: ' + (value / 100) + '%;');
@@ -19918,7 +19948,7 @@ $__System.register("158", ["157"], function(exports_1, context_1) {
     }
 });
 
-$__System.register("1", ["12f", "131", "13d", "133", "135", "156", "158"], function(exports_1, context_1) {
+$__System.register("1", ["12f", "131", "13b", "133", "135", "156", "158"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var util_1, xbmc_1, handlebars_1, loadPages_1, player_1;

@@ -4,26 +4,31 @@
 
 <title>Hax//Kodi</title>
 
-<link rel=stylesheet href=css/reset.css>
-<link rel=stylesheet href=css/typography.css>
-<link rel=stylesheet href=css/color.css>
-<link rel=stylesheet href=css/layout.css>
-<link rel=stylesheet href=css/header.css>
-<link rel=stylesheet href=css/page.css>
-<link rel=stylesheet href=css/list.css>
-<link rel=stylesheet href=css/spin.css>
-<link rel=stylesheet href=css/player.css>
-
-<link rel=stylesheet href=css/home.css>
-<link rel=stylesheet href=css/guide.css>
+<link rel=stylesheet href=css/style.css>
 
 <body lang=en>
 <div id=loading><span><img alt="Loading" src="img/busy.png" class="spin"></span></div>
 
 <script src="https://jspm.io/system@0.19.js"></script>
 <script src="advancedSettings.js"></script>
-<script>	
-	System.config(advancedSettings.systemJS)
-	if (advancedSettings.debug = true) console.info('advancedSettings.json', advancedSettings)
-	System.import(advancedSettings.mainModule)
+<script>
+	console.info('advancedSettings.json', advancedSettings)
+
+	advancedSettings.debug = true
+
+	if (!advancedSettings.jsonRPC) advancedSettings.jsonRPC = {}
+	//advancedSettings.jsonRPC.debug = true // Generates lots of messages (all network requests and responses are output to console)
+
+	if (!advancedSettings.xbmc) advancedSettings.xbmc = {}
+	advancedSettings.xbmc.debug = true
+
+	System.config({
+		"transpiler": "babel",
+		"map": {
+			"babel-polyfill": "npm:babel-polyfill",
+			"whatwg-fetch": "npm:whatwg-fetch"
+		}
+	})
+	System.import("./js/main")
+
 </script>

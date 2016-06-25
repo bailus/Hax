@@ -1,4 +1,5 @@
 import Progress from './progress'
+import { seconds2string, makeJsLink } from './util'
 
 export default (function () {
 "use strict";
@@ -10,14 +11,6 @@ export default (function () {
 		return ((((o.hours*60) + o.minutes)*60) + o.seconds)+(o.milliseconds/1e3);
 	}
 
-	function seconds2string(t) {
-		var str = function (n) {
-			return (n < 10 && n > -10 ? '0' : '')+Math.floor(n)
-		}
-		if (t > 3600) return str(t/3600) +':'+ str((t%3600)/60) +':'+ str(t%60)
-		else return str(t/60) +':'+ str(t%60)
-	}
-
 	function renderPlayer(player) {
 		var slider, volume, data
 
@@ -25,7 +18,14 @@ export default (function () {
 			return {
 				'label': o.text,
 				'class': o.action,
-				'link': "javascript: (() => { xbmc.get({ 'method': 'Input.ExecuteAction', 'params': { 'action': '"+o.action+"' } }) } )()"
+				'link': makeJsLink(`
+					xbmc.get({
+						'method': 'Input.ExecuteAction',
+						'params': {
+							'action': '${ o.action }'
+						}
+					})
+				`)
 			}
 		}
 
@@ -58,7 +58,17 @@ export default (function () {
 		data.navbuttons.push({ //the context menu button is a bit more complicated, since it does different things depending on the state of kodi
 			'label': 'Menu',
 			'class': 'contextmenu',
-			'link': "javascript: (() => { xbmc.get({method: 'GUI.GetProperties', params: { properties: [ 'fullscreen' ] }}).then(result => xbmc.sendMessage('Input.ExecuteAction', { action: result.fullscreen ? 'osd' : 'contextmenu' })) })()"
+			'link': makeJsLink(`
+				xbmc.get({
+					method: 'GUI.GetProperties',
+					params: {
+						properties: [ 'fullscreen' ] 
+					}
+				})
+				.then(result => xbmc.sendMessage('Input.ExecuteAction', {
+					action: result.fullscreen ? 'osd' : 'contextmenu'
+				}))
+			`)
 		})
 		
 		//render the data to the DOM via the player template

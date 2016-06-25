@@ -1,5 +1,5 @@
 import Page from '../js/page'
-import { seconds2string, ymd2string } from '../js/util'
+import { seconds2string, ymd2string, makeJsLink } from '../js/util'
 
 export default (new Page({
 	'id': 'TV Show',
@@ -23,12 +23,7 @@ export default (new Page({
 		.then(data => data.tvshowdetails || {})
 		.then(details => ({
 			title: details.title,
-			banner: details.art && details.art.banner ? xbmc.vfs2uri(details.art.banner) : undefined,
-			/*actions: [ {  //doesn't work? is playing a tvshowid possible?
-				label: 'Play',
-				thumbnail: 'img/buttons/play.png',
-				link: "javascript:(() => { xbmc.Play({ 'tvshowid': "+tvshowid+" }, 1) })()"
-			} ]*/
+			banner: details.art && details.art.banner ? xbmc.vfs2uri(details.art.banner) : undefined
 		}))
 		.then(details => {  //format show details
 			if (details.art) details.banner = xbmc.vfs2uri(details.art.banner);
@@ -55,7 +50,10 @@ export default (new Page({
 			details: [ seconds2string(episode.runtime), episode.lastplayed ? 'Last played '+ymd2string(episode.lastplayed) : undefined ],
 			number: episode.episode,
 			actions: [
-				{ label: '▶', link: `javascript: xbmc.Play({ 'episodeid': ${episode.episodeid} }, 1)` }
+				{
+					label: '▶',
+					link: makeJsLink(`xbmc.Play({ 'episodeid': ${episode.episodeid} }, 1)`)
+				}
 			]
 		})))
 

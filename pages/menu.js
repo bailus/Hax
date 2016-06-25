@@ -1,5 +1,5 @@
 import Page from '../js/page'
-import { seconds2string } from '../js/util'
+import { seconds2string, makeJsLink } from '../js/util'
 
 export default (new Page({
 	'id': 'Menu',
@@ -113,7 +113,7 @@ export default (new Page({
 					label: item.showtitle + ' - ' + item.title,
 					details: [ 'Season '+item.season, 'Episode '+item.episode ],
 					actions: [
-						{ label: '▶', link: `javascript: xbmc.Play({ 'episodeid': ${item.episodeid} }, 1)` }
+						{ label: '▶', link: makeJsLink(`xbmc.Play({ 'episodeid': ${item.episodeid} }, 1)`) }
 					]
 				})
 			},
@@ -127,7 +127,7 @@ export default (new Page({
 					label: item.title + (item.originaltitle && item.originaltitle != item.title ? ' ['+item.originaltitle+']' : ''),
 					details: [ '('+item.year+')', seconds2string(item.runtime) ],
 					actions: [
-						{ label: '▶', link: `javascript: xbmc.Play({ 'movieid': ${item.movieid} }, 1)` }
+						{ label: '▶', link: makeJsLink(`xbmc.Play({ 'movieid': ${item.movieid} }, 1)`) }
 					]
 				})
 			},
@@ -141,7 +141,7 @@ export default (new Page({
 					label: item.artist + ' - ' + item.title,
 					details: [ item.album + ' (' + item.year + ')', seconds2string(item.runtime) ],
 					actions: [
-						{ label: '▶', link: `javascript: xbmc.Play({ 'musicvideoid': ${item.musicvideoid} }, 1)` }
+						{ label: '▶', link: makeJsLink(`xbmc.Play({ 'musicvideoid': ${item.musicvideoid} }, 1)`) }
 					]
 				})
 			},

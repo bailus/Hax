@@ -1,4 +1,5 @@
 import Page from '../js/page'
+import { makeJsLink } from '../js/util'
 
 export default (new Page({
 	'id': 'Albums',
@@ -40,7 +41,7 @@ export default (new Page({
 					link: '#page=Album&albumid='+album.albumid,
 					thumbnail: album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : 'img/icons/default/DefaultAlbumCover.png',
 					actions: [
-						{ label: '▶', link: `javascript: xbmc.Play({ 'albumid': ${album.albumid} }, 0)` }
+						{ label: '▶', link: makeJsLink(`xbmc.Play({ 'albumid': ${album.albumid} }, 0)`) }
 					]
 				}))
 		}))
