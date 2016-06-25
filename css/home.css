@@ -1,16 +1,17 @@
 .page[data-page="Home"] .titlebar {
 	display: none;
 }
+.page[data-page="Home"] > article {
+	justify-content: flex-start;
+}
 .page[data-page="Home"] .items {
 	display: flex;
 	flex-wrap: wrap;
 	flex-direction: row;
 	justify-content: center;
 	align-content: center;
-    flex-grow: 1;
-
+	flex-grow: 1;
 	width: 500px;
-	height: 100%;
 	margin: 0;
 }
 .page[data-page="Home"] .listItem {

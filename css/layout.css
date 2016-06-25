@@ -79,6 +79,7 @@ a img,:link img,:visited img {
 	.page > article > * {
 		width: 700px;
 		max-width: 100%;
+		flex-shrink: 0;
 	}
 
 	.page > article > img {
