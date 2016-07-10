@@ -16,7 +16,7 @@ A fast and simple remote control for mobile devices.
 
 
 ## Development
-For testing purposes, Hax can be used without running the build command. The index.html file in the root directory uses SystemJS, jspm and Babel to dynamically download, compile and load the modules and their dependencies from within the browser.
+For development, Hax can be used without running the build command. The index.html file in the root directory uses SystemJS, jspm and Babel to dynamically download, compile and load the modules and their dependencies from within the browser. Note that styles (CSS) can't be compiled in the browser using [PostCSS-cssnext](http://cssnext.io/) so those features won't be available.
 
 This is useful for testing purposes but can take a *very* long time to load, especially on mobile devices. A fast version can be built using the `npm run build` command (see below).
 
@@ -30,10 +30,14 @@ npm run build
 A self-contained build will be saved into the ./build folder.
 
 
- ## Stack
- * [npm](https://www.npmjs.com/) - Build tool
- * [jspm](http://jspm.io/) - Browser package management
- * [SystemJS](https://github.com/systemjs/systemjs) - Dynamic Module loader
- * [Babel](https://babeljs.io/) - Next generation JavaScript (es2015/es6) support
+## Stack
+### Development
+ * [Babel](https://babeljs.io/) - Latest JavaScript (es2015/es6) syntax support
  * [PostCSS-cssnext](http://cssnext.io/) - Latest CSS syntax support
+ * [SystemJS](https://github.com/systemjs/systemjs) - Dynamic Module loader
+ * [jspm](http://jspm.io/) - Browser package management
+ * [npm](https://www.npmjs.com/) - Build tool
+
+### Libraries
  * [handlebars](http://handlebarsjs.com/) - Templating
+ * [Moment.js](http://momentjs.com/) - Date parsing and formatting
