@@ -4,11 +4,11 @@ import { makeJsLink } from '../js/util'
 export default (new Page({
 	'id': 'Channel',
 	'view': 'list',
-	'icon': state => state.get('media') === 'radio' ? 'img/icons/home/radio.png' : 'img/icons/home/livetv.png',
-	'parentState': state => new Map([[ 'page', 'Channels' ],[ 'media', state.get('media') ]]),
+	'icon': state => state['media'] === 'radio' ? 'img/icons/home/radio.png' : 'img/icons/home/livetv.png',
+	'parentState': state => ({ 'page': 'Channels', 'media': state['media'] }),
 	'data': state => {
 
-		let channelid =  +state.get('channelid')
+		let channelid =  +state['channelid']
 
 		return xbmc.get({
 			method: 'PVR.GetChannelDetails',

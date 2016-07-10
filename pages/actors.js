@@ -5,7 +5,7 @@ export default (new Page({
 	'view': 'list',
 	'groupby': 'alpha',
 	'icon': () => 'img/icons/default/DefaultActor.png',
-	'parentState': state => new Map([[ 'page', 'Menu' ],[ 'media', state.get('media') ]]),
+	'parentState': state => ({ 'page': 'Menu', 'media': state['media'] }),
 	'data': function (state) {
 
 		//higher order map functions (for use in promise api .then() calls)
@@ -29,7 +29,7 @@ export default (new Page({
 			}
 		}
 
-		const mediaType = mediaTypes[state.get('media')]
+		const mediaType = mediaTypes[state['media']]
 		const m = mediaType ? [mediaType] :
 			Object.keys(mediaTypes).map(key => mediaTypes[key]) //mediaTypes.toArray()
 

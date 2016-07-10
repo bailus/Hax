@@ -86,7 +86,7 @@ export default (function () {
 
 		progress = Progress(function (position, time, duration) {
 			var value = Math.round(position*10000)
-			var string = seconds2string(time)+'/'+seconds2string(duration)
+			var string = (time ? seconds2string(time)+'/' : '')+seconds2string(duration)
 			if (string !== oldString) {
 				timeElem.innerHTML = string
 				barElem.setAttribute('style', 'width: ' + (value/100) + '%;')

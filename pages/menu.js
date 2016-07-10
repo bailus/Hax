@@ -14,54 +14,57 @@ export default (new Page({
 		'Pictures': 'img/icons/home/pictures.png',
 		'TV': 'img/icons/home/livetv.png',
 		'Radio': 'img/icons/home/radio.png'
-	}[state ? state.get('media') : 'Default']),
+	}[state ? state['media'] : 'Default']),
 	'parentState': state => {
 		const m = new Map()
 		const parent = {
 			'Movies': 'Videos',
 			'TV Shows': 'Videos',
 			'Music Videos': 'Videos'
-		}[state.get('media')]
+		}[state['media']]
 		if (parent) {
-			m.set('page', 'Menu')
-			m.set('media', parent)
+			m['page'] = 'Menu'
+			m['media'] = parent
 		}
 		else {
-			m.set('page', 'Home')
+			m['page'] = 'Home'
 		}
 		return m
 	},
 	'data': function (state) {
-		let media = state.get('media')
+		let media = state['media']
 		let m = ({'Videos':'video','Music':'music','Pictures':'pictures'})[media]
 
 		let getPage = Promise.resolve({
 			'pageName': media || 'Menu',
 			'items': ({
 				'Videos': [
-					{ 'label': 'Library', 'items': [
+					{ 'label': 'Videos', 'items': [
 						{ 'label': 'Movies', 'link': '#page=Menu&media=Movies', 'thumbnail': 'img/icons/home/movies.png' },
 						{ 'label': 'TV Shows', 'link': '#page=Menu&media=TV Shows', 'thumbnail': 'img/icons/home/tv.png' },
 						{ 'label': 'Music Videos', 'link': '#page=Menu&media=Music Videos', 'thumbnail': 'img/icons/home/musicvideos.png' }
 					] }
 				],
 				'Movies': [
-					{ 'label': 'Library', 'items': [
+					{ 'label': 'Movies', 'items': [
 						{ 'label': 'By Year', 'link': '#page=Movies&group=year', 'thumbnail': 'img/icons/default/DefaultMovieYears.png' },
 						{ 'label': 'By Title', 'link': '#page=Movies&group=alpha', 'thumbnail': 'img/icons/default/DefaultMovieTitle.png' },
 						{ 'label': 'By Genre', 'link': '#page=Genres&type=Movies', 'thumbnail': 'img/icons/default/DefaultGenre.png' },
 						{ 'label': 'By Actor', 'link': '#page=Actors&media=Movies', 'thumbnail': 'img/icons/default/DefaultActor.png' }
+					] },
+					{ 'label': 'Movie Sets', 'items': [
+						{ 'label': 'By Title', 'link': '#page=Movie Sets', 'thumbnail': 'img/icons/default/DefaultMovieTitle.png' }
 					] }
 				],
 				'TV Shows': [
-					{ 'label': 'Library', 'items': [
+					{ 'label': 'TV Shows', 'items': [
 						{ 'label': 'By Title', 'link': '#page=TV Shows', 'thumbnail': 'img/icons/default/DefaultTVShows.png' },
 						{ 'label': 'By Genre', 'link': '#page=Genres&type=TV Shows', 'thumbnail': 'img/icons/default/DefaultGenre.png' },
 						{ 'label': 'By Actor', 'link': '#page=Actors&media=TV Shows', 'thumbnail': 'img/icons/default/DefaultActor.png' }
 					] }
 				],
 				'Music Videos': [
-					{ 'label': 'Library', 'items': [
+					{ 'label': 'Music Videos', 'items': [
 						{ 'label': 'By Year', 'link': '#page=Music Videos&group=year', 'thumbnail': 'img/icons/default/DefaultYear.png' },
 						{ 'label': 'By Artist', 'link': '#page=Music Videos', 'thumbnail': 'img/icons/default/DefaultMusicArtists.png' },
 						{ 'label': 'By Genre', 'link': '#page=Music Videos&group=genre', 'thumbnail': 'img/icons/default/DefaultGenre.png' }
@@ -111,10 +114,7 @@ export default (new Page({
 				transformItem: item => ({
 					link: '#page=Episode&episodeid='+item.episodeid,
 					label: item.showtitle + ' - ' + item.title,
-					details: [ 'Season '+item.season, 'Episode '+item.episode ],
-					actions: [
-						{ label: '▶', link: makeJsLink(`xbmc.Play({ 'episodeid': ${item.episodeid} }, 1)`) }
-					]
+					details: [ 'Season '+item.season, 'Episode '+item.episode ]
 				})
 			},
 			'Movies': {
@@ -124,11 +124,7 @@ export default (new Page({
 				defaultThumbnail: 'img/icons/default/DefaultVideo.png',
 				transformItem: item => ({
 					link: '#page=Movie&movieid='+item.movieid,
-					label: item.title + (item.originaltitle && item.originaltitle != item.title ? ' ['+item.originaltitle+']' : ''),
-					details: [ '('+item.year+')', seconds2string(item.runtime) ],
-					actions: [
-						{ label: '▶', link: makeJsLink(`xbmc.Play({ 'movieid': ${item.movieid} }, 1)`) }
-					]
+					label: '('+item.year+')'+item.label
 				})
 			},
 			'Music Videos': {
@@ -139,10 +135,7 @@ export default (new Page({
 				transformItem: item => ({
 					link: '#page=Music Video&musicvideoid='+item.musicvideoid,
 					label: item.artist + ' - ' + item.title,
-					details: [ item.album + ' (' + item.year + ')', seconds2string(item.runtime) ],
-					actions: [
-						{ label: '▶', link: makeJsLink(`xbmc.Play({ 'musicvideoid': ${item.musicvideoid} }, 1)`) }
-					]
+					details: [ item.album + ' (' + item.year + ')' ]
 				})
 			},
 		})[media]
@@ -159,12 +152,8 @@ export default (new Page({
 					out.thumbnail = item.thumbnail ? xbmc.vfs2uri(item.thumbnail) : recentlyAdded.defaultThumbnail
 					return out
 				}))
-				.then(items => ({
-					label: 'Recently Added',
-					items: items
-				}))
-				.then(item => {
-					page.items.push(item)
+				.then(items => {
+					page.recentlyAdded = items;
 					return page
 				})
 			})

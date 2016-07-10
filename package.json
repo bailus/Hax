@@ -1,13 +1,20 @@
 {
+  "private": true,
   "version": "0.3.3",
   "name": "Hax",
-  "description": "A fast and simple remote control for mobile devices.",
+  "id": "webinterface.hax",
+  "summary": "A fast and simple remote control for mobile devices.",
+  "description": "Hax is a web interface for the Kodi® media center. Designed to be fast and simple to use, it supports modern browsers including Android, Internet Explorer 9 and Edge.",
   "keywords": [
     "Kodi",
     "XBMC"
   ],
   "homepage": "http://bailey.geek.nz/remote",
-  "author": "Samuel Bailey <sam@bailey.geek.nz> (http://bailey.geek.nz)",
+  "author": {
+    "name": "Samuel Bailey",
+    "email": "sam@bailey.geek.nz",
+    "url": "http://bailey.geek.nz"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/bailus/hax"
@@ -15,16 +22,29 @@
   "bugs": {
     "url": "https://github.com/bailus/hax/issues"
   },
-  "scripts": {
-    "lint": "jshint **.js",
-    "clean": "rm -r build && mkdir build",
-    "build:js": "jspm bundle-sfx js/main build/script.js",
-    "build:css": "postcss -u postcss-import -u postcss-cssnext -i css/style.css -o build/style.css",
-    "build:html": "cp templates/index.html build/",
-    "build:assets": "cp -r img templates addon.xml advancedSettings.js LICENSE.txt icon.png favicon.ico fanart.jpg build/",
-    "build": "npm run clean && npm run build:css && npm run build:js && npm run build:html && npm run build:assets"
+  "screenshot": {
+    "url": "http://i.imgur.com/oUNe3E9.png"
   },
-  "devDependencies": {
+  "links": {
+    "Screenshots": "http://imgur.com/a/ss0uj",
+    "Forum thread": "http://forum.kodi.tv/showthread.php?tid=270698",
+    "Kodi addon repository": "http://addons.kodi.tv/show/webinterface.hax/"
+  },
+  "license": "GPL-3.0",
+
+  "scripts": {
+    "clean": "touch build/temp && rm -r build/*",
+    "build:script.js": "jspm bundle-sfx js/main build/script.js",
+    "build:style.css": "postcss -u postcss-import -u postcss-cssnext -i css/style.css -o build/style.css",
+    "build:index.html": "handlebars package.json < templates/index.html > build/index.html",
+    "build:addon.xml": "handlebars package.json < templates/addon.xml > build/addon.xml",
+    "build:readme.md": "handlebars package.json < templates/README.md > build/README.md",
+    "build:assets": "cp -r templates img assets/* build/",
+    "build": "npm run clean && npm run build:script.js && npm run build:style.css && npm run build:index.html && npm run build:addon.xml && npm run build:readme.md && npm run build:assets"
+  },
+  "dependencies": {
+    "handlebars": "^4.0.5",
+    "handlebars-cmd": "^0.1.4",
     "jspm": "^0.16.39",
     "postcss-cli": "^2.5.2",
     "postcss-cssnext": "^2.6.0",

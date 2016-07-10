@@ -6,45 +6,105 @@ export default (new Page({
 	'view': 'list',
 	'groupby': 'year',
 	'icon': state => 'img/icons/default/DefaultMusicAlbums.png',
-	'parentState': state => new Map([[ 'page', 'Menu' ],[ 'media', 'Music' ]]),
+	'parentState': state => ({ 'page': 'Menu', 'media': 'Music' }),
 	'data': state => {
-		const artistid = +state.get('artistid')
+		const artistid = +state['artistid']
 
 		let getArtistDetails = xbmc.get({
 			'method': 'AudioLibrary.GetArtistDetails',
 			'params': {
-				'properties': [ "instrument", "style", "mood", "born", "formed", "description", "genre",
-								"died", "disbanded", "yearsactive", "fanart", "thumbnail" ],
+				'properties': [ //http://kodi.wiki/view/JSON-RPC_API/v6#Audio.Fields.Artist
+					"instrument", 
+					"style", 
+					"mood", 
+					"born", 
+					"formed", 
+					"description", 
+					"genre", 
+					"died", 
+					"disbanded", 
+					"yearsactive", 
+					"musicbrainzartistid", 
+					"fanart", 
+					"thumbnail"
+				],
 				'artistid': artistid
 			},
 			cache: true
 		})
-		.then(result => result.artistdetails || {})
-		.then(x => ({
-			title: x.label || 'Artist ' + x.artistid,
-			thumbnail: x.thumbnail ? xbmc.vfs2uri(x.thumbnail) : undefined,
+		.then(({ artistdetails={} }) => artistdetails)
+		.then(x => {console.log(x);return x})
+		.then(({
+			label='',
+			instrument=[],
+			style=[],
+			mood=[],
+			born='',
+			formed='',
+			description='',
+			genre=[],
+			died='',
+			disbanded='',
+			yearsactive=[],
+			musicbrainzartistid=[],
+			fanart,
+			thumbnail=''
+		}) => ({
+			title: label || 'Artist ' + artistid,
+			thumbnail: thumbnail ? xbmc.vfs2uri(thumbnail) : undefined,
+			fanart: xbmc.vfs2uri(fanart),
 			details: [
-				{ 'name': 'Instrument', 'value': x.instrument },
-				{ 'name': 'Style', 'value': x.style },
-				{ 'name': 'Mood', 'value': x.mood },
-				{ 'name': 'Born', 'value': x.born },
-				{ 'name': 'Formed', 'value': x.formed },
-				{ 'name': 'Description', 'value': x.description },
-				{ 'name': 'Genre', 'value': x.genre },
-				{ 'name': 'Died', 'value': x.died },
-				{ 'name': 'Disbanded', 'value': x.disbanded },
-				{ 'name': 'Years Active', 'value': x.yearsactive }
+				{ 'name': 'Born', 'value': born },
+				{ 'name': 'Formed', 'value': formed },
+				{ 'name': 'Disbanded', 'value': disbanded },
+				{ 'name': 'Died', 'value': died },
+				{
+					name: 'Years Active',
+					links: yearsactive.map(year => ({
+								label: year,
+								link: '#page=Albums&year='+year
+							}))
+				},
+				{
+					name: 'Mood',
+					links: mood.map(mood => ({
+								label: mood,
+								link: '#page=Artists&mood='+mood
+							}))
+				},
+				{
+					name: 'Style',
+					links: style.map(style => ({
+								label: style,
+								link: '#page=Artists&style='+style
+							}))
+				},
+				{
+					name: 'Instrument',
+					links: instrument.map(instrument => ({
+								label: instrument,
+								link: '#page=Artists&instrument='+instrument
+							}))
+				},
+				{
+					name: 'Genre',
+					links: genre.map(genre => ({
+								label: genre,
+								link: '#page=Movies&genre='+genre
+							}))
+				},
+				{ 'name': 'Description', 'value': description }
 			],
 			actions: [
 				{
 					label: 'Play',
 					thumbnail: 'img/buttons/play.png',
-					link: makeJsLink(`xbmc.Play({ 'artistid': (${ x.artistid }) }, 0)`)
+					link: makeJsLink(`xbmc.Play({ 'artistid': (${ artistid }) }, 0)`)
 				},
 				{
 					label: 'Add to playlist',
 					thumbnail: 'img/buttons/add.png',
-					link: makeJsLink(`xbmc.sendMessage('Playlist.add', { 'playlistid': 0, 'item': { 'artistid': (${ x.artistid }) } })`)
+					link: makeJsLink(`xbmc.sendMessage('Playlist.add', { 'playlistid': 0, 'item': { 'artistid': (${ artistid }) } })`)
 				}
 			]
 		}))
@@ -52,21 +112,27 @@ export default (new Page({
 		let getAlbums = xbmc.get({
 			'method': 'AudioLibrary.GetAlbums',
 			'params': {
-				'properties': [ 'title', 'artist', 'year', 'thumbnail' ],
+				'properties': [ //http://kodi.wiki/view/JSON-RPC_API/v6#Audio.Fields.Album
+				'title', 'artist', 'year', 'thumbnail' ],
 				'filter': { 'artistid': artistid }
 			},
 			'cache': true
 		})
-		.then(result => (result.albums || []).map(album => ({
-			label: album.label,
-			link: '#page=Album&albumid=' + album.albumid + '&artistid=' + artistid,
-			thumbnail: album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : 'img/icons/default/DefaultAudio.png',
+		.then(result => (result.albums || []).map(({
+			label,
+			albumid,
+			thumbnail,
+			year
+		}) => ({
+			label: label,
+			link: '#page=Album&albumid=' + albumid + '&artistid=' + artistid,
+			thumbnail: thumbnail ? xbmc.vfs2uri(thumbnail) : 'img/icons/default/DefaultAudio.png',
 			thumbnailWidth: '50px',
-			year: album.year,
+			year: year,
 			actions: [
 				{
 					label: '▶',
-					link: makeJsLink(`xbmc.Play({ 'albumid': ${album.albumid} }, 0)`)
+					link: makeJsLink(`xbmc.Play({ 'albumid': ${albumid} }, 0)`)
 				}
 			]
 		})))

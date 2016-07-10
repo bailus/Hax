@@ -11,19 +11,19 @@ export default (new Page({
 			'video': 'Videos',
 			'music': 'Music',
 			'pictures': 'Pictures'
-		}[state.get('media')]
+		}[state['media']]
 		return m ? 
-			new Map([[ 'page', 'Menu' ],[ 'media', m ]]) :
-			new Map([[ 'page', 'Home' ]])
+			{ 'page': 'Menu', 'media': m } :
+			{ 'page': 'Home' }
 	},
 	'data': state => {
 
-		const root = state.get('root')
-		const path = state.get('path')
-		const media = state.get('media') || ''
-		const sortby = state.get('sortby') || 'date'
+		const root = state['root']
+		const path = state['path']
+		const media = state['media'] || ''
+		const sortby = state['sortby'] || 'date'
 
-		let order = state.get('order')
+		let order = state['order']
 		let inverseOrder = {
 			'ascending': 'descending',
 			'descending': 'ascending'
@@ -63,10 +63,7 @@ export default (new Page({
 						link: makeJsLink(`xbmc.Open({ 'item': { 'file': '${xbmc.vfs2uri(file.file)}'  } })`)
 					}
 				]
-				/*file.play = function () {
-					if (file.type === 'unknown' || !file.type) file.type = media
-					xbmc.Open({ 'item': { 'file': xbmc.vfs2uri(file.file) } })
-				}*/
+				file.link = `#page=File&media=${ media }&sortby=${ sortby }&order=${ order }&root=${ encodeURIComponent(root) }&=${ encodeURIComponent((path || '')) }&filename=${ encodeURIComponent(filename) }`
 
 				if (media === 'pictures')
 					file.thumbnail = file.thumbnail || file.file

@@ -1,0 +1,34 @@
+
+	{{#if .}}
+		<ul class="details">
+			{{#.}}
+
+				{{#if value}}
+					<li>
+						<h5>{{name}}</h5>
+						<p>
+							{{#link}}<a href="{{.}}">{{/link}}
+								{{#thumbnail}}<span class="thumbnail"><img src="{{.}}"></span>{{/thumbnail}}
+								{{#value}}<span>{{.}}</span>{{/value}}
+							{{#link}}</a>{{/link}}
+						</p>
+					</li>
+				{{/if}}
+
+
+				{{#if links}}
+					<li>
+						<h5>{{name}}</h5>
+						<ul class="links">
+							{{#links}}
+								<li class="link {{class}}">
+									{{>listItem}}
+								</li>
+							{{/links}}
+						</ul>
+					</li>
+				{{/if}}
+
+			{{/.}}
+		</ul>
+	{{/if}}

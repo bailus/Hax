@@ -1,27 +1,55 @@
 import Page from '../js/page'
+import Filter from '../js/xbmcFilter'
 
 export default (new Page({
 	'id': 'Music Videos',
 	'view': 'list',
 	'groupby': 'artist',
 	'icon': state => 
-			state.get('group') === 'year' ? 'img/icons/default/DefaultYear.png' :
-			state.get('group') === 'genre' ? 'img/icons/default/DefaultGenre.png' :
+			state['group'] === 'year' ? 'img/icons/default/DefaultYear.png' :
+			state['group'] === 'genre' ? 'img/icons/default/DefaultGenre.png' :
 			'img/icons/default/DefaultMusicArtists.png',
-	'parentState': state => new Map([[ 'page', 'Menu' ],[ 'media', 'Music Videos' ]]),
+	'parentState': state => ({ 'page': 'Menu', 'media': 'Music Videos' }),
 	'data': function (state) {
 
-		let groupby = state.get('group') || this.groupby
+		let groupby = state['group'] || this.groupby
+
+		
+		const fields = [ //http://kodi.wiki/view/JSON-RPC_API/v6#List.Filter.Fields.MusicVideos
+			{ name: 'Title', key: 'title', type: 'string' },
+			{ name: 'Genre', key: 'genre', type: 'string' },
+			{ name: 'Genre', key: 'genreid', type: 'integer' },
+			{ name: 'Album', key: 'album', type: 'string' },
+			{ name: 'Year', key: 'year', type: 'integer' },
+			{ name: 'Artist', key: 'artist', type: 'string' },
+			{ name: 'Filename', key: 'filename', type: 'string' },
+			{ name: 'Path', key: 'path', type: 'string' },
+			{ name: 'Director', key: 'director', type: 'string' },
+			{ name: 'Studio', key: 'studio', type: 'string' },
+			{ name: 'Plot', key: 'plot', type: 'string' },
+			{ name: 'Video Resolution', key: 'videoresolution', type: 'string' },
+			{ name: 'Audio Channels', key: 'audiochannels', type: 'string' },
+			{ name: 'Video Codec', key: 'videocodec', type: 'string' },
+			{ name: 'Audio Codec', key: 'audiocodec', type: 'string' },
+			{ name: 'Audio Language', key: 'audiolanguage', type: 'string' },
+			{ name: 'Subtitle Language', key: 'subtitlelanguage', type: 'string' },
+			{ name: 'Video Aspect', key: 'videoaspect', type: 'string' },
+			{ name: 'Playlist', key: 'playlist', type: 'string' }
+		]
+		const filter = Filter.fromState(state, fields)
+
 
 		return xbmc.get({
 			'params': {
-				'properties': [ 'title', 'genre', 'runtime', 'year', 'album', 'artist', 'track', 'thumbnail', 'file' ]
+				'properties': [ 'title', 'genre', 'runtime', 'year', 'album', 'artist', 'track', 'thumbnail', 'file' ],
+				'filter': filter.out()
 			},
 			'method': 'VideoLibrary.GetMusicVideos',
 			'cache': true
 		})
 		.then(result => ({
-			pageName: 'Music Videos by '+groupby,
+			title: 'Music Videos' + (groupby ? ' by '+groupby : ''),
+			subtitle: filter.toString(),
 			items: (result.musicvideos || []).map((mv) => ({
 				artist: (mv.artist instanceof Array ? mv.artist : [mv.artist]).join(', '),
 				label: mv.title,

@@ -6,7 +6,7 @@ export default (new Page({
 	'view': 'list',
 	'groupby': 'type',
 	'icon': state => 'img/icons/home/addons.png',
-	'parentState': state => new Map([[ 'page', 'Home' ]]),
+	'parentState': state => ({ 'page': 'Home' }),
 	'data': function (state) {
 
 		return xbmc.get({

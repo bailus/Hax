@@ -5,13 +5,13 @@ import moment from 'moment'
 export default (new Page({
 	'id': 'Guide',
 	'view': 'list',
-	'icon': state => state.get('media') === 'Radio' ? 'img/icons/home/radio.png' : 'img/icons/home/livetv.png',
-	'parentState': state => new Map([[ 'page', 'Menu' ], [ 'media', state.get('media') ]]),
+	'icon': state => state['media'] === 'Radio' ? 'img/icons/home/radio.png' : 'img/icons/home/livetv.png',
+	'parentState': state => ({ 'page': 'Menu', 'media': state['media'] }),
 	'data': state => {
 		const now = moment()
 		const nowUnix = now.unix()
 
-		let groupid =  +state.get('groupid')
+		let groupid =  +state['groupid']
 
 
 		return xbmc.get({
@@ -36,7 +36,7 @@ export default (new Page({
 				})
 				.then(({broadcasts}) => broadcasts.map(broadcast => ({
 					label: broadcast.label,
-					link: '#page=Broadcast&broadcastid=' + broadcast.broadcastid + '&media=' + state.get('media'),
+					link: '#page=Broadcast&broadcastid=' + broadcast.broadcastid + '&media=' + state['media'],
 					details: moment(broadcast.endtime).isBefore(now) ?
 							[ minutes2string(broadcast.runtime) ] :
 							[ moment(broadcast.starttime).format('LT'), minutes2string(broadcast.runtime) ],
@@ -66,7 +66,7 @@ export default (new Page({
 			const startOfToday = moment().startOf('day')
 			const endOfToday = moment().endOf('day')
 
-			const day = state.get('day')
+			const day = state['day']
 			let startOfDay = undefined
 			let endOfDay = undefined
 			if (day === undefined) {
@@ -92,14 +92,14 @@ export default (new Page({
 				return {
 					label:  d.isSame(startOfToday) ? 'today' : d.from(startOfToday),
 					selected: +day === +dUnix,
-					link: '#page=Guide&media='+state.get('media')+'&groupid='+state.get('groupid')+'&day='+dUnix,
+					link: '#page=Guide&media='+state['media']+'&groupid='+state['groupid']+'&day='+dUnix,
 					timestamp: +dUnix
 				}
 			})
 			groups.unshift({
 					label: 'now',
 					selected: day === undefined,
-					link: '#page=Guide&media='+state.get('media')+'&groupid='+state.get('groupid'),
+					link: '#page=Guide&media='+state['media']+'&groupid='+state['groupid'],
 					timestamp: +nowUnix
 			})
 			groups.sort((a, b) => (a.timestamp - b.timestamp))

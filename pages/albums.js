@@ -6,10 +6,10 @@ export default (new Page({
 	'view': 'list',
 	'groupby': 'title',
 	'icon': state => 
-			state.get('group') === 'genre' || state.get('genre') ? 'img/icons/default/DefaultMusicGenres.png' :
-			state.get('group') === 'year' || state.get('year') ? 'img/icons/default/DefaultYear.png' :
+			state['group'] === 'genre' || state['genre'] ? 'img/icons/default/DefaultMusicGenres.png' :
+			state['group'] === 'year' || state['year'] ? 'img/icons/default/DefaultYear.png' :
 			'img/icons/default/DefaultMusicAlbums.png',
-	'parentState': state => new Map([[ 'page', 'Menu' ],[ 'media', 'Music' ]]),
+	'parentState': state => ({ 'page': 'Menu', 'media': 'Music' }),
 	'data': function (state) {
 
 		let filter = xbmc.makeFilter(state, [
@@ -17,7 +17,7 @@ export default (new Page({
 			{ name: 'Artist', key: 'artist', type: String }
 		])
 
-		let group = state.get('group') || this.groupby
+		let group = state['group'] || this.groupby
 
 		return xbmc.get({
 			method: 'AudioLibrary.GetAlbums',

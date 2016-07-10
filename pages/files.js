@@ -5,7 +5,7 @@ export default (new Page({
 	'view': 'list',
 	'icon': state => 'img/icons/default/DefaultFolder.png',
 	'data': state => {
-		const media = state.get('media')
+		const media = state['media']
 		
 		let types = [
 			{ 'media': 'video', 'label': 'Video' },

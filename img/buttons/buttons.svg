@@ -26,15 +26,15 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.979899"
-     inkscape:cx="174.27233"
-     inkscape:cy="489.24163"
+     inkscape:cx="88.914441"
+     inkscape:cy="488.23148"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1920"
-     inkscape:window-height="1057"
-     inkscape:window-x="1672"
-     inkscape:window-y="-8"
+     inkscape:window-height="990"
+     inkscape:window-x="1528"
+     inkscape:window-y="0"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
@@ -44,7 +44,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -374,6 +374,38 @@
          id="arrow-4"
          d="m 147.62179,464.62142 0,8.85938 -0.20321,0.11914 -14.76295,8.60351 14.76295,8.60157 0.20321,0.11914 0,8.10742 -14.76635,-8.60156 -14.76295,-8.60352 14.76295,-8.60352 14.76635,-8.60156 z"
          style="fill:#ffffff;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <g
+       inkscape:label="#g3420"
+       id="download"
+       transform="matrix(0,-0.86825355,0.9299579,0,-329.9286,945.98154)"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         id="g3416"
+         transform="translate(2.617569e-6,1.3860337)">
+        <path
+           style="fill:#ffffff;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 329.78027,414.79997 0,8.85938 -0.13942,0.11914 -10.12844,8.60351 10.12844,8.60157 0.13942,0.11914 0,8.10742 -10.13077,-8.60156 -10.12844,-8.60352 10.12844,-8.60352 10.13077,-8.60156 z"
+           id="path3369-1-7-5-1"
+           inkscape:connector-curvature="0" />
+        <rect
+           style="fill:#ffffff;fill-opacity:1;stroke:none"
+           id="rect4233-8-3-0-95"
+           width="20.256063"
+           height="7.2269063"
+           x="-337.61954"
+           y="-435.6185"
+           transform="scale(-1,-1)" />
+      </g>
+      <rect
+         transform="matrix(0,-1,1,0,0,0)"
+         y="300.76395"
+         x="-450.33765"
+         height="7.2269063"
+         width="33.893124"
+         id="rect4233-8-3-0-95-2"
+         style="fill:#ffffff;fill-opacity:1;stroke:none" />
     </g>
   </g>
 </svg>

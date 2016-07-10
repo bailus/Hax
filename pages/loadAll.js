@@ -12,6 +12,8 @@ import channels from './channels.js'
 import directory from './directory.js'
 import episode from './episode.js'
 import files from './files.js'
+import file from './file.js'
+import filealbum from './filealbum.js'
 import genres from './genres.js'
 import guide from './guide.js'
 import home from './home.js'
@@ -19,11 +21,15 @@ import loadAll from './loadAll.js'
 import menu from './menu.js'
 import movie from './movie.js'
 import movies from './movies.js'
+import movieset from './movieset.js'
+import moviesets from './moviesets.js'
 import musicvideo from './musicvideo.js'
 import musicvideos from './musicvideos.js'
 import playlists from './playlists.js'
 import tvshow from './tvshow.js'
 import tvshows from './tvshows.js'
+import episodes from './episodes.js'
+import season from './season.js'
 
 const pages = [
 	actors,
@@ -40,17 +46,23 @@ const pages = [
 	directory,
 	episode,
 	files,
+	file,
+	filealbum,
 	genres,
 	guide,
 	home,
 	menu,
 	movie,
 	movies,
+	movieset,
+	moviesets,
 	musicvideo,
 	musicvideos,
 	playlists,
 	tvshow,
-	tvshows
+	tvshows,
+	episodes,
+	season
 ]
 
 export default pages

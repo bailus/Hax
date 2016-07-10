@@ -1,30 +1,37 @@
 import Page from '../js/page'
+import Filter from '../js/xbmcFilter'
 
 export default (new Page({
 	'id': 'TV Shows',
 	'view': 'list',
 	'groupby': 'title',
 	'icon': state => 
-			state.get('group') === 'actor' || state.get('actor') ? 'img/icons/default/DefaultActor.png' :
-			state.get('group') === 'year' || state.get('year') ? 'img/icons/default/DefaultYear.png' :
-			state.get('group') === 'genre' || state.get('genre') ? 'img/icons/default/DefaultGenre.png' :
+			state['group'] === 'actor' || state['actor'] ? 'img/icons/default/DefaultActor.png' :
+			state['group'] === 'year' || state['year'] ? 'img/icons/default/DefaultYear.png' :
+			state['group'] === 'genre' || state['genre'] ? 'img/icons/default/DefaultGenre.png' :
 			'img/icons/default/DefaultTVShows.png',
-	'parentState': state => new Map([[ 'page', 'Menu' ],[ 'media', 'TV Shows' ]]),
+	'parentState': state => ({ 'page': 'Menu', 'media': 'TV Shows' }),
 	'data': function (state) {
 
-		let filter = xbmc.makeFilter(state, [
-			{ name: 'Genre', key: 'genre', type: String },
-			{ name: 'Year', key: 'year', type: Number },
-			{ name: 'Actor', key: 'actor', type: String }
-		])
+		//http://kodi.wiki/view/JSON-RPC_API/v6#List.Filter.Fields.TVShows
+		const fields = [
+			{ name: 'Title', key: 'title', type: 'string' },
+			{ name: 'Genre', key: 'genre', type: 'string' },
+			{ name: 'Genre', key: 'genreid', type: 'integer' },
+			{ name: 'Year', key: 'year', type: 'integer' },
+			{ name: 'Actor', key: 'actor', type: 'string' },
+			{ name: 'Studio', key: 'studio', type: 'string' },
+			{ name: 'Tag', key: 'tag', type: 'string' }
+		]
+		const filter = Filter.fromState(state, fields)
 
-		let group = state.get('group') || this.groupby
+		let group = state['group'] || this.groupby
 
 		return xbmc.get({
 			method: 'VideoLibrary.GetTVShows',
 			params: {
 				'properties': [ 'title', 'originaltitle', 'sorttitle', 'thumbnail', 'episode' ],
-				'filter': (filter || {}).filter
+				'filter': filter.out()
 			},
 			cache: true
 		})
@@ -37,11 +44,8 @@ export default (new Page({
 			title: (tvshow.sorttitle || tvshow.title || tvshow.originaltitle)[0].toUpperCase()
 		})))
 		.then(items => ({
-			pageName: 'TV Shows' + (
-				filter ? ' by ' + filter.name : 
-				group ? ' by '+group :
-				''),
-			title: filter ? ''+filter.value : undefined,
+			title: 'TV Shows' + (group ? ' by '+group : ''),
+			subtitle: filter.toString(),
 			items: items
 		}))
 

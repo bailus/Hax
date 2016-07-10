@@ -1,0 +1,41 @@
+.page[data-page="Movie Set"] .leaf {
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+.page[data-page="Movie Set"] .listItem {
+	margin-bottom: 2em;
+	text-align: justify;
+}
+
+.page[data-page="Movie Set"] .listItem .label {
+	font-size: 140%;
+	padding: 0;
+	white-space: normal;
+	height: auto;
+	line-height: initial;
+	text-align: left;
+}
+
+.page[data-page="Movie Set"] .leaf .label {
+	min-width: 100%;
+	order: -1;
+}
+
+.page[data-page="Movie Set"] .listItem .thumbnail {
+	width: auto;
+	height: 400px;
+	margin-right: 10px;
+}
+
+.page[data-page="Movie Set"] .listItem .listItem {
+	margin-left: 20px;
+	margin-right: 10px;
+	width: auto;
+}
+
+.page[data-page="Movie Set"] .details {
+	flex-basis: 50%;
+	flex-shrink: 10;
+	flex-grow: 10;
+}

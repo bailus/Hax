@@ -76,10 +76,116 @@
 .listItem .listActions {
 	display: flex;
 	flex-wrap: nowrap;
+	flex-shrink: 0;
 }
 .listItem .listAction {
 	display: block;
 	flex-shrink: 0;
 	text-align: center;
 	font-size: 32px;
+}
+
+
+
+/* icon view */
+.icon-list {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	align-content: flex-start;
+	justify-content: space-around;
+}
+
+.icon-list > li {
+	min-width:64px;
+	flex-grow: 0;
+	flex-shrink: 0;
+}
+.icon-list .label,
+.icon-list .thumbnail span {
+	width:100%;
+	flex-grow: 1;
+}
+.icon-list .thumbnail span {
+	height: 64px;
+}
+
+.icon-list > li {
+	display: flex;
+	flex-direction: column;
+	margin: 16px;
+}
+
+.icon-list .thumbnail img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+.icon-list .thumbnail span {
+	display: block;
+}
+
+.icon-list .label,
+.icon-list .label > * {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+}
+
+.icon-list.seasons {
+	flex-wrap: wrap;
+}
+
+.icon-list.seasons > li {
+	width:96px;
+}
+.icon-list.seasons .thumbnail span {
+	height: 128px;
+}
+
+.recently-added {
+	width: auto !important;
+	max-width: 100%;
+	flex-wrap: nowrap;
+	overflow-x: scroll;
+}
+
+.recently-added .thumbnail span,
+.recently-added > li {
+	padding: 0;
+	margin: 0.5em;
+}
+
+.recently-added .thumbnail span {
+	height: auto;
+	width: 96px;
+}
+
+.recently-added .label {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	display: block;
+	width: 96px;
+}
+
+.recently-added .label,
+.recently-added .label > * {
+	white-space: initial;
+	align-items: flex-start;
+	text-align: left;
+	white-space: nowrap;
+}
+
+.icon-list.cast {
+	width: 100% !important;
+	max-width: 100%;
+	flex-wrap: nowrap;
+	overflow-x: scroll;
+	justify-content: space-between;
+}
+
+.icon-list.cast > li {
+	width: 96px;
 }

@@ -5,13 +5,13 @@ export default (new Page({
 	'view': 'list',
 	'groupby': 'alpha',
 	'icon': () => 'img/icons/default/DefaultMusicArtists.png',
-	'parentState': state => new Map([[ 'page', 'Menu' ],[ 'media', 'Music' ]]),
+	'parentState': state => ({ 'page': 'Menu', 'media': 'Music' }),
 	'data': function (state) {
 		const filter = xbmc.makeFilter(state, [
 			{ name: 'Genre', key: 'genre', type: String }
 		])
 
-		let group = state.get('group') || this.groupby
+		let group = state['group'] || this.groupby
 
 		return xbmc.get({
 			'method': 'AudioLibrary.GetArtists',

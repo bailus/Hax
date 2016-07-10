@@ -5,6 +5,11 @@ a, a:hover, a:visited {
 	color: #FFF;
 }
 
+article a,
+article a:hover,
+article a:visited {
+	color: hsl(203, 84%, 75%);
+}
 
 /* Background */
 body,
@@ -14,6 +19,10 @@ body,
 header,
 #player {
 	background-color: hsl(203, 64%, 24%);
+}
+
+.page > article > .wrapper {
+	background-color: hsl(0, 0%, 6%);
 }
 
 

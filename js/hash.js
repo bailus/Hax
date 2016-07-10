@@ -4,24 +4,20 @@
 
 /* HASH FUNCTIONS */
 
-export function getHashMap() {
-	let map = new Map()
+export function getHashArray() {
+	let o = {}
 
-	if (!document.location.hash) return map
+	if (!document.location.hash) return o
 
 	let hasharray = document.location.hash.substring(1).split(/\&/)
 	for (let y = 0; y < hasharray.length; y++) {  //for (y in hasharray) {
 		let z = hasharray[y].split(/\=/);
 		if (z && z.length == 2)
-			map.set(z[0], decodeURIComponent(z[1]))
+			o[z[0]] = decodeURIComponent(z[1])
 	}
-	return map
+	return o
 }
 
-export function hashMapToURL(map) {
-	let pairs = []
-	map.forEach((value, key) => {
-		pairs.push(key + '=' + encodeURIComponent(value))
-	})
-	return '#' + pairs.join('&')
+export function hashArrayToURL(o) {
+	return '#' + ( Object.keys(o).map(key => (`${ key }=${ encodeURIComponent( o[key] ) }`)).join('&') )
 }

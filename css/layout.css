@@ -10,9 +10,9 @@ a img,:link img,:visited img {
 
 
 
-/* Loading Screen */
+/* Initial Loading Screen */
 
-	#loading {
+	body > #loading {
 		z-index: 1000;
 		position: fixed;
 		top: 0;
@@ -21,15 +21,20 @@ a img,:link img,:visited img {
 		right: 0;
 	}
 
+/* Loading Screen */
+
+	#loading {
+		display: flex;
+		justify-content: center;
+		align-content: center;
+		align-items: center;
+		flex-grow: 1;
+		flex-shrink: 1;
+		overflow: hidden;
+		flex-direction: column;
+	}
 	#loading img {
-		position: absolute;
-		display: block;
-		width: 64px;
-		height: 64px;
-		left: 50%;
-		top: 50%;
-		margin-left: -32px;
-		margin-top: -32px;
+		flex-grow: 0;
 	}
 
 
@@ -68,18 +73,30 @@ a img,:link img,:visited img {
 	}
 
 	.page > article {
-		display: flex;
-		flex-direction: column;
+		overflow: auto;
 		flex-grow: 1;
 		flex-shrink: 1;
-		overflow: auto;
+	}
+
+	.page > article,
+	.page > article > .wrapper {
+		display: flex;
+		flex-direction: column;
 		align-items: center;
 	}
 
-	.page > article > * {
+	.page > article > *,
+	.page > article > .wrapper > * {
 		width: 700px;
 		max-width: 100%;
 		flex-shrink: 0;
+		flex-grow: 0;
+	}
+
+	.page > article > .wrapper {
+		width: 100%;
+		flex-shrink: 0;
+		flex-grow: 0;
 	}
 
 	.page > article > img {
@@ -87,7 +104,15 @@ a img,:link img,:visited img {
 	}
 
 	.fanart {
-		display: none;
+	    display: flex;
+	    position: absolute;
+	    left: 0;
+	    top: 0;
+	    z-index: -10;
+	    opacity: 0.2;
+	    min-width: 100%;
+	    max-width: inherit !important;
+	    height: 100%;
 	}
 
 /* Borders */

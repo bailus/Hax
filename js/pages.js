@@ -1,4 +1,4 @@
-import { getHashMap, hashMapToURL } from './hash'
+import { getHashArray, hashArrayToURL } from './hash'
 
 export default (() => {
 "use strict";
@@ -23,11 +23,11 @@ export default (() => {
 
 	//render the current page
 	pub.renderPage = function () {
-		const state = getHashMap()
-		const url = hashMapToURL(state)
+		const state = getHashArray()
+		const url = hashArrayToURL(state)
 
 		//find the page to render
-		const title = (state.get('page') || '').replace('%20',' ') //some browsers replace spaces with %20
+		const title = (state['page'] || '').replace('%20',' ') //some browsers replace spaces with %20
 		const page = pub.getById(title) || pub.getById(advancedSettings.pages.default)
 
 		if (!page) return Promise.reject()

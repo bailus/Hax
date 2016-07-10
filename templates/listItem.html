@@ -13,13 +13,18 @@
 {{/if}}
 
 
-
 {{#link}}<a href="{{.}}" class="label">{{/link}}
 {{^link}}<span class="label">{{/link}}
 
+
 	{{#if details}}
 
-		<span class="line1">{{label}}</span>
+		<span class="line1">
+		{{#if number}}
+			<span class="number">{{number}}.</span>
+		{{/if}}
+		{{label}}
+		</span>
 
 		<span class="line2">
 			{{#details}}<span>{{.}}</span>{{/details}}
@@ -54,3 +59,4 @@
 
 {{/if}}
 
+{{>details detailList}}

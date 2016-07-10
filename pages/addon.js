@@ -5,10 +5,10 @@ export default (new Page({
 	'id': 'Addon',
 	'view': 'list',
 	'icon': state => 'img/icons/home/addons.png',
-	'parentState': state => new Map([[ 'page', 'Home' ]]),
+	'parentState': state => ({ 'page': 'Home' }),
 	'data': state => {
 
-			const addonid = state.get('addonid')
+			const addonid = state['addonid']
 
 			return xbmc.get({
 				'method': 'Addons.GetAddonDetails',

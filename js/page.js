@@ -1,4 +1,4 @@
-import { hashMapToURL } from './hash'
+import { hashArrayToURL } from './hash'
 
 export default class {
 	
@@ -10,16 +10,17 @@ export default class {
 	}
 
 	crumbs(state, pages) {
-		if (this.parentState === undefined)
-			return []
+		if (this.parentState === undefined) return []
 
 		const parentState = this.parentState(state)
-		const parentPage = pages.getById(parentState.get('page'))
+		const parentPage = pages.getById(parentState['page'])
+		if (!parentPage) return []
+
 		const crumbs = parentPage.crumbs(parentState, pages)
 		if (parentPage.icon) crumbs.push({
 			'label': parentPage['id'],
 			'icon': parentPage.icon(parentState),
-			'link': hashMapToURL(parentState)
+			'link': hashArrayToURL(parentState)
 		})
 		return crumbs
 	}
@@ -27,16 +28,17 @@ export default class {
 	render(state, pages) {
 		let $loading = document.getElementById('loading')
 		$loading.className = ''
+		let $content = document.getElementById('content')
+		$content.className = 'hidden'
 
 		const page = this
-
 		return page.data(state)   //get the page data
 		.then(data => {
 			data.crumbs = page.crumbs(state, pages)
 			data.crumbs.push({
 				'icon': page.icon ? page.icon(state) : undefined,
 				'label': data.pageName || page.name || page.id,
-				'link': hashMapToURL(state)
+				'link': hashArrayToURL(state)
 			})
 			return data
 		})
@@ -74,10 +76,10 @@ export default class {
 				})
 			}
 			
-			//if (state.get('sort') || this.sortby) data.items = sortItems(data.items, state.get('sort') || this.sortby)
+			//if (state['sort') || this.sortby) data.items = sortItems(data.items, state['sort'] || this.sortby]
 			
-			const groupbyKey = state.get('group') || this.groupby
-			const groupbyValue = state.get(groupbyKey)
+			const groupbyKey = state['group'] || this.groupby
+			const groupbyValue = state[groupbyKey]
 			if (groupbyKey) {
 				let size = data.items.length
 				const showItems = !(!groupbyValue && size > advancedSettings.pages.groupingThreshold)
@@ -88,11 +90,11 @@ export default class {
 				//create groups
 				if (size > advancedSettings.pages.groupingThreshold)
 					data.groups = data.items.map(x => {
-						const s = new Map(state)
-						s.set(groupbyKey, x.label)
+						const s = Object.assign({}, state)
+						s[groupbyKey] = x.label
 						return {
 							'label': x.label,
-							'link': hashMapToURL(s),
+							'link': hashArrayToURL(s),
 							'selected': x.label === groupbyValue
 						}
 					})
@@ -125,19 +127,20 @@ export default class {
 		.then(data => {
 			//render the data to the DOM via the template
 			data.id = this.id;
-			document.title = 'Hax//'+(data.title ? data.title : 'Kodi');
+			//document.title = ''+(data.title ? data.title : 'Kodi');
 
 			let $page = document.createElement('div')
 			$page.setAttribute('class', 'page')
 
 			//copy key/value pairs from the URL to the data- attributes of the $page
-			state.forEach((value, key) => $page.setAttribute('data-'+key, value))
+			Object.keys(state).forEach(key => $page.setAttribute('data-'+key, state[key]))
 			$page.setAttribute('data-page', this.id) //make sure the home page has a data-page attribute
 
-			$page.innerHTML = templates[ state.get('view') || this.view ](data)
+			$page.innerHTML = templates[ state['view'] || this.view ](data)
 
 			let $content = document.getElementById('content')
 			while ($content.firstChild) $content.removeChild($content.firstChild)  // $content.removeAllChildElements()
+			$content.className = ''
 
 			let $loading = document.getElementById('loading')
 			$loading.className = 'hidden'

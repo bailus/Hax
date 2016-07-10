@@ -1,62 +1,155 @@
 import Page from '../js/page'
-import { seconds2string, ymd2string, makeJsLink } from '../js/util'
+import { seconds2string, makeJsLink } from '../js/util'
+import moment from 'moment'
 
 export default (new Page({
 	'id': 'Episode',
 	'view': 'list',
 	'parent': 'TV Shows',
 	'icon': state => 'img/icons/default/DefaultVideo.png',
-	'parentState': state => new Map([[ 'page', 'Menu' ],[ 'media', 'TV Shows' ]]),
+	'parentState': state => ({ 'page': 'Menu', 'media': 'TV Shows' }),
 	'data': state => {
-		let episodeid = +state.get('episodeid')
+		let episodeid = +state['episodeid']
 
 		return xbmc.get({
 			'method': 'VideoLibrary.GetEpisodeDetails',
 			'params': {
-				'properties': [
-					"title", "plot", "writer", "firstaired", "runtime", "director",
-					"productioncode", "season", "episode", "originaltitle", "showtitle",
-					"lastplayed", "fanart", "thumbnail", "tvshowid", "cast"
+				'properties': [ //http://kodi.wiki/view/JSON-RPC_API/v6#Video.Fields.Episode
+					"title", 
+					"plot", 
+					"votes", 
+					"rating", 
+					"writer", 
+					"firstaired", 
+					"playcount", 
+					"runtime", 
+					"director", 
+					"productioncode", 
+					"season", 
+					"episode", 
+					"originaltitle", 
+					"showtitle", 
+					"cast", 
+					"streamdetails", 
+					"lastplayed", 
+					"file", 
+					"resume", 
+					"tvshowid", 
+					"dateadded", 
+					"uniqueid", 
+					"art"
 				],
 				'episodeid': episodeid
 			}
 		})
-		.then(result => result.episodedetails)
-		.then(x => ({
-			title: x.title + ((x.originaltitle && x.originaltitle != x.title) ? ' [' + x.originaltitle + ']' : ''),
-			subtitle: x.showtitle,
-			thumbnail: xbmc.vfs2uri(x.thumbnail),
-			fanart: xbmc.vfs2uri(x.fanart),
+//		.then(x => {console.log(x);return x})
+		.then(({ episodedetails={} }) => episodedetails)
+		.then(({
+			title,
+			plot,
+			votes,
+			rating,
+			writer=[],
+			firstaired,
+			playcount,
+			runtime,
+			director=[],
+			productioncode,
+			season,
+			episode,
+			originaltitle,
+			showtitle,
+			cast,
+			streamdetails={},
+			lastplayed,
+			file,
+			resume,
+			tvshowid,
+			dateadded,
+			uniqueid,
+			art,
+			label
+		}) => ({
+			title: showtitle,
+			titleLink: `#page=TV Show&tvshowid=${ tvshowid }`,
+			subtitle: label,
+			thumbnail: xbmc.vfs2uri(art['thumb'] || art['season.poster'] || art['tvshow.poster']),
+			banner: xbmc.vfs2uri(art['tvshow.banner']),
+			fanart: xbmc.vfs2uri(art['tvshow.fanart']),
 			details: [
-				(x.productioncode || x.season && x.episode) ? { 'name': 'Production Code', 'value': (x.productioncode || x.season + 'x' + x.episode) } : undefined,
-				x.lastplayed ? { 'name': 'Last Played', 'value': ymd2string(x.lastplayed) } : undefined,
-				x.firstaired ? { 'name': 'First Aired', 'value': ymd2string(x.firstaired) } : undefined,
-				x.runtime ? { 'name': 'Runtime', 'value': seconds2string(x.runtime) } : undefined,
-				{ 'name': 'Plot', 'value': x.plot },
-				{ 'name': 'Director', 'value': x.director },
-				{ 'name': 'Writer', 'value': x.writer },
-				{ 'name': 'Genre', 'value': x.genre }
+				{
+					'name': 'Production Code',
+					'links': [
+						{ label: `Season ${ season }`, link: `#page=Season&tvshowid=${ tvshowid }&season=${ season }` },
+						{ label: `Episode ${ episode }` }
+					]
+				},
+				{ 'name': 'Rating', 'value': `${ Math.round(rating*10)/10 }/10 (${ votes } votes)` },
+				{ 'name': 'Plot', 'value': plot },
+				{
+					name: 'Director',
+					links: director.map(director => ({
+								label: director,
+								link: '#page=Episodes&director='+director
+							}))
+				},
+				{
+					name: 'Writer',
+					links: writer.map(writer => ({
+								label: writer,
+								link: '#page=Episodes&writers='+writer
+							}))
+				},
+				{ 'name': 'Statistics', 'links': [
+					{ 'label': `Runtime ${ seconds2string(runtime) }` },
+					{ 'label': `Played ${ playcount } times` },
+					{ 'label': lastplayed instanceof String && lastplayed.length > 0 ? `Last Played ${ moment(lastplayed).format('LL') }` : undefined },
+					{ 'label': `Added ${ moment(dateadded).format('LL') }` }
+				] },
+				{
+					name: 'Audio',
+					links: streamdetails.audio
+								.map(({ language, channels, codec }) => ({
+									label: (language ? `${ language }: ` : '') + `${ channels } channels (${ codec })`
+								}))
+				},
+				{
+					name: 'Video',
+					links: streamdetails.video
+								.map(({ width, height, codec, stereomode }) => ({
+									label: `${ width }×${ height } (${ codec })` + (stereomode ? `, ${ stereomode }` : '')
+								}))
+				},
+				{
+					name: 'File',
+					links: [
+						{
+							label: file,
+							link: `${ xbmc.vfs2uri(file) }`
+						}
+					]
+				}
 			],
 			actions: [
 				{	label: 'Play',
 					thumbnail: 'img/buttons/play.png',
-					link: makeJsLink(`xbmc.Play({ 'episodeid': (${ x.episodeid }) }, 1)`)
+					link: makeJsLink(`xbmc.Play({ 'episodeid': (${ episodeid }) }, 1)`)
 				},
 				{	label: 'Add to Playlist',
 					thumbnail: 'img/buttons/add.png',
-					link: makeJsLink(`xbmc.sendMessage('Playlist.Add',{ 'playlistid': 1, 'item': { 'episodeid': (${ x.episodeid }) } })`)
+					link: makeJsLink(`xbmc.sendMessage('Playlist.Add',{ 'playlistid': 1, 'item': { 'episodeid': (${ episodeid }) } })`)
 				}
 			],
-			items: [
-				{	label: 'Cast',
-					items: x.cast.map(actor => ({
-						label: actor.name,
-						details: actor.role,
-						thumbnail: actor.thumbnail ? xbmc.vfs2uri(actor.thumbnail) : 'img/icons/default/DefaultActor.png',
-						link: '#page=TV Shows&actor='+actor.name
-					}))
-				}
-			]
+			cast: cast.map(({
+				name,
+				role,
+				thumbnail
+			}) => ({
+				label: name,
+				details: role,
+				thumbnail: thumbnail ? xbmc.vfs2uri(thumbnail) : 'img/icons/default/DefaultActor.png',
+				link: `#page=Episodes&actor=${ name }`
+			}))
 		}))
 
 	}

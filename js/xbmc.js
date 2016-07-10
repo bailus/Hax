@@ -124,6 +124,7 @@ export default (function () {
 		'vfs2uri': (function () { //converts xbmc virtual filesystem paths to URIs
 			let self, vfsurl = parseURL('/',{'protocol':'http'});
 			self = function (vfs) {
+				if (!vfs) return;
 				//if (vfs.substring(0,21) === 'image://http%3a%2f%2f') return decodeURIComponent( vfs.substring(8) ); //get image directly from the internet, bypassing the xbmc cache
 				return vfsurl + encodeURIComponent(vfs);
 			};
@@ -133,7 +134,7 @@ export default (function () {
 			return self;
 		})(),
 		'makeFilter': (state, filter) => (first_((filter) => {
-					let value = state.get(filter.key)
+					let value = state[filter.key]
 					if (!value) return
 		
 					let out = {

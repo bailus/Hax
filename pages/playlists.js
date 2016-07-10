@@ -5,7 +5,7 @@ export default (new Page({
 	'id': 'Playlists',
 	'view': 'list',
 	'icon': state => 'img/icons/home/playlists.png',
-	'parentState': state => new Map([[ 'page', 'Home' ]]),
+	'parentState': state => ({ 'page': 'Home' }),
 	'data': state => {
 		
 		return xbmc.get({

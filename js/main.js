@@ -17,7 +17,8 @@ ready().then(function () { //on document load
 		{ name: 'listItem', file: templateDir+'listItem.html' },
 		{ name: 'listItems', file: templateDir+'listItems.html' },
 		{ name: 'list', file: templateDir+'list.html' },
-		{ name: 'player', file: templateDir+'player.html' }
+		{ name: 'player', file: templateDir+'player.html' },
+		{ name: 'details', file: templateDir+'details.html' }
 	]
 
 	function error({ summary, details }) {
@@ -30,8 +31,8 @@ ready().then(function () { //on document load
 
 	function createSkeleton() {
 		document.body.innerHTML = `
-			<div id=loading><span><img alt="Loading" src="img/busy.png" class="spin"></span></div>
 			<div id=main>
+				<div id=loading><span><img alt="Loading" src="img/busy.png" class="spin"></span></div>
 				<div id=content></div>
 				<div id=player class=minimize></div>
 			</div>

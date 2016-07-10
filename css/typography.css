@@ -4,7 +4,8 @@
 	{ font-family:sans-serif; }
 
 	h1, h2, h3, h4, h5,
-	.listItem
+	.listItem,
+	.icon-list .line1
 	{ font-weight: bold; }
 
 	h2
@@ -44,7 +45,8 @@
 	{ font-size: 105%; }
 	
 	.listItem,
-	h5
+	h5,
+	.icon-list .line1
 	{ font-size: 100%; }
 
 	.listItem.leaf
@@ -58,9 +60,9 @@
 	h3, h4, h5,
 	.listItem > .label,
 	.titles,
-	.actions,
 	.options,
 	.details,
+	.icon-list
 	article > .items
 	{
 		margin-top: 1.2em;
@@ -77,4 +79,12 @@
 	.listItem.leaf > .label
 	{
 		margin-top: 0;
+	}
+
+	.icon-list .line1 {
+		margin-top: 0.4em;
+		margin-bottom: 0.3em;
+	}
+	.icon-list .line2 > * {
+		margin-top: 0.2em;
 	}

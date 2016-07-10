@@ -3,7 +3,7 @@ import Page from '../js/page'
 export default (new Page({
 	'id': 'Genres',
 	'view': 'list',
-	'icon': state => state.get('type') === 'Albums' || state.get('type') === 'Artists' ? 'img/icons/default/DefaultMusicGenres.png' : 'img/icons/default/DefaultGenre.png',
+	'icon': state => state['type'] === 'Albums' || state['type'] === 'Artists' ? 'img/icons/default/DefaultMusicGenres.png' : 'img/icons/default/DefaultGenre.png',
 	'parentState': state => {
 		const type = {
 			'Movies': 'Movies',
@@ -11,7 +11,7 @@ export default (new Page({
 			'Music Videos': 'Music Videos',
 			'Artists': 'Music',
 			'Albums': 'Music'
-		}[state.get('type')]
+		}[state['type']]
 		if (type)
 			return new Map([[ 'page', 'Menu' ],[ 'media', type ]])
 		else
@@ -20,7 +20,7 @@ export default (new Page({
 	'data': state => {
 		let page = {}
 
-		let type = state.get('type')
+		let type = state['type']
 		let videoType = { 'Movies': 'movie', 'TV Shows': 'tvshow', 'Music Videos': 'musicvideo' }[type]
 		let audioType = { 'Artists': 'artists', 'Albums': 'albums' }[type]
 

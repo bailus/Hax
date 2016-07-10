@@ -5,14 +5,14 @@ const mediaToLower = { 'Radio': 'radio', 'TV': 'tv' }
 export default (new Page({
 	'id': 'Channels',
 	'view': 'list',
-	'icon': state => state.get('media') === 'Radio' ? 'img/icons/home/radio.png' : 'img/icons/home/livetv.png',
-	'parentState': state => new Map([[ 'page', 'Menu' ], [ 'media', state.get('media') ]]),
+	'icon': state => state['media'] === 'Radio' ? 'img/icons/home/radio.png' : 'img/icons/home/livetv.png',
+	'parentState': state => ({ 'page': 'Menu', 'media': state['media'] }),
 	'data': state => {
 
-		const m = state.get('media')
+		const m = state['media']
 		const media = mediaToLower[m] === undefined ? [ 'TV', 'Radio' ] : [ m ]
 
-		let nextpage = ({ 'Channel Group': 'Channel Group', 'Guide': 'Guide' })[state.get('nextpage')]
+		let nextpage = ({ 'Channel Group': 'Channel Group', 'Guide': 'Guide' })[state['nextpage']]
 		if (nextpage === undefined) nextpage = 'Channel Group'
 
 		return Promise.all(media.map(type => {
@@ -23,7 +23,7 @@ export default (new Page({
 				}
 			})
 			.then(result => result.channelgroups.map(g => {
-				g.link = '#page=' + nextpage + '&media=' + state.get('media') + '&groupid=' + g.channelgroupid
+				g.link = '#page=' + nextpage + '&media=' + state['media'] + '&groupid=' + g.channelgroupid
 				return g
 			}))
 			.catch(() => [])
