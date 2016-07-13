@@ -74,7 +74,7 @@ export default (new Page({
 			titleLink: `#page=TV Show&tvshowid=${ tvshowid }`,
 			subtitle: label,
 			thumbnail: xbmc.vfs2uri(art['thumb'] || art['season.poster'] || art['tvshow.poster']),
-			banner: xbmc.vfs2uri(art['tvshow.banner']),
+			//banner: xbmc.vfs2uri(art['tvshow.banner']),
 			fanart: xbmc.vfs2uri(art['tvshow.fanart']),
 			details: [
 				{

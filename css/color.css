@@ -1,35 +1,52 @@
 
+:root {
+  --main-hue: 202;
+  --main-saturation: 80%;
+
+
+  --background-hue: var(--main-hue);
+  --background-saturation: calc(var(--main-saturation) * 0.75);
+
+  --link-hue: var(--main-hue);
+  --link-saturation: var(--main-saturation);
+
+  --text-hue: var(--main-hue);
+  --text-saturation: calc(var(--main-saturation) * 0.125);
+
+
+  --background-saturation-low: calc(var(--main-saturation) * 0.25);
+}
+
+
 /* Foreground */
 body,
 a, a:hover, a:visited {
-	color: #FFF;
+	color: hsl(var(--text-hue), var(--text-saturation), 85%);
 }
 
 article a,
 article a:hover,
 article a:visited {
-	color: hsl(203, 84%, 75%);
+	color: hsl(var(--link-hue), var(--link-saturation), 75%);
 }
+
 
 /* Background */
 body,
 #loading {
-	background-color: #000;
+	background-color: hsl(var(--background-hue), var(--background-saturation), 4%);
 }
 header,
 #player {
-	background-color: hsl(203, 64%, 24%);
+	background-color: hsl(var(--background-hue), var(--background-saturation), 24%);
+}
+
+.page > article {
+	background-color: hsla(var(--background-hue), var(--background-saturation-low), 6%, .8);
 }
 
 .page > article > .wrapper {
-	background-color: hsl(0, 0%, 6%);
-}
-
-
-/* Borders */
-header,
-#player {
-	border-color:;
+	background-color: hsla(var(--background-hue), var(--background-saturation-low), 6%, .6);
 }
 
 
@@ -37,7 +54,7 @@ header,
 .group,
 .option > ul > li,
 .action {
-	background-color: hsl(203, 24%, 12%);
+	background-color: hsl(var(--background-hue), var(--background-saturation-low), 12%);
 }
 
 .group.selected,

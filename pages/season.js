@@ -31,8 +31,7 @@ export default (new Page({
 					"sorttitle", 
 					"episodeguide", 
 					"dateadded", 
-					"tag", 
-					"art"
+					"tag"
 				],
 				'tvshowid': tvshowid
 			},
@@ -57,12 +56,13 @@ export default (new Page({
 		.then(({ seasons=[] }) => seasons.filter(s => (s.season == season))[0])
 
 		let getDetails = Promise.all([ getShowDetails, getSeasonDetails ])
-		//.then(x => {console.log(x);return x})
+		.then(x => {console.log(x);return x})
 		.then(([ show, season ]) => ({
 			title: season.showtitle,
 			titleLink: `#page=TV Show&tvshowid=${ tvshowid }`,
 			subtitle: season.label,
-			banner: season.art && xbmc.vfs2uri(season.art['tvshow.banner']),
+			banner: season.art && xbmc.vfs2uri(season.art['season.banner'] || season.art['tvshow.banner']),
+			fanart: xbmc.vfs2uri(season.art['tvshow.fanart']),
 			details: [
 				{
 					name: 'Tag',

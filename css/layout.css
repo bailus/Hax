@@ -109,7 +109,6 @@ a img,:link img,:visited img {
 	    left: 0;
 	    top: 0;
 	    z-index: -10;
-	    opacity: 0.2;
 	    min-width: 100%;
 	    max-width: inherit !important;
 	    height: 100%;

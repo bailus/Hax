@@ -78,6 +78,7 @@ export default (new Page({
 			title: title,
 			subtitle: title === originaltitle ? undefined : originaltitle,
 			banner: art && art.banner ? xbmc.vfs2uri(art.banner) : undefined,
+			fanart: xbmc.vfs2uri(art['fanart']),
 			details: [
 				{
 					name: 'Tag',
