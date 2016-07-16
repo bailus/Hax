@@ -21,7 +21,7 @@ For development, Hax can be used without running the build command. The index.ht
 This is useful for testing purposes but can take a *very* long time to load, especially on mobile devices. A fast version can be built using the `npm run build` command (see below).
 
 
-## Compiling
+### Building
 ```bash
 npm install
 npm run build
@@ -30,14 +30,14 @@ npm run build
 A self-contained build will be saved into the ./build folder.
 
 
-## Stack
-### Development
+### Stack
+#### Development
  * [Babel](https://babeljs.io/) - Latest JavaScript (es2015/es6) syntax support
  * [PostCSS-cssnext](http://cssnext.io/) - Latest CSS syntax support
  * [SystemJS](https://github.com/systemjs/systemjs) - Dynamic Module loader
  * [jspm](http://jspm.io/) - Browser package management
  * [npm](https://www.npmjs.com/) - Build tool
 
-### Libraries
+#### Libraries
  * [handlebars](http://handlebarsjs.com/) - Templating
  * [Moment.js](http://momentjs.com/) - Date parsing and formatting
