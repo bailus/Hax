@@ -8,7 +8,7 @@ export default (new Page({
 	'icon': state => state['media'] === 'Radio' ? 'img/icons/home/radio.png' : 'img/icons/home/livetv.png',
 	'parentState': state => ({ 'page': 'Menu', 'media': state['media'] }),
 	'data': state => {
-		const now = moment()
+		const now = moment.utc()
 		const nowUnix = now.unix()
 
 		let groupid =  +state['groupid']
@@ -22,7 +22,7 @@ export default (new Page({
 			},
 			cache: true
 		})
-		.then(({ channels }) => channels.map(channel => ({
+		.then(({ channels: channels } = { channels: [] }) => channels.map(channel => ({
 			channelid: channel.channelid,
 			label: channel.label,
 			thumbnail: xbmc.vfs2uri(channel.thumbnail),
@@ -34,20 +34,21 @@ export default (new Page({
 					},
 					cache: true
 				})
-				.then(({broadcasts}) => broadcasts.map(broadcast => ({
+				.then(({ broadcasts: broadcasts } = { broadcasts: [] }) => broadcasts.map(broadcast => ({
 					label: broadcast.label,
 					link: '#page=Broadcast&broadcastid=' + broadcast.broadcastid + '&media=' + state['media'],
-					details: moment(broadcast.endtime).isBefore(now) ?
-							[ minutes2string(broadcast.runtime) ] :
-							[ moment(broadcast.starttime).format('LT'), minutes2string(broadcast.runtime) ],
+					details: [ moment.utc(broadcast.starttime).local().format('LT') ],
 					runtime: broadcast.runtime,
-					starttime: moment(broadcast.starttime),
-					endtime: moment(broadcast.endtime),
-					isfinished: moment(broadcast.endtime).isBefore(moment()),
+					starttime: moment.utc(broadcast.starttime),
+					stime: moment.utc(broadcast.starttime),
+					endtime: moment.utc(broadcast.endtime),
+					isfinished: moment.utc(broadcast.endtime).isBefore(moment()),
 					isactive: broadcast.isactive
 				})))
+				.catch(x => ([]))
 		})))
 		.then(channels => {
+			console.log(channels)
 			return Promise.all(channels.map(channel => {
 				return channel.itemsP
 				.then(items => ({
@@ -107,30 +108,36 @@ export default (new Page({
 			//filter channels from days that aren't selected
 			channels = channels.map(channel => {
 				const c = Object.create(channel)
-			 	c.items = channel.items.filter(item => (item.endtime.isBetween(startOfDay, endOfDay) || item.starttime.isBetween(startOfDay, endOfDay)))
+				if (Array.isArray(channel.items))
+			 		c.items = channel.items.filter(item => (item.endtime.isBetween(startOfDay, endOfDay) || item.starttime.isBetween(startOfDay, endOfDay)))
+			 	else
+			 		c.items = []
 			 	return c
 			})
 
 			//find the first and last episode times
-			let starttime = undefined
+			/*let starttime = undefined
 			let endtime = undefined
 			channels.forEach(channel => channel.items.forEach(item => {
 				starttime = starttime === undefined ? item.starttime : moment.min(item.starttime, starttime)
 				endtime = endtime === undefined ? item.endtime : moment.max(item.endtime, endtime)
-			}))
+			}))*/
+			const starttime = startOfDay
+			const endtime = endOfDay
 
 			//calculate the position of each episode
 			channels = channels.map(channel => {
-				channel.items = channel.items.map(item => {
-					item.style = `left: ${(item.starttime.unix() - starttime.unix()) / advancedSettings.epg.width}px; width: ${((item.endtime.unix() - item.starttime.unix()) / advancedSettings.epg.width) - advancedSettings.epg.padding}px;`
+				if (Array.isArray(channel.items)) channel.items = channel.items.map(item => {
+					const stime = moment.max(starttime, item.starttime)
+					item.style = `left: ${(stime.unix() - starttime.unix()) / advancedSettings.epg.width}px; width: ${((item.endtime.unix() - stime.unix()) / advancedSettings.epg.width) - advancedSettings.epg.padding}px;`
 					return item
 				})
 				return channel
 			})
 
 			//create timeline (the list of times at the top of page)
-			const start = moment(starttime).startOf('hour')
-			const end = moment(endtime).endOf('hour').add(1, 'minutes')
+			const start = moment.utc(starttime).local().startOf('hour')
+			const end = moment.utc(endtime).local().endOf('hour').add(1, 'minutes')
 			const timeline = []
 			for (let date = moment(start); date.isSameOrBefore(endtime); date.add(15, 'minutes'))
 				if (date.isSameOrAfter(starttime))

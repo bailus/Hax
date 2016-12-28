@@ -81,7 +81,8 @@ export default class {
 			const groupbyKey = state['group'] || this.groupby
 			const groupbyValue = state[groupbyKey]
 			if (groupbyKey) {
-				let size = data.items.length
+				if (!Array.isArray(data.items)) data.items = []
+				const size = data.items.length
 				const showItems = !(!groupbyValue && size > advancedSettings.pages.groupingThreshold)
 
 				//sort and group the items

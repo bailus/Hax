@@ -1,10 +1,10 @@
 {
   "private": true,
-  "version": "0.3.3",
-  "name": "Hax",
-  "id": "webinterface.hax",
+  "version": "0.4",
+  "name": "Basic",
+  "id": "webinterface.basic",
   "summary": "A fast and simple remote control for mobile devices.",
-  "description": "Hax is a web interface for the Kodi® media center. Designed to be fast and simple to use, it supports modern browsers including Android, Internet Explorer 9 and Edge.",
+  "description": "Basic is a web interface for the Kodi® media center. Designed to be fast and easy to use, it supports modern browsers including Android, Internet Explorer 9 and Edge.",
   "keywords": [
     "Kodi",
     "XBMC"
@@ -33,13 +33,14 @@
   "license": "GPL-3.0",
 
   "scripts": {
-    "clean": "touch build/temp && rm -r build/*",
-    "build:script.js": "jspm bundle-sfx js/main build/script.js",
-    "build:style.css": "postcss -u postcss-import -u postcss-cssnext -i css/style.css -o build/style.css",
-    "build:index.html": "handlebars package.json < templates/index.html > build/index.html",
-    "build:addon.xml": "handlebars package.json < templates/addon.xml > build/addon.xml",
-    "build:readme.md": "handlebars package.json < templates/README.md > build/README.md",
-    "build:assets": "cp -r templates img assets/* build/",
+    "clean": "touch build/temp && rm -r build/* && touch build/webinterface.basic",
+    "build:script.js": "jspm bundle-sfx js/main build/webinterface.basic/script.js",
+    "build:style.css": "postcss -u postcss-import -u postcss-cssnext -i css/style.css -o build/webinterface.basic/style.css",
+    "build:index.html": "handlebars package.json < templates/index.html > build/webinterface.basic/index.html",
+    "build:addon.xml": "handlebars package.json < templates/addon.xml > build/webinterface.basic/addon.xml",
+    "build:readme.md": "handlebars package.json < templates/README.md > build/webinterface.basic/README.md",
+    "build:assets": "cp -r templates img assets/* build/webinterface.basic/",
+    "build:zip": "zip -r build/webinterface.basic.zip build/webinterface.basic",
     "build": "npm run clean && npm run build:script.js && npm run build:style.css && npm run build:index.html && npm run build:addon.xml && npm run build:readme.md && npm run build:assets"
   },
   "dependencies": {

@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <addon
-	id="webinterface.hax-dev"
-	version="1.0.0"
-	name="Hax Development Version"
+	id="webinterface.basic-dev"
+	version="0.0.0"
+	name="Basic - Development Version"
 	provider-name="bailus">
 	<requires>
 		<import addon="xbmc.json" version="6.0.0"/>

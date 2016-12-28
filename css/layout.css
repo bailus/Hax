@@ -53,7 +53,7 @@ a img,:link img,:visited img {
 	#content {
 		flex-grow: 1;
 		flex-shrink: 1;
-		display: inline-flex;
+		display: flex;
 		overflow: hidden;
 	}
 	#player {

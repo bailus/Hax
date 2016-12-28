@@ -30,6 +30,8 @@ import tvshow from './tvshow.js'
 import tvshows from './tvshows.js'
 import episodes from './episodes.js'
 import season from './season.js'
+import timers from './timers.js'
+import timer from './timer.js'
 
 const pages = [
 	actors,
@@ -62,7 +64,9 @@ const pages = [
 	tvshow,
 	tvshows,
 	episodes,
-	season
+	season,
+	timers,
+	timer
 ]
 
 export default pages

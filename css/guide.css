@@ -1,32 +1,28 @@
 
 .page[data-page="Guide"] > article {
-	align-items: flex-start;
 }
 
 .page[data-page="Guide"] > article,
 .page[data-page="Guide"] .timeline
 {
-	max-width: 100%;
-	flex-shrink: 0;
 }
-.page[data-page="Guide"] > article {
-	overflow: initial;
-}
+.page[data-page="Guide"] > article {}
 
 .page[data-page="Guide"] > article > .items > .listItem {
 	display: block;
 	position: relative;
 	height: 50px;
 	margin-bottom: 2px;
-	margin-left: 50px;
+	margin-left: 170px;
 }
 
 .page[data-page="Guide"] > article > .items > .listItem > .thumbnail {
 	position: absolute;
 	top:0;
-	left: -50px;
+	left: -170px;
 	width: 50px;
 	height: 50px;
+	will-change: transform;
 }
 
 .page[data-page="Guide"] .listItem > .thumbnail > img {
@@ -34,9 +30,7 @@
 	height: 50px;
 }
 
-.page[data-page="Guide"] > article > .items > .listItem > .label {
-	display: none;
-}
+.page[data-page="Guide"] > article > .items > .listItem > .label {margin: auto;margin-left: -120px;width: 110px;overflow: hidden;text-overflow: ellipsis;}
 .page[data-page="Guide"] .listItem > ul {
 	position: absolute;
 	left: 0;
@@ -72,64 +66,85 @@
 	padding: 2px;
 	margin: 0;
 }
-.page[data-page="Guide"] .listItem .line1 {
-	height: 32px;
+.page[data-page="Guide"] .listItem.leaf .line1 {
+	height: 46px;
 	line-height: 16px;
 	word-wrap: break-word;
 	white-space: normal;
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	right: 2px;
+	font-size: 12px;
+	font-weight: bold;
 }
-.page[data-page="Guide"] .listItem .line2 {
+.page[data-page="Guide"] .listItem.leaf:hover .line1 {
+	height: 32px;
+}
+.page[data-page="Guide"] .listItem.leaf .line2 {
 	position: absolute;
 	bottom: 0;
 	left: 2px;
 	right: 2px;
 	height: 14px;
 	line-height: 14px;
-	font-size: 11px;
+	font-size: 9px;
+	display:none;
 }
-.page[data-page="Guide"] .listItem .line2 > span:last-child {
-	float: right;
+.page[data-page="Guide"] .listItem.leaf:hover .line2 {
+	display:block;
 }
+
+.page[data-page="Guide"] .listActions {
+    position: absolute;
+    top: 0;
+    left: -170px;
+}
+.page[data-page="Guide"] .listActions img {
+	visibility: hidden;
+}
+.page[data-page="Guide"] .listActions:hover img {
+	visibility: visible;
+}
+
 
 .page[data-page="Guide"] .timeline {
 	height: 24px;
 	position: relative;
 	width: 100%;
-	border-top: 1px solid white;
+	left: 171px;
 }
 
 .page[data-page="Guide"] .timeline > span {
 	position: absolute;
 	width: 0;
 	height: 16px;
-	line-height: 32px;
+	line-height: 24px;
 	top: 0;
 	border-left: 1px solid white;
 	padding-left: 2px;
 	color: #BBB;
 	overflow: visible;
-    margin-left: 52px;
-    font-size: 11px;
-    white-space: nowrap;
+	font-size: 11px;
+	white-space: nowrap;
 }
 
 .page[data-page="Guide"] .timeline > .minor {
-	height: 9px;
+	height: 3px;
 }
 
 .page[data-page="Guide"] .timeline > .present {
 	position: absolute;
 	border-left: 1px solid #F00;
 	z-index: 100;
-	height: 100%;
+	height: 1e6px;
 }
 
 
 .page[data-page="Guide"] article > .items {
-	overflow: scroll;
-	flex-grow: 10;
-	min-width: 100%;
 	margin: 0;
+	height: 100%;
+	min-width: 100%;
 }
 
 

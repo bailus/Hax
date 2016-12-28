@@ -89,17 +89,17 @@ export default (new Page({
 				'TV': [
 					{ 'label': '', 'items': [
 						{ 'label': 'Channels', 'link': '#page=Channels&media=TV', 'thumbnail': 'img/icons/home/livetv.png' },
-						{ 'label': 'Guide', 'link': '#page=Channels&media=TV&nextpage=Guide', 'thumbnail': 'img/icons/home/livetv.png' }/*,
-						{ 'label': 'Recordings', 'link': '#', 'thumbnail': 'img/icons/home/livetv.png' },
-						{ 'label': 'Timers', 'link': '#page=Timers&media=TV', 'thumbnail': 'img/icons/home/livetv.png' }*/
+						{ 'label': 'Guide', 'link': '#page=Channels&media=TV&nextpage=Guide', 'thumbnail': 'img/icons/home/livetv.png' },
+						{ 'label': 'Recordings', 'link': '#page=Recordings&media=TV', 'thumbnail': 'img/icons/home/livetv.png' },
+						{ 'label': 'Timers', 'link': '#page=Timers&media=TV', 'thumbnail': 'img/icons/home/livetv.png' }
 					] }
 				],
 				'Radio': [
 					{ 'label': '', 'items': [
 						{ 'label': 'Channels', 'link': '#page=Channels&media=Radio', 'thumbnail': 'img/icons/home/radio.png' },
-						{ 'label': 'Guide', 'link': '#page=Channels&media=Radio&nextpage=Guide', 'thumbnail': 'img/icons/home/radio.png' }/*,
-						{ 'label': 'Recordings', 'link': '#', 'thumbnail': 'img/icons/home/radio.png' },
-						{ 'label': 'Timers', 'link': '#page=Timers&media=Radio', 'thumbnail': 'img/icons/home/radio.png' }*/
+						{ 'label': 'Guide', 'link': '#page=Channels&media=Radio&nextpage=Guide', 'thumbnail': 'img/icons/home/radio.png' },
+						{ 'label': 'Recordings', 'link': '#page=Recordings&media=Radio', 'thumbnail': 'img/icons/home/radio.png' },
+						{ 'label': 'Timers', 'link': '#page=Timers&media=Radio', 'thumbnail': 'img/icons/home/radio.png' }
 					] }
 				]
 			})[media]
