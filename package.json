@@ -1,6 +1,6 @@
 {
   "private": true,
-  "version": "0.4",
+  "version": "0.5.0",
   "name": "Basic",
   "id": "webinterface.basic",
   "summary": "A fast and simple remote control for mobile devices.",
@@ -33,15 +33,15 @@
   "license": "GPL-3.0",
 
   "scripts": {
-    "clean": "touch build/temp && rm -r build/* && touch build/webinterface.basic",
+    "clean": "rm -r build/* && mkdir build/webinterface.basic",
     "build:script.js": "jspm bundle-sfx js/main build/webinterface.basic/script.js",
     "build:style.css": "postcss -u postcss-import -u postcss-cssnext -i css/style.css -o build/webinterface.basic/style.css",
     "build:index.html": "handlebars package.json < templates/index.html > build/webinterface.basic/index.html",
     "build:addon.xml": "handlebars package.json < templates/addon.xml > build/webinterface.basic/addon.xml",
     "build:readme.md": "handlebars package.json < templates/README.md > build/webinterface.basic/README.md",
     "build:assets": "cp -r templates img assets/* build/webinterface.basic/",
-    "build:zip": "zip -r build/webinterface.basic.zip build/webinterface.basic",
-    "build": "npm run clean && npm run build:script.js && npm run build:style.css && npm run build:index.html && npm run build:addon.xml && npm run build:readme.md && npm run build:assets"
+    "build:zip": "zip -r build/webinterface.basic.zip build/webinterface.basic && file build/webinterface.basic.zip",
+    "build": "npm run clean && npm run build:script.js && npm run build:style.css && npm run build:index.html && npm run build:addon.xml && npm run build:readme.md && npm run build:assets && npm run build:zip"
   },
   "dependencies": {
     "handlebars": "^4.0.5",
