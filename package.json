@@ -1,10 +1,10 @@
 {
   "private": true,
-  "version": "0.5.0",
-  "name": "Basic",
-  "id": "webinterface.basic",
+  "version": "0.5.1",
+  "name": "Hax",
+  "id": "webinterface.hax",
   "summary": "A fast and simple remote control for mobile devices.",
-  "description": "Basic is a web interface for the Kodi® media center. Designed to be fast and easy to use, it supports modern browsers including Android, Internet Explorer 9 and Edge.",
+  "description": "Hax is a web interface for the Kodi® media center. Designed to be fast and easy to use, it supports modern browsers including Android, Internet Explorer 9 and Edge.",
   "keywords": [
     "Kodi",
     "XBMC"
@@ -33,14 +33,14 @@
   "license": "GPL-3.0",
 
   "scripts": {
-    "clean": "rm -r build/* && mkdir build/webinterface.basic",
-    "build:script.js": "jspm bundle-sfx js/main build/webinterface.basic/script.js",
-    "build:style.css": "postcss -u postcss-import -u postcss-cssnext -i css/style.css -o build/webinterface.basic/style.css",
-    "build:index.html": "handlebars package.json < templates/index.html > build/webinterface.basic/index.html",
-    "build:addon.xml": "handlebars package.json < templates/addon.xml > build/webinterface.basic/addon.xml",
-    "build:readme.md": "handlebars package.json < templates/README.md > build/webinterface.basic/README.md",
-    "build:assets": "cp -r templates img assets/* build/webinterface.basic/",
-    "build:zip": "zip -r build/webinterface.basic.zip build/webinterface.basic && file build/webinterface.basic.zip",
+    "clean": "rm -r build/* && mkdir build/webinterface.hax",
+    "build:script.js": "jspm bundle-sfx js/main build/webinterface.hax/script.js",
+    "build:style.css": "node_modules/postcss-cli/bin/postcss -u postcss-import -u postcss-cssnext -i css/style.css -o build/webinterface.hax/style.css",
+    "build:index.html": "node_modules/.bin/hbsrender -c package.json -t templates/index.html > build/webinterface.hax/index.html",
+    "build:addon.xml": "node_modules/.bin/hbsrender -c package.json -t templates/addon.xml > build/webinterface.hax/addon.xml",
+    "build:readme.md": "node_modules/.bin/hbsrender -c package.json -t templates/README.md > build/webinterface.hax/README.md",
+    "build:assets": "cp -r templates img assets/* build/webinterface.hax/",
+    "build:zip": "cd build/webinterface.hax && zip -r ../webinterface.hax.zip ./* && cd ../.. && stat build/webinterface.hax.zip && file build/webinterface.hax.zip",
     "build": "npm run clean && npm run build:script.js && npm run build:style.css && npm run build:index.html && npm run build:addon.xml && npm run build:readme.md && npm run build:assets && npm run build:zip"
   },
   "dependencies": {
@@ -64,7 +64,9 @@
     "devDependencies": {
       "babel": "npm:babel-core@^5.8.24",
       "babel-runtime": "npm:babel-runtime@^5.8.24",
-      "core-js": "npm:core-js@^1.1.4"
+      "core-js": "npm:core-js@^1.1.4",
+      "handlebars": "github:components/handlebars.js@^4.0.5",
+      "hbsrender": "npm:hbsrender@^1.0.9"
     },
     "buildConfig": {
       "transpileES6": true,

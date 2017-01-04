@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <addon
 	id="webinterface.basic-dev"
-	version="0.0.0"
+	version="0.55555.0"
 	name="Basic - Development Version"
 	provider-name="bailus">
 	<requires>
