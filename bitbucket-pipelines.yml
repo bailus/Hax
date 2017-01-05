@@ -9,6 +9,7 @@ pipelines:
   default:
     - step:
         script: # Modify the commands below to build your repository.
+          - apt-get install -y zip
           - npm install
           - ./node_modules/.bin/jspm install
           - npm run build
