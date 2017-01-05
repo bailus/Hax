@@ -20,7 +20,6 @@ SystemJS.config({
       "core-js": "npm:core-js@1.2.6",
       "hbsrender": "npm:hbsrender@1.0.9",
       "uglify-js": "npm:uglify-js@2.7.5",
-      "events": "npm:jspm-nodelibs-events@0.2.0",
       "tty": "npm:jspm-nodelibs-tty@0.2.0",
       "plugin-typescript": "github:frankwallis/plugin-typescript@5.3.3",
       "net": "npm:jspm-nodelibs-net@0.2.0"
@@ -296,6 +295,7 @@ SystemJS.config({
     "github:*/*.json"
   ],
   map: {
+    "events": "npm:jspm-nodelibs-events@0.2.0",
     "assert": "npm:jspm-nodelibs-assert@0.2.0",
     "babel-plugin-transform-es2015-arrow-functions": "npm:babel-plugin-transform-es2015-arrow-functions@6.8.0",
     "babel-polyfill": "npm:babel-polyfill@6.9.1",
