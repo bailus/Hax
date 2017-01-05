@@ -1,6 +1,6 @@
 {
   "private": true,
-  "version": "0.5.1",
+  "version": "0.5.2",
   "name": "Hax",
   "id": "webinterface.hax",
   "summary": "A fast and simple remote control for mobile devices.",
@@ -31,27 +31,28 @@
     "Kodi addon repository": "http://addons.kodi.tv/show/webinterface.hax/"
   },
   "license": "GPL-3.0",
-
   "scripts": {
-    "clean": "rm -r build/* && mkdir build/webinterface.hax",
-    "build:script.js": "jspm bundle-sfx js/main build/webinterface.hax/script.js",
+    "clean": "mkdir -p build && rm -rd build && mkdir -p build/webinterface.hax",
+    "build:script.js": "jspm build js/main.js build/webinterface.hax/script.js",
     "build:style.css": "node_modules/postcss-cli/bin/postcss -u postcss-import -u postcss-cssnext -i css/style.css -o build/webinterface.hax/style.css",
     "build:index.html": "node_modules/.bin/hbsrender -c package.json -t templates/index.html > build/webinterface.hax/index.html",
     "build:addon.xml": "node_modules/.bin/hbsrender -c package.json -t templates/addon.xml > build/webinterface.hax/addon.xml",
     "build:readme.md": "node_modules/.bin/hbsrender -c package.json -t templates/README.md > build/webinterface.hax/README.md",
     "build:assets": "cp -r templates img assets/* build/webinterface.hax/",
-    "build:zip": "cd build/webinterface.hax && zip -r ../webinterface.hax.zip ./* && cd ../.. && stat build/webinterface.hax.zip && file build/webinterface.hax.zip",
+    "build:zip": "cd build && zip -r build.zip ./* && file build.zip && cd ..",
     "build": "npm run clean && npm run build:script.js && npm run build:style.css && npm run build:index.html && npm run build:addon.xml && npm run build:readme.md && npm run build:assets && npm run build:zip"
   },
   "dependencies": {
     "handlebars": "^4.0.5",
     "handlebars-cmd": "^0.1.4",
-    "jspm": "^0.16.39",
+    "hbsrender": "^1.0.9",
+    "jspm": "^0.17.0-beta.32",
     "postcss-cli": "^2.5.2",
     "postcss-cssnext": "^2.6.0",
-    "postcss-import": "^8.1.2"
+    "postcss-import": "8.1.0"
   },
   "jspm": {
+    "main": "main.js",
     "dependencies": {
       "babel-plugin-transform-es2015-arrow-functions": "npm:babel-plugin-transform-es2015-arrow-functions@^6.8.0",
       "babel-polyfill": "npm:babel-polyfill@^6.9.1",
@@ -65,12 +66,135 @@
       "babel": "npm:babel-core@^5.8.24",
       "babel-runtime": "npm:babel-runtime@^5.8.24",
       "core-js": "npm:core-js@^1.1.4",
-      "handlebars": "github:components/handlebars.js@^4.0.5",
-      "hbsrender": "npm:hbsrender@^1.0.9"
+      "events": "npm:jspm-nodelibs-events@^0.2.0",
+      "hbsrender": "npm:hbsrender@^1.0.9",
+      "net": "npm:jspm-nodelibs-net@^0.2.0",
+      "plugin-typescript": "github:frankwallis/plugin-typescript@^5.3.3",
+      "tty": "npm:jspm-nodelibs-tty@^0.2.0",
+      "uglify-js": "npm:uglify-js@^2.6"
     },
     "buildConfig": {
       "transpileES6": true,
       "minify": false
+    },
+    "peerDependencies": {
+      "assert": "npm:jspm-nodelibs-assert@^0.2.0",
+      "buffer": "npm:jspm-nodelibs-buffer@^0.2.0",
+      "child_process": "npm:jspm-nodelibs-child_process@^0.2.0",
+      "constants": "npm:jspm-nodelibs-constants@^0.2.0",
+      "crypto": "npm:jspm-nodelibs-crypto@^0.2.0",
+      "fs": "npm:jspm-nodelibs-fs@^0.2.0",
+      "http": "npm:jspm-nodelibs-http@^0.2.0",
+      "module": "npm:jspm-nodelibs-module@^0.2.0",
+      "os": "npm:jspm-nodelibs-os@^0.2.0",
+      "path": "npm:jspm-nodelibs-path@^0.2.0",
+      "process": "npm:jspm-nodelibs-process@^0.2.0",
+      "stream": "npm:jspm-nodelibs-stream@^0.2.0",
+      "string_decoder": "npm:jspm-nodelibs-string_decoder@^0.2.0",
+      "url": "npm:jspm-nodelibs-url@^0.2.0",
+      "util": "npm:jspm-nodelibs-util@^0.2.0",
+      "vm": "npm:jspm-nodelibs-vm@^0.2.0"
+    },
+    "overrides": {
+      "github:jmcriffey/bower-traceur-runtime@0.0.93": {
+        "format": "global",
+        "meta": {
+          "traceur-runtime.js": {
+            "exports": "$traceurRuntime",
+            "format": "global"
+          }
+        }
+      },
+      "github:jmcriffey/bower-traceur@0.0.93": {
+        "format": "global",
+        "meta": {
+          "traceur.js": {
+            "exports": "traceur",
+            "format": "global"
+          }
+        }
+      },
+      "npm:babel-core@5.8.38": {
+        "main": "browser.js",
+        "dependencies": {},
+        "jspmNodeConversion": false,
+        "map": {
+          "regenerator/runtime": "babel-runtime/regenerator/runtime"
+        },
+        "meta": {
+          "browser.js": {
+            "exports": "babel",
+            "format": "global"
+          }
+        }
+      },
+      "npm:babel-runtime@5.8.38": {
+        "main": false,
+        "dependencies": {},
+        "optionalDependencies": {
+          "core-js": "^1.2.0"
+        }
+      },
+      "npm:debug@2.2.0": {
+        "main": "browser.js",
+        "jspmNodeConversion": false,
+        "format": "cjs",
+        "map": {
+          "./browser.js": {
+            "node": "./node.js"
+          },
+          "./node.js": {
+            "browser": "./browser.js"
+          },
+          "fs": "@node/fs",
+          "net": "@node/net",
+          "tty": "@node/tty",
+          "util": "@node/util"
+        }
+      },
+      "npm:inherits@2.0.1": {
+        "ignore": [
+          "test.js"
+        ]
+      },
+      "npm:lodash@4.13.1": {
+        "map": {
+          "buffer": "@empty",
+          "process": "@empty"
+        }
+      },
+      "npm:moment@2.13.0": {
+        "jspmNodeConversion": false
+      },
+      "npm:ms@0.7.1": {
+        "jspmNodeConversion": false,
+        "format": "cjs"
+      },
+      "npm:typescript@1.8.10": {
+        "browser": {},
+        "map": {
+          "buffer": "@empty",
+          "child_process": "@empty",
+          "fs": "@empty",
+          "path": "@empty",
+          "process": "@empty",
+          "readline": "@empty"
+        }
+      },
+      "npm:typescript@2.1.4": {
+        "browser": {},
+        "map": {
+          "buffer": "@empty",
+          "child_process": "@empty",
+          "fs": "@empty",
+          "path": "@empty",
+          "process": "@empty",
+          "readline": "@empty"
+        },
+        "dependencies": {
+          "source-map-support": "*"
+        }
+      }
     }
   }
 }

@@ -3,7 +3,7 @@
 	id="{{{ id }}}"
 	version="{{{ version }}}"
 	name="{{{ name }}}"
-	provider-name="{{{ author }}}">
+	provider-name="{{{ author.email }}}">
 	<requires>
 		<import addon="xbmc.json" version="6.0.0"/>
 	</requires>
