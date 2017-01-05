@@ -10,5 +10,4 @@ pipelines:
     - step:
         script: # Modify the commands below to build your repository.
           - npm install
-          - jspm install
           - npm run build
