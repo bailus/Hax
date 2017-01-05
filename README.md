@@ -1,13 +1,14 @@
-# Basic
-## Remote Control for Kodi®
+# Hax v0.5.1
 
 [Samuel Bailey](http://bailey.geek.nz) <[sam@bailey.geek.nz](mailto:sam@bailey.geek.nz)>
 
 
 A fast and simple remote control for mobile devices.
 
+![oUNe3E9.png](https://bitbucket.org/repo/dMaXXg/images/3495096627-oUNe3E9.png)
 
-### Links
+
+## Links
  * [Homepage](http://bailey.geek.nz/remote)
  * [Source](https://github.com/bailus/hax)
  * [Issues, Bugs and Feature Requests](https://github.com/bailus/hax/issues)
@@ -16,7 +17,7 @@ A fast and simple remote control for mobile devices.
  * [Kodi addon repository](http://addons.kodi.tv/show/webinterface.hax/)
 
 
-### Development
+## Development
 For development, Hax can be used without running the build command. The index.html file in the root directory uses SystemJS, jspm and Babel to dynamically download, compile and load the modules and their dependencies from within the browser. Note that styles (CSS) can't be compiled in the browser using [PostCSS-cssnext](http://cssnext.io/) so those features won't be available.
 
 This is useful for testing purposes but can take a *very* long time to load, especially on mobile devices. A fast version can be built using the `npm run build` command (see below).
