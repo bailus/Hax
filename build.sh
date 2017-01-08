@@ -16,4 +16,4 @@ mv ../build/* ./
 
 git add .
 git commit -m "Build using Bitbucket Pipelines"
-git push
+git push --set-upstream origin staging
