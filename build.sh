@@ -5,15 +5,11 @@ npm install
 ./node_modules/.bin/jspm install
 npm run build
 
-git clone -b staging https://$USERNAME:$PASSWORD@bitbucket.org/bailus/hax-for-kodi.git
-cd hax-for-kodi
-git remote set-url origin https://$USERNAME:$PASSWORD@bitbucket.org/bailus/kodi-addons.git
-git fetch origin
-git checkout -b staging 
-git pull
+git clone -b staging https://$USERNAME:$PASSWORD@bitbucket.org/bailus/kodi-addons.git
+cd kodi-addons
 
 mv ../build/* ./
 
 git add .
 git commit -m "Build using Bitbucket Pipelines"
-git push --set-upstream origin staging
+git push
