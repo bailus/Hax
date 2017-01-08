@@ -8,7 +8,8 @@ npm run build
 git clone -b staging https://$USERNAME:$PASSWORD@bitbucket.org/bailus/kodi-addons.git
 cd kodi-addons
 
-mv ../build/* ./
+rm -r webinterface.hax
+mv ../build/webinterface.hax ./
 
 git add .
 git commit -m "Build using Bitbucket Pipelines"
