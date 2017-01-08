@@ -20,12 +20,13 @@ A fast and simple remote control for mobile devices.
 ## Development
 For development, Hax can be used without running the build command. The index.html file in the root directory uses SystemJS, jspm and Babel to dynamically download, compile and load the modules and their dependencies from within the browser. Note that styles (CSS) can't be compiled in the browser using [PostCSS-cssnext](http://cssnext.io/) so those features won't be available.
 
-This is useful for testing purposes but can take a *very* long time to load, especially on mobile devices. A fast version can be built using the `npm run build` command (see below).
+This is useful for testing purposes but can take a *very* long time to load, especially on mobile devices. A faster version can be built using the `npm run build` command (see below).
 
 
 ### Building
 ```bash
 npm install
+jspm install
 npm run build
 ```
 
