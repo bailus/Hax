@@ -6,6 +6,7 @@ npm install
 npm run build
 
 git clone -b staging https://$USERNAME:$PASSWORD@bitbucket.org/bailus/hax-for-kodi.git
+git remote set-url origin https://$USERNAME:$PASSWORD@bitbucket.org/bailus/kodi-addons.git
 mv build/* hax-for-kodi
 
 cd hax-for-kodi
