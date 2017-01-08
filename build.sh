@@ -9,6 +9,7 @@ git clone -b staging https://$USERNAME:$PASSWORD@bitbucket.org/bailus/hax-for-ko
 git remote set-url origin https://$USERNAME:$PASSWORD@bitbucket.org/bailus/kodi-addons.git
 git fetch origin
 git checkout -b staging 
+git pull
 mv build/* hax-for-kodi
 
 cd hax-for-kodi
