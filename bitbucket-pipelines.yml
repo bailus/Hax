@@ -6,15 +6,16 @@
 image: node:latest
 
 pipelines:
-  custom:
-    versionBump:
+  custom: # Pipelines that are triggered manually
+    version-bump:
       - step:
+          image: python:latest
           script: # Modify the commands below to build your repository.
-            - apt-get update && apt-get install -y python3
             - python3 versionBump.py
             - git commit -am "Version bump (using bitbucket pipelines)" && git push
-  default:
+  default:  # Pipelines that run automatically on any commit
     - step:
+        image: node:latest
         script: # Modify the commands below to build your repository.
-          - apt-get update && apt-get install -y zip python3
+          - apt-get update && apt-get install -y zip
           - sh build.sh
