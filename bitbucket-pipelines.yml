@@ -12,7 +12,7 @@ pipelines:
           script: # Modify the commands below to build your repository.
             - apt-get update && apt-get install -y python3
             - python3 versionBump.py
-            - git commit -am "Version bump (using bitbucket pipelines)"
+            - git commit -am "Version bump (using bitbucket pipelines)" && git push
   default:
     - step:
         script: # Modify the commands below to build your repository.
