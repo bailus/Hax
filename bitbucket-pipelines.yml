@@ -10,5 +10,5 @@ pipelines:
     - step:
         script: # Modify the commands below to build your repository.
           - apt-get update && apt-get install -y zip python3
-          - python3 versionbump.py
+          - python3 versionBump.py
           - sh build.sh
