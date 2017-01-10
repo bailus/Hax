@@ -22,26 +22,26 @@ A fast and simple remote control for mobile devices.
 The stable version is available from the official Kodi add-on repository. It can be downloaded and installed using Kodi's add-on manager.
 
 Install the stable version of Hax from within Kodi [(v16 or above)](https://kodi.tv/download/) by going to:
-1 Settings
-2 Add-ons
-3 Install from repository
-4 Kodi add-on repository
-5 Web interface
-6 Hax
-7 Install
+ 1 Settings
+ 2 Add-ons
+ 3 Install from repository
+ 4 Kodi add-on repository
+ 5 Web interface
+ 6 Hax
+ 7 Install
 
 
 ## Installation (Latest version)
 The latest version can be installed from within Kodi after installing [Sam's Kodi addon repository](http://bailey.geek.nz/).
 
 Install Hax from within Kodi [(v17 or above)](https://kodi.tv/download/) by going to:
-1 Settings
-2 Add-ons
-3 Install from repository
-4 [Sam's Kodi addon repository](http://bailey.geek.nz/)
-5 Web interface
-6 Hax
-7 Install
+ 1 Settings
+ 2 Add-ons
+ 3 Install from repository
+ 4 [Sam's Kodi addon repository](http://bailey.geek.nz/)
+ 5 Web interface
+ 6 Hax
+ 7 Install
 
 
 ## Configuration
@@ -53,11 +53,11 @@ After installation, Kodi's web interface can be enabled by going to:
 3 Control
 
 To access the interface, you need to turn on "Allow remote control via HTTP". I use the following settings:
-- Allow remote control via HTTP: on
-- Port: 80
-- Username: kodi
-- Password: 
-- Web interface: Hax
+ - Allow remote control via HTTP: on
+ - Port: 80
+ - Username: kodi
+ - Password: 
+ - Web interface: Hax
 
 You can then visit "http://localhost/" in your web browser to use Hax.
 
