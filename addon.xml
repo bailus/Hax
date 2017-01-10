@@ -1,13 +1,8 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<addon
-	id="webinterface.basic-dev"
-	version="0.55555.0"
-	name="Basic - Development Version"
-	provider-name="bailus">
+<addon id="webinterface.basic-dev" name="Basic - Development Version" provider-name="bailus" version="0.55555.3">
 	<requires>
-		<import addon="xbmc.json" version="6.0.0"/>
+		<import addon="xbmc.json" version="6.0.0" />
 	</requires>
-	<extension point="xbmc.webinterface"/>
+	<extension point="xbmc.webinterface" />
 	<extension point="xbmc.addon.metadata">
 		<platform>all</platform>
 		<source>https://github.com/bailus/Hax</source>
