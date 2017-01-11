@@ -17,4 +17,4 @@ pipelines:
         image: node:latest
         script: # Modify the commands below to build your repository.
           - apt-get update && apt-get install -y zip
-          - sh build.sh
+          - sh tools/build.sh
