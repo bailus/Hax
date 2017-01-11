@@ -11,10 +11,7 @@ pipelines:
       - step:
           image: python:latest
           script: # Modify the commands below to build your repository.
-            - python3 versionBump.py
-            - git config --global user.email "sam@bailey.geek.nz"
-            - git config --global user.name "Bitbucket Pipelines"
-            - git commit -am "Version bump (using bitbucket pipelines)" && git push HEAD:master
+            - sh tools/versionBump.sh
   default:  # Pipelines that run automatically on any commit
     - step:
         image: node:latest
