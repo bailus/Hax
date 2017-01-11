@@ -1,7 +1,7 @@
 import json
 import re
 
-filename = 'package.json'
+filename = '../package.json'
 
 with open(filename, 'r+') as file:
 	data = json.load(file)

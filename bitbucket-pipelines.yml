@@ -11,7 +11,9 @@ pipelines:
       - step:
           image: python:latest
           script: # Modify the commands below to build your repository.
-            - sh tools/versionBump.sh
+            - cd tools
+            - sh versionBump.sh
+            - cd ..
   default:  # Pipelines that run automatically on any commit
     - step:
         image: node:latest
