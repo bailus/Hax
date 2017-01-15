@@ -1,4 +1,4 @@
-<addon id="webinterface.basic-dev" name="Basic - Development Version" provider-name="bailus" version="0.55555.3">
+<addon id="webinterface.hax-dev" name="Hax - Development Version" provider-name="bailus" version="42.0.0">
 	<requires>
 		<import addon="xbmc.json" version="6.0.0" />
 	</requires>

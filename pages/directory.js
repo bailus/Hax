@@ -48,7 +48,8 @@ export default (new Page({
 		.then(files => files.map(file => {
 			let f = pathSplit(file.file)
 			let filename = f.pop()
-			let pathname = path.replace(/^\/+|\/+$/g, '') + '/'
+			let pathDelimiter = typeof path === 'string' && root.search(/\\/) === -1 ? "/" : "\\"
+			let pathname = typeof path === 'string' ? path.replace(/^\/+|\/+$|^\\+|\\+$/g, '') + pathDelimiter : ''
 
 			if (!filename) filename = f.pop()
 
