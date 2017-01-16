@@ -26,6 +26,7 @@ export default (new Page({
 		const path = state['path'] || ''
 		const filename = state['filename'] || ''
 		const fullPath = [ root, path, filename ].join('')
+		console.log(fullPath)
 
 		return xbmc.get({
 			method: 'Files.GetFileDetails',
