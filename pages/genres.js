@@ -13,9 +13,9 @@ export default (new Page({
 			'Albums': 'Music'
 		}[state['type']]
 		if (type)
-			return new Map([[ 'page', 'Menu' ],[ 'media', type ]])
+			return { page: 'Menu', media: type }
 		else
-			return new Map([[ 'page', 'Home' ]])
+			return { page: 'Home' }
 	},
 	'data': state => {
 		let page = {}

@@ -10,6 +10,14 @@ export default (function () {
 	function timeObjToSeconds (o) {
 		return ((((o.hours*60) + o.minutes)*60) + o.seconds)+(o.milliseconds/1e3);
 	}
+	function secondsToShortString(s) {
+		const seconds = Math.round(s%60)
+		const minutes = Math.floor(s/60)
+		const hours = Math.floor(s/3600)
+		return (hours > 0 ? hours + ':' : '') +
+				(minutes < 10 ? '0' : '') + minutes + ':' +
+				(seconds < 10 ? '0' : '') + seconds
+	}
 
 	function renderPlayer(player) {
 		var slider, volume, data
@@ -85,8 +93,10 @@ export default (function () {
 		let backgroundElem = progressElem.querySelector('.background')
 
 		progress = Progress(function (position, time, duration) {
-			var value = Math.round(position*10000)
-			var string = (time ? seconds2string(time)+'/' : '')+seconds2string(duration)
+			const value = Math.round(position*10000)
+			const timeString = secondsToShortString(time)
+			const durationString = secondsToShortString(duration)
+			const string = timeString + ' / ' + durationString
 			if (string !== oldString) {
 				timeElem.innerHTML = string
 				barElem.setAttribute('style', 'width: ' + (value/100) + '%;')
@@ -207,7 +217,7 @@ export default (function () {
 						statusElem.innerHTML = ''+
 							(item.showtitle ? item.showtitle+' ' : '')+
 							(item.season>=0 ? item.episode>=0 && item.season+'x'+item.episode+' ' : '')+
-							(item.artist && item.artist.length ? item.artist.join(', ')+' - '+(item.album || '') : '')+
+							(item.artist && item.artist.length ? item.artist.join(', ')+' - '+(item.album || '[unknown album]')+' ' : '')+
 							(item.label||item.title||item.file)
 					}
 					else statusElem.innerHTML = ''
