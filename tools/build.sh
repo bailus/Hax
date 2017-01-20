@@ -1,5 +1,9 @@
+#!/bin/bash
+
 git config --global user.email "sam@bailey.geek.nz"
 git config --global user.name "Bitbucket Pipelines"
+
+VERSION=`python3 tools/getVersion.py`
 
 npm install
 ./node_modules/.bin/jspm install
@@ -12,5 +16,5 @@ rm -r webinterface.hax
 mv ../build/webinterface.hax ./
 
 git add .
-git commit -m "Build using Bitbucket Pipelines"
+git commit -m "Build $VERSION (using Bitbucket Pipelines)"
 git push
