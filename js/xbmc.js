@@ -126,7 +126,7 @@ export default (function () {
 			self = function (vfs) {
 				if (!vfs) return;
 				//if (vfs.substring(0,21) === 'image://http%3a%2f%2f') return decodeURIComponent( vfs.substring(8) ); //get image directly from the internet, bypassing the xbmc cache
-				return vfsurl + encodeURIComponent(vfs);
+				return vfsurl + encodeURIComponent(vfs.replace(/\\/g,'/'));
 			};
 			self.set = function (url) {
 				vfsurl = parseURL(url || '/');

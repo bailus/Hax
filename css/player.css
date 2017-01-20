@@ -221,7 +221,6 @@ body[data-status=playing] #player .playpause a { background-image:url('../img/bu
 #progress .background {
 	height: 7px;
 	width: 100%;
-	background-color: hsl(203, 34%, 44%);
 }
 #progress .status {
     max-width: 100%;

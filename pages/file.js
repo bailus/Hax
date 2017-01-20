@@ -26,6 +26,7 @@ export default (new Page({
 		const path = state['path'] || ''
 		const filename = state['filename'] || ''
 		const fullPath = [ root, path, filename ].join('')
+		console.log(fullPath)
 
 		return xbmc.get({
 			method: 'Files.GetFileDetails',
@@ -45,7 +46,7 @@ export default (new Page({
 					'value': filedetails.file
 				},
 				{ 'name': 'Type', 'value': filedetails.mimetype },
-				{ 'name': 'Size', 'value': filedetails.size/1024 },
+				{ 'name': 'Size', 'value': ((filedetails.size > 0 ? filedetails.size : 0) / 1024 / 1024).toFixed(2) + ' MB' },
 				{ 'name': 'Last Modified', 'value': filedetails.lastmodified }
 			],
 			actions: [

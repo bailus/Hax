@@ -48,6 +48,8 @@ export default (new Page({
 		.then(files => files.map(file => {
 			let f = pathSplit(file.file)
 			let filename = f.pop()
+			let pathDelimiter = typeof path === 'string' && root.search(/\\/) === -1 ? "/" : "\\"
+			let pathname = typeof path === 'string' ? path.replace(/^\/+|\/+$|^\\+|\\+$/g, '') + pathDelimiter : ''
 
 			if (!filename) filename = f.pop()
 
@@ -63,7 +65,7 @@ export default (new Page({
 						link: makeJsLink(`xbmc.Open({ 'item': { 'file': '${xbmc.vfs2uri(file.file)}'  } })`)
 					}
 				]
-				file.link = `#page=File&media=${ media }&sortby=${ sortby }&order=${ order }&root=${ encodeURIComponent(root) }&=${ encodeURIComponent((path || '')) }&filename=${ encodeURIComponent(filename) }`
+				file.link = `#page=File&media=${ media }&sortby=${ sortby }&order=${ order }&root=${ encodeURIComponent(root) }&path=${ encodeURIComponent((pathname || '')) }&filename=${ encodeURIComponent(filename) }`
 
 				if (media === 'pictures')
 					file.thumbnail = file.thumbnail || file.file

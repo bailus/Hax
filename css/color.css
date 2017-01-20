@@ -1,18 +1,17 @@
 
 :root {
-  --main-hue: 202;
-  --main-saturation: 80%;
+  --main-hue: 192;
+  --main-saturation: 60%;
 
 
   --background-hue: var(--main-hue);
-  --background-saturation: calc(var(--main-saturation) * 0.75);
+  --background-saturation: calc(var(--main-saturation) * 0.666);
 
   --link-hue: var(--main-hue);
-  --link-saturation: var(--main-saturation);
+  --link-saturation: calc(var(--main-saturation) * 0.25);
 
   --text-hue: var(--main-hue);
-  --text-saturation: calc(var(--main-saturation) * 0.125);
-
+  --text-saturation: var(--main-saturation);
 
   --background-saturation-low: calc(var(--main-saturation) * 0.25);
 }
@@ -27,7 +26,7 @@ a, a:hover, a:visited {
 article a,
 article a:hover,
 article a:visited {
-	color: hsl(var(--link-hue), var(--link-saturation), 75%);
+	color: hsl(var(--link-hue), var(--link-saturation), 100%);
 }
 
 
@@ -60,4 +59,11 @@ header,
 .group.selected,
 .option .selected {
 	background-color: inherit;
+}
+
+
+/* Player */
+
+#progress .background {
+  background-color: hsl(var(--background-hue), var(--background-saturation), 44%);
 }
