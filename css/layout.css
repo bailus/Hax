@@ -67,39 +67,77 @@ a img,:link img,:visited img {
 		flex-direction: column;
 	}
 
+	.page .article-container {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+	}
+
+	.page .article-container > article {
+		width:700px;
+	}
+
+	.page .article-container > * {
+		flex-grow: 0;
+		flex-shrink: 1;
+		overflow:auto;
+	}
+
+	.page .article-container > nav {
+		flex-shrink: 100;
+		display: flex;
+		width: 256px;
+		flex-direction: column;
+		justify-content: center;
+	}
+
 	.page > header {
 		flex-grow: 0;
 		flex-shrink: 0;
 	}
 
-	.page > article {
+	.page .article-container {
 		overflow: auto;
 		flex-grow: 1;
 		flex-shrink: 1;
 	}
 
-	.page > article,
-	.page > article > .wrapper {
+	.article-container > nav .icon-list .thumbnail span {
+		height: auto;
+	}
+	.article-container > nav .icon-list li {
+		width: 128px;
+		max-width: 128px;
+		min-width:auto;
+		padding:5px;
+	}
+	.article-container > nav h5 {
+		text-align: center;
+	}
+
+	.page article > .wrapper {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 	}
 
-	.page > article > *,
-	.page > article > .wrapper > * {
-		width: 700px;
+	.page article {
+	}
+
+	.page article > *,
+	.page article > .wrapper > * {
 		max-width: 100%;
 		flex-shrink: 0;
 		flex-grow: 0;
 	}
 
-	.page > article > .wrapper {
+	.page article > .wrapper {
 		width: 100%;
 		flex-shrink: 0;
 		flex-grow: 0;
 	}
 
-	.page > article > img {
+	.page article > img {
 		width: auto;
 	}
 

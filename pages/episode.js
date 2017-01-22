@@ -11,7 +11,7 @@ export default (new Page({
 	'data': state => {
 		let episodeid = +state['episodeid']
 
-		return xbmc.get({
+		const getEpisodeDetails = xbmc.get({
 			'method': 'VideoLibrary.GetEpisodeDetails',
 			'params': {
 				'properties': [ //http://kodi.wiki/view/JSON-RPC_API/v6#Video.Fields.Episode
@@ -42,9 +42,47 @@ export default (new Page({
 				'episodeid': episodeid
 			}
 		})
-//		.then(x => {console.log(x);return x})
 		.then(({ episodedetails={} }) => episodedetails)
-		.then(({
+
+		const getPrevNext = getEpisodeDetails.then(({ tvshowid, season, episode }) => {
+
+			return xbmc.get({
+				method: 'VideoLibrary.GetEpisodes',
+				params: {
+					'properties': [ 'tvshowid', 'title', 'episode', 'art' ],
+					'tvshowid': tvshowid,
+					'season': season
+				},
+				cache: true
+			})
+			.then(({ episodes=[] }) => {
+				let o = {}
+
+				episodes.forEach((curr, s) => {
+					const prev = episodes[s-1]
+					const next = episodes[s+1]
+					if (curr.episode == episode) {
+						o = {
+							previous: prev === undefined ? undefined : {
+								label: prev.label,
+								link: `#page=Episode&episodeid=${ prev.episodeid }`,
+								thumbnail: prev.art.thumb ? xbmc.vfs2uri(prev.art.thumb) : 'img/icons/default/DefaultVideo.png'
+							},
+							next: next === undefined ? undefined : {
+								label: next.label,
+								link: `#page=Episode&episodeid=${ next.episodeid }`,
+								thumbnail: next.art.thumb ? xbmc.vfs2uri(next.art.thumb) : 'img/icons/default/DefaultVideo.png'
+							}
+						}
+					}
+				})
+
+				return o
+			})
+		})
+
+		return Promise.all([ getEpisodeDetails, getPrevNext ])
+		.then(([ {
 			title,
 			plot,
 			votes,
@@ -69,7 +107,9 @@ export default (new Page({
 			uniqueid,
 			art,
 			label
-		}) => ({
+		}, prevNext ]) => ({
+			previous: prevNext.previous,
+			next: prevNext.next,
 			title: showtitle,
 			titleLink: `#page=TV Show&tvshowid=${ tvshowid }`,
 			subtitle: label,

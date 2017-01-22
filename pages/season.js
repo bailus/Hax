@@ -39,7 +39,7 @@ export default (new Page({
 		})
 		.then(({ tvshowdetails={} }) => tvshowdetails)
 
-		const getSeasonDetails = xbmc.get({
+		const getSeasons = xbmc.get({
 			method: 'VideoLibrary.GetSeasons',
 			params: {
 				'properties': [ //http://kodi.wiki/view/JSON-RPC_API/v6#Video.Fields.Season
@@ -47,17 +47,47 @@ export default (new Page({
 					"showtitle", 
 					"episode", 
 					"watchedepisodes", 
+					"thumbnail",
 					"art"
 				],
 				'tvshowid': tvshowid
 			},
 			cache: true
 		})
-		.then(({ seasons=[] }) => seasons.filter(s => (s.season == season))[0])
 
-		let getDetails = Promise.all([ getShowDetails, getSeasonDetails ])
-		.then(x => {console.log(x);return x})
-		.then(([ show, season ]) => ({
+		const getSeasonDetails = getSeasons.then(({ seasons=[] }) => seasons.filter(s => (s.season == season))[0])
+
+		const getPrevNext = getSeasons.then(({ seasons=[] }) => {
+			let o = {}
+
+			seasons.forEach((curr, s) => {
+				const prev = seasons[s-1]
+				const next = seasons[s+1]
+				if (curr.season == season) {
+					o = {
+						previous: prev === undefined ? undefined : {
+							label: prev.label,
+							details: [ prev.episode + ' episodes', prev.watchedepisodes + ' watched' ],
+							link: `#page=Season&tvshowid=${ tvshowid }&season=${ prev.season }`,
+							thumbnail: prev.thumbnail ? xbmc.vfs2uri(prev.thumbnail) : 'img/icons/default/DefaultVideo.png'
+						},
+						next: next === undefined ? undefined : {
+							label: next.label,
+							details: [ next.episode + ' episodes', next.watchedepisodes + ' watched' ],
+							link: `#page=Season&tvshowid=${ tvshowid }&season=${ next.season }`,
+							thumbnail: next.thumbnail ? xbmc.vfs2uri(next.thumbnail) : 'img/icons/default/DefaultVideo.png'
+						}
+					}
+				}
+			})
+
+			return o
+		})
+
+		let getDetails = Promise.all([ getShowDetails, getSeasonDetails, getPrevNext ])
+		.then(([ show, season, prevNext ]) => ({
+			previous: prevNext.previous,
+			next: prevNext.next,
 			title: season.showtitle,
 			titleLink: `#page=TV Show&tvshowid=${ tvshowid }`,
 			subtitle: season.label,

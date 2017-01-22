@@ -40,11 +40,13 @@ header,
 	background-color: hsl(var(--background-hue), var(--background-saturation), 24%);
 }
 
-.page > article {
+.page article,
+.page > .article-container,
+.article-container > nav .icon-list li {
 	background-color: hsla(var(--background-hue), var(--background-saturation-low), 6%, .8);
 }
 
-.page > article > .wrapper {
+.page article > .wrapper {
 	background-color: hsla(var(--background-hue), var(--background-saturation-low), 6%, .6);
 }
 

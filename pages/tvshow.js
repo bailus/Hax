@@ -46,7 +46,6 @@ export default (new Page({
 			},
 			cache: true
 		})
-		//.then(x => {console.log(x);return x})
 		.then(({ tvshowdetails={} }) => tvshowdetails)
 		.then(({
 			title,

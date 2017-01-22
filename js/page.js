@@ -48,21 +48,23 @@ export default class {
 			//TODO: review and probably rewrite
 
 			function groupItems (items, groupby) {
-				let o = [], temp = {}
+				const o = [], groups = {}
+
 				if (!(items[0] && items[0][groupby])) return items
+					
 				items.forEach((item, i) => {
-					let s = item[groupby]
-					if (item instanceof Object) {
-						if (!temp[s]) temp[s] = []
-						temp[s].push(item)
-					}
+					const key = item[groupby]
+					if (groups[key] === undefined) groups[key] = []
+					groups[key].push(item)
 				})
-				Object.getOwnPropertyNames(temp).forEach(label => {
+
+				Object.getOwnPropertyNames(groups).forEach(key => {
 					o.unshift({
-						'label': label,
-						'items': temp[label]
+						'label': key,
+						'items': groups[key]
 					})
 				})
+
 				return o
 			}
 
@@ -107,9 +109,6 @@ export default class {
 				//don't show the full list
 				if (!showItems)
 					data.items = undefined
-
-				if (showItems && data.groups && data.groups.length > 40)
-					data.groups = []
 
 			}
 

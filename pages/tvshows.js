@@ -15,7 +15,6 @@ export default (new Page({
 
 		//http://kodi.wiki/view/JSON-RPC_API/v6#List.Filter.Fields.TVShows
 		const fields = [
-			{ name: 'Title', key: 'title', type: 'string' },
 			{ name: 'Genre', key: 'genre', type: 'string' },
 			{ name: 'Genre', key: 'genreid', type: 'integer' },
 			{ name: 'Year', key: 'year', type: 'integer' },

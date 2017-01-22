@@ -13,145 +13,171 @@
 
 </header>
 
-<article>
+<div class="article-container space-around">
 
-	{{#if banner}}
-		<h1 class="banner">
-			<img src="{{banner}}" alt="{{title}}" title="{{title}}">
-		</h1>
-	{{/if}}
+	<nav id="previous">
+		{{#if previous}}<h5>Previous</h5>{{/if}}
+		<ul class="icon-list">
+			{{#previous}}
+				<li class="{{class}}">
+					{{>listItem}}
+				</li>
+			{{/previous}}
+		</ul>
+	</nav>
 
-	{{#if thumbnail}}
-		<div class="wrapper">
-			<div class="thumbnails">
-				{{#thumbnail}}
-					<div class="thumbnail">
-						<img src="{{.}}">
-					</div>
-				{{/thumbnail}}
+	<article>
+
+		{{#if banner}}
+			<h1 class="banner">
+				<img src="{{banner}}" alt="{{title}}" title="{{title}}">
+			</h1>
+		{{/if}}
+
+		{{#if thumbnail}}
+			<div class="wrapper">
+				<div class="thumbnails">
+					{{#thumbnail}}
+						<div class="thumbnail">
+							<img src="{{.}}">
+						</div>
+					{{/thumbnail}}
+				</div>
 			</div>
-		</div>
-	{{/if}}
+		{{/if}}
 
 
 
-	
-	{{#if title}}<div class="titlebar">{{/if}}
-
-		{{#if title}}<div class="titles">{{/if}}
 		
-			{{#if title}}
-				<h1>
-					{{#if titleLink}}
-						<a href="{{titleLink}}">{{title}}</a>
-					{{else}}
-						{{title}}
-					{{/if}}
-				</h1>
-			{{/if}}
+		{{#if title}}<div class="titlebar">{{/if}}
 
-			{{#if subtitle}}
-				<h2>
-					{{#if subtitleLink}}
-						<a href="{{subtitleLink}}">{{subtitle}}</a>
-					{{else}}
-						{{subtitle}}
-					{{/if}}
-				</h2>
+			{{#if title}}<div class="titles">{{/if}}
+			
+				{{#if title}}
+					<h1>
+						{{#if titleLink}}
+							<a href="{{titleLink}}">{{title}}</a>
+						{{else}}
+							{{title}}
+						{{/if}}
+					</h1>
+				{{/if}}
+
+				{{#if subtitle}}
+					<h2>
+						{{#if subtitleLink}}
+							<a href="{{subtitleLink}}">{{subtitle}}</a>
+						{{else}}
+							{{subtitle}}
+						{{/if}}
+					</h2>
+				{{/if}}
+
+			{{#if title}}</div>{{/if}}
+
+			{{#if actions}}
+				<ul class="actions">
+					{{#actions}}
+						<li class="action">
+							{{>listItem}}
+						</li>
+					{{/actions}}
+				</ul>
 			{{/if}}
 
 		{{#if title}}</div>{{/if}}
 
-		{{#if actions}}
-			<ul class="actions">
-				{{#actions}}
-					<li class="action">
+		{{#if seasons}}
+			<h5><span>Seasons</span></h5>
+			<ul class="seasons icon-list">
+				{{#seasons}}
+					<li class="season {{#if selected}}selected{{/if}} {{class}}">
 						{{>listItem}}
 					</li>
-				{{/actions}}
+				{{/seasons}}
 			</ul>
 		{{/if}}
 
-	{{#if title}}</div>{{/if}}
+		{{#if options}}
+			<ul class="options">
+				{{#options}}
+					<li class="option {{id}}">
+						<h5>{{label}}</h5>
+						<ul>
+							{{#items}}
+								<li class="{{class}}">
+									{{>listItem}}
+								</li>
+							{{/items}}
+						</ul>
+					</li>
+				{{/options}}
+			</ul>
+		{{/if}}
 
-	{{#if seasons}}
-		<h5><span>Seasons</span></h5>
-		<ul class="seasons icon-list">
-			{{#seasons}}
-				<li class="season {{#if selected}}selected{{/if}} {{class}}">
-					{{>listItem}}
-				</li>
-			{{/seasons}}
-		</ul>
-	{{/if}}
-
-	{{#if options}}
-		<ul class="options">
-			{{#options}}
-				<li class="option {{id}}">
-					<h5>{{label}}</h5>
-					<ul>
-						{{#items}}
-							<li class="{{class}}">
-								{{>listItem}}
-							</li>
-						{{/items}}
-					</ul>
-				</li>
-			{{/options}}
-		</ul>
-	{{/if}}
-
-	{{#if groups}}
-		<ul class="groups">
-			{{#groups}}
-				<li class="group {{#if selected}}selected{{/if}}">
-					{{>listItem}}
-				</li>
-			{{/groups}}
-		</ul>
-	{{/if}}
-
-	{{#if timeline}}
-		<div class="timeline">
-			{{#timeline}}
-				<span class="{{class}}" style="{{style}}">{{label}}</span>
-			{{/timeline}}
-		</div>
-	{{/if}}
-
-	{{>listItems}}
-
-	{{>details details}}
-
-	{{#if cast}}
-		<h5><span>Cast</span></h5>
-		<div class="wrapper">
-			<ul class="cast icon-list">
-				{{#cast}}
-					<li class="{{class}}">
+		{{#if groups}}
+			<ul class="groups">
+				{{#groups}}
+					<li class="group {{#if selected}}selected{{/if}}">
 						{{>listItem}}
 					</li>
-				{{/cast}}
+				{{/groups}}
 			</ul>
-		</div>
-	{{/if}}
+		{{/if}}
 
-	{{#if recentlyAdded}}
-		<h5><span>Recently Added</span></h5>
-		<div class="wrapper">
-			<ul class="recently-added icon-list">
-				{{#recentlyAdded}}
-					<li class="{{class}}">
-						{{>listItem}}
-					</li>
-				{{/recentlyAdded}}
-			</ul>
-		</div>
-	{{/if}}
+		{{#if timeline}}
+			<div class="timeline">
+				{{#timeline}}
+					<span class="{{class}}" style="{{style}}">{{label}}</span>
+				{{/timeline}}
+			</div>
+		{{/if}}
 
-	{{#fanart}}
-		<img class="fanart" src="{{.}}" />
-	{{/fanart}}
+		{{>listItems}}
 
-</article>
+		{{>details details}}
+
+		{{#if cast}}
+			<h5><span>Cast</span></h5>
+			<div class="wrapper">
+				<ul class="cast icon-list">
+					{{#cast}}
+						<li class="{{class}}">
+							{{>listItem}}
+						</li>
+					{{/cast}}
+				</ul>
+			</div>
+		{{/if}}
+
+		{{#if recentlyAdded}}
+			<h5><span>Recently Added</span></h5>
+			<div class="wrapper">
+				<ul class="recently-added icon-list">
+					{{#recentlyAdded}}
+						<li class="{{class}}">
+							{{>listItem}}
+						</li>
+					{{/recentlyAdded}}
+				</ul>
+			</div>
+		{{/if}}
+
+		{{#fanart}}
+			<img class="fanart" src="{{.}}" />
+		{{/fanart}}
+
+	</article>
+
+	<nav id="next">
+		{{#if next}}<h5>Next</h5>{{/if}}
+		<ul class="icon-list">
+			{{#next}}
+				<li class="{{class}}">
+					{{>listItem}}
+				</li>
+			{{/next}}
+		</ul>
+	</nav>
+
+</div>

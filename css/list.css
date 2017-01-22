@@ -124,6 +124,7 @@
 
 .icon-list .thumbnail span {
 	display: block;
+	text-align: center;
 }
 
 .icon-list .label,
@@ -182,8 +183,7 @@
 .icon-list.cast {
 	width: 100% !important;
 	max-width: 100%;
-	flex-wrap: nowrap;
-	overflow-x: scroll;
+	flex-wrap: wrap;
 	justify-content: space-between;
 }
 
