@@ -1,5 +1,5 @@
 import Page from '../js/page'
-import { seconds2string, ymd2string, makeJsLink } from '../js/util'
+import { seconds2string, ymd2string, makeJsLink, makeDetail } from '../js/util'
 import moment from 'moment'
 
 export default (new Page({
@@ -51,6 +51,7 @@ export default (new Page({
 			year,
 			plot,
 			album,
+			//albumid,
 			artist,
 			genre,
 			track,
@@ -65,57 +66,57 @@ export default (new Page({
 			art,
 			label
 		}) => ({
-			title: artist,
-			titleLink: `#page=Music Videos&artist=${ artist }`,
-			subtitle: label,
-			thumbnail: xbmc.vfs2uri(thumbnail),
-			fanart: xbmc.vfs2uri(fanart),
-			details: [
-
+			'title': artist,
+			'titleLink': `#page=Music Videos&artist=${ artist }`,
+			'subtitle': label,
+			'thumbnail': xbmc.vfs2uri(thumbnail),
+			'fanart': xbmc.vfs2uri(fanart),
+			'details': [
 				{
-					name: 'Tag',
-					links: (Array.isArray(tag) ? tag : [ tag ])
+					'name': 'Tag',
+					'links': (Array.isArray(tag) ? tag : [ tag ])
 								.map(tag => ({
-									label: tag,
-									link: '#page=Music Videos&tag='+tag
+									'label': tag,
+									'link': '#page=Music Videos&tag='+tag
 								}))
 				},
 				{
 					'name': 'Album',
 					'links': [{
-						label: album + (track > 0 ? `track ${ track }` : '')
+						'label': `${album} (Track ${ track })`
+						//'link': '#page=Album&albumid='+albumid
 					}]
 				},
 				{
-					name: 'Year',
-					links: [{
-						label: year,
-						link: '#page=Music Videos&year='+year
+					'name': 'Year',
+					'links': [{
+						'label': year,
+						'link': '#page=Music Videos&year='+year
 					}]
 				},
 				{
-					name: 'Genre',
-					links: (Array.isArray(genre) ? genre : [ genre ])
+					'name': 'Genre',
+					'links': (Array.isArray(genre) ? genre : [ genre ])
 								.map(genre => ({
-									label: genre,
-									link: '#page=Music Videos&genre='+genre
+									'label': genre,
+									'link': '#page=Music Videos&genre='+genre
 								}))
 				},
 				{ 'name': 'Plot', 'value': plot },
 				{
-					name: 'Director',
-					links: (Array.isArray(director) ? director : [ director ])
+					'name': 'Director',
+					'links': (Array.isArray(director) ? director : [ director ])
 								.map(director => ({
-									label: director,
-									link: '#page=Music Videos&director='+director
+									'label': director,
+									'link': '#page=Videos&director='+director
 								}))
 				},
 				{
-					name: 'Studio',
-					links: (Array.isArray(studio) ? studio : [ studio ])
+					'name': 'Studio',
+					'links': (Array.isArray(studio) ? studio : [ studio ])
 								.map(studio => ({
-									label: studio,
-									link: '#page=Music Videos&studio='+studio
+									'label': studio,
+									'link': '#page=Videos&studio='+studio
 								}))
 				},
 				{ 'name': 'Statistics', 'links': [
@@ -125,44 +126,23 @@ export default (new Page({
 					{ 'label': `Added ${ moment(dateadded).format('LL') }` }
 				] },
 				{
-					name: 'Audio',
-					links: (Array.isArray(streamdetails.audio) ? streamdetails.audio : [ streamdetails.audio ])
-								.map(({ language, channels, codec }) => ({
-									label: (language ? `${ language }: ` : '') + `${ channels } channels (${ codec })`
-								}))
-				},
-				{
-					name: 'Video',
-					links: (Array.isArray(streamdetails.video) ? streamdetails.video : [ streamdetails.video ])
-								.map(({ width, height, codec, stereomode }) => ({
-									label: `${ width }×${ height } (${ codec })` + (stereomode ? `, ${ stereomode }` : '')
-								}))
-				},
-				{
-					name: 'File',
-					links: [
+					'name': 'File',
+					'links': [
 						{
-							label: file,
-							link: `${ xbmc.vfs2uri(file) }`
+							'label': file,
+							'link': `${ xbmc.vfs2uri(file) }`
 						}
 					]
-				},
-				{
-					'name': 'Links',
-					'links': [{
-						label: `Albums by ${ artist }`,
-						link: `#page=Albums&artist=${ artist }&album=${ album }`
-					}]
 				}
 			],
 			actions: [
-				{	label: 'Play',
-					thumbnail: 'img/buttons/play.png',
-					link: makeJsLink(`xbmc.Play({ 'musicvideoid': ${ musicvideoid } }, 1)`)
+				{	'label': 'Play',
+					'thumbnail': 'img/buttons/play.png',
+					'link': makeJsLink(`xbmc.Play({ 'musicvideoid': ${ musicvideoid } }, 1)`)
 				},
-				{	label: 'Add to Playlist',
-					thumbnail: 'img/buttons/add.png',
-					link: makeJsLink(`xbmc.sendMessage('Playlist.Add',{ 'playlistid': 1, 'item': { 'musicvideoid': ${ musicvideoid } } })`)
+				{	'label': 'Add to Playlist',
+					'thumbnail': 'img/buttons/add.png',
+					'link': makeJsLink(`xbmc.sendMessage('Playlist.Add',{ 'playlistid': 1, 'item': { 'musicvideoid': ${ musicvideoid } } })`)
 				}
 			]
 		}))

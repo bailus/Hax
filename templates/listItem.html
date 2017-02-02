@@ -1,42 +1,40 @@
+{{#link}}<a href="{{.}}">{{/link}}
 
 
-{{#if thumbnail}}
-
-	{{#link}}<a href="{{.}}" class="thumbnail">{{/link}}
-	{{^link}}<span class="thumbnail">{{/link}}
-
-			<span><img src="{{thumbnail}}"></span>
-
-	{{^link}}</span>{{/link}}
-	{{#link}}</a>{{/link}}
-
-{{/if}}
-
-
-{{#link}}<a href="{{.}}" class="label">{{/link}}
-{{^link}}<span class="label">{{/link}}
-
-
-	{{#if details}}
-
-		<span class="line1">
-		{{#if number}}
-			<span class="number">{{number}}.</span>
-		{{/if}}
-		{{label}}
-		</span>
-
-		<span class="line2">
-			{{#details}}<span>{{.}}</span>{{/details}}
-		</span>
-
-	{{else}}
-		{{label}}
+	{{#if number}}
+		<div class="number">
+			{{number}}
+		</div>
 	{{/if}}
 
-{{^link}}</span>{{/link}}
-{{#link}}</a>{{/link}}
+	{{#if thumbnail}}
+		<div class="thumbnail">
+			<img src="{{thumbnail}}" alt="">
+		</div>
+	{{/if}}
 
+	<div class="label">
+
+		{{#if details}}
+
+			<span class="line1">
+				{{label}}
+			</span>
+
+			<span class="line2">
+				{{#details}}<span>{{.}}</span>{{/details}}
+			</span>
+
+		{{else}}
+			<span>
+				{{label}}
+			</span>
+		{{/if}}
+
+	</div>
+
+
+{{#link}}</a>{{/link}}
 
 
 {{#if actions}}
@@ -58,5 +56,6 @@
 	</span>
 
 {{/if}}
+
 
 {{>details detailList}}

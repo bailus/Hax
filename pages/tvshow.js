@@ -2,6 +2,18 @@ import Page from '../js/page'
 import { seconds2string, ymd2string, makeJsLink } from '../js/util'
 import moment from 'moment'
 
+function makeDetail(page, name, key, value) {
+	return value !== undefined && value.length > 0 && {
+		'class': key,
+		'name': name,
+		'links': (Array.isArray(value) ? value : [  ])
+				.map(v => ({
+					'label': v,
+					'link': `#page=${page}&${key}=${v}`
+				}))
+	}
+}
+
 export default (new Page({
 	'id': 'TV Show',
 	'view': 'list',
@@ -79,61 +91,68 @@ export default (new Page({
 			banner: art && art.banner ? xbmc.vfs2uri(art.banner) : undefined,
 			fanart: xbmc.vfs2uri(art['fanart']),
 			details: [
-				{
-					name: 'Tag',
-					links: (Array.isArray(tag) ? tag : [ tag ])
-								.map(tag => ({
-									label: tag,
-									link: '#page=Movies&tag='+tag
-								}))
+				rating !== undefined && votes > 0 && {
+					'class': 'rating',
+					'name': 'Rating',
+					'flags': [
+						{
+							'class': 'starrating',
+							'value': Math.round(rating),
+							'caption': `(${votes} votes)`
+						}
+					]
 				},
-				{ 'name': 'Rating', 'value': `${ Math.round(rating*10)/10 }/10 (${ votes } votes)` },
-				{ 'name': 'MPAA Rating', 'value': mpaa },
+				mpaa !== undefined && mpaa.length > 0 && {
+					'class': 'mpaa',
+					'name': 'MPAA Rating',
+					'value': mpaa
+				},
+				plot !== undefined && plot.length > 0 && {
+					'class': 'plot',
+					'name': 'Plot',
+					'value': plot
+				},
+				makeDetail('Videos', 'Studio', 'studio', studio),
+				makeDetail('TV Shows', 'Genre', 'genre', genre),
+				makeDetail('TV Shows', 'Tag', 'tag', tag),
 				{
-					name: 'Year',
-					links: [
-						{ label: year, link: '#page=Movies&year='+year },
-						{ 'label': premiered instanceof String && premiered.length > 0 ? `Premiered: ${ moment(premiered).format('LL') }` : undefined }
+					'class': '',
+					'name': 'Statistics',
+					'links': [
+						{ 'label': `Played ${ playcount } times` },
+						{ 'label': lastplayed instanceof String && lastplayed.length > 0 ? `Last Played ${ moment(lastplayed).format('LL') }` : undefined },
+						{ 'label': `Added ${ moment(dateadded).format('LL') }` },
+						{ 'label': `Premiered ${ moment(premiered).format('LL') }` }
+					]
+				},
+				file !== undefined && file.length > 0 && {
+					'class': '',
+					'name': 'File',
+					'links': [
+						{
+							'label': file,
+							'link': `${ xbmc.vfs2uri(file) }`
+						}
 					]
 				},
 				{
-					name: 'Genre',
-					links: (Array.isArray(genre) ? genre : [ genre ])
-								.map(genre => ({
-									label: genre,
-									link: '#page=Movies&genre='+genre
-								}))
-				},
-				{ 'name': 'Plot', 'value': plot },
-				{
-					name: 'Studio',
-					links: (Array.isArray(studio) ? studio : [ studio ])
-								.map(studio => ({
-									label: studio,
-									link: '#page=Movies&studio='+studio
-								}))
-				},
-				{ 'name': 'Statistics', 'links': [
-					{ 'label': `Seasons: ${ season }` },
-					{ 'label': `Episodes: ${ episode } (${ watchedepisodes } watched)` },
-					{ 'label': lastplayed instanceof String && lastplayed.length > 0 ? `Last Played: ${ moment(lastplayed).format('LL') }` : undefined },
-					{ 'label': `Added: ${ moment(dateadded).format('LL') }` }
-				] },
-				{
-					name: 'Links',
-					links: imdbnumber instanceof String && imdbnumber.length > 0 ? [
+					'name': 'Links',
+					'links': imdbnumber instanceof String && imdbnumber.length > 0 ? [
 						{
-							label: 'IMDB',
-							link: `http://www.imdb.com/title/${ imdbnumber }/`
+							'label': 'IMDB',
+							'link': ( (imdbnumber instanceof String) && (imdbnumber.length > 0) ) ? 
+									`http://www.imdb.com/title/${ imdbnumber }/` : 
+									`http://www.imdb.com/search/title?release_date=${ encodeURIComponent(year) },&title=${ encodeURIComponent(title) }&title_type=feature,tv_movie,documentary,short`
+
 						}
 					] : undefined
 				}
 			],
 			cast: cast.map(actor => ({
 				label: actor.name,
-				details: actor.role,
+				details: actor.role || '',
 				thumbnail: actor.thumbnail ? xbmc.vfs2uri(actor.thumbnail) : 'img/icons/default/DefaultActor.png',
-				link: '#page=TV Shows&actor='+actor.name
+				link: '#page=Videos&actor='+actor.name
 			}))
 		}))
 

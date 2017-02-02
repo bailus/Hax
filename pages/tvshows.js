@@ -5,6 +5,7 @@ export default (new Page({
 	'id': 'TV Shows',
 	'view': 'list',
 	'groupby': 'title',
+	'sortby': 'label',
 	'icon': state => 
 			state['group'] === 'actor' || state['actor'] ? 'img/icons/default/DefaultActor.png' :
 			state['group'] === 'year' || state['year'] ? 'img/icons/default/DefaultYear.png' :
@@ -20,6 +21,7 @@ export default (new Page({
 			{ name: 'Year', key: 'year', type: 'integer' },
 			{ name: 'Actor', key: 'actor', type: 'string' },
 			{ name: 'Studio', key: 'studio', type: 'string' },
+			{ name: 'Director', key: 'director', type: 'string' },
 			{ name: 'Tag', key: 'tag', type: 'string' }
 		]
 		const filter = Filter.fromState(state, fields)
@@ -29,8 +31,13 @@ export default (new Page({
 		return xbmc.get({
 			method: 'VideoLibrary.GetTVShows',
 			params: {
-				'properties': [ 'title', 'originaltitle', 'sorttitle', 'thumbnail', 'episode' ],
-				'filter': filter.out()
+				'properties': [
+					'title', 'originaltitle', 'sorttitle', 'thumbnail', 'episode'
+				],
+				'filter': filter.out(),
+				'limits': state['limit'] === undefined ? undefined : {
+					end: state['limit']
+				}
 			},
 			cache: true
 		})
@@ -43,8 +50,7 @@ export default (new Page({
 			title: (tvshow.sorttitle || tvshow.title || tvshow.originaltitle)[0].toUpperCase()
 		})))
 		.then(items => ({
-			title: 'TV Shows' + (group ? ' by '+group : ''),
-			subtitle: filter.toString(),
+			title: filter.toString(),
 			items: items
 		}))
 

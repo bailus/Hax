@@ -1,4 +1,5 @@
 import Page from '../js/page'
+import { makeJsLink } from '../js/util'
 
 export default (new Page({
 	'id': 'Home',
@@ -39,23 +40,35 @@ export default (new Page({
 				items.push({ 'label': 'Music', 'link': '#page=Menu&media=Music', 'thumbnail': 'img/icons/home/music.png' })
 
 			if (!advancedSettings.home.hidePictures)
-				items.push({ 'label': 'Pictures', 'link': '#page=Menu&media=Pictures', 'thumbnail': 'img/icons/home/pictures.png' })
-
-			if (!advancedSettings.home.hidePlaylists)
-				items.push({ 'label': 'Playlists', 'link': '#page=Playlists', 'thumbnail':'img/icons/home/playlists.png' })
+				items.push({ 'label': 'Pictures', 'link': '#page=Files&media=Pictures', 'thumbnail': 'img/icons/home/pictures.png' })
 
 			if (!advancedSettings.home.hideRadio && infoBooleans[ 'PVR.HasRadioChannels' ])
-				items.push({ 'label': 'Radio', 'link': '#page=Menu&media=Radio', 'thumbnail': 'img/icons/home/radio.png' })
+				items.push({ 'label': 'Radio', 'link': '#page=Channels&media=Radio', 'thumbnail': 'img/icons/home/radio.png' })
 
 			if (!advancedSettings.home.hideLiveTv && infoBooleans[ 'PVR.HasTVChannels' ])
-				items.push({ 'label': 'Live TV', 'link': '#page=Menu&media=TV', 'thumbnail': 'img/icons/home/livetv.png' })
+				items.push({ 'label': 'Live TV', 'link': '#page=Channels&media=TV', 'thumbnail': 'img/icons/home/livetv.png' })
 
 			if (!advancedSettings.home.hideAddons)
-				items.push({ 'label': 'Addons', 'link':'#page=Addons', 'thumbnail':'img/icons/home/addons.png' })
+				items.push({ 'label': 'Addons', 'link':'#page=Menu&media=Addons', 'thumbnail':'img/icons/home/addons.png' })
 
 			return {
 				'items': items,
-				'hideNavigation': true
+				'hideNavigation': true,
+				'actions': [
+					/*{	'label': 'Power',
+						'thumbnail': 'img/icons/power.png',
+						'link': '#page=Power'
+					},
+					{	'label': 'Settings',
+						'thumbnail': 'img/icons/settings.png',
+						'link': '#page=Settings'
+					},*/
+					advancedSettings.home.hidePlaylists ? undefined : {
+						'label': 'Playlists',
+						'thumbnail': 'img/icons/home/playlists.png',
+						'link': '#page=Playlists'
+					}
+				]
 			}
 
 		})

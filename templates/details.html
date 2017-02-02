@@ -1,24 +1,38 @@
 
 	{{#if .}}
 		<ul class="details">
-			{{#.}}
+			{{#.}}{{#if .}}
+				<li class="{{class}}">
 
-				{{#if value}}
-					<li>
-						<h5>{{name}}</h5>
+					<h5>{{name}}</h5>
+
+					{{#if flags}}
+						<ul class="flags">
+							{{#flags}}
+								<li>
+									<figure class="{{class}}" data-type="{{type}}" data-value="{{value}}">
+										{{#label}}<h6>{{.}}</h6>{{/label}}
+										{{#link}}<a href="{{.}}">{{/link}}
+											<img src="img/flags/{{class}}/{{value}}.png">
+										{{#link}}</a>{{/link}}
+										{{#caption}}<figcaption>{{.}}</figcaption>{{/caption}}
+									</figure>
+								</li>
+							{{/flags}}
+						</ul>
+					{{/if}}
+
+					{{#if value}}
 						<p>
 							{{#link}}<a href="{{.}}">{{/link}}
 								{{#thumbnail}}<span class="thumbnail"><img src="{{.}}"></span>{{/thumbnail}}
 								{{#value}}<span>{{.}}</span>{{/value}}
 							{{#link}}</a>{{/link}}
 						</p>
-					</li>
-				{{/if}}
+					{{/if}}
 
 
-				{{#if links}}
-					<li>
-						<h5>{{name}}</h5>
+					{{#if links}}
 						<ul class="links">
 							{{#links}}
 								<li class="link {{class}}">
@@ -26,9 +40,24 @@
 								</li>
 							{{/links}}
 						</ul>
-					</li>
-				{{/if}}
+					{{/if}}
 
-			{{/.}}
+					{{>listItems}}
+
+					{{#if iconList}}
+						<div class="wrapper">
+							<ul class="icon-list">
+								{{#iconList}}
+									<li class="{{class}}">
+										{{>listItem}}
+									</li>
+								{{/iconList}}
+							</ul>
+						</div>
+					{{/if}}
+
+
+				</li>
+			{{/if}}{{/.}}
 		</ul>
 	{{/if}}

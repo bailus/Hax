@@ -1,5 +1,5 @@
 import Page from '../js/page'
-import { seconds2string, makeJsLink } from '../js/util'
+import { seconds2string, makeJsLink, flatMap } from '../js/util'
 import moment from 'moment'
 
 export default (new Page({
@@ -44,14 +44,13 @@ export default (new Page({
 		})
 		.then(({ episodedetails={} }) => episodedetails)
 
-		const getPrevNext = getEpisodeDetails.then(({ tvshowid, season, episode }) => {
+		const getPrevNext = getEpisodeDetails.then(({ tvshowid, season, episodeid }) => {
 
 			return xbmc.get({
 				method: 'VideoLibrary.GetEpisodes',
 				params: {
 					'properties': [ 'tvshowid', 'title', 'episode', 'art' ],
-					'tvshowid': tvshowid,
-					'season': season
+					'tvshowid': tvshowid
 				},
 				cache: true
 			})
@@ -61,7 +60,7 @@ export default (new Page({
 				episodes.forEach((curr, s) => {
 					const prev = episodes[s-1]
 					const next = episodes[s+1]
-					if (curr.episode == episode) {
+					if (curr.episodeid == episodeid) {
 						o = {
 							previous: prev === undefined ? undefined : {
 								label: prev.label,
@@ -80,6 +79,18 @@ export default (new Page({
 				return o
 			})
 		})
+
+		function makeDetail(page, name, key, value) {
+			return value !== undefined && value.length > 0 && {
+				'class': key,
+				'name': name,
+				'links': (Array.isArray(value) ? value : [  ])
+						.map(v => ({
+							'label': v,
+							'link': `#page=${page}&${key}=${v}`
+						}))
+			}
+		}
 
 		return Promise.all([ getEpisodeDetails, getPrevNext ])
 		.then(([ {
@@ -111,68 +122,66 @@ export default (new Page({
 			previous: prevNext.previous,
 			next: prevNext.next,
 			title: showtitle,
-			titleLink: `#page=TV Show&tvshowid=${ tvshowid }`,
-			subtitle: label,
+			titleLink: `#page=Season&tvshowid=${ tvshowid }&season=${ season }`,
+			subtitle: `${season}x${ (episode < 10 ? '0' : '') + episode }. ${label}`,
 			thumbnail: xbmc.vfs2uri(art['thumb'] || art['season.poster'] || art['tvshow.poster']),
-			//banner: xbmc.vfs2uri(art['tvshow.banner']),
+			banner: xbmc.vfs2uri(art['season.banner'] || art['tvshow.banner']),
 			fanart: xbmc.vfs2uri(art['tvshow.fanart']),
 			details: [
-				{
-					'name': 'Production Code',
-					'links': [
-						{ label: `Season ${ season }`, link: `#page=Season&tvshowid=${ tvshowid }&season=${ season }` },
-						{ label: `Episode ${ episode }` }
+				rating !== undefined && votes > 0 && {
+					'class': 'rating',
+					'name': 'Rating',
+					'flags': [
+						{
+							'class': 'starrating',
+							'value': Math.round(rating),
+							'caption': `(${votes} votes)`
+						}
 					]
 				},
-				{ 'name': 'Rating', 'value': `${ Math.round(rating*10)/10 }/10 (${ votes } votes)` },
-				{ 'name': 'Plot', 'value': plot },
-				{
-					name: 'Director',
-					links: director.map(director => ({
-								label: director,
-								link: '#page=Episodes&director='+director
-							}))
+				/*mpaa !== undefined && mpaa.length > 0 && {
+					'class': 'mpaa',
+					'name': 'MPAA Rating',
+					'value': mpaa
+				},*/
+				plot !== undefined && plot.length > 0 && {
+					'class': 'plot',
+					'name': 'Plot',
+					'value': plot
 				},
-				{
-					name: 'Writer',
-					links: writer.map(writer => ({
-								label: writer,
-								link: '#page=Episodes&writers='+writer
-							}))
+				runtime !== undefined && runtime.length > 0 && {
+					'class': 'runtime',
+					'name': 'Runtime',
+					'value': moment.duration(runtime, 'seconds').humanize()
 				},
-				{ 'name': 'Statistics', 'links': [
-					{ 'label': `Runtime ${ seconds2string(runtime) }` },
-					{ 'label': `Played ${ playcount } times` },
-					{ 'label': lastplayed instanceof String && lastplayed.length > 0 ? `Last Played ${ moment(lastplayed).format('LL') }` : undefined },
-					{ 'label': `Added ${ moment(dateadded).format('LL') }` }
-				] },
+				//makeDetail('Movies', 'Studio', 'studio', studio),
+				//makeDetail('Movies', 'Set', 'set', set),
+				//makeDetail('Movies', 'Genre', 'genre', genre),
+				//makeDetail('Movies', 'Tag', 'tag', tag),
+				//makeDetail('Movies', 'Country', 'country', country),
 				{
-					name: 'Audio',
-					links: streamdetails.audio
-								.map(({ language, channels, codec }) => ({
-									label: (language ? `${ language }: ` : '') + `${ channels } channels (${ codec })`
-								}))
+					'class': '',
+					'name': 'Statistics',
+					'links': [
+						{ 'label': `Played ${ playcount } times` },
+						{ 'label': lastplayed instanceof String && lastplayed.length > 0 ? `Last Played ${ moment(lastplayed).format('LL') }` : undefined },
+						{ 'label': `Added ${ moment(dateadded).format('LL') }` }
+					]
 				},
-				{
-					name: 'Video',
-					links: streamdetails.video
-								.map(({ width, height, codec, stereomode }) => ({
-									label: `${ width }×${ height } (${ codec })` + (stereomode ? `, ${ stereomode }` : '')
-								}))
-				},
-				{
-					name: 'File',
-					links: [
+				file !== undefined && file.length > 0 && {
+					'class': '',
+					'name': 'File',
+					'links': [
 						{
-							label: file,
-							link: `${ xbmc.vfs2uri(file) }`
+							'label': file,
+							'link': `${ xbmc.vfs2uri(file) }`
 						}
 					]
 				}
 			],
 			actions: [
 				{	label: 'Play',
-					thumbnail: 'img/buttons/play.png',
+					thumbnail: 'img/icons/infodialogs/play.png',
 					link: makeJsLink(`xbmc.Play({ 'episodeid': (${ episodeid }) }, 1)`)
 				},
 				{	label: 'Add to Playlist',
@@ -180,16 +189,29 @@ export default (new Page({
 					link: makeJsLink(`xbmc.sendMessage('Playlist.Add',{ 'playlistid': 1, 'item': { 'episodeid': (${ episodeid }) } })`)
 				}
 			],
-			cast: cast.map(({
-				name,
-				role,
-				thumbnail
-			}) => ({
-				label: name,
-				details: role,
-				thumbnail: thumbnail ? xbmc.vfs2uri(thumbnail) : 'img/icons/default/DefaultActor.png',
-				link: `#page=Episodes&actor=${ name }`
-			}))
+			cast: (function () {
+				let out = (Array.isArray(director) ? director : [ director ])
+					.map(director => ({
+						label: director,
+						details: 'Director',
+						thumbnail: director.thumbnail ? xbmc.vfs2uri(director.thumbnail) : 'img/icons/default/DefaultDirector.png',
+						link: '#page=Videos&director='+director
+					}))
+				out = out.concat((Array.isArray(writer) ? writer : [ writer ])
+					.map(writer => ({
+						link: '#page=Videos&writers='+writer,
+						thumbnail: writer.thumbnail ? xbmc.vfs2uri(writer.thumbnail) : 'img/icons/default/DefaultWriter.png',
+						label: writer,
+						details: 'Writer'
+					})))
+				out = out.concat(cast.map(actor => ({
+					label: actor.name,
+					details: actor.role || '',
+					thumbnail: actor.thumbnail ? xbmc.vfs2uri(actor.thumbnail) : 'img/icons/default/DefaultActor.png',
+					link: '#page=Videos&actor='+actor.name
+				})))
+				return out
+			})()
 		}))
 
 	}

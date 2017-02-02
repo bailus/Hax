@@ -25,7 +25,12 @@ window.advancedSettings = {
 		"hidePlaylists": false,
 		"hideRadio": false,
 		"hideLiveTv": false,
-		"hideAddons": true
+		"hideAddons": false
 	},
-	'dateFormat': 'LL'
+	'dateFormat': 'LL',
+	"imageSize": {
+		"album": [ 500, 500 ],
+		"movie": [ 333.33, 500 ],
+		"episode": [ 500, 375 ]
+	}
 };

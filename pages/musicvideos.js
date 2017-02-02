@@ -48,8 +48,7 @@ export default (new Page({
 			'cache': true
 		})
 		.then(result => ({
-			title: 'Music Videos' + (groupby ? ' by '+groupby : ''),
-			subtitle: filter.toString(),
+			title: filter.toString(),
 			items: (result.musicvideos || []).map((mv) => ({
 				artist: (mv.artist instanceof Array ? mv.artist : [mv.artist]).join(', '),
 				label: mv.title,

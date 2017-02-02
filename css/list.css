@@ -1,47 +1,67 @@
 .items {
 	display: flex;
-	flex-direction: column;
+	flex-direction: column !important;
 	width: 100%;
 	flex-shrink:0;
 }
 
-.listItem {
+.listItem, .listItem > a {
 	display: flex;
 	flex-direction: column;
-	width: 100%;
+	overflow: hidden;
 }
 
-.listItem.leaf {
+.listItem.leaf, .listItem.leaf > a {
 	flex-direction: row;
+	margin: 4px 0;
+	display: flex;
+}
+.listItem.leaf > a {
+	flex-grow: 1;
 }
 
 /* Size */
 .listItem .listAction,
 .listItem .thumbnail {
-	width: 50px;
+	max-width: 89px;
 	height: 50px;
 	line-height: 50px;
+	width: 15.625%;
+}
+.listItem .listAction {
+	width: 50px;
+}
+.listItem.leaf {
+	width: 100%;
 }
 .listItem.leaf .label {
 	height: 50px;
 	line-height: 50px;
+	padding-left: 1ch;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	justify-content: center;
+	margin-bottom: 0;
 }
 .listItem .line1,
 .listItem .line2 {
 	line-height: 20px;
 	height: 20px;
+	margin: 0 1ch;
 }
 
 /* Thumbnail */
 .listItem .thumbnail {
-	display: block;
-	text-align: center;
+	display: flex;
 	flex-shrink: 0;
+	justify-content:center;
+	align-items:center;
+	align-content:center;
 }
 .listItem .thumbnail img {
 	max-width: 100%;
 	max-height: 100%;
-	vertical-align: middle;
 }
 @media all and (max-width : 300px) {
 	.listItem .thumbnail {
@@ -53,23 +73,32 @@
 .listItem .label {
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
-	padding-left: 1ch;
+	justify-content: space-between;
 	flex-grow: 1;
 }
 .listItem .line1,
 .listItem .line2 {
-	display: block;		
 }
 .listItem .label,
 .listItem .line1,
-.listItem .line2 {
+.listItem .line2,
+.listItem .line2 span {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
 }
 .listItem .line2 span + span {
-	margin-left: 10px;
+}
+
+.listItem .number {
+	display: flex;
+	justify-content:flex-end;
+	align-items:center;
+	min-width: 2em;
+	padding-right: 1ch;
 }
 
 /* Actions */
@@ -91,24 +120,34 @@
 /* icon view */
 .icon-list {
 	display: flex;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	flex-direction: row;
 	align-content: flex-start;
-	justify-content: space-around;
+	justify-content: flex-start;
+	width: 100%;
+	overflow-x: scroll;
 }
 
 .icon-list > li {
-	min-width:64px;
+	width:128px;
 	flex-grow: 0;
 	flex-shrink: 0;
 }
-.icon-list .label,
-.icon-list .thumbnail span {
-	width:100%;
-	flex-grow: 1;
+.icon-list .label > .line2 {
+	flex-direction:row;
+	width: 100%;
+	justify-content: space-between;
 }
-.icon-list .thumbnail span {
-	height: 64px;
+.icon-list .label,
+.icon-list .thumbnail {
+	width:100%;
+}
+.icon-list .thumbnail {
+	height: 128px;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .icon-list > li {
@@ -117,76 +156,48 @@
 	margin: 16px;
 }
 
-.icon-list .thumbnail img {
-	max-width: 100%;
-	max-height: 100%;
-}
+.thumbnail img {max-width: 100%;max-height: 100%;}
 
-.icon-list .thumbnail span {
-	display: block;
-	text-align: center;
-}
-
-.icon-list .label,
-.icon-list .label > * {
+.icon-list .label {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
 	text-align: center;
+}
+.icon-list .label > span,
+.icon-list .label > .line2 span {
+	display: block;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+	width:100%;
+	overflow: hidden;
 }
 
 .icon-list.seasons {
-	flex-wrap: wrap;
+	flex-wrap: wrap !important;
+	overflow-x: auto;
 }
 
-.icon-list.seasons > li {
-	width:96px;
-}
+.icon-list.seasons > li {flex-grow: 1;}
 .icon-list.seasons .thumbnail span {
 	height: 128px;
 }
 
-.recently-added {
-	width: auto !important;
-	max-width: 100%;
-	flex-wrap: nowrap;
-	overflow-x: auto;
-}
-
-.recently-added .thumbnail span,
-.recently-added > li {
-	padding: 0;
-	margin: 0.5em;
-}
-
-.recently-added .thumbnail span {
-	height: auto;
-	width: 96px;
-}
-
-.recently-added .label {
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	overflow: hidden;
-	display: block;
-	width: 96px;
-}
-
-.recently-added .label,
-.recently-added .label > * {
-	white-space: initial;
-	align-items: flex-start;
-	text-align: left;
-	white-space: nowrap;
-}
-
 .icon-list.cast {
 	width: 100% !important;
-	max-width: 100%;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	justify-content: space-between;
+	overflow-x: scroll;
 }
 
 .icon-list.cast > li {
 	width: 96px;
+}
+
+
+.flags img {
+	height: 32px;
+}
+
+.recently-added .icon-list {
+	flex-wrap: nowrap;
 }

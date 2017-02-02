@@ -16,6 +16,9 @@ export function ready() {
 	})
 }
 
+export function flatMap (array, callback) {
+  return [].concat.apply([], array.map(callback));
+}
 
 export function minutes2string (t) {
 	const hours = Math.floor(t/60),
@@ -30,12 +33,16 @@ export function seconds2string (t) {
 	return minutes2string(Math.round(t/60))
 }
 
-export function seconds2shortstring (t) {
-	function str (n) {
-		return (n < 10 && n > -10 ? '0' : '')+Math.floor(n)
-	}
-	if (t > 3600) return str(t/3600) +':'+ str((t%3600)/60) +':'+ str(t%60)
-	else return str(t/60) +':'+ str(t%60)
+export function seconds2shortstring (seconds) {
+	const format = n => (n < 10 ? '0' : '')+Math.floor(n)
+
+	const s = Math.abs(seconds)
+	const hh = s >= 3600 && format(s/3600)
+	const mm = format((s%3600)/60)
+	const ss = format(s%60)
+
+	return (seconds < 0 ? '-' : '') +
+			(hh === false ? '' : `${hh}:`) + `${mm}:${ss}`
 }
 
 export function ymd2string (ymd) {
@@ -49,4 +56,16 @@ export function ymd2string (ymd) {
 
 export function makeJsLink(script) {
 	return `javascript: (function () { ${ script } })()`
+}
+
+export function makeDetail(page, name, key, value) {
+	return value !== undefined && value.length > 0 && {
+		'class': key,
+		'name': name,
+		'links': (Array.isArray(value) ? value : [  ])
+				.map(v => ({
+					'label': v,
+					'link': `#page=${page}&${key}=${v}`
+				}))
+	}
 }

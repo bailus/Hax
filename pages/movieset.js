@@ -89,7 +89,13 @@ export default (new Page({
 				detailList: [
 					{ 'name': 'Rating', 'value': `${ Math.round(rating*10)/10 }/10 (${ votes } votes)` + (top250 ? ' #'+top250 : '') },
 					{ 'name': 'Plot', 'value': plot }
-				]
+				],
+					actions: [
+						{	label: 'Play',
+							thumbnail: 'img/buttons/play.png',
+							link: makeJsLink(`xbmc.Play({ "movieid": ${ movieid } }, 1)`)
+						}
+					]
 			}))
 		}))
 

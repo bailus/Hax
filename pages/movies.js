@@ -1,5 +1,7 @@
 import Page from '../js/page'
 import { seconds2string, makeJsLink } from '../js/util'
+import moment from 'moment'
+
 
 import Filter from '../js/xbmcFilter'
 
@@ -18,7 +20,6 @@ export default (new Page({
 		const fields = [
 			{ name: 'Genre', key: 'genreid', type: 'integer' },
 			{ name: 'Genre', key: 'genre', type: 'string' },
-			{ name: 'Year', key: 'year', type: 'integer' },
 			{ name: 'Actor', key: 'actor', type: 'string' },
 			{ name: 'Writer', key: 'writers', type: 'string' },
 			{ name: 'Director', key: 'director', type: 'string' },
@@ -33,37 +34,41 @@ export default (new Page({
 		let group = state['group'] || this.groupby
 		
 		return xbmc.get({
-			method: 'VideoLibrary.GetMovies', 
-			params: {
-				'properties': [ 'title', 'originaltitle', 'runtime', 'year', 'thumbnail', 'file', 'genre' ],
+			'method': 'VideoLibrary.GetMovies', 
+			'params': {
+				'properties': [
+					'title', 'originaltitle', 'runtime', 'year', 'thumbnail', 'file', 'genre', 'lastplayed'
+				],
 				'sort': { method: 'sorttitle', ignorearticle: true },
-				'filter': filter.out()
-			},
-			cache: true
-		})
-		.then(result => ({ //format movies
-			title: 'Movies' + (group ? ' by '+group : ''),
-			subtitle: filter.toString(),
-			items: (result.movies || []).map((movie, i) => {
-
-				movie.details = []
-				if (movie.runtime) movie.details.push(seconds2string(movie.runtime))
-
-				return {
-					label: (movie.title || movie.label || '') +
-							(movie.originaltitle && movie.originaltitle != movie.title ? ' [' + movie.originaltitle + ']' : ''),
-					year: movie.year,
-					link: '#page=Movie&movieid='+movie.movieid,
-					alpha: movie.label[0].toUpperCase(),
-					thumbnail: movie.thumbnail ? xbmc.vfs2uri(movie.thumbnail) : 'img/icons/default/DefaultVideo.png',
-					actions: [
-						{
-							label: '▶',
-							link: makeJsLink(`xbmc.Play({ 'movieid': ${movie.movieid} }, 1)`)
-						}
-					]
+				'filter': filter.out(),
+				'limits': state['limit'] === undefined ? undefined : {
+					'end': state['limit']
 				}
-			})
+			},
+			'cache': true
+		})
+		.then(({ movies=[] }) => ({ //format movies
+			'title': filter.toString(),
+			'items': movies.map(({
+				runtime, title, label, originaltitle, movieid, thumbnail, year, lastplayed
+			}) => ({
+				'label': (title || label || '') +
+						(originaltitle && originaltitle != title ? ' [' + originaltitle + ']' : ''),
+				'details': [
+					`(${year})`,
+					seconds2string(runtime)
+				],
+				'year': year,
+				'link': '#page=Movie&movieid='+movieid,
+				'alpha': label[0].toUpperCase(),
+				'thumbnail': thumbnail ? xbmc.vfs2uri(thumbnail) : 'img/icons/default/DefaultVideo.png',
+				'actions': [
+					{
+						'label': '▶',
+						'link': makeJsLink(`xbmc.Play({ 'movieid': ${movieid} }, 1)`)
+					}
+				]
+			}))
 		}))
 
 	}

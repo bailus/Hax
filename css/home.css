@@ -1,18 +1,20 @@
 .page[data-page="Home"] .titlebar {
 	display: none;
 }
-.page[data-page="Home"] > article {
-	justify-content: flex-start;
+.page[data-page="Home"] article {
+	align-content: space-around;
+	align-items: center;
 }
 .page[data-page="Home"] .items {
 	display: flex;
 	flex-wrap: wrap;
-	flex-direction: row;
-	justify-content: center;
+	flex-direction: row !important;
+	justify-content: space-around;
 	align-content: center;
 	flex-grow: 1;
 	width: 500px;
 	margin: 0;
+	max-width: 100%;
 }
 .page[data-page="Home"] .listItem {
 	flex-direction: column;
@@ -21,19 +23,32 @@
 	text-align: center;
 	margin:5px;
 	margin-top:10px;
+	flex-grow: 1;
 }
-.page[data-page="Home"] .thumbnail {
+.page[data-page="Home"] .listItem a {
+	flex-direction: column;
+}
+.page[data-page="Home"] .items .thumbnail {
 	display: block !important;
 	width: 64px;
 	height: 64px;
 	line-height: normal;
 }
 .page[data-page="Home"] .label {
-	display: block !important;
 	font-size: 12px;
 	float: none;
 	height: 36px;
 	line-height: 18px;
-	margin:0;padding:0;
+	margin:0;
+	padding:0;
 	white-space: inherit;
+}
+.page[data-page="Home"] .actions {
+	flex-direction:row;
+}
+.page[data-page="Home"] .actions .action {
+	background-color:initial;
+}
+.page[data-page="Home"] .actions .label {
+	display: none;
 }

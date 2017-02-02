@@ -1,5 +1,6 @@
 import Page from '../js/page'
 import { makeJsLink } from '../js/util'
+import moment from 'moment'
 
 export default (new Page({
 	'id': 'Directory',
@@ -8,13 +9,11 @@ export default (new Page({
 	'icon': state => 'img/icons/default/DefaultFolder.png',
 	'parentState': state => {
 		const m = {
-			'video': 'Videos',
-			'music': 'Music',
-			'pictures': 'Pictures'
+			'video': { 'page': 'Menu', 'media': 'Videos' },
+			'music': { 'page': 'Menu', 'media': 'Music' },
+			'pictures': { 'page': 'Files', 'media': 'Pictures' }
 		}[state['media']]
-		return m ? 
-			{ 'page': 'Menu', 'media': m } :
-			{ 'page': 'Home' }
+		return m ? m : { 'page': 'Home' }
 	},
 	'data': state => {
 
@@ -34,11 +33,13 @@ export default (new Page({
 		}
 
 
-		const pathSplit = path => path.split(new RegExp('[\\\\/]'))
+		const pathSplit = path => path === undefined ?
+							[] :
+							path.split(new RegExp('[\\\\/]'))
 		return xbmc.get({
 			method: 'Files.GetDirectory',
 			params: {
-				'properties': [ 'duration', 'thumbnail', 'file', 'size', 'mimetype', 'lastmodified' ],
+				'properties': [ 'duration', 'thumbnail', 'file', 'size', 'mimetype', 'lastmodified', 'art' ],
 				'sort': { 'method': sortby, 'order': order },
 				'directory': root + (path || ''),
 				'media': media
@@ -46,7 +47,8 @@ export default (new Page({
 		})
 		.then(result => result.files || [])
 		.then(files => files.map(file => {
-			let f = pathSplit(file.file)
+		console.log(file)
+			let f = pathSplit(decodeURIComponent(file.file))
 			let filename = f.pop()
 			let pathDelimiter = typeof path === 'string' && root.search(/\\/) === -1 ? "/" : "\\"
 			let pathname = typeof path === 'string' ? path.replace(/^\/+|\/+$|^\\+|\\+$/g, '') + pathDelimiter : ''
@@ -67,24 +69,24 @@ export default (new Page({
 				]
 				file.link = `#page=File&media=${ media }&sortby=${ sortby }&order=${ order }&root=${ encodeURIComponent(root) }&path=${ encodeURIComponent((pathname || '')) }&filename=${ encodeURIComponent(filename) }`
 
-				if (media === 'pictures')
-					file.thumbnail = file.thumbnail || file.file
+				//if (media === 'pictures')
+				//	file.thumbnail = file.thumbnail || file.file
 				file.thumbnail = file.thumbnail ? xbmc.vfs2uri(file.thumbnail) : 'img/icons/default/DefaultFile.png'
 			}
 
 			file.label = filename
 
 			file.details = []
-			if (file.size) file.details.push((file.size/1024/1024).toFixed(2) + 'MB')
+			if (file.lastmodified) file.details.push(moment(file.lastmodified).calendar())
 			if (file.mimetype) file.details.push(file.mimetype)
-			if (file.lastmodified) file.details.push(file.lastmodified)
+			if (file.size) file.details.push((file.size/1024/1024).toFixed(2) + 'MB')
 
 
 			file.thumbnailWidth = '50px'
 
 			return file
 		}))
-		/*.then(items => { //add up button
+		.then(items => { //add up button
 
 			//don't put an up button on top level directories
 			if (!path) return items
@@ -101,7 +103,7 @@ export default (new Page({
 			})
 
 			return items
-		})*/
+		})
 		.then(items => {
 
 			let splitPath = (path ? pathSplit(path) : [])			

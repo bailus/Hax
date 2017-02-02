@@ -1,4 +1,5 @@
 import actors from './actors.js'
+import videos from './videos.js'
 import addon from './addon.js'
 import addons from './addons.js'
 import album from './album.js'
@@ -6,7 +7,6 @@ import albums from './albums.js'
 import artist from './artist.js'
 import artists from './artists.js'
 import broadcast from './broadcast.js'
-import channelgroup from './channelgroup.js'
 import channel from './channel.js'
 import channels from './channels.js'
 import directory from './directory.js'
@@ -35,6 +35,7 @@ import timer from './timer.js'
 
 const pages = [
 	actors,
+	videos,
 	addon,
 	addons,
 	album,
@@ -42,7 +43,6 @@ const pages = [
 	artist,
 	artists,
 	broadcast,
-	channelgroup,
 	channel,
 	channels,
 	directory,

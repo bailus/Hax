@@ -1,4 +1,3 @@
-
 :root {
   --main-hue: 192;
   --main-saturation: 60%;
@@ -14,40 +13,83 @@
   --text-saturation: var(--main-saturation);
 
   --background-saturation-low: calc(var(--main-saturation) * 0.25);
+  
+  /*	<color name="primary_background">FF0E597E</color>
+	<color name="secondary_background">330BAA8E</color>
+	<color name="dialog_tint">FF1A2123</color>
+	<color name="background">FF000000</color>
+	<color name="bg_image">FF909090</color>
+	<color name="bg_overlay">30FFFFFF</color>
+	<color name="black">FF000000</color>
+	<color name="white">FFF0F0F0</color>
+	<color name="grey">FFA0A0A0</color>
+	<color name="blue">FF7ACAFE</color>
+	<color name="red">FFCE4421</color>
+	<color name="button_focus">FF12A0C7</color>
+	<color name="text_shadow">22000000</color>
+	<color name="border_alpha">60FFFFFF</color>
+	<color name="disabled">40FFFFFF</color>
+	<color name="selected">FF11E7B1</color>
+	<color name="invalid">FFFF0000</color>		*/
+
+	--hue_primary: 193;
+	--hue_secondary: 165;
+	--saturation_low: 80%;
+	--saturation_medium: 83%;
+	--saturation_high: 88%;
+
+	--black: hsl(0, 0%, 0%);
+	--white: hsl(0, 0%, 94%);
+	--grey: hsl(0, 0%, 63%);
+	--blue: hsl(204, 99%, 74%);
+	--red: hsl(12, 72%, 47%);
+
+	--primary_background: hsl(var(--hue_primary), var(--saturation_low), 27%);
+	--secondary_background: hsla(var(--hue_secondary), var(--saturation_high), 35%, 0.2);
+	--background: hsl(var(--hue_primary), 15%, 12%);
+	--bg_image: hsl(0, 0%, 56%);
+	--bg_overlay: hsla(0, 0%, 100%, 0.2);
+	--button_focus: hsl(var(--hue_primary), var(--saturation_medium), 43%);
+	--button_background: hsl(var(--hue_primary), var(--saturation_medium), 23%);
+	--button_selected: hsla(0, 0%, 23%, 0.5);
+	--text: var(--white);
+	--text_shadow: hsla(0, 0%, 0%, 0.2);
+	--border_alpha: hsla(0, 0%, 100%, 0.4);
+	--disabled: hsla(0, 0%, 100%, 0.25);
+	--invalid: var(--red);
 }
 
 
 /* Foreground */
 body,
 a, a:hover, a:visited {
-	color: hsl(var(--text-hue), var(--text-saturation), 85%);
+	color: var(--text);
 }
 
 article a,
 article a:hover,
 article a:visited {
-	color: hsl(var(--link-hue), var(--link-saturation), 100%);
+	color: var(--text)
 }
 
 
 /* Background */
 body,
 #loading {
-	background-color: hsl(var(--background-hue), var(--background-saturation), 4%);
+	background-color: var(--background);
 }
 header,
 #player {
-	background-color: hsl(var(--background-hue), var(--background-saturation), 24%);
+	background-color: var(--primary_background);
 }
 
-.page article,
-.page > .article-container,
-.article-container > nav .icon-list li {
-	background-color: hsla(var(--background-hue), var(--background-saturation-low), 6%, .8);
+.page .listItem.leaf,
+.page .icon-list {
+	background-color: var(--text_shadow);
 }
 
-.page article > .wrapper {
-	background-color: hsla(var(--background-hue), var(--background-saturation-low), 6%, .6);
+.page .thumbnails .thumbnailWrapper {
+	background-color: var(--black);
 }
 
 
@@ -55,17 +97,23 @@ header,
 .group,
 .option > ul > li,
 .action {
-	background-color: hsl(var(--background-hue), var(--background-saturation-low), 12%);
+	background-color: var(--button_background);
+}
+
+.group:hover,
+.option > ul > li:hover,
+.action:hover {
+	background-color: var(--button_focus);
 }
 
 .group.selected,
 .option .selected {
-	background-color: inherit;
+	background-color: var(--button_selected);
 }
 
 
 /* Player */
 
 #progress .background {
-  background-color: hsl(var(--background-hue), var(--background-saturation), 44%);
+  background-color: var(--grey);
 }

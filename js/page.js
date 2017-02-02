@@ -78,7 +78,6 @@ export default class {
 				})
 			}
 			
-			//if (state['sort') || this.sortby) data.items = sortItems(data.items, state['sort'] || this.sortby]
 			
 			const groupbyKey = state['group'] || this.groupby
 			const groupbyValue = state[groupbyKey]
@@ -87,10 +86,19 @@ export default class {
 				const size = data.items.length
 				const showItems = !(!groupbyValue && size > advancedSettings.pages.groupingThreshold)
 
-				//sort and group the items
+				//group the items
 				data.items = sortItems(groupItems(data.items, groupbyKey), 'label')
 
-				//create groups
+				//sort the groups
+				if (state['sort'] || this.sortby)
+					data.items = data.items.map(item => {
+						if (!item.items || item.items.length < 2)
+							return item
+						item.items = sortItems(item.items, state['sort'] || this.sortby)
+						return item
+					})
+
+				//create group list
 				if (size > advancedSettings.pages.groupingThreshold)
 					data.groups = data.items.map(x => {
 						const s = Object.assign({}, state)
@@ -110,6 +118,10 @@ export default class {
 				if (!showItems)
 					data.items = undefined
 
+			}
+			else {
+				if (state['sort'] || this.sortby)
+					data.items = sortItems(data.items, state['sort'] || this.sortby)
 			}
 
 			return data

@@ -1,5 +1,6 @@
 import Page from '../js/page'
 import { seconds2string, makeJsLink } from '../js/util'
+import moment from 'moment'
 
 export default (new Page({
 	'id': 'Menu',
@@ -13,7 +14,8 @@ export default (new Page({
 		'Music': 'img/icons/home/music.png',
 		'Pictures': 'img/icons/home/pictures.png',
 		'TV': 'img/icons/home/livetv.png',
-		'Radio': 'img/icons/home/radio.png'
+		'Radio': 'img/icons/home/radio.png',
+		'Addons': 'img/icons/home/addons.png'
 	}[state ? state['media'] : 'Default']),
 	'parentState': state => {
 		const m = new Map()
@@ -39,10 +41,14 @@ export default (new Page({
 			'pageName': media || 'Menu',
 			'items': ({
 				'Videos': [
-					{ 'label': 'Videos', 'items': [
+					{ 'label': 'Library', 'items': [
 						{ 'label': 'Movies', 'link': '#page=Menu&media=Movies', 'thumbnail': 'img/icons/home/movies.png' },
 						{ 'label': 'TV Shows', 'link': '#page=Menu&media=TV Shows', 'thumbnail': 'img/icons/home/tv.png' },
 						{ 'label': 'Music Videos', 'link': '#page=Menu&media=Music Videos', 'thumbnail': 'img/icons/home/musicvideos.png' }
+					] },
+					{ 'label': 'More', 'items': [
+						{ 'label': 'Files', 'link': '#page=Files&media=Videos', 'thumbnail': 'img/icons/default/DefaultFolder.png' },
+						{ 'label': 'Addons', 'link': '#page=Addons&content=video', 'thumbnail': 'img/icons/home/addons.png' }
 					] }
 				],
 				'Movies': [
@@ -79,11 +85,12 @@ export default (new Page({
 						{ 'label': 'By Year', 'link': '#page=Albums&group=year', 'thumbnail': 'img/icons/default/DefaultMusicYears.png' },
 						{ 'label': 'By Title', 'link': '#page=Albums', 'thumbnail': 'img/icons/default/DefaultMusicAlbums.png' },
 						{ 'label': 'By Genre', 'link': '#page=Genres&type=Albums', 'thumbnail': 'img/icons/default/DefaultMusicGenres.png' }
-					] }/*,
-					{ 'label': 'Music Videos', 'items': [
-						{ 'label': 'By Artist', 'link': '#page=Music Videos', 'thumbnail': 'img/icons/default/DefaultMusicArtists.png' },
-						{ 'label': 'By Genre', 'link': '#page=Genres&type=Music Videos', 'thumbnail': 'img/icons/default/DefaultGenre.png' }
-					] }*/
+					] },
+					{ 'label': 'More', 'items': [
+						{ 'label': 'Files', 'link': '#page=Files&media=Music', 'thumbnail': 'img/icons/default/DefaultFolder.png' },
+						{ 'label': 'Addons', 'link': '#page=Addons&content=audio', 'thumbnail': 'img/icons/home/addons.png' },
+						{ 'label': 'Music Videos', 'link': '#page=Menu&media=Music Videos', 'thumbnail': 'img/icons/home/musicvideos.png' }
+					] }
 				],
 				'Pictures': [ ],
 				'TV': [
@@ -101,88 +108,455 @@ export default (new Page({
 						{ 'label': 'Recordings', 'link': '#page=Recordings&media=Radio', 'thumbnail': 'img/icons/home/radio.png' },
 						{ 'label': 'Timers', 'link': '#page=Timers&media=Radio', 'thumbnail': 'img/icons/home/radio.png' }
 					] }
+				],
+				'Addons': [
+					{ 'label': 'My Addons', 'items': [
+						{ 'label': 'Video Addons', 'link': '#page=Addons&content=video', 'thumbnail': 'img/icons/home/videos.png' },
+						{ 'label': 'Music Addons', 'link': '#page=Addons&content=audio', 'thumbnail': 'img/icons/home/music.png' },
+						{ 'label': 'Picture Addons', 'link': '#page=Addons&content=image', 'thumbnail': 'img/icons/home/pictures.png' },
+						{ 'label': 'Program Addons', 'link': '#page=Addons&content=executable', 'thumbnail': 'img/icons/home/addons.png' },
+					]},
+					{ 'label': 'More', 'items': [
+						{ 'label': 'Installed Addons', 'link': '#page=Addons&group=type', 'thumbnail': 'img/icons/home/addons.png' }
+					]}
 				]
 			})[media]
 		})
 
-		let recentlyAdded = ({
-			'TV Shows': {
-				method: 'VideoLibrary.GetRecentlyAddedEpisodes',
-				params: { 'properties': [ 'tvshowid', 'title', 'thumbnail', 'episode', 'season', 'file', 'showtitle' ], 'limits': { 'end': 5 } },
-				key: 'episodes',
-				defaultThumbnail: 'img/icons/default/DefaultVideo.png',
-				transformItem: item => ({
-					link: '#page=Episode&episodeid='+item.episodeid,
-					label: item.showtitle + ' - ' + item.title,
-					details: [ 'Season '+item.season, 'Episode '+item.episode ]
-				})
-			},
-			'Movies': {
-				method: 'VideoLibrary.GetRecentlyAddedMovies',
-				params: { "properties": [ "title", "originaltitle", "runtime", "year", "thumbnail" ], 'limits': { 'end': 5 } },
-				key: 'movies',
-				defaultThumbnail: 'img/icons/default/DefaultVideo.png',
-				transformItem: item => ({
-					link: '#page=Movie&movieid='+item.movieid,
-					label: '('+item.year+')'+item.label
-				})
-			},
-			'Music Videos': {
-				method: 'VideoLibrary.GetRecentlyAddedMusicVideos',
-				params: { "properties": [ "title", "runtime", "album", "artist", "year", "thumbnail" ], 'limits': { 'end': 5 } },
-				key: 'musicvideos',
-				defaultThumbnail: 'img/icons/default/DefaultVideo.png',
-				transformItem: item => ({
-					link: '#page=Music Video&musicvideoid='+item.musicvideoid,
-					label: item.artist + ' - ' + item.title,
-					details: [ item.album + ' (' + item.year + ')' ]
-				})
-			},
+		let iconLists = ({
+			'TV Shows': [
+				{
+					'name': 'In Progress',
+					'method': 'VideoLibrary.GetTVShows',
+					'params': {
+						'properties': [
+							'title', 'originaltitle', 'sorttitle', 'thumbnail', 'lastplayed'
+						],
+						'limits': {
+							'end': 10
+						},
+						'sort': {
+							'method': 'lastplayed',
+							'order': 'descending'
+						},
+						'filter': {
+							'field': 'inprogress',
+							'operator': 'is',
+							'value': 'true'
+						}
+					},
+					'key': 'tvshows',
+					'defaultThumbnail': 'img/icons/default/DefaultVideo.png',
+					'transformItem': ({
+						tvshowid, title, lastplayed
+					}) => ({
+						'link': '#page=TV Show&tvshowid='+tvshowid,
+						'label': title,
+						'details': moment(lastplayed).calendar()
+					})
+				},
+				{
+					'name': 'Recently Added',
+					'method': 'VideoLibrary.GetRecentlyAddedEpisodes',
+					'params': { 'properties': [ 'tvshowid', 'title', 'thumbnail', 'episode', 'season', 'file', 'showtitle', 'dateadded' ], 'limits': { 'end': 10 } },
+					'key': 'episodes',
+					'defaultThumbnail': 'img/icons/default/DefaultVideo.png',
+					'transformItem': ({
+						episodeid, showtitle, dateadded, title, season, episode
+					}) => ({
+						'link': '#page=Episode&episodeid='+episodeid,
+						'label': `${showtitle} - ${season}x${episode} ${title}`,
+						'details': `Added ${moment(dateadded).calendar()}`
+					})
+				},
+				{
+					'name': 'Unwatched',
+					'method': 'VideoLibrary.GetTVShows',
+					'params': {
+						'properties': [
+							'title', 'originaltitle', 'sorttitle', 'thumbnail', 'rating', 'votes'
+						],
+						'limits': {
+							'end': 10
+						},
+						'sort': {
+							'method': 'random'
+						},
+						'filter': {
+							'field': 'numwatched',
+							'operator': 'is',
+							'value': '0'
+						}
+					},
+					'key': 'tvshows',
+					'defaultThumbnail': 'img/icons/default/DefaultVideo.png',
+					'transformItem': ({
+						tvshowid, title, rating, votes
+					}) => ({
+						'link': '#page=TV Show&tvshowid='+tvshowid,
+						'label': title,
+						'details': `${Math.round(rating*10)/10}/10 (${votes} votes)`
+					})
+				},
+				{
+					'name': 'Highest Rating',
+					'method': 'VideoLibrary.GetTVShows',
+					'params': {
+						'properties': [
+							'title', 'originaltitle', 'sorttitle', 'thumbnail', 'rating', 'votes'
+						],
+						'limits': {
+							'end': 10
+						},
+						'sort': {
+							'method': 'rating',
+							'order': 'descending'
+						},
+						'filter': {
+							'field': 'votes',
+							'operator': 'greaterthan',
+							'value': '99'
+						}
+					},
+					'key': 'tvshows',
+					'defaultThumbnail': 'img/icons/default/DefaultVideo.png',
+					'transformItem': ({
+						tvshowid, title, rating, votes
+					}) => ({
+						'link': '#page=TV Show&tvshowid='+tvshowid,
+						'label': title,
+						'details': `${Math.round(rating*10)/10}/10 (${votes} votes)`
+					})
+				}
+			],
+			'Movies': [
+				{
+					'name': 'In Progress',
+					'method': 'VideoLibrary.GetMovies',
+					'params': {
+						"properties": [
+							"title", "originaltitle", "runtime", "year", "thumbnail", "tagline", "rating", "votes", "top250"
+						],
+						'limits': {
+							'end': 10
+						},
+						'sort': {
+							'method': 'lastplayed',
+							'order': 'descending'
+						},
+						'filter': {
+							'field': 'inprogress',
+							'operator': 'is',
+							'value': 'true'
+						}
+					},
+					'key': 'movies',
+					'defaultThumbnail': 'img/icons/default/DefaultVideo.png',
+					'transformItem': ({
+						movieid, label, year, dateadded, rating, votes, top250
+					}) => ({
+						'link': `#page=Movie&movieid=${movieid}`,
+						'label': `(${year}) ${label}`,
+						'details': (top250 ? `#${top250} ` : '')+`${Math.round(rating*10)/10}/10 (${votes} votes)`
+					})
+				},
+				{
+					'name': 'Recently Added',
+					'method': 'VideoLibrary.GetRecentlyAddedMovies',
+					'params': {
+						"properties": [
+							"title", "originaltitle", "runtime", "year", "thumbnail", "tagline", "dateadded"
+						],
+						'limits': {
+							'end': 10
+						}
+					},
+					'key': 'movies',
+					'defaultThumbnail': 'img/icons/default/DefaultVideo.png',
+					'transformItem': ({
+						movieid, label, year, dateadded
+					}) => ({
+						'link': `#page=Movie&movieid=${movieid}`,
+						'label': `(${year}) ${label}`,
+						'details': `Added ${moment(dateadded).calendar()}`,
+					})
+				},
+				{
+					'name': 'Unwatched',
+					'method': 'VideoLibrary.GetMovies',
+					'params': {
+						"properties": [
+							"title", "originaltitle", "runtime", "year", "thumbnail", "tagline", "rating", "votes", "top250"
+						],
+						'limits': {
+							'end': 10
+						},
+						'sort': {
+							'method': 'random'
+						},
+						'filter': {
+							'field': 'playcount',
+							'operator': 'is',
+							'value': '0'
+						}
+					},
+					'key': 'movies',
+					'defaultThumbnail': 'img/icons/default/DefaultVideo.png',
+					'transformItem': ({
+						movieid, label, year, dateadded, rating, votes, top250
+					}) => ({
+						'link': `#page=Movie&movieid=${movieid}`,
+						'label': `(${year}) ${label}`,
+						'details': (top250 ? `#${top250} ` : '')+`${Math.round(rating*10)/10}/10 (${votes} votes)`
+					})
+				},
+				{
+					'name': 'Highest Rating',
+					'method': 'VideoLibrary.GetMovies',
+					'params': {
+						"properties": [
+							"title", "originaltitle", "runtime", "year", "thumbnail", "tagline", "rating", "votes", "top250"
+						],
+						'limits': {
+							'end': 10
+						},
+						'sort': {
+							'method': 'rating',
+							'order': 'descending'
+						},
+						'filter': {
+							'field': 'votes',
+							'operator': 'greaterthan',
+							'value': '99'
+						}
+					},
+					'key': 'movies',
+					'defaultThumbnail': 'img/icons/default/DefaultVideo.png',
+					'transformItem': ({
+						movieid, label, year, dateadded, rating, votes, top250
+					}) => ({
+						'link': `#page=Movie&movieid=${movieid}`,
+						'label': `(${year}) ${label}`,
+						'details': (top250 ? `#${top250} ` : '')+`${Math.round(rating*10)/10}/10 (${votes} votes)`
+					})
+				}
+			],
+			'Music Videos': [
+				{
+					'name': 'Recently Added',
+					'method': 'VideoLibrary.GetRecentlyAddedMusicVideos',
+					'params': {
+						"properties": [
+							"title", "runtime", "album", "artist", "year", "thumbnail", "dateadded"
+						],
+						'limits': {
+							'end': 10
+						}
+					},
+					'key': 'musicvideos',
+					'defaultThumbnail': 'img/icons/default/DefaultVideo.png',
+					'transformItem': ({
+						musicvideoid, artist, title, album, year, dateadded
+					}) => ({
+						'link': '#page=Music Video&musicvideoid='+musicvideoid,
+						'label': title,
+						'details': artist
+					})
+				}
+			],
+			'Music': [
+				{
+					'name': 'Recently Played',
+					'method': 'AudioLibrary.GetAlbums',
+					'params': {
+						"properties": [ // http://kodi.wiki/view/JSON-RPC_API/v6#Audio.Fields.Album
+							"title", 
+							"artist",
+							"thumbnail"
+						],
+						'limits': {
+							'end': 10
+						},
+						'sort': {
+							'method': 'lastplayed',
+							'order': 'descending'
+						}
+					},
+					'key': 'albums',
+					'defaultThumbnail': 'img/icons/default/DefaultAlbumCover.png',
+					'transformItem': ({
+						albumid, label, artist
+					}) => ({
+						'link': '#page=Album&albumid='+albumid,
+						'label': label,
+						'details': artist
+					})
+				},
+				{
+					'name': 'Recently Added',
+					'method': 'AudioLibrary.GetRecentlyAddedAlbums',
+					'params': {
+						"properties": [ // http://kodi.wiki/view/JSON-RPC_API/v6#Audio.Fields.Album
+							"title", 
+							"artist",
+							"thumbnail"
+						],
+						'limits': {
+							'end': 10
+						}
+					},
+					'key': 'albums',
+					'defaultThumbnail': 'img/icons/default/DefaultAlbumCover.png',
+					'transformItem': ({
+						albumid, label, artist
+					}) => ({
+						'link': '#page=Album&albumid='+albumid,
+						'label': label,
+						'details': artist
+					})
+				},
+				{
+					'name': 'Random Albums',
+					'method': 'AudioLibrary.GetAlbums',
+					'params': {
+						"properties": [ // http://kodi.wiki/view/JSON-RPC_API/v6#Audio.Fields.Album
+							"title", 
+							"artist",
+							"thumbnail"
+						],
+						'limits': {
+							'end': 10
+						},
+						'sort': {
+							'method': 'random'
+						}
+					},
+					'key': 'albums',
+					'defaultThumbnail': 'img/icons/default/DefaultAlbumCover.png',
+					'transformItem': ({
+						albumid, label, artist
+					}) => ({
+						'link': '#page=Album&albumid='+albumid,
+						'label': label,
+						'details': artist
+					})
+				},
+				{
+					'name': 'Random Artists',
+					'method': 'AudioLibrary.GetArtists',
+					'params': {
+						"properties": [ // http://kodi.wiki/view/JSON-RPC_API/v6#Audio.Fields.Album
+							"thumbnail"
+						],
+						'limits': {
+							'end': 10
+						},
+						'sort': {
+							'method': 'random'
+						}
+					},
+					'key': 'artists',
+					'defaultThumbnail': 'img/icons/default/DefaultMusicArtists.png',
+					'transformItem': ({
+						label, artistid
+					}) => ({
+						'link': `#page=Artist&artistid=${artistid}`,
+						'label': label
+					})
+				},
+				{
+					'name': 'Unplayed Albums',
+					'method': 'AudioLibrary.GetAlbums',
+					'params': {
+						"properties": [ // http://kodi.wiki/view/JSON-RPC_API/v6#Audio.Fields.Album
+							"title", 
+							"artist",
+							"thumbnail"
+						],
+						'limits': {
+							'end': 10
+						},
+						'sort': {
+							'method': 'random'
+						},
+						'filter': {
+							'field': 'playcount',
+							'operator': 'is',
+							'value': '0'
+						}
+					},
+					'key': 'albums',
+					'defaultThumbnail': 'img/icons/default/DefaultAlbumCover.png',
+					'transformItem': ({
+						albumid, label, artist
+					}) => ({
+						'link': '#page=Album&albumid='+albumid,
+						'label': label,
+						'details': artist
+					})
+				},
+				{
+					'name': 'Most Played',
+					'method': 'AudioLibrary.GetAlbums',
+					'params': {
+						"properties": [ // http://kodi.wiki/view/JSON-RPC_API/v6#Audio.Fields.Album
+							"title", 
+							"artist",
+							"thumbnail"
+						],
+						'limits': {
+							'end': 10
+						},
+						'sort': {
+							'method': 'playcount',
+							'order': 'descending'
+						}
+					},
+					'key': 'albums',
+					'defaultThumbnail': 'img/icons/default/DefaultAlbumCover.png',
+					'transformItem': ({
+						albumid, label, artist
+					}) => ({
+						'link': '#page=Album&albumid='+albumid,
+						'label': label,
+						'details': artist
+					})
+				}
+			]
 		})[media]
 
-		if (recentlyAdded !== undefined)
+		if (iconLists !== undefined) {
 			getPage = getPage.then(page => {
-				return xbmc.get({
-					method: recentlyAdded.method,
-					params: recentlyAdded.params
-				})
-				.then(result => result[recentlyAdded.key] || [])
-				.then(items => items.map(item => {
-					let out = recentlyAdded.transformItem(item)
-					out.thumbnail = item.thumbnail ? xbmc.vfs2uri(item.thumbnail) : recentlyAdded.defaultThumbnail
-					return out
+				return Promise.all(iconLists.map(({
+					method, params, key, transformItem, defaultThumbnail, name
+				}) => {
+					return xbmc.get({
+						'method': method,
+						'params': params
+					})
+					.then(result => result[key] || [])
+					.then(items => items.map(item => {
+						let out = transformItem(item)
+						out.thumbnail = item.thumbnail ? xbmc.vfs2uri(item.thumbnail) : defaultThumbnail
+						return out
+					}))
+					.then(items => ({
+						'name': name,
+						'iconList': items
+					}))
 				}))
-				.then(items => {
-					page.recentlyAdded = items;
+				.then(iconLists => {
+					console.log(iconLists)
+					if (page.details)
+						page.details = page.details.concat(iconLists)
+					else
+						page.details = iconLists
 					return page
 				})
 			})
+		}
 
-		//add a list of file sources to the Videos, Music... pages
-		if (m === undefined)
-			return getPage
-
-		let getSources = xbmc.get({
-			method: 'Files.GetSources',
-			params: { 'media': m },
-			cache: true
-		})
-		.then(result => result.sources || [])
-		.then(sources => sources.map(source => ({ //format sources
-			label: source.label,
-			link: '#page=Directory&root=' + encodeURIComponent(source.file) + '&media=' + m,
-			thumbnail: 'img/icons/default/DefaultFolder.png',
-			thumbnailWidth: '50px'
-		})))
-
-		return Promise.all([ getPage, getSources ])
-		.then(([page, sources]) => {
-			page.items.push({
-				'label': 'Files',
-				'items': sources
-			})
-			return page
-		})
+		return getPage
 
 	}
 }));

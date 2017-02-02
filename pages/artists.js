@@ -4,6 +4,7 @@ export default (new Page({
 	'id': 'Artists',
 	'view': 'list',
 	'groupby': 'alpha',
+	'sortby': 'label',
 	'icon': () => 'img/icons/default/DefaultMusicArtists.png',
 	'parentState': state => ({ 'page': 'Menu', 'media': 'Music' }),
 	'data': function (state) {
@@ -16,9 +17,8 @@ export default (new Page({
 		return xbmc.get({
 			'method': 'AudioLibrary.GetArtists',
 			'params': { 
-				'properties': [ 'thumbnail' ],
-				'albumartistsonly': true,
-				'filter': filter ? filter.filter : undefined
+				'properties': [ 'thumbnail' ]
+				//'albumartistsonly': true
 			},
 			'cache': true
 		})

@@ -9,9 +9,9 @@ export default (new Page({
 	'parentState': state => ({ 'page': 'Menu', 'media': 'Music' }),
 	'data': function (state) {
 
-		let albumid = +state['albumid']
+		const albumid = +state['albumid']
 
-		let getAlbumDetails = xbmc.get({
+		const getAlbumDetails = xbmc.get({
 			'method': 'AudioLibrary.GetAlbumDetails',
 			'params': {
 				'properties': [ //http://kodi.wiki/view/JSON-RPC_API/v6#Audio.Fields.Album
@@ -41,6 +41,8 @@ export default (new Page({
 		})
 		.then(({ albumdetails={} }) => albumdetails)
 		//.then(x => {console.log(x);return x})
+
+		const getPage = getAlbumDetails
 		.then(({
 			label,
 			title,
@@ -53,6 +55,7 @@ export default (new Page({
 			type,
 			albumlabel,
 			rating,
+			votes,
 			year,
 			fanart,
 			thumbnail,
@@ -62,54 +65,52 @@ export default (new Page({
 			displayartist
 		}) => { //format album details
 			const page = {
-				title: displayartist || artist.join(', '),
-				titleLink: `#page=Artist&artistid=${ artistid }`,
-				subtitle: label,
-				thumbnail: thumbnail && xbmc.vfs2uri(thumbnail),
-				fanart: xbmc.vfs2uri(fanart),
-				details: [
-					{
-						name: 'Year',
-						links: [{
-							label: year,
-							link: '#page=Albums&year='+year
-						}]
+				'title': `${ displayartist || artist.join(', ')}`,
+				'titleLink': `#page=Artist&artistid=${ artistid }`,
+				'subtitle': `(${year}) ${title}`,
+				'thumbnail': thumbnail ? xbmc.vfs2uri(thumbnail) : 'img/icons/default/DefaultAlbumCover.png',
+				'fanart': xbmc.vfs2uri(fanart),
+				'details': [
+					votes !== undefined && votes > 0 && {
+						'name': 'Rating',
+						'flags': [
+							{
+								'class': 'starrating',
+								'value': Math.round(rating),
+								'caption': `(${votes} votes)`
+							}
+						]
 					},
-					{ 'name': 'Rating', 'value': rating },
-					{
-						name: 'Mood',
-						links: mood.map(mood => ({
+					mood !== undefined && mood.length > 0 && {
+						'name': 'Mood',
+						'links': mood.map(mood => ({
 									label: mood,
 									link: '#page=Albums&mood='+mood
 								}))
 					},
-					{
-						name: 'Style',
-						links: style.map(style => ({
+					style !== undefined && style.length > 0 && {
+						'name': 'Style',
+						'links': style.map(style => ({
 									label: style,
 									link: '#page=Albums&style='+style
 								}))
 					},
-					{
-						name: 'Type',
-						links: [{
-							label: type,
-							link: '#page=Albums&type='+type
-						}]
-					},
-					{
-						name: 'Genre',
-						links: genre.map(genre => ({
+					genre !== undefined && genre.length > 0 && {
+						'name': 'Genre',
+						'links': genre.map(genre => ({
 									label: genre,
 									link: '#page=Albums&genre='+genre
 								}))
 					},
-					{ 'name': 'Description', 'value': description }
+					description !== undefined && description.length > 0 && {
+						'name': 'Description',
+						'value': description
+					}
 				],
 				actions: [
 					{
 						label: 'Play',
-						thumbnail: 'img/buttons/play.png',
+						thumbnail: 'img/icons/infodialogs/play.png',
 						link: makeJsLink(`xbmc.Play({ 'albumid': (${ albumid }) }, 0)`)
 					},
 					{
@@ -125,22 +126,30 @@ export default (new Page({
 			return page
 		})
 
-		let getSongs = xbmc.get({
+		const getSongs = xbmc.get({
 			'method': 'AudioLibrary.GetSongs',
 			'params': {
-				'properties': [ 'file', 'title', 'track', 'duration' ],
+				'properties': [
+					'artist', 'artistid', 'file', 'title', 'track', 'duration', 'displayartist',
+					'albumartist', 'albumartistid'
+				],
 				'filter': { 'albumid': albumid }
 			},
 			cache: true
 		})
-		.then(result => result.songs.map(({
+
+		const formatSongs = getSongs
+		.then(({songs=[]}) => songs.map(({
 			label,
 			title,
 			track,
-			duration
+			duration,
+			artist,
+			displayartist,
+			albumartist
 		}) => ({
-			thumbnail: 'img/icons/default/DefaultAudio.png',
-			label: label,
+			//thumbnail: 'img/icons/default/DefaultAudio.png',
+			label: (displayartist != albumartist ? `${displayartist} - ` : '') + title,
 			number: track,
 			details: seconds2shortstring(duration),
 			actions: [
@@ -149,11 +158,75 @@ export default (new Page({
 					link: makeJsLink(`xbmc.Play({ 'albumid': ${albumid} }, 0, ${track-1})`)
 				}
 			]
-		})));
+		})))
 
-		return Promise.all([ getAlbumDetails, getSongs ])      //wait for the above to finish
-		.then( ( [ page, items ] ) => { //create the page
+		const getOtherArtists = getSongs
+		.then(({ songs=[] }) => {
+			console.log(songs)
+			const artists = {}
+			songs.forEach(({
+				artistid =[], artist =[]
+			}) => {
+				for (let i = 0; i < artistid .length; i++) {
+					artists[artistid[i]] = {
+						'artistid': artistid[i],
+						'label': artist[i],
+						'link': `#page=Artist&artistid=${artistid[i]}`,
+						'thumbnail': 'img/icons/default/DefaultArtist.png'
+					}
+				}
+			})
+			console.log(artists)
+			return Object.keys(artists).map(artistid => artists[artistid]) //convert the object to an array
+		})
+
+		const getPrevNext = getAlbumDetails
+		.then(({ artistid, artist }) => {
+			return xbmc.get({
+				'method': 'AudioLibrary.GetAlbums',
+				'params': {
+					'properties': [ //http://kodi.wiki/view/JSON-RPC_API/v6#Audio.Fields.Album
+					'title', 'artist', 'year', 'thumbnail' ],
+					'filter': { 'operator': 'is', 'field': 'albumartist', 'value': artist } //the 'artist' filter ensures that we exclude albums by other artists that feature this one (eg. albums by 'Various Artists'). TODO: find a better way to do this.
+				},
+				'cache': true
+			})
+			.then(({ albums={} }) => {
+				let o = {}
+
+				albums.forEach((curr, s) => {
+					const prev = albums[s-1]
+					const next = albums[s+1]
+					if (curr.albumid == albumid) {
+						o = {
+							previous: prev === undefined ? undefined : {
+								label: `(${prev.year}) ${prev.title}`,
+								link: `#page=Album&albumid=${ prev.albumid }`,
+								thumbnail: prev.thumbnail ? xbmc.vfs2uri(prev.thumbnail) : 'img/icons/default/DefaultAlbumCover.png'
+							},
+							next: next === undefined ? undefined : {
+								label: `(${next.year}) ${next.title}`,
+								link: `#page=Album&albumid=${ next.albumid }`,
+								thumbnail: next.thumbnail ? xbmc.vfs2uri(next.thumbnail) : 'img/icons/default/DefaultAlbumCover.png'
+							}
+						}
+					}
+				})
+
+				return o
+			})
+		})
+
+
+		return Promise.all([ getPage, formatSongs, getPrevNext, getOtherArtists ])      //wait for the above to finish
+		.then( ( [ page, items, prevNext, otherArtists ] ) => { //create the page
 			page.items = items
+			page.previous = prevNext.previous
+			page.next = prevNext.next
+			if (otherArtists.length > 0) page.details.push({
+				'name': 'Artists',
+				'iconList': otherArtists
+			})
 			return page
 		})
 

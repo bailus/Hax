@@ -1,5 +1,5 @@
 import Page from '../js/page'
-import { makeJsLink } from '../js/util'
+import { makeJsLink, makeDetail } from '../js/util'
 
 export default (new Page({
 	'id': 'Addon',
@@ -10,31 +10,123 @@ export default (new Page({
 
 			const addonid = state['addonid']
 
-			return xbmc.get({
+			const getAddonDetails = xbmc.get({
 				'method': 'Addons.GetAddonDetails',
 				'params': {
-					'properties': [ "name", "version", "summary", "description", "author", "thumbnail", "broken", "enabled" ],
+					'properties': [
+						"name", 
+						"version", 
+						"summary", 
+						"description", 
+						"path", 
+						"author", 
+						"thumbnail", 
+						"disclaimer", 
+						"fanart", 
+						"dependencies", 
+						"broken", 
+						"extrainfo", 
+						"rating", 
+						"enabled"
+					],
 					'addonid': addonid
 				},
 				'cache': false
 			})
-			.then(result => result.addon || {})
-			.then(addon => ({
-				'thumbnail': addon.thumbnail ? xbmc.vfs2uri(addon.thumbnail) : 'img/icons/default/DefaultAddon.png',
-				'title': addon.name + ' v' + addon.version,
-				'subtitle': addon.summary,
-				'author': addon.author,
-				'description': addon.description,
+
+getAddonDetails.then(console.log)
+			const formatAddonDetails = getAddonDetails.then(x => {console.log(x); return x})
+			.then(({ addon: {
+				addonid,
+				label,
+				name,
+				version, 
+				summary, 
+				description, 
+				path, 
+				author, 
+				thumbnail, 
+				disclaimer, 
+				fanart, 
+				dependencies, 
+				broken, 
+				extrainfo, 
+				rating, 
+				votes,
+				enabled,
+				type
+			} }) => ({
+				'thumbnail': thumbnail ? xbmc.vfs2uri(thumbnail) : 'img/icons/default/DefaultAddon.png',
+				'title': name + ' v' + version,
+				'subtitle': author,
 				'actions': [
-					addon.enabled && {
+					enabled && {
 						'label': 'Run',
 						'link': makeJsLink(`xbmc.sendMessage('Addons.ExecuteAddon', { 'addonid': '${ addonid }' })`)
-					},
+					}
+				],
+				'details': [
 					{
-						'label': addon.enabled ? 'Disable' : 'Enable',
-						'link': makeJsLink(`xbmc.sendMessage('Addons.SetAddonEnabled', { 'addonid': '${ addonid }', 'enabled': 'toggle' }); pages.renderPage()`)
+						'class': 'status',
+						'name': 'Status',
+						'value': [
+							broken ? 'Marked as broken' : 'Marked as working' ,
+							enabled ? 'Enabled' : 'Disabled'
+						]
+					},
+					rating !== undefined && votes > 0 && {
+						'class': 'rating',
+						'name': 'Rating',
+						'flags': [
+							{
+								'class': 'starrating',
+								'value': Math.round(rating),
+								'caption': `(${votes} votes)`
+							}
+						]
+					},
+					summary !== undefined && summary.length > 0 && {
+						'class': 'summary',
+						'name': 'Summary',
+						'value': summary
+					},
+					description !== undefined && description.length > 0 && {
+						'class': 'description',
+						'name': 'Description',
+						'value': description
+					},
+					type !== undefined && type.length > 0 && {
+						'class': 'type',
+						'name': 'Type',
+						'links': [{
+							'label': type,
+							'link': '#page=Addons&type='+type
+						}]
+					},
+					extrainfo !== undefined && extrainfo.length > 0 && {
+						'class': 'extrainfo',
+						'name': 'More Information',
+						'value': extrainfo.map(({key,value}) => `${key}: ${value}`)
+					},
+					disclaimer !== undefined && disclaimer.length > 0 && {
+						'class': 'disclaimer',
+						'name': 'Disclaimer',
+						'value': disclaimer
+					},
+					dependencies !== undefined && dependencies.length > 0 && {
+						'class': 'dependencies',
+						'name': 'Dependencies',
+						'items': dependencies.map(({
+							addonid, optional, version
+						}) => ({
+							'label': addonid,
+							'link': `#page=Addon&addonid=${addonid}`,
+							'details': [ version, optional ? 'Optional' : 'Required' ]
+						}))
 					}
 				]
 			}))
+
+			return formatAddonDetails
 	}
 }));

@@ -15,53 +15,73 @@
 
 <div class="article-container space-around">
 
-	<nav id="previous">
-		{{#if previous}}<h5>Previous</h5>{{/if}}
-		<ul class="icon-list">
-			{{#previous}}
-				<li class="{{class}}">
-					{{>listItem}}
-				</li>
-			{{/previous}}
-		</ul>
-	</nav>
-
 	<article>
 
 		{{#if banner}}
 			<h1 class="banner">
-				<img src="{{banner}}" alt="{{title}}" title="{{title}}">
+				{{#if titleLink}}
+					<a href="{{titleLink}}">
+						<img src="{{banner}}" alt="{{title}}" title="{{title}}">
+					</a>
+				{{else}}
+					<img src="{{banner}}" alt="{{title}}" title="{{title}}">
+				{{/if}}
 			</h1>
 		{{/if}}
 
 		{{#if thumbnail}}
-			<div class="wrapper">
-				<div class="thumbnails">
-					{{#thumbnail}}
-						<div class="thumbnail">
-							<img src="{{.}}">
-						</div>
-					{{/thumbnail}}
+			<div class="thumbnails">
+
+				<div class="thumbnail previous {{class}}">
+					{{#previous}}
+						{{#link}}<a href="{{.}}" class="label">{{/link}}
+							<div class="thumbnailWrapper">
+								{{#thumbnail}}<img src="{{.}}">{{/thumbnail}}
+								{{#duration}}<span class="duration">{{.}}</span>{{/duration}}
+							</div>
+							{{#label}}<p class="label">{{.}}</p>{{/label}}
+						{{#link}}</a>{{/link}}
+					{{/previous}}
 				</div>
+
+				{{#if thumbnail}}
+					<div class="thumbnail">
+						{{#thumbnailLink}}<a href="{{.}}" class="label">{{/thumbnailLink}}
+							<div class="thumbnailWrapper">
+								{{#thumbnail}}<img src="{{.}}">{{/thumbnail}}
+								{{#label}}<p class="label">{{.}}</p>{{/label}}
+							</div>
+						{{#thumbnailLink}}</a>{{/thumbnailLink}}
+					</div>
+				{{/if}}
+
+				<div class="thumbnail next {{class}}">
+					{{#next}}
+						{{#link}}<a href="{{.}}" class="label">{{/link}}
+							<div class="thumbnailWrapper">
+								{{#thumbnail}}<img src="{{.}}">{{/thumbnail}}
+								{{#duration}}<span class="duration">{{.}}</span>{{/duration}}
+							</div>
+							{{#label}}<p class="label">{{.}}</p>{{/label}}
+						{{#link}}</a>{{/link}}
+					{{/next}}
+				</div>
+
 			</div>
 		{{/if}}
-
-
 
 		
 		{{#if title}}<div class="titlebar">{{/if}}
 
 			{{#if title}}<div class="titles">{{/if}}
 			
-				{{#if title}}
-					<h1>
-						{{#if titleLink}}
-							<a href="{{titleLink}}">{{title}}</a>
-						{{else}}
-							{{title}}
-						{{/if}}
-					</h1>
-				{{/if}}
+				<h1>
+					{{#if titleLink}}
+						<a href="{{titleLink}}">{{title}}</a>
+					{{else}}
+						{{title}}
+					{{/if}}
+				</h1>
 
 				{{#if subtitle}}
 					<h2>
@@ -77,15 +97,16 @@
 
 			{{#if actions}}
 				<ul class="actions">
-					{{#actions}}
+					{{#actions}}{{#if .}}
 						<li class="action">
 							{{>listItem}}
 						</li>
-					{{/actions}}
+					{{/if}}{{/actions}}
 				</ul>
 			{{/if}}
 
 		{{#if title}}</div>{{/if}}
+
 
 		{{#if seasons}}
 			<h5><span>Seasons</span></h5>
@@ -168,16 +189,5 @@
 		{{/fanart}}
 
 	</article>
-
-	<nav id="next">
-		{{#if next}}<h5>Next</h5>{{/if}}
-		<ul class="icon-list">
-			{{#next}}
-				<li class="{{class}}">
-					{{>listItem}}
-				</li>
-			{{/next}}
-		</ul>
-	</nav>
 
 </div>

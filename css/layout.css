@@ -74,13 +74,16 @@ a img,:link img,:visited img {
 	}
 
 	.page .article-container > article {
-		width:700px;
+		max-width: 700px;
+		display: flex;
+		justify-content: flex-start;
+		flex-direction: column;
+		width: 100%;
 	}
 
 	.page .article-container > * {
 		flex-grow: 0;
 		flex-shrink: 1;
-		overflow:auto;
 	}
 
 	.page .article-container > nav {
@@ -97,9 +100,10 @@ a img,:link img,:visited img {
 	}
 
 	.page .article-container {
-		overflow: auto;
+		overflow-y: scroll;
 		flex-grow: 1;
 		flex-shrink: 1;
+		overflow-x: hidden;
 	}
 
 	.article-container > nav .icon-list .thumbnail span {
@@ -126,9 +130,81 @@ a img,:link img,:visited img {
 
 	.page article > *,
 	.page article > .wrapper > * {
-		max-width: 100%;
+		width: 100%;
+		z-index: 20;
 		flex-shrink: 0;
+	}
+
+	.page article > .items {
+		flex-grow: 1;
+	}
+
+	.page article .thumbnails {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		overflow-x: visible;
+		perspective: 800px;
+		z-index: 10;
+		margin: 20px 0;
+	}
+
+	.page article .thumbnails > * {
+		max-width: 50%;
+		text-align: center;
+	}
+
+	.page article .thumbnails .previous > *,
+	.page article .thumbnails .next > * {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.page article .thumbnails .previous,
+	.page article .thumbnails .next {
+		width: 25%;
+		z-index:-100;
+	}
+
+	.page article .thumbnails .previous img,
+	.page article .thumbnails .next img,
+	.page article .thumbnails .previous .label,
+	.page article .thumbnails .next .label {
+		opacity:0.666;
+	}
+
+	.page article .thumbnails .previous img,
+	.page article .thumbnails .next img {
+		width: 25%;
+		z-index:-100;
+	}
+
+	.page article .thumbnails .thumbnail img {
+		max-height:300px;
+	}
+	.page article .thumbnails > * {
+		max-height: 300px;
+	}
+
+	.page article .thumbnails .thumbnail img,
+	.page article .thumbnails > * {
 		flex-grow: 0;
+		width: auto;
+		flex-shrink: 1;
+	}
+
+
+	.page article .thumbnails .previous {
+		transform: rotateY(30deg) translateZ(-5px);
+	}
+	.page article .thumbnails .next {
+		transform: rotateY(-30deg) translateZ(-5px);
+	}
+
+	.page article .thumbnails p {
+		overflow:hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 
 	.page article > .wrapper {
@@ -141,15 +217,20 @@ a img,:link img,:visited img {
 		width: auto;
 	}
 
+	.page article h1.banner {
+		text-align: center;
+	}
+
 	.fanart {
 	    display: flex;
 	    position: absolute;
 	    left: 0;
 	    top: 0;
-	    z-index: -10;
+	    z-index: -10 !important;
 	    min-width: 100%;
-	    max-width: inherit !important;
 	    height: 100%;
+	    opacity: 0.1;
+	    align-self: center;
 	}
 
 /* Borders */

@@ -1,8 +1,9 @@
 .page[data-page="Directory"][data-media="pictures"] .items {
-	flex-direction: row;
+	flex-direction: row !important;
 	flex-wrap: wrap;
 }
-.page[data-page="Directory"][data-media="pictures"] .listItem.leaf {
+.page[data-page="Directory"][data-media="pictures"] .listItem.leaf,
+.page[data-page="Directory"][data-media="pictures"] .listItem.leaf > a {
 	width: 120px;
 	flex-direction: column;
 	flex-wrap: nowrap;
@@ -10,6 +11,7 @@
 }
 .page[data-page="Directory"][data-media="pictures"] .listItem.leaf .thumbnail {
 	height: 120px;
+	width: 120px;
 }
 .page[data-page="Directory"][data-media="pictures"] .listItem.leaf > * {
 	width: 100%;

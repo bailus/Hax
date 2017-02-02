@@ -18,20 +18,8 @@ export default (new Page({
 			'params': {
 				'properties': [ //http://kodi.wiki/view/JSON-RPC_API/v6#Video.Fields.TVShow
 					"title", 
-					"genre", 
-					"rating", 
-					"studio", 
-					"mpaa", 
-					"cast", 
 					"episode", 
-					"votes", 
-					"lastplayed", 
-					"file", 
-					"originaltitle", 
-					"sorttitle", 
-					"episodeguide", 
-					"dateadded", 
-					"tag"
+					"originaltitle"
 				],
 				'tvshowid': tvshowid
 			},
@@ -45,9 +33,12 @@ export default (new Page({
 				'properties': [ //http://kodi.wiki/view/JSON-RPC_API/v6#Video.Fields.Season
 					"season", 
 					"showtitle", 
+					"playcount", 
 					"episode", 
+					"fanart", 
+					"thumbnail", 
+					"tvshowid", 
 					"watchedepisodes", 
-					"thumbnail",
 					"art"
 				],
 				'tvshowid': tvshowid
@@ -84,6 +75,17 @@ export default (new Page({
 			return o
 		})
 
+		function makeDetail(page, name, key, value) {
+			return value !== undefined && value.length > 0 && {
+				'class': key,
+				'name': name,
+				'links': (Array.isArray(value) ? value : [  ])
+						.map(v => ({
+							'label': v,
+							'link': `#page=${page}&${key}=${v}`
+						}))
+			}
+		}
 		let getDetails = Promise.all([ getShowDetails, getSeasonDetails, getPrevNext ])
 		.then(([ show, season, prevNext ]) => ({
 			previous: prevNext.previous,
@@ -91,46 +93,18 @@ export default (new Page({
 			title: season.showtitle,
 			titleLink: `#page=TV Show&tvshowid=${ tvshowid }`,
 			subtitle: season.label,
-			banner: season.art && xbmc.vfs2uri(season.art['season.banner'] || season.art['tvshow.banner']),
+			banner: season.art && xbmc.vfs2uri(season.art['tvshow.banner']),
+			thumbnail: season.thumbnail && xbmc.vfs2uri(season.thumbnail),
 			fanart: xbmc.vfs2uri(season.art['tvshow.fanart']),
 			details: [
 				{
-					name: 'Tag',
-					links: (Array.isArray(show.tag) ? show.tag : [ show.tag ])
-								.map(tag => ({
-									label: tag,
-									link: '#page=TV Shows&tag='+tag
-								}))
-				},
-				{ 'name': 'Rating', 'value': `${ Math.round(show.rating*10)/10 }/10 (${ show.votes } votes)` },
-				{ 'name': 'MPAA Rating', 'value': show.mpaa },
-				{
-					name: 'Genre',
-					links: (Array.isArray(show.genre) ? show.genre : [ ])
-								.map(genre => ({
-									label: genre,
-									link: '#page=TV Shows&genre='+genre
-								}))
-				},
-				{
-					name: 'Studio',
-					links: (Array.isArray(show.studio) ? show.studio : [ ])
-								.map(studio => ({
-									label: studio,
-									link: '#page=TV Shows&studio='+studio
-								}))
-				},
-				{ 'name': 'Statistics', 'links': [
-					{ 'label': `Episodes: ${ season.episode } (${ season.watchedepisodes } watched)` },
-					{ 'label': `Added ${ moment(show.dateadded).format('LL') }` }
-				] }
-			],
-			cast: show.cast.map(actor => ({
-				label: actor.name,
-				details: actor.role,
-				thumbnail: actor.thumbnail ? xbmc.vfs2uri(actor.thumbnail) : 'img/icons/default/DefaultActor.png',
-				link: '#page=TV Shows&actor='+actor.name
-			}))
+					'class': '',
+					'name': 'Statistics',
+					'links': [
+						{ 'label': `Episodes: ${ season.episode } (${ season.watchedepisodes } watched)` }
+					]
+				}
+			]
 		}))
 		
 
@@ -152,26 +126,31 @@ export default (new Page({
 			episode,
 			art={}
 		}) => ({
-			link: `#page=Episode&episodeid=${ episodeid }`,
-			label: title,
-			thumbnail: xbmc.vfs2uri(art.thumb) || 'img/icons/default/DefaultVideo.png',
-			season: `Season ${ season }`,
-			details: [ seconds2string(runtime), lastplayed ? 'Last played '+moment(lastplayed).format('LL') : undefined ],
-			number: episode,
-			actions: [
+			'link': `#page=Episode&episodeid=${ episodeid }`,
+			'label': title,
+			'thumbnail': xbmc.vfs2uri(art.thumb) || 'img/icons/default/DefaultVideo.png',
+			'season': `Season ${ season }`,
+			'details': [
+				lastplayed ? 'Last played '+moment(lastplayed).calendar() : undefined,
+				seconds2string(runtime)
+			],
+			'number': episode,
+			'actions': [
 				{
-					label: '▶',
-					link: makeJsLink(`xbmc.Play({ 'episodeid': ${ episodeid } }, 1)`)
+					'label': '▶',
+					'link': makeJsLink(`xbmc.Play({ 'episodeid': ${ episodeid } }, 1)`)
 				}
 			]
 		})))
 
 		return Promise.all([ getDetails, getEpisodes ])
 		.then(([ page, episodes ]) => {
-			page.items = [ {
-				label: 'Episodes',
-				items: episodes
-			} ]
+			page.details.splice(0, 0, {
+				'items': [ {
+					'label': 'Episodes',
+					'items': episodes
+				} ]
+			})
 			return page
 		})
 

@@ -12,7 +12,7 @@ export default (function () {
 	}
 	function secondsToShortString(s) {
 		const seconds = Math.round(s%60)
-		const minutes = Math.floor(s/60)
+		const minutes = Math.floor((s/60)%60)
 		const hours = Math.floor(s/3600)
 		return (hours > 0 ? hours + ':' : '') +
 				(minutes < 10 ? '0' : '') + minutes + ':' +

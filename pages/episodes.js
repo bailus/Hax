@@ -25,7 +25,6 @@ export default (new Page({
 			{ name: 'Tag', key: 'tag', 'type': 'string' }
 		]
 		const filter = Filter.fromState(state, fields)
-
 		let getEpisodes = xbmc.get({
 			method: 'VideoLibrary.GetEpisodes',
 			params: {
@@ -37,33 +36,32 @@ export default (new Page({
 					'episode',
 					'season',
 					'runtime',
-					'lastplayed'
+					'lastplayed',
+					'cast'
 				],
-				'filter': filter.out()
+				'filter': filter.out(),
+				'limits': state['limit'] === undefined ? undefined : {
+					end: state['limit']
+				}
 			},
 			cache: true
 		})
 		.then(({ episodes=[] }) => episodes.map(episode => ({
-			show: episode.showtitle,
-			link: '#page=Episode&episodeid='+episode.episodeid,
-			label: episode.title || '',
-			thumbnail: episode.thumbnail ? xbmc.vfs2uri(episode.thumbnail) : 'img/icons/default/DefaultVideo.png',
-			season: 'Season ' + episode.season,
-			thumbnailWidth: '89px',
-			details: [ seconds2string(episode.runtime), episode.lastplayed ? 'Last played '+ymd2string(episode.lastplayed) : undefined ],
-			number: episode.episode,
-			actions: [
+			'link': '#page=Episode&episodeid='+episode.episodeid,
+			'label': `${episode.season}x${episode.episode < 10 ? '0' : ''}${episode.episode}. ${episode.title}`,
+			'thumbnail': episode.thumbnail ? xbmc.vfs2uri(episode.thumbnail) : 'img/icons/default/DefaultVideo.png',
+			'details': [ episode.showtitle, episode.runtime ? seconds2string(episode.runtime) : undefined ],
+			'actions': [
 				{
-					label: '▶',
-					link: makeJsLink(`xbmc.Play({ 'episodeid': ${episode.episodeid} }, 1)`)
+					'label': '▶',
+					'link': makeJsLink(`xbmc.Play({ 'episodeid': ${episode.episodeid} }, 1)`)
 				}
 			]
 		})))
 
 		return getEpisodes.then(items => ({
-			title: 'Episodes',
-			subtitle: filter.toString(),
-			items: items
+			'title': filter.toString(),
+			'items': items
 		}))
 
 	}

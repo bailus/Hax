@@ -1,5 +1,6 @@
 import Page from '../js/page'
 import { makeJsLink } from '../js/util'
+import Filter from '../js/xbmcFilter'
 
 export default (new Page({
 	'id': 'Albums',
@@ -12,10 +13,11 @@ export default (new Page({
 	'parentState': state => ({ 'page': 'Menu', 'media': 'Music' }),
 	'data': function (state) {
 
-		let filter = xbmc.makeFilter(state, [
-			{ name: 'Genre', key: 'genre', type: String },
-			{ name: 'Artist', key: 'artist', type: String }
-		])
+		const fields = [
+			{ name: 'Genre', key: 'genre', type: 'string' },
+			{ name: 'Artist', key: 'artist', type: 'string' }
+		]
+		const filter = Filter.fromState(state, fields)
 
 		let group = state['group'] || this.groupby
 
@@ -23,19 +25,15 @@ export default (new Page({
 			method: 'AudioLibrary.GetAlbums',
 			params: {
 				'properties': [ 'title', 'artist', 'year', 'thumbnail' ],
-				'filter': (filter || {}).filter
+				'filter': filter.out()
 			},
 			cache: true
 		})
 		.then(result => ({
-			pageName: 'Albums' + (
-				filter ? ' by ' + filter.name : 
-				group ? ' by '+group :
-				''),
-			title: filter ? ''+filter.value : undefined,
+			title: filter.toString(),
 			items: (result.albums || []).map((album, i) => ({
-					title: album.label[0].toUpperCase(),
 					label: album.label,
+					title: album.label[0],
 					details: album.artist,
 					year: album.year,
 					link: '#page=Album&albumid='+album.albumid,

@@ -26,6 +26,25 @@
 	.group.selected
 	{ font-weight: bold; }
 
+	.details .listItem a, .details .listItem a:hover, .details .listItem a:visited {
+		text-decoration:none;
+	}
+
+	.details a, .details a:hover, .details a:visited {
+		text-decoration:underline;
+	}
+
+	.details .icon-list a,
+	.details .icon-list a:hover,
+	.details .icon-list a:visited {
+		text-decoration:none;
+	}
+
+	.label .line2 {
+		font-style: italic;
+		justify-content: space-between;
+	}
+
 
 /* Font size */
 	
@@ -33,7 +52,7 @@
 	{ font-size: 13px; }
 
 	h1
-	{ font-size: 118%; }
+	{text-align: center;font-size: 118%;width: 90%;}
 	
 	h2
 	{ font-size: 115%; }
@@ -52,8 +71,9 @@
 	.listItem.leaf
 	{ font-size: 100%; }
 
-	.line2
-	{ font-size:  89%; }
+	.line2,
+	article > .details > li figcaption
+	{font-size: 85%;}
 
 
 /* White space */
@@ -65,26 +85,31 @@
 	.icon-list
 	article > .items
 	{
-		margin-top: 1.2em;
+		margin-top: 1.6em;
 		margin-bottom: 0.4em;
+	}
+
+	h5 {
+		padding: 0 0.3333ch;
 	}
 
 	.details,
 	h1.banner
-	{ margin-top: 0; }
+	{margin-top: 0;}
 
 	h2
-	{ margin-top: 0.4em; }
+	{margin-top: 0.4em;text-align: center;width: 90%;}
 
 	.listItem.leaf > .label
 	{
 		margin-top: 0;
 	}
 
-	.icon-list .line1 {
+	.icon-list .label > span {
 		margin-top: 0.4em;
 		margin-bottom: 0.3em;
 	}
 	.icon-list .line2 > * {
 		margin-top: 0.2em;
+		display: block;
 	}
