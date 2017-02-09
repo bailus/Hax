@@ -67,7 +67,7 @@ export default (new Page({
 			const page = {
 				'title': `${ displayartist || artist.join(', ')}`,
 				'titleLink': `#page=Artist&artistid=${ artistid }`,
-				'subtitle': `(${year}) ${title}`,
+				'label': `(${year}) ${title}`,
 				'thumbnail': thumbnail ? xbmc.vfs2uri(thumbnail) : 'img/icons/default/DefaultAlbumCover.png',
 				'fanart': xbmc.vfs2uri(fanart),
 				'details': [
@@ -107,16 +107,16 @@ export default (new Page({
 						'value': description
 					}
 				],
-				actions: [
+				'actions': [
 					{
-						label: 'Play',
-						thumbnail: 'img/icons/infodialogs/play.png',
-						link: makeJsLink(`xbmc.Play({ 'albumid': (${ albumid }) }, 0)`)
+						'label': 'Play',
+						'thumbnail': 'img/icons/infodialogs/play.png',
+						'link': makeJsLink(`xbmc.Play({ 'albumid': (${ albumid }) }, 0)`)
 					},
 					{
-						label: 'Add to playlist',
-						thumbnail: 'img/buttons/add.png',
-						link: makeJsLink(`xbmc.sendMessage('Playlist.add', { 'playlistid': 0, 'item': { 'albumid': (${ albumid }) } })`)
+						'label': 'Add to playlist',
+						'thumbnail': 'img/buttons/add.png',
+						'link': makeJsLink(`xbmc.sendMessage('Playlist.add', { 'playlistid': 0, 'item': { 'albumid': (${ albumid }) } })`)
 					}
 				]
 			}
@@ -149,13 +149,16 @@ export default (new Page({
 			albumartist
 		}) => ({
 			//thumbnail: 'img/icons/default/DefaultAudio.png',
-			label: (displayartist != albumartist ? `${displayartist} - ` : '') + title,
-			number: track,
-			details: seconds2shortstring(duration),
-			actions: [
+			'label': title,
+			'number': track,
+			'details': [
+				(displayartist != albumartist ? displayartist : ''),
+				seconds2shortstring(duration)
+			],
+			'actions': [
 				{
-					label: '▶',
-					link: makeJsLink(`xbmc.Play({ 'albumid': ${albumid} }, 0, ${track-1})`)
+					'label': '▶',
+					'link': makeJsLink(`xbmc.Play({ 'albumid': ${albumid} }, 0, ${track-1})`)
 				}
 			]
 		})))
@@ -199,15 +202,15 @@ export default (new Page({
 					const next = albums[s+1]
 					if (curr.albumid == albumid) {
 						o = {
-							previous: prev === undefined ? undefined : {
-								label: `(${prev.year}) ${prev.title}`,
-								link: `#page=Album&albumid=${ prev.albumid }`,
-								thumbnail: prev.thumbnail ? xbmc.vfs2uri(prev.thumbnail) : 'img/icons/default/DefaultAlbumCover.png'
+							'previous': prev === undefined ? undefined : {
+								'label': `(${prev.year}) ${prev.title}`,
+								'link': `#page=Album&albumid=${ prev.albumid }`,
+								'thumbnail': prev.thumbnail ? xbmc.vfs2uri(prev.thumbnail) : 'img/icons/default/DefaultAlbumCover.png'
 							},
-							next: next === undefined ? undefined : {
-								label: `(${next.year}) ${next.title}`,
-								link: `#page=Album&albumid=${ next.albumid }`,
-								thumbnail: next.thumbnail ? xbmc.vfs2uri(next.thumbnail) : 'img/icons/default/DefaultAlbumCover.png'
+							'next': next === undefined ? undefined : {
+								'label': `(${next.year}) ${next.title}`,
+								'link': `#page=Album&albumid=${ next.albumid }`,
+								'thumbnail': next.thumbnail ? xbmc.vfs2uri(next.thumbnail) : 'img/icons/default/DefaultAlbumCover.png'
 							}
 						}
 					}

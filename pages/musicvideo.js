@@ -35,7 +35,8 @@ export default (new Page({
 					"resume", 
 					"dateadded", 
 					"tag", 
-					"art"
+					"art",
+					"rating"
 				],
 				'musicvideoid': musicvideoid
 			}
@@ -64,45 +65,41 @@ export default (new Page({
 			dateadded,
 			tag,
 			art,
-			label
+			label,
+			rating,
+			votes
 		}) => ({
 			'title': artist,
-			'titleLink': `#page=Music Videos&artist=${ artist }`,
-			'subtitle': label,
+			'titleLink': `#page=Artist&artist=${ artist }`,
+			'subtitle': album + (track > 0 ? `(Track ${ track })` : ''),
+			'label': label,
 			'thumbnail': xbmc.vfs2uri(thumbnail),
 			'fanart': xbmc.vfs2uri(fanart),
 			'details': [
-				{
-					'name': 'Tag',
-					'links': (Array.isArray(tag) ? tag : [ tag ])
-								.map(tag => ({
-									'label': tag,
-									'link': '#page=Music Videos&tag='+tag
-								}))
+				rating !== undefined && votes > 0 && {
+					'class': 'rating',
+					'name': 'Rating',
+					'flags': [
+						{
+							'class': 'starrating',
+							'value': Math.round(rating),
+							'caption': `(${votes} votes)`
+						}
+					]
 				},
-				{
-					'name': 'Album',
-					'links': [{
-						'label': `${album} (Track ${ track })`
-						//'link': '#page=Album&albumid='+albumid
-					}]
+				plot !== undefined && plot.length > 0 && {
+					'class': 'plot',
+					'name': 'Plot',
+					'value': plot
 				},
-				{
-					'name': 'Year',
-					'links': [{
-						'label': year,
-						'link': '#page=Music Videos&year='+year
-					}]
+				runtime !== undefined && runtime.length > 0 && {
+					'class': 'runtime',
+					'name': 'Runtime',
+					'value': moment.duration(runtime, 'seconds').humanize()
 				},
-				{
-					'name': 'Genre',
-					'links': (Array.isArray(genre) ? genre : [ genre ])
-								.map(genre => ({
-									'label': genre,
-									'link': '#page=Music Videos&genre='+genre
-								}))
-				},
-				{ 'name': 'Plot', 'value': plot },
+				makeDetail('Videos', 'Studio', 'studio', studio),
+				makeDetail('Music Videos', 'Genre', 'genre', genre),
+				makeDetail('Music Videos', 'Tag', 'tag', tag),
 				{
 					'name': 'Director',
 					'links': (Array.isArray(director) ? director : [ director ])
@@ -111,21 +108,13 @@ export default (new Page({
 									'link': '#page=Videos&director='+director
 								}))
 				},
-				{
-					'name': 'Studio',
-					'links': (Array.isArray(studio) ? studio : [ studio ])
-								.map(studio => ({
-									'label': studio,
-									'link': '#page=Videos&studio='+studio
-								}))
-				},
 				{ 'name': 'Statistics', 'links': [
 					{ 'label': `Runtime ${ seconds2string(runtime) }` },
 					{ 'label': `Played ${ playcount } times` },
 					{ 'label': lastplayed instanceof String && lastplayed.length > 0 ? `Last Played ${ moment(lastplayed).format('LL') }` : undefined },
 					{ 'label': `Added ${ moment(dateadded).format('LL') }` }
 				] },
-				{
+				file !== undefined && file.length > 0 && {
 					'name': 'File',
 					'links': [
 						{

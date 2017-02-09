@@ -47,12 +47,12 @@ export default (new Page({
 		const getPrevNext = getEpisodeDetails.then(({ tvshowid, season, episodeid }) => {
 
 			return xbmc.get({
-				method: 'VideoLibrary.GetEpisodes',
-				params: {
+				'method': 'VideoLibrary.GetEpisodes',
+				'params': {
 					'properties': [ 'tvshowid', 'title', 'episode', 'art' ],
 					'tvshowid': tvshowid
 				},
-				cache: true
+				'cache': true
 			})
 			.then(({ episodes=[] }) => {
 				let o = {}
@@ -62,15 +62,15 @@ export default (new Page({
 					const next = episodes[s+1]
 					if (curr.episodeid == episodeid) {
 						o = {
-							previous: prev === undefined ? undefined : {
-								label: prev.label,
-								link: `#page=Episode&episodeid=${ prev.episodeid }`,
-								thumbnail: prev.art.thumb ? xbmc.vfs2uri(prev.art.thumb) : 'img/icons/default/DefaultVideo.png'
+							'previous': prev === undefined ? undefined : {
+								'label': prev.label,
+								'link': `#page=Episode&episodeid=${ prev.episodeid }`,
+								'thumbnail': prev.art.thumb ? xbmc.vfs2uri(prev.art.thumb) : 'img/icons/default/DefaultVideo.png'
 							},
-							next: next === undefined ? undefined : {
-								label: next.label,
-								link: `#page=Episode&episodeid=${ next.episodeid }`,
-								thumbnail: next.art.thumb ? xbmc.vfs2uri(next.art.thumb) : 'img/icons/default/DefaultVideo.png'
+							'next': next === undefined ? undefined : {
+								'label': next.label,
+								'link': `#page=Episode&episodeid=${ next.episodeid }`,
+								'thumbnail': next.art.thumb ? xbmc.vfs2uri(next.art.thumb) : 'img/icons/default/DefaultVideo.png'
 							}
 						}
 					}
@@ -119,15 +119,18 @@ export default (new Page({
 			art,
 			label
 		}, prevNext ]) => ({
-			previous: prevNext.previous,
-			next: prevNext.next,
-			title: showtitle,
-			titleLink: `#page=Season&tvshowid=${ tvshowid }&season=${ season }`,
-			subtitle: `${season}x${ (episode < 10 ? '0' : '') + episode }. ${label}`,
-			thumbnail: xbmc.vfs2uri(art['thumb'] || art['season.poster'] || art['tvshow.poster']),
-			banner: xbmc.vfs2uri(art['season.banner'] || art['tvshow.banner']),
-			fanart: xbmc.vfs2uri(art['tvshow.fanart']),
-			details: [
+			'previous': prevNext.previous,
+			'next': prevNext.next,
+			'titleLink': `#page=TV Show&tvshowid=${ tvshowid }`,
+			'title': showtitle,
+			'subtitleLink': `#page=Season&tvshowid=${ tvshowid }&season=${ season }`,
+			'bannerLink': `#page=Season&tvshowid=${ tvshowid }&season=${ season }`,
+			'subtitle': `Season ${season}`,
+			'label': `${season}x${ (episode < 10 ? '0' : '') + episode }. ${label}`,
+			'thumbnail': xbmc.vfs2uri(art['thumb'] || art['season.poster'] || art['tvshow.poster']),
+			'banner': xbmc.vfs2uri(art['season.banner'] || art['tvshow.banner']),
+			'fanart': xbmc.vfs2uri(art['tvshow.fanart']),
+			'details': [
 				rating !== undefined && votes > 0 && {
 					'class': 'rating',
 					'name': 'Rating',
@@ -179,36 +182,36 @@ export default (new Page({
 					]
 				}
 			],
-			actions: [
-				{	label: 'Play',
-					thumbnail: 'img/icons/infodialogs/play.png',
-					link: makeJsLink(`xbmc.Play({ 'episodeid': (${ episodeid }) }, 1)`)
+			'actions': [
+				{	'label': 'Play',
+					'thumbnail': 'img/icons/infodialogs/play.png',
+					'link': makeJsLink(`xbmc.Play({ 'episodeid': (${ episodeid }) }, 1)`)
 				},
-				{	label: 'Add to Playlist',
-					thumbnail: 'img/buttons/add.png',
-					link: makeJsLink(`xbmc.sendMessage('Playlist.Add',{ 'playlistid': 1, 'item': { 'episodeid': (${ episodeid }) } })`)
+				{	'label': 'Add to Playlist',
+					'thumbnail': 'img/buttons/add.png',
+					'link': makeJsLink(`xbmc.sendMessage('Playlist.Add',{ 'playlistid': 1, 'item': { 'episodeid': (${ episodeid }) } })`)
 				}
 			],
-			cast: (function () {
+			'cast': (function () {
 				let out = (Array.isArray(director) ? director : [ director ])
 					.map(director => ({
-						label: director,
-						details: 'Director',
-						thumbnail: director.thumbnail ? xbmc.vfs2uri(director.thumbnail) : 'img/icons/default/DefaultDirector.png',
-						link: '#page=Videos&director='+director
+						'label': director,
+						'details': 'Director',
+						'thumbnail': director.thumbnail ? xbmc.vfs2uri(director.thumbnail) : 'img/icons/default/DefaultDirector.png',
+						'link': '#page=Videos&director='+director
 					}))
 				out = out.concat((Array.isArray(writer) ? writer : [ writer ])
 					.map(writer => ({
-						link: '#page=Videos&writers='+writer,
-						thumbnail: writer.thumbnail ? xbmc.vfs2uri(writer.thumbnail) : 'img/icons/default/DefaultWriter.png',
-						label: writer,
-						details: 'Writer'
+						'link': '#page=Videos&writers='+writer,
+						'thumbnail': writer.thumbnail ? xbmc.vfs2uri(writer.thumbnail) : 'img/icons/default/DefaultWriter.png',
+						'label': writer,
+						'details': 'Writer'
 					})))
 				out = out.concat(cast.map(actor => ({
-					label: actor.name,
-					details: actor.role || '',
-					thumbnail: actor.thumbnail ? xbmc.vfs2uri(actor.thumbnail) : 'img/icons/default/DefaultActor.png',
-					link: '#page=Videos&actor='+actor.name
+					'label': actor.name,
+					'details': actor.role || '',
+					'thumbnail': actor.thumbnail ? xbmc.vfs2uri(actor.thumbnail) : 'img/icons/default/DefaultActor.png',
+					'link': '#page=Videos&actor='+actor.name
 				})))
 				return out
 			})()

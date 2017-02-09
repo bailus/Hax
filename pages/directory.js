@@ -1,6 +1,7 @@
 import Page from '../js/page'
 import { makeJsLink } from '../js/util'
 import moment from 'moment'
+import { getSlash, trimFilename, joinFilenameComponents, joinDirectoryComponents } from '../js/filename'
 
 export default (new Page({
 	'id': 'Directory',
@@ -33,30 +34,24 @@ export default (new Page({
 		}
 
 
-		const pathSplit = path => path === undefined ?
-							[] :
-							path.split(new RegExp('[\\\\/]'))
+		const slash = getSlash([ root, path ])
+
 		return xbmc.get({
 			method: 'Files.GetDirectory',
 			params: {
 				'properties': [ 'duration', 'thumbnail', 'file', 'size', 'mimetype', 'lastmodified', 'art' ],
 				'sort': { 'method': sortby, 'order': order },
-				'directory': root + (path || ''),
+				'directory': joinDirectoryComponents([ root, path ], slash),
 				'media': media
 			}
 		})
 		.then(result => result.files || [])
 		.then(files => files.map(file => {
-		console.log(file)
-			let f = pathSplit(decodeURIComponent(file.file))
-			let filename = f.pop()
-			let pathDelimiter = typeof path === 'string' && root.search(/\\/) === -1 ? "/" : "\\"
-			let pathname = typeof path === 'string' ? path.replace(/^\/+|\/+$|^\\+|\\+$/g, '') + pathDelimiter : ''
-
-			if (!filename) filename = f.pop()
+			let filename = trimFilename(decodeURIComponent(file.file)).split(slash).pop()
 
 			if (file.filetype === 'directory') {
-				file.link = '#page=Directory&media='+media+'&sortby='+sortby+'&order='+order+'&root='+encodeURIComponent(root)+'&path='+encodeURIComponent((path || '') + '/' + filename)
+
+				file.link = '#page=Directory&media='+media+'&sortby='+sortby+'&order='+order+'&root='+encodeURIComponent(root)+'&path='+encodeURIComponent(joinDirectoryComponents([ path, filename ], slash))
 				file.thumbnail = file.thumbnail ? xbmc.vfs2uri(file.thumbnail) : 'img/icons/default/DefaultFolder.png'
 			}
 			else {
@@ -67,7 +62,7 @@ export default (new Page({
 						link: makeJsLink(`xbmc.Open({ 'item': { 'file': '${xbmc.vfs2uri(file.file)}'  } })`)
 					}
 				]
-				file.link = `#page=File&media=${ media }&sortby=${ sortby }&order=${ order }&root=${ encodeURIComponent(root) }&path=${ encodeURIComponent((pathname || '')) }&filename=${ encodeURIComponent(filename) }`
+				file.link = `#page=File&media=${ media }&sortby=${ sortby }&order=${ order }&root=${ encodeURIComponent(root) }&path=${ encodeURIComponent(path || '') }&filename=${ encodeURIComponent(filename) }`
 
 				//if (media === 'pictures')
 				//	file.thumbnail = file.thumbnail || file.file
@@ -88,12 +83,14 @@ export default (new Page({
 		}))
 		.then(items => { //add up button
 
+			const path = trimFilename(state['path'])
+
 			//don't put an up button on top level directories
-			if (!path) return items
+			if (path.length <= 0) return items
 			
-			let parentPath = pathSplit(path)
-			parentPath.pop()
-			parentPath = parentPath.join('/')
+			const splitPath = path.split(slash)
+			splitPath.pop()
+			const parentPath = joinDirectoryComponents(splitPath, slash)
 
 			items.unshift({
 				'link': '#page=Directory&media='+media+'&sortby='+sortby+'&order='+order+'&root='+encodeURIComponent(root)+'&path='+encodeURIComponent(parentPath),
@@ -106,12 +103,12 @@ export default (new Page({
 		})
 		.then(items => {
 
-			let splitPath = (path ? pathSplit(path) : [])			
+			let splitPath = (path ? path.split(slash) : [])			
 			let p = []
 			let pathString = ''
 			while (splitPath.length > 0) {
 				let label = splitPath.shift()
-				pathString += label + '/'
+				pathString += label + slash
 				if (label)
 					p.push({
 						'link': '#page=Directory&media='+media+'&sortby='+sortby+'&order='+order+'&root='+encodeURIComponent(root)+'&path='+encodeURIComponent(pathString),
@@ -127,24 +124,24 @@ export default (new Page({
 
 
 			return {
-				items: items,
-				options: [
+				'items': items,
+				'options': [
 					{
-						id: 'path',
-						label: 'Path',
-						items: p
+						'id': 'path',
+						'label': 'Path',
+						'items': p
 					},
 					{
-						id: 'sort',
-						label: 'Sort By',
-						items: [
-							{ label: 'Name', sortby: 'label', order: 'ascending' },
-							{ label: 'Size', sortby: 'size', order: 'descending' },
-							{ label: 'Date', sortby: 'date', order: 'descending' }
+						'id': 'sort',
+						'label': 'Sort By',
+						'items': [
+							{ 'label': 'Name', 'sortby': 'label', 'order': 'ascending' },
+							{ 'label': 'Size', 'sortby': 'size', 'order': 'descending' },
+							{ 'label': 'Date', 'sortby': 'date', 'order': 'descending' }
 						].map(item => ({
-								label: item.label + (sortby === item.sortby ? { 'ascending': ' ↑', 'descending': ' ↓' }[order] : ''),
+								'label': item.label + (sortby === item.sortby ? { 'ascending': ' ↑', 'descending': ' ↓' }[order] : ''),
 								'class': sortby === item.sortby ? 'selected' : undefined,
-								link: sortby === item.sortby ?
+								'link': sortby === item.sortby ?
 										'#page=Directory&media='+media+'&sortby='+item.sortby+'&order='+inverseOrder+'&root='+encodeURIComponent(root)+'&path='+encodeURIComponent(pathString) :
 										'#page=Directory&media='+media+'&sortby='+item.sortby+'&order='+item.order+'&root='+encodeURIComponent(root)+'&path='+encodeURIComponent(pathString)
 						}))

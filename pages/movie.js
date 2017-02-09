@@ -56,57 +56,57 @@ export default (new Page({
 		//.then(x => {console.log(x);return x})
 		.then(({ moviedetails={} }) => moviedetails)
 
-getMovieDetails.then(console.log)
-		const getPrevNext = getMovieDetails.then(({ setid }) => {
+		const getMovieSetDetails = getMovieDetails.then(({ setid }) => {
 			if (!setid) return Promise.resolve({})
-
 			return xbmc.get({
-				'method': 'VideoLibrary.GetMovieSetDetails', //http://kodi.wiki/view/JSON-RPC_API/#VideoLibrary.GetMovieSetDetails
-				'params': {
-					'setid': +setid,
-					'properties': [ ],
-					'movies': {
-						'properties': [ //http://kodi.wiki/view/JSON-RPC_API/#Video.Fields.Movie
-							"title", 
-							"year", 
-							"thumbnail"
-						],
-						'sort': {
-							'method': 'date'
-						}
-					}
-				},
-				cache: true
-			})
-			.then(({ setdetails={} }) => {
-				const movies = setdetails.movies || []
-				let o = {}
-
-				console.log(movies)
-
-				movies.forEach((curr, s) => {
-					const prev = movies[s-1]
-					const next = movies[s+1]
-					if (curr.movieid == movieid) {
-						o = {
-							previous: prev === undefined ? undefined : {
-								label: `(${prev.year}) ${prev.title}`,
-								link: `#page=Movie&movieid=${ prev.movieid }`,
-								thumbnail: prev.thumbnail ? xbmc.vfs2uri(prev.thumbnail) : 'img/icons/default/DefaultVideo.png'
-							},
-							next: next === undefined ? undefined : {
-								label: `(${next.year}) ${next.title}`,
-								link: `#page=Movie&movieid=${ next.movieid }`,
-								thumbnail: next.thumbnail ? xbmc.vfs2uri(next.thumbnail) : 'img/icons/default/DefaultVideo.png'
+					'method': 'VideoLibrary.GetMovieSetDetails', //http://kodi.wiki/view/JSON-RPC_API/#VideoLibrary.GetMovieSetDetails
+					'params': {
+						'setid': +setid,
+						'properties': [ ],
+						'movies': {
+							'properties': [ //http://kodi.wiki/view/JSON-RPC_API/#Video.Fields.Movie
+								"title", 
+								"year", 
+								"thumbnail"
+							],
+							'sort': {
+								'method': 'date'
 							}
 						}
-					}
-				})
+					},
+					cache: true
+			})
+		})
 
-				return o
+		const getPrevNext = getMovieSetDetails
+		.then(({ setdetails={} }) => {
+			const movies = setdetails.movies || []
+			let o = {}
+
+			console.log(movies)
+
+			movies.forEach((curr, s) => {
+				const prev = movies[s-1]
+				const next = movies[s+1]
+				if (curr.movieid == movieid) {
+					o = {
+						'previous': prev === undefined ? undefined : {
+							'label': `(${prev.year}) ${prev.title}`,
+							'link': `#page=Movie&movieid=${ prev.movieid }`,
+							'thumbnail': prev.thumbnail ? xbmc.vfs2uri(prev.thumbnail) : 'img/icons/default/DefaultVideo.png'
+						},
+						'next': next === undefined ? undefined : {
+							'label': `(${next.year}) ${next.title}`,
+							'link': `#page=Movie&movieid=${ next.movieid }`,
+							'thumbnail': next.thumbnail ? xbmc.vfs2uri(next.thumbnail) : 'img/icons/default/DefaultVideo.png'
+						}
+					}
+				}
 			})
 
+			return o
 		})
+
 
 		function makeDetail(page, name, key, value) {
 			return value !== undefined && value.length > 0 && {
@@ -120,7 +120,7 @@ getMovieDetails.then(console.log)
 			}
 		}
 
-		return Promise.all([ getMovieDetails, getPrevNext ])
+		return Promise.all([ getMovieDetails, getPrevNext, getMovieSetDetails ])
 		.then(([ {
 			title,
 			genre,
@@ -155,14 +155,20 @@ getMovieDetails.then(console.log)
 			dateadded,
 			tag,
 			art
-		}, prevNext ] = {}) => ({
-			previous: prevNext.previous,
-			next: prevNext.next,
-			title: `(${year}) ${title}` + ((originaltitle && originaltitle != title) ? ` [${originaltitle}]` : ''),
-			subtitle: tagline,
-			thumbnail: xbmc.vfs2uri(thumbnail),
-			fanart: xbmc.vfs2uri(fanart),
-			details: [
+		}, prevNext, { setdetails={} } ] = {}) => ({
+			'previous': prevNext.previous,
+			'next': prevNext.next,
+			'title': setdetails.label,
+			'titleLink': setdetails.setid && `#page=Movie Set&setid=${setdetails.setid}`,
+			'label': `(${year}) ${title}` + ((originaltitle && originaltitle != title) ? ` [${originaltitle}]` : ''),
+			'thumbnail': xbmc.vfs2uri(thumbnail),
+			'fanart': xbmc.vfs2uri(fanart),
+			'details': [
+				tagline !== undefined && tagline.length > 0 && {
+					'class': 'tagline',
+					'name': 'Tagline',
+					'value': tagline
+				},
 				rating !== undefined && votes > 0 && {
 					'class': 'rating',
 					'name': 'Rating',
@@ -190,7 +196,6 @@ getMovieDetails.then(console.log)
 					'value': moment.duration(runtime, 'seconds').humanize()
 				},
 				makeDetail('Videos', 'Studio', 'studio', studio),
-				makeDetail('Movies', 'Set', 'set', set),
 				makeDetail('Movies', 'Genre', 'genre', genre),
 				makeDetail('Movies', 'Tag', 'tag', tag),
 				makeDetail('Movies', 'Country', 'country', country),
@@ -247,23 +252,23 @@ getMovieDetails.then(console.log)
 			'cast': (function () {
 				let out = (Array.isArray(director) ? director : [ director ])
 					.map(director => ({
-						label: director,
-						details: 'Director',
-						thumbnail: director.thumbnail ? xbmc.vfs2uri(director.thumbnail) : 'img/icons/default/DefaultDirector.png',
-						link: '#page=Videos&director='+director
+						'label': director,
+						'details': 'Director',
+						'thumbnail': director.thumbnail ? xbmc.vfs2uri(director.thumbnail) : 'img/icons/default/DefaultDirector.png',
+						'link': '#page=Videos&director='+director
 					}))
 				out = out.concat((Array.isArray(writer) ? writer : [ writer ])
 					.map(writer => ({
-						link: '#page=Videos&writers='+writer,
-						thumbnail: writer.thumbnail ? xbmc.vfs2uri(writer.thumbnail) : 'img/icons/default/DefaultWriter.png',
-						label: writer,
-						details: 'Writer'
+						'link': '#page=Videos&writers='+writer,
+						'thumbnail': writer.thumbnail ? xbmc.vfs2uri(writer.thumbnail) : 'img/icons/default/DefaultWriter.png',
+						'label': writer,
+						'details': 'Writer'
 					})))
 				out = out.concat(cast.map(actor => ({
-					label: actor.name,
-					details: actor.role || '',
-					thumbnail: actor.thumbnail ? xbmc.vfs2uri(actor.thumbnail) : 'img/icons/default/DefaultActor.png',
-					link: '#page=Videos&actor='+actor.name
+					'label': actor.name,
+					'details': actor.role || '',
+					'thumbnail': actor.thumbnail ? xbmc.vfs2uri(actor.thumbnail) : 'img/icons/default/DefaultActor.png',
+					'link': '#page=Videos&actor='+actor.name
 				})))
 				return out
 			})()

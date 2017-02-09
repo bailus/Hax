@@ -92,6 +92,7 @@ article > .details > li {
 	flex-shrink: 0;
 	flex-wrap: wrap;
 	flex-grow: 0;
+	margin-top: 1.2em;
 }
 article > .details .detail {
     flex-grow: 1;
@@ -105,9 +106,13 @@ article > .details > li figure {
 }
 article > .details .links {
 	display: flex;
+	overflow-x: auto;
 }
 article > .details .links .link {
 	margin-right: 1em;
+	white-space: nowrap;
+	flex-grow: 0;
+	line-height: 38px;
 }
 article > .details > li > p {
 	text-align: justify;
@@ -155,8 +160,7 @@ article .groups {
 	justify-content: center;
 	align-items: center;
 }
-.groups > .group,
-.option > ul > li {
+.groups > .group, .option > ul > li {
 	white-space: nowrap;
 	display: flex;
 	height: 38px;

@@ -27,12 +27,12 @@ export default (new Page({
 		let getGenres = undefined
 		if (videoType !== undefined)
 			getGenres = xbmc.get({
-				method: 'VideoLibrary.GetGenres',
-				params: { 'type': videoType }
+				'method': 'VideoLibrary.GetGenres',
+				'params': { 'type': videoType }
 			})
 		if (audioType !== undefined)
 			getGenres = xbmc.get({
-				method: 'AudioLibrary.GetGenres'
+				'method': 'AudioLibrary.GetGenres'
 			})
 		
 		if (getGenres === undefined) throw "Page: Menu: invalid type"
@@ -42,8 +42,8 @@ export default (new Page({
 			'link': '#page=' + type + '&genre=' + encodeURIComponent(genre.label)
 		})))
 		.then(items => ({
-			pageName: type+' by Genre',
-			groups: items
+			'pageName': type+' by Genre',
+			'items': items
 		}))
 
 	}

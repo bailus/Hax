@@ -51,6 +51,7 @@
 	--bg_overlay: hsla(0, 0%, 100%, 0.2);
 	--button_focus: hsl(var(--hue_primary), var(--saturation_medium), 43%);
 	--button_background: hsl(var(--hue_primary), var(--saturation_medium), 23%);
+	--link_background: hsla(var(--hue_primary), var(--saturation_medium), 23%, 0.2);
 	--button_selected: hsla(0, 0%, 23%, 0.5);
 	--text: var(--white);
 	--text_shadow: hsla(0, 0%, 0%, 0.2);
@@ -98,6 +99,10 @@ header,
 .option > ul > li,
 .action {
 	background-color: var(--button_background);
+}
+
+.link {
+	background-color: var(--link_background);
 }
 
 .group:hover,

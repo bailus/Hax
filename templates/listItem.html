@@ -15,20 +15,25 @@
 
 	<div class="label">
 
-		{{#if details}}
-
-			<span class="line1">
-				{{label}}
-			</span>
-
-			<span class="line2">
-				{{#details}}<span>{{.}}</span>{{/details}}
-			</span>
+		{{#if search}}
+			<input type="search" placeholder="{{label}}" class="search" data-link="{{link}}" formaction="{{page}}">
 
 		{{else}}
-			<span>
-				{{label}}
-			</span>
+			{{#if details}}
+
+				<span class="line1">
+					{{label}}
+				</span>
+
+				<span class="line2">
+					{{#details}}<span>{{.}}</span>{{/details}}
+				</span>
+
+			{{else}}
+				<span>
+					{{label}}
+				</span>
+			{{/if}}
 		{{/if}}
 
 	</div>

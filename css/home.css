@@ -4,6 +4,7 @@
 .page[data-page="Home"] article {
 	align-content: space-around;
 	align-items: center;
+	flex-direction: column-reverse;
 }
 .page[data-page="Home"] .items {
 	display: flex;
@@ -12,7 +13,7 @@
 	justify-content: space-around;
 	align-content: center;
 	flex-grow: 1;
-	width: 500px;
+	width: 380px;
 	margin: 0;
 	max-width: 100%;
 }
@@ -35,10 +36,8 @@
 	line-height: normal;
 }
 .page[data-page="Home"] .label {
-	font-size: 12px;
+	font-size: 110%;
 	float: none;
-	height: 36px;
-	line-height: 18px;
 	margin:0;
 	padding:0;
 	white-space: inherit;
@@ -46,9 +45,10 @@
 .page[data-page="Home"] .actions {
 	flex-direction:row;
 }
-.page[data-page="Home"] .actions .action {
+.page[data-page="Home"] .actions .action, .page[data-page="Home"] .actions .action > a {
 	background-color:initial;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
 }
-.page[data-page="Home"] .actions .label {
-	display: none;
-}
+.page[data-page="Home"] .actions .label {font-size: 100%;}

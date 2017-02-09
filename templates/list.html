@@ -19,8 +19,8 @@
 
 		{{#if banner}}
 			<h1 class="banner">
-				{{#if titleLink}}
-					<a href="{{titleLink}}">
+				{{#if bannerLink}}
+					<a href="{{bannerLink}}">
 						<img src="{{banner}}" alt="{{title}}" title="{{title}}">
 					</a>
 				{{else}}
@@ -28,6 +28,28 @@
 				{{/if}}
 			</h1>
 		{{/if}}
+
+		{{#if title}}<div class="titles">{{/if}}
+		
+			<h1>
+				{{#if titleLink}}
+					<a href="{{titleLink}}">{{title}}</a>
+				{{else}}
+					{{title}}
+				{{/if}}
+			</h1>
+
+			{{#if subtitle}}
+				<h2>
+					{{#if subtitleLink}}
+						<a href="{{subtitleLink}}">{{subtitle}}</a>
+					{{else}}
+						{{subtitle}}
+					{{/if}}
+				</h2>
+			{{/if}}
+
+		{{#if title}}</div>{{/if}}
 
 		{{#if thumbnail}}
 			<div class="thumbnails">
@@ -49,7 +71,6 @@
 						{{#thumbnailLink}}<a href="{{.}}" class="label">{{/thumbnailLink}}
 							<div class="thumbnailWrapper">
 								{{#thumbnail}}<img src="{{.}}">{{/thumbnail}}
-								{{#label}}<p class="label">{{.}}</p>{{/label}}
 							</div>
 						{{#thumbnailLink}}</a>{{/thumbnailLink}}
 					</div>
@@ -69,44 +90,28 @@
 
 			</div>
 		{{/if}}
-
+	
+		{{#if label}}<div class="titles">
 		
-		{{#if title}}<div class="titlebar">{{/if}}
-
-			{{#if title}}<div class="titles">{{/if}}
-			
-				<h1>
-					{{#if titleLink}}
-						<a href="{{titleLink}}">{{title}}</a>
-					{{else}}
-						{{title}}
-					{{/if}}
-				</h1>
-
-				{{#if subtitle}}
-					<h2>
-						{{#if subtitleLink}}
-							<a href="{{subtitleLink}}">{{subtitle}}</a>
-						{{else}}
-							{{subtitle}}
-						{{/if}}
-					</h2>
+			<h3>
+				{{#if labelLink}}
+					<a href="{{labelLink}}">{{label}}</a>
+				{{else}}
+					{{label}}
 				{{/if}}
+			</h1>
 
-			{{#if title}}</div>{{/if}}
+		</div>{{/if}}
 
-			{{#if actions}}
-				<ul class="actions">
-					{{#actions}}{{#if .}}
-						<li class="action">
-							{{>listItem}}
-						</li>
-					{{/if}}{{/actions}}
-				</ul>
-			{{/if}}
-
-		{{#if title}}</div>{{/if}}
-
+		{{#if actions}}
+			<ul class="actions">
+				{{#actions}}{{#if .}}
+					<li class="action">
+						{{>listItem}}
+					</li>
+				{{/if}}{{/actions}}
+			</ul>
+		{{/if}}
 
 		{{#if seasons}}
 			<h5><span>Seasons</span></h5>

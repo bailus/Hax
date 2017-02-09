@@ -130,7 +130,7 @@ export default (new Page({
 					'method': 'VideoLibrary.GetTVShows',
 					'params': {
 						'properties': [
-							'title', 'originaltitle', 'sorttitle', 'thumbnail', 'lastplayed'
+							'title', 'originaltitle', 'sorttitle', 'thumbnail', 'lastplayed', 'watchedepisodes'
 						],
 						'limits': {
 							'end': 10
@@ -148,11 +148,11 @@ export default (new Page({
 					'key': 'tvshows',
 					'defaultThumbnail': 'img/icons/default/DefaultVideo.png',
 					'transformItem': ({
-						tvshowid, title, lastplayed
+						tvshowid, title, lastplayed, watchedepisodes
 					}) => ({
 						'link': '#page=TV Show&tvshowid='+tvshowid,
 						'label': title,
-						'details': moment(lastplayed).calendar()
+						'details': `${watchedepisodes} watched`
 					})
 				},
 				{

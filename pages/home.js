@@ -48,9 +48,6 @@ export default (new Page({
 			if (!advancedSettings.home.hideLiveTv && infoBooleans[ 'PVR.HasTVChannels' ])
 				items.push({ 'label': 'Live TV', 'link': '#page=Channels&media=TV', 'thumbnail': 'img/icons/home/livetv.png' })
 
-			if (!advancedSettings.home.hideAddons)
-				items.push({ 'label': 'Addons', 'link':'#page=Menu&media=Addons', 'thumbnail':'img/icons/home/addons.png' })
-
 			return {
 				'items': items,
 				'hideNavigation': true,
@@ -67,6 +64,16 @@ export default (new Page({
 						'label': 'Playlists',
 						'thumbnail': 'img/icons/home/playlists.png',
 						'link': '#page=Playlists'
+					},
+					advancedSettings.home.hideAddons ? undefined : {
+						'label': 'Addons',
+						'thumbnail': 'img/icons/home/addons.png',
+						'link': '#page=Menu&media=Addons'
+					},
+					advancedSettings.home.hideFiles ? undefined : {
+						'label': 'Files',
+						'thumbnail': 'img/icons/default/DefaultFolder.png',
+						'link': '#page=Files'
 					}
 				]
 			}

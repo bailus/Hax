@@ -1,11 +1,16 @@
 /* layout */
 #player {
 	display: flex;
-	flex-wrap: wrap;
 	flex-shrink: 0;
+	flex-direction: row;
 	align-items: center;
 	align-items: stretch;
 }
+@media (max-width: 400px) {
+	#player {
+		flex-wrap: wrap;
+	}
+}	
 #player > .player {
 	display: flex;
 	flex-direction: column;
@@ -16,6 +21,9 @@
 }
 #player .buttons {
     display: flex;
+    flex-shrink: 1;
+    justify-content: space-around;
+    flex-wrap: wrap;
 }
 #player .buttons.right {
 	flex-direction: column;
@@ -23,9 +31,9 @@
 	
 }
 #player > .nav {
-	flex-shrink: 0;
+	flex-shrink: 1;
 	flex-grow: 0;
-	min-width: 200px;
+	min-width: 150px;
 	flex-basis: 225px;
 	max-width: 250px;
 	margin:0 auto;
@@ -55,7 +63,10 @@
 	#player {
 	    flex-direction: row;
 	    align-items: stretch;
-	    justify-content: center;
+	    flex-wrap: wrap;
+	    overflow-y: auto;
+	    max-height: 100%;
+	    max-width: 100%;
 	}
 	#player > .thumbnailWrapper > .thumbnail,
 	#player > .nav {
@@ -204,10 +215,11 @@ body[data-status=playing] #player .playpause a { background-image:url('../img/bu
 	justify-content: space-around;
 	overflow:hidden;
 	height: 46px;
-	max-width: 100%;
 	padding: 2px 12px;
 	color: white;
 	flex-direction: column;
+	flex-shrink: 1;
+	max-width: 100%;
 }
 #progress > * {
 	z-index: 100;
@@ -223,14 +235,12 @@ body[data-status=playing] #player .playpause a { background-image:url('../img/bu
 	width: 100%;
 }
 #progress .status {
-    max-width: 100%;
-
-    align-self: flex-start;
+    align-self: stretch;
     flex-shrink: 1e3;
-    
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    max-width: 100%;
 }
 #progress .time {
 	flex-grow: 0;
@@ -268,13 +278,3 @@ body[data-status=playing] #player .playpause a { background-image:url('../img/bu
 #player .buttons .right     { top:50px; right:50%; margin-right:-75px; }
 #player .buttons .up        { top:0;	left: 50%;  }
 #player .buttons .down      { top:100px; left: 50%;  }
-
-
-
-@media (orientation: landscape) {
-
-	#player {
-		flex-wrap: nowrap;
-	}
-
-}
