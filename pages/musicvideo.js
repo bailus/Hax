@@ -71,7 +71,6 @@ export default (new Page({
 		}) => ({
 			'title': artist,
 			'titleLink': `#page=Artist&artist=${ artist }`,
-			'subtitle': album + (track > 0 ? `(Track ${ track })` : ''),
 			'label': label,
 			'thumbnail': xbmc.vfs2uri(thumbnail),
 			'fanart': xbmc.vfs2uri(fanart),
@@ -86,6 +85,11 @@ export default (new Page({
 							'caption': `(${votes} votes)`
 						}
 					]
+				},
+				album !== undefined && album.length > 0 && {
+					'class': 'album',
+					'name': 'Album',
+					'value': album + (track > 0 ? ` (Track ${ track })` : '')
 				},
 				plot !== undefined && plot.length > 0 && {
 					'class': 'plot',

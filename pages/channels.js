@@ -8,7 +8,6 @@ export default (new Page({
 	'id': 'Channels',
 	'view': 'list',
 	'icon': state => state['media'] === 'Radio' ? 'img/icons/home/radio.png' : 'img/icons/home/livetv.png',
-	//'parentState': state => ({ 'page': 'Menu', 'media': state['media'] }),
 	'parentState': state => ({ 'page': 'Home' }),
 	'data': state => {
 
@@ -54,15 +53,14 @@ export default (new Page({
 			})
 
 		})
-		.then(x => {console.log(x); return x})
 
-
-		return Promise.all([ getChannelGroups, getChannelGroupDetails ])
-		.then(([ { channelgroups=[] }, { channelgroupdetails={} } ]) => ({
+		return Promise.all([ getChannelGroups, getChannelGroupDetails, getGroupId ])
+		.then(([ { channelgroups=[] }, { channelgroupdetails={} }, groupid ]) => ({
 			'pageName': { 'radio': 'Radio ', 'tv': 'TV ' }[channelgroupdetails.channeltype] + 'Channels',
 			'groups': channelgroups.map((channelgroup={}) => ({
 				'label': channelgroup.label,
-				'link': '#page=Channel Group&media=' + state['media'] + '&groupid=' + channelgroup.channelgroupid
+				'link': '#page=Channels&media=' + state['media'] + '&groupid=' + channelgroup.channelgroupid,
+				'selected': channelgroup.channelgroupid == groupid
 			})),
 			'items': channelgroupdetails.channels.map(channel => ({
 				'label': channel.label,
@@ -71,7 +69,7 @@ export default (new Page({
 					channel.broadcastnext === undefined ? undefined : moment.utc(channel.broadcastnext.starttime).fromNow() + ': ' + channel.broadcastnext.title
 				],
 				'class': (channel.locked ? 'locked ' : '') + (channel.hidden ? 'hidden ' : '') + (channel.isrecording ? 'isrecording ' : ''),
-				'thumbnail': channel.thumbnail === undefined ? 'img/icons/default/DefaultAddonNone.png' : xbmc.vfs2uri(channel.thumbnail),
+				'thumbnail': channel.thumbnail === undefined ? 'img/icons/default/DefaultTVShows.png' : xbmc.vfs2uri(channel.thumbnail),
 				'link': '#page=Channel&media='+state['media']+'&channelid='+channel.channelid + '&groupid=' + channelgroupdetails.channelgroupid,
 				'actions': [
 					{

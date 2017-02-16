@@ -181,6 +181,10 @@
 .icon-list.seasons .thumbnail span {
 	height: 128px;
 }
+.icon-list.seasons .thumbnail {
+	height:192px;
+}
+
 
 .icon-list.cast {
 	width: 100% !important;

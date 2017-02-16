@@ -1,5 +1,6 @@
 import Page from '../js/page'
 import Filter from '../js/xbmcFilter'
+import { parseYear } from '../js/util'
 
 export default (new Page({
 	'id': 'Music Videos',
@@ -48,16 +49,16 @@ export default (new Page({
 			'cache': true
 		})
 		.then(result => ({
-			title: filter.toString(),
-			items: (result.musicvideos || []).map((mv) => ({
-				artist: (mv.artist instanceof Array ? mv.artist : [mv.artist]).join(', '),
-				label: mv.title,
-				details: (mv.album ? mv.album+(mv.year ? ' ('+mv.year+')' : '') : ''),
-				thumbnail: mv.thumbnail ? xbmc.vfs2uri(mv.thumbnail) : undefined,
-				play: () => { xbmc.Open({ 'item': { 'file': xbmc.vfs2uri(mv.file) } }) },
-				year: mv.year,
-				genre: mv.genre,
-				link: '#page=Music Video&musicvideoid='+mv.musicvideoid
+			'title': filter.toString(),
+			'items': (result.musicvideos || []).map((mv) => ({
+				'artist': (mv.artist instanceof Array ? mv.artist : [mv.artist]).join(', '),
+				'label': mv.title,
+				'details': (mv.album ? mv.album+(mv.year ? ' ('+mv.year+')' : '') : ''),
+				'thumbnail': mv.thumbnail ? xbmc.vfs2uri(mv.thumbnail) : undefined,
+				'play': () => { xbmc.Open({ 'item': { 'file': xbmc.vfs2uri(mv.file) } }) },
+				'year': parseYear(mv.year),
+				'genre': mv.genre,
+				'link': '#page=Music Video&musicvideoid='+mv.musicvideoid
 			}))
 		}))
 

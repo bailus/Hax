@@ -1,5 +1,5 @@
 import Page from '../js/page'
-import { makeJsLink } from '../js/util'
+import { makeJsLink, parseYear } from '../js/util'
 import Filter from '../js/xbmcFilter'
 
 function makeDetail(page, name, key, value) {
@@ -163,30 +163,30 @@ export default (new Page({
 				'details': `${ displayartist || artist.join(', ')}`,
 				'link': '#page=Album&albumid=' + albumid + '&artistid=' + artistid,
 				'thumbnail': thumbnail ? xbmc.vfs2uri(thumbnail) : 'img/icons/default/DefaultAudio.png',
-				'label': `(${year}) ${title}`
+				'label': (year ? `(${parseYear(year)}) ` : '') + title
 			}))
 		})
 
 		const getMusicVideos = getArtist
-			.then(artist => xbmc.get({
-				'method': 'VideoLibrary.GetMusicVideos',
-				'params': {
-					'properties': [ 'title', 'genre', 'runtime', 'year', 'album', 'artist', 'track', 'thumbnail' ],
-					'filter': {
-						'field': 'artist',
-						'operator': 'is',
-						'value': artist
-					}
+		.then(artist => xbmc.get({
+			'method': 'VideoLibrary.GetMusicVideos',
+			'params': {
+				'properties': [ 'title', 'genre', 'runtime', 'year', 'album', 'artist', 'track', 'thumbnail' ],
+				'filter': {
+					'field': 'artist',
+					'operator': 'is',
+					'value': artist
 				}
-			})
-			.then(({ musicvideos=[] }) => musicvideos.map(({
-				title, album, year, thumbnail, musicvideoid
-			}) => ({
-				'label': title,
-				'details': (album ? album+(year ? ' ('+year+')' : '') : ''),
-				'thumbnail': thumbnail ? xbmc.vfs2uri(thumbnail) : undefined,
-				'link': '#page=Music Video&musicvideoid='+musicvideoid
-			}))))
+			}
+		})
+		.then(({ musicvideos=[] }) => musicvideos.map(({
+			title, album, year, thumbnail, musicvideoid
+		}) => ({
+			'label': title,
+			'details': (album ? album+(year ? ' ('+parseYear(year)+')' : '') : ''),
+			'thumbnail': thumbnail ? xbmc.vfs2uri(thumbnail) : undefined,
+			'link': '#page=Music Video&musicvideoid='+musicvideoid
+		}))))
 
 		return Promise.all([ formatArtistDetails, formatArtistAlbums, formatFeaturedAlbums, getMusicVideos ])      //wait for the above to finish
 		.then( ( [ page, items, featuredAlbums, musicVideos ] ) => { //create the page

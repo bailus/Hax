@@ -7,6 +7,7 @@ export default (new Page({
 	'id': 'Movie Sets',
 	'view': 'list',
 	'icon': state => 'img/icons/default/DefaultMovieTitle.png',
+	'groupby': 'alpha',
 	'parentState': state => ({ 'page': 'Menu', 'media': 'Movies' }),
 	'data': function (state) {
 		
@@ -20,21 +21,20 @@ export default (new Page({
 			}
 		})
 		//.then(x => {console.log(x);return x})
-		.then(({ sets={} }) => (sets.map(({
-			label,
-			thumbnail,
-			setid
+		.then(({ sets=[] }) => (sets.map(({
+			label="", thumbnail, setid
 		}) => ({
-			label: label,
-			thumbnail: xbmc.vfs2uri(thumbnail),
-			link: `#page=Movie Set&setid=${ setid }`
+			'label': label,
+			'alpha': label.at(0).toUpperCase(),
+			'thumbnail': xbmc.vfs2uri(thumbnail),
+			'link': `#page=Movie Set&setid=${ setid }`
 		}))))
 
 
 		return Promise.all([ getMovieSets ])
 		.then(( [ sets ] = [ [] ] ) => ({
-			title: 'Movie Sets',
-			items: sets
+			'title': 'Movie Sets',
+			'items': sets
 		}))
 
 

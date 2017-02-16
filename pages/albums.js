@@ -1,5 +1,5 @@
 import Page from '../js/page'
-import { makeJsLink } from '../js/util'
+import { makeJsLink, parseYear } from '../js/util'
 import Filter from '../js/xbmcFilter'
 
 export default (new Page({
@@ -33,9 +33,9 @@ export default (new Page({
 			title: filter.toString(),
 			items: (result.albums || []).map((album, i) => ({
 					label: album.label,
-					title: album.label[0],
+					title: album.label.at(0).toUpperCase(),
 					details: album.artist,
-					year: album.year,
+					year: parseYear(album.year),
 					link: '#page=Album&albumid='+album.albumid,
 					thumbnail: album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : 'img/icons/default/DefaultAlbumCover.png',
 					actions: [

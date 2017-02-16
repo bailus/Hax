@@ -16,39 +16,9 @@ export default (new Page({
 			'method': 'VideoLibrary.GetMovieDetails',
 			'params': {
 				'properties': [ //http://kodi.wiki/view/JSON-RPC_API/v6#Video.Fields.Movie
-					"title", 
-					"genre", 
-					"year", 
-					"rating", 
-					"director", 
-					"trailer", 
-					"tagline", 
-					"plot", 
-					"plotoutline", 
-					"originaltitle", 
-					"lastplayed", 
-					"playcount", 
-					"writer", 
-					"studio", 
-					"mpaa", 
-					"cast", 
-					"country", 
-					"imdbnumber", 
-					"runtime", 
-					"set", 
-					"showlink", 
-					"streamdetails", 
-					"top250", 
-					"votes", 
-					"fanart", 
-					"thumbnail", 
-					"file", 
-					"sorttitle", 
-					"resume", 
-					"setid", 
-					"dateadded", 
-					"tag", 
-					"art"
+					"title", "genre", "year", "rating", "director", "trailer", "tagline", "plot", "plotoutline", "originaltitle", "lastplayed",
+					"playcount", "writer", "studio", "mpaa", "cast", "country", "imdbnumber", "runtime", "set", "showlink", "streamdetails",
+					"top250", "votes", "fanart", "thumbnail", "file", "sorttitle", "resume", "setid", "dateadded", "tag", "art"
 				],
 				'movieid': movieid
 			}
@@ -59,22 +29,22 @@ export default (new Page({
 		const getMovieSetDetails = getMovieDetails.then(({ setid }) => {
 			if (!setid) return Promise.resolve({})
 			return xbmc.get({
-					'method': 'VideoLibrary.GetMovieSetDetails', //http://kodi.wiki/view/JSON-RPC_API/#VideoLibrary.GetMovieSetDetails
-					'params': {
-						'setid': +setid,
-						'properties': [ ],
-						'movies': {
-							'properties': [ //http://kodi.wiki/view/JSON-RPC_API/#Video.Fields.Movie
-								"title", 
-								"year", 
-								"thumbnail"
-							],
-							'sort': {
-								'method': 'date'
-							}
+				'method': 'VideoLibrary.GetMovieSetDetails', //http://kodi.wiki/view/JSON-RPC_API/#VideoLibrary.GetMovieSetDetails
+				'params': {
+					'setid': +setid,
+					'properties': [ ],
+					'movies': {
+						'properties': [ //http://kodi.wiki/view/JSON-RPC_API/#Video.Fields.Movie
+							"title", 
+							"year", 
+							"thumbnail"
+						],
+						'sort': {
+							'method': 'year'
 						}
-					},
-					cache: true
+					}
+				},
+				cache: true
 			})
 		})
 
@@ -122,39 +92,9 @@ export default (new Page({
 
 		return Promise.all([ getMovieDetails, getPrevNext, getMovieSetDetails ])
 		.then(([ {
-			title,
-			genre,
-			year,
-			rating,
-			director,
-			trailer,
-			tagline,
-			plot,
-			plotoutline,
-			originaltitle,
-			lastplayed,
-			playcount,
-			writer,
-			studio,
-			mpaa,
-			cast,
-			country,
-			imdbnumber,
-			runtime,
-			set,
-			showlink,
-			streamdetails,
-			top250,
-			votes,
-			fanart,
-			thumbnail,
-			file,
-			sorttitle,
-			resume,
-			setid,
-			dateadded,
-			tag,
-			art
+			title, genre, year, rating, director, trailer, tagline, plot, plotoutline, originaltitle, lastplayed, playcount,
+			writer, studio, mpaa, cast, country, imdbnumber, runtime, set, showlink, streamdetails, top250, votes, fanart,
+			thumbnail, file, sorttitle, resume, setid, dateadded, tag, art
 		}, prevNext, { setdetails={} } ] = {}) => ({
 			'previous': prevNext.previous,
 			'next': prevNext.next,

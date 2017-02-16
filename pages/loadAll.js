@@ -32,6 +32,7 @@ import episodes from './episodes.js'
 import season from './season.js'
 import timers from './timers.js'
 import timer from './timer.js'
+import song from './song.js'
 
 const pages = [
 	actors,
@@ -66,7 +67,8 @@ const pages = [
 	episodes,
 	season,
 	timers,
-	timer
+	timer,
+	song
 ]
 
 export default pages

@@ -37,12 +37,12 @@ export function seconds2shortstring (seconds) {
 	const format = n => (n < 10 ? '0' : '')+Math.floor(n)
 
 	const s = Math.abs(seconds)
-	const hh = s >= 3600 && format(s/3600)
+	const h = s >= 3600 && Math.floor(s/3600)
 	const mm = format((s%3600)/60)
 	const ss = format(s%60)
 
 	return (seconds < 0 ? '-' : '') +
-			(hh === false ? '' : `${hh}:`) + `${mm}:${ss}`
+			(h === false ? '' : `${h}:`) + `${mm}:${ss}`
 }
 
 export function ymd2string (ymd) {
@@ -68,4 +68,53 @@ export function makeDetail(page, name, key, value) {
 					'link': `#page=${page}&${key}=${v}`
 				}))
 	}
+}
+
+import moment from 'moment'
+export function parseYear(inputStr) {	
+
+	const oldParseTwoDigitYear = moment.parseTwoDigitYear
+	moment.parseTwoDigitYear = function (inputStr) {  //assume all 2-digit years are in the 1900s. https://momentjs.com/docs/#/parsing/string-format/
+		return 1900+parseInt(inputStr)
+	}
+	const year = moment(inputStr, 'YYYY', true) // YYYY: 4 or 2 digit year.
+	moment.parseTwoDigitYear = oldParseTwoDigitYear
+	
+	return year.isValid() ? year.format('YYYY') : "Unknown" // YYYY: 4 digit year.
+}
+
+
+
+
+export function groupItems (items, groupby) {
+	const groups = new Map() // Map lets us efficiently look up groups by name (key)
+	const groupKeys = [] // but Map doesn't guarantee order, so we also store an array of keys [42]
+
+	if (!(items[0] && items[0][groupby])) return items
+		
+	items.forEach((item, i) => {
+		const key = item[groupby]
+		if (groups.has(key))
+			groups.get(key).push(item)
+		else {
+			groups.set(key, [ item ])
+			groupKeys.push(key) // [42]
+		}
+	})
+
+	// output
+	return groupKeys.map(key => ({
+		'label': key,
+		'items': groups.get(key)
+	}))
+}
+
+export function sortItems (items, sortby) {
+	if (!(items[0] && items[0][sortby])) return items
+	return items.sort(function (a, b) {
+		let x = a[sortby], y = b[sortby]
+		if (x < y) return -1
+		if (x > y) return +1
+		return 0
+	})
 }

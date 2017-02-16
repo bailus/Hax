@@ -1,5 +1,5 @@
 import Page from '../js/page'
-import { seconds2shortstring, makeJsLink } from '../js/util'
+import { seconds2shortstring, makeJsLink, parseYear } from '../js/util'
 
 export default (new Page({
 	'id': 'Album',
@@ -15,25 +15,8 @@ export default (new Page({
 			'method': 'AudioLibrary.GetAlbumDetails',
 			'params': {
 				'properties': [ //http://kodi.wiki/view/JSON-RPC_API/v6#Audio.Fields.Album
-					"title", 
-					"description", 
-					"artist", 
-					"genre", 
-					"theme", 
-					"mood", 
-					"style", 
-					"type", 
-					"albumlabel", 
-					"rating", 
-					"year", 
-					"musicbrainzalbumid", 
-					"musicbrainzalbumartistid", 
-					"fanart", 
-					"thumbnail", 
-					"playcount", 
-					"genreid", 
-					"artistid", 
-					"displayartist"
+					"title", "description", "artist", "genre", "theme", "mood", "style", "type", "albumlabel", "rating", "year", "musicbrainzalbumid",
+					"musicbrainzalbumartistid", "fanart", "thumbnail", "playcount", "genreid", "artistid", "displayartist"
 				],
 				'albumid': albumid
 			},
@@ -67,7 +50,7 @@ export default (new Page({
 			const page = {
 				'title': `${ displayartist || artist.join(', ')}`,
 				'titleLink': `#page=Artist&artistid=${ artistid }`,
-				'label': `(${year}) ${title}`,
+				'label': `(${parseYear(year)}) ${title}`,
 				'thumbnail': thumbnail ? xbmc.vfs2uri(thumbnail) : 'img/icons/default/DefaultAlbumCover.png',
 				'fanart': xbmc.vfs2uri(fanart),
 				'details': [
@@ -146,11 +129,13 @@ export default (new Page({
 			duration,
 			artist,
 			displayartist,
-			albumartist
+			albumartist,
+			songid
 		}) => ({
 			//thumbnail: 'img/icons/default/DefaultAudio.png',
 			'label': title,
 			'number': track,
+			'link': `#page=Song&songid=${ songid }&albumid=${ albumid }`,
 			'details': [
 				(displayartist != albumartist ? displayartist : ''),
 				seconds2shortstring(duration)
@@ -203,12 +188,12 @@ export default (new Page({
 					if (curr.albumid == albumid) {
 						o = {
 							'previous': prev === undefined ? undefined : {
-								'label': `(${prev.year}) ${prev.title}`,
+								'label': `(${parseYear(prev.year)}) ${prev.title}`,
 								'link': `#page=Album&albumid=${ prev.albumid }`,
 								'thumbnail': prev.thumbnail ? xbmc.vfs2uri(prev.thumbnail) : 'img/icons/default/DefaultAlbumCover.png'
 							},
 							'next': next === undefined ? undefined : {
-								'label': `(${next.year}) ${next.title}`,
+								'label': `(${parseYear(next.year)}) ${next.title}`,
 								'link': `#page=Album&albumid=${ next.albumid }`,
 								'thumbnail': next.thumbnail ? xbmc.vfs2uri(next.thumbnail) : 'img/icons/default/DefaultAlbumCover.png'
 							}
@@ -221,14 +206,44 @@ export default (new Page({
 		})
 
 
-		return Promise.all([ getPage, formatSongs, getPrevNext, getOtherArtists ])      //wait for the above to finish
-		.then( ( [ page, items, prevNext, otherArtists ] ) => { //create the page
+		const getMusicVideos = getAlbumDetails
+		.then(({ artist, title }) => xbmc.get({
+			'method': 'VideoLibrary.GetMusicVideos',
+			'params': {
+				'properties': [ 'title', 'genre', 'runtime', 'year', 'album', 'artist', 'track', 'thumbnail' ],
+				'filter': { 'and': [{
+					'field': 'artist',
+					'operator': 'contains',
+					'value': artist
+				},{
+					'field': 'album',
+					'operator': 'is',
+					'value': title
+				}]}
+			}
+		})
+		.then(({ musicvideos=[] }) => musicvideos.map(({
+			title, album, year, thumbnail, musicvideoid, track
+		}) => ({
+			'label': title,
+			'details': track > 0 ? `Track ${track}` : '',
+			'thumbnail': thumbnail ? xbmc.vfs2uri(thumbnail) : undefined,
+			'link': '#page=Music Video&musicvideoid='+musicvideoid
+		}))))
+
+
+		return Promise.all([ getPage, formatSongs, getPrevNext, getOtherArtists, getMusicVideos ])      //wait for the above to finish
+		.then( ( [ page, items, prevNext, otherArtists, musicVideos ] ) => { //create the page
 			page.items = items
 			page.previous = prevNext.previous
 			page.next = prevNext.next
-			if (otherArtists.length > 0) page.details.push({
+			if (otherArtists.length > 1) page.details.push({
 				'name': 'Artists',
 				'iconList': otherArtists
+			})
+			if (musicVideos.length > 0) page.details.push({
+				'name': 'Music Videos',
+				'iconList': musicVideos
 			})
 			return page
 		})

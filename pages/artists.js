@@ -29,7 +29,7 @@ export default (new Page({
 		.then(result => ({
 			title: filter.toString(),
 			items: (result.artists || []).map(artist => ({
-				alpha: artist.label[0].toUpperCase(),
+				alpha: artist.label.at(0).toUpperCase(),
 				label: artist.label,
 				link: '#page=Artist&artistid='+artist.artistid,
 				thumbnail: artist.thumbnail ? xbmc.vfs2uri(artist.thumbnail) : 'img/icons/default/DefaultArtist.png',

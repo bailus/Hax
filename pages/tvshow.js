@@ -86,11 +86,11 @@ export default (new Page({
 			tag,
 			art
 		}) => ({
-			title: title,
-			subtitle: title === originaltitle ? undefined : originaltitle,
-			banner: art && art.banner ? xbmc.vfs2uri(art.banner) : undefined,
-			fanart: xbmc.vfs2uri(art['fanart']),
-			details: [
+			'title': title,
+			'subtitle': title === originaltitle ? undefined : originaltitle,
+			'banner': art && art.banner ? xbmc.vfs2uri(art.banner) : undefined,
+			'fanart': xbmc.vfs2uri(art['fanart']),
+			'details': [
 				rating !== undefined && votes > 0 && {
 					'class': 'rating',
 					'name': 'Rating',
@@ -116,7 +116,7 @@ export default (new Page({
 				makeDetail('TV Shows', 'Genre', 'genre', genre),
 				makeDetail('TV Shows', 'Tag', 'tag', tag),
 				{
-					'class': '',
+					'class': 'statistics',
 					'name': 'Statistics',
 					'links': [
 						{ 'label': `Played ${ playcount } times` },
@@ -126,33 +126,33 @@ export default (new Page({
 					]
 				},
 				file !== undefined && file.length > 0 && {
-					'class': '',
-					'name': 'File',
+					'class': 'filename',
+					'name': 'Directory',
 					'links': [
 						{
 							'label': file,
-							'link': `${ xbmc.vfs2uri(file) }`
+							'link': `#page=Directory&media=video&root=${ encodeURIComponent(file) }`
 						}
 					]
 				},
 				{
+					'class': 'links',
 					'name': 'Links',
-					'links': imdbnumber instanceof String && imdbnumber.length > 0 ? [
+					'links': [
 						{
 							'label': 'IMDB',
 							'link': ( (imdbnumber instanceof String) && (imdbnumber.length > 0) ) ? 
 									`http://www.imdb.com/title/${ imdbnumber }/` : 
 									`http://www.imdb.com/search/title?release_date=${ encodeURIComponent(year) },&title=${ encodeURIComponent(title) }&title_type=feature,tv_movie,documentary,short`
-
 						}
-					] : undefined
+					]
 				}
 			],
 			cast: cast.map(actor => ({
-				label: actor.name,
-				details: actor.role || '',
-				thumbnail: actor.thumbnail ? xbmc.vfs2uri(actor.thumbnail) : 'img/icons/default/DefaultActor.png',
-				link: '#page=Videos&actor='+actor.name
+				'label': actor.name,
+				'details': actor.role || '',
+				'thumbnail': actor.thumbnail ? xbmc.vfs2uri(actor.thumbnail) : 'img/icons/default/DefaultActor.png',
+				'link': '#page=Videos&actor='+actor.name
 			}))
 		}))
 
@@ -173,10 +173,10 @@ export default (new Page({
 		})
 		//.then(x => {console.log(x);return x})
 		.then(({ seasons=[] }) => seasons.map(season => ({
-			label: season.label,
-			details: [ season.episode + ' episodes', season.watchedepisodes + ' watched' ],
-			link: `#page=Season&tvshowid=${ season.tvshowid }&season=${ season.season }`,
-			thumbnail: season.thumbnail ? xbmc.vfs2uri(season.thumbnail) : 'img/icons/default/DefaultVideo.png'
+			'label': season.label,
+			'details': [ season.episode + ' episodes', season.watchedepisodes + ' watched' ],
+			'link': `#page=Season&tvshowid=${ season.tvshowid }&season=${ season.season }`,
+			'thumbnail': season.thumbnail ? xbmc.vfs2uri(season.thumbnail) : 'img/icons/default/DefaultVideo.png'
 		})))
 
 		return Promise.all([ getShowDetails, getSeasons ])

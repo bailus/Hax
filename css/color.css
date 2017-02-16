@@ -93,6 +93,9 @@ header,
 	background-color: var(--black);
 }
 
+.page[data-page="Channel"] .thumbnailWrapper {
+	background: linear-gradient(to bottom, hsla(0, 0%, 63%,0.8) 0%,hsla(0, 0%, 63%,0.2) 100%);
+}
 
 /* Button background */
 .group,

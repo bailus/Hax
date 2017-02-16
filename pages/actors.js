@@ -16,16 +16,16 @@ export default (new Page({
 		
 		const mediaTypes = {
 			'TV Shows': {
-				name: 'TV Shows',
-				page: 'TV Shows',
-				resultProperty: 'tvshows',
-				method: 'VideoLibrary.GetTVShows'
+				'name': 'TV Shows',
+				'page': 'TV Shows',
+				'resultProperty': 'tvshows',
+				'method': 'VideoLibrary.GetTVShows'
 			},
 			'Movies': {
-				name: 'Movies',
-				page: 'Movies',
-				resultProperty: 'movies',
-				method: 'VideoLibrary.GetMovies'
+				'name': 'Movies',
+				'page': 'Movies',
+				'resultProperty': 'movies',
+				'method': 'VideoLibrary.GetMovies'
 			}
 		}
 
@@ -33,28 +33,27 @@ export default (new Page({
 		const m = mediaType ? [mediaType] :
 			Object.keys(mediaTypes).map(key => mediaTypes[key]) //mediaTypes.toArray()
 
-		return Promise.all(m.map(media => {
+		return Promise.all(m.map(({ name, page, resultProperty, method }) => {
 			return xbmc.get({
-				method: media.method,
-				params: {
+				'method': method,
+				'params': {
 					'properties': [ 'cast' ]
 				},
-				cache: true
+				'cache': true
 			})
-			.then(result => result[media.resultProperty] || [])
+			.then(x => {console.log(x); return x})
+			.then(result => result[resultProperty] || [])
 			.then(flatMap_(mediaInfo => mediaInfo.cast))
-			.then(map_(actor => ({
-				label: actor.name,
-				alpha: actor.name[0].toUpperCase(),
-				link: '#page='+media.page+'&actor='+encodeURIComponent(actor.name),
-				thumbnail: actor.thumbnail ? xbmc.vfs2uri(actor.thumbnail) : 'img/icons/default/DefaultActor.png'
+			.then(map_(({ name="", thumbnail }) => ({
+				'label': name,
+				'alpha': name.at(0).toUpperCase(),
+				'link': '#page='+page+'&actor='+encodeURIComponent(name),
+				'thumbnail': thumbnail ? xbmc.vfs2uri(thumbnail) : 'img/icons/default/DefaultActor.png'
 			})))
 		}))
 		.then(flatten)
 		.then(actors => ({
-			pageName: !(mediaType && mediaType.name) ? 'Actors' :
-					mediaType.name + ' by Actor',
-			items: actors
+			'items': actors
 		}))
 
 	}

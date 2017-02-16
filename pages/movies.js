@@ -1,5 +1,5 @@
 import Page from '../js/page'
-import { seconds2string, makeJsLink } from '../js/util'
+import { seconds2string, makeJsLink, parseYear } from '../js/util'
 import moment from 'moment'
 
 
@@ -58,9 +58,9 @@ export default (new Page({
 					`(${year})`,
 					seconds2string(runtime)
 				],
-				'year': year,
+				'year': parseYear(year),
 				'link': '#page=Movie&movieid='+movieid,
-				'alpha': label[0].toUpperCase(),
+				'alpha': label.at(0).toUpperCase(),
 				'thumbnail': thumbnail ? xbmc.vfs2uri(thumbnail) : 'img/icons/default/DefaultVideo.png',
 				'actions': [
 					{

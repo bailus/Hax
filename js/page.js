@@ -1,4 +1,5 @@
 import { hashArrayToURL } from './hash'
+import { sortItems, groupItems } from './util'
 
 export default class {
 	
@@ -45,40 +46,6 @@ export default class {
 		.then(data => {
 
 			//sort and group the data
-			//TODO: review and probably rewrite
-
-			function groupItems (items, groupby) {
-				const o = [], groups = {}
-
-				if (!(items[0] && items[0][groupby])) return items
-					
-				items.forEach((item, i) => {
-					const key = item[groupby]
-					if (groups[key] === undefined) groups[key] = []
-					groups[key].push(item)
-				})
-
-				Object.getOwnPropertyNames(groups).forEach(key => {
-					o.unshift({
-						'label': key,
-						'items': groups[key]
-					})
-				})
-
-				return o
-			}
-
-			function sortItems (items, sortby) {
-				if (!(items[0] && items[0][sortby])) return items
-				return items.sort(function (a, b) {
-					let x = a[sortby], y = b[sortby]
-					if (x < y) return -1
-					if (x > y) return +1
-					return 0
-				})
-			}
-			
-			
 			const groupbyKey = state['group'] || this.groupby
 			const groupbyValue = state[groupbyKey]
 			if (groupbyKey) {

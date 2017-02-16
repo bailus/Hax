@@ -4,7 +4,7 @@
 .page[data-page="Home"] article {
 	align-content: space-around;
 	align-items: center;
-	flex-direction: column-reverse;
+	flex-direction: column;
 }
 .page[data-page="Home"] .items {
 	display: flex;
@@ -44,6 +44,7 @@
 }
 .page[data-page="Home"] .actions {
 	flex-direction:row;
+	order: 100;
 }
 .page[data-page="Home"] .actions .action, .page[data-page="Home"] .actions .action > a {
 	background-color:initial;
