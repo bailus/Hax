@@ -68,8 +68,13 @@ export default (new Page({
 					channel.broadcastnow === undefined ? undefined : channel.broadcastnow.title,
 					channel.broadcastnext === undefined ? undefined : moment.utc(channel.broadcastnext.starttime).fromNow() + ': ' + channel.broadcastnext.title
 				],
-				'class': (channel.locked ? 'locked ' : '') + (channel.hidden ? 'hidden ' : '') + (channel.isrecording ? 'isrecording ' : ''),
-				'thumbnail': channel.thumbnail === undefined ? 'img/icons/default/DefaultTVShows.png' : xbmc.vfs2uri(channel.thumbnail),
+				'class': [
+					channel.hidden ? 'hidden' : undefined,
+					channel.locked ? 'locked' : undefined,
+					channel.isrecording ? 'recording' : undefined,
+					channel.isrecording ? 'selected' : undefined
+				].filter(x => x !== undefined).join(', '),
+				'thumbnail': xbmc.vfs2uri(channel.thumbnail) || 'img/icons/default/DefaultTVShows.png',
 				'link': '#page=Channel&media='+state['media']+'&channelid='+channel.channelid + '&groupid=' + channelgroupdetails.channelgroupid,
 				'actions': [
 					{

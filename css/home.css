@@ -23,11 +23,12 @@
 	width:90px;
 	text-align: center;
 	margin:5px;
-	margin-top:10px;
 	flex-grow: 1;
+	padding: 5px;
 }
-.page[data-page="Home"] .listItem a {
+.page[data-page="Home"] .listItem > a {
 	flex-direction: column;
+	align-items: center;
 }
 .page[data-page="Home"] .items .thumbnail {
 	display: block !important;
@@ -35,12 +36,15 @@
 	height: 64px;
 	line-height: normal;
 }
-.page[data-page="Home"] .label {
+.page[data-page="Home"] .items .label {
 	font-size: 110%;
 	float: none;
 	margin:0;
 	padding:0;
 	white-space: inherit;
+	height: initial;
+	line-height: initial;
+	padding-bottom: 12px;
 }
 .page[data-page="Home"] .actions {
 	flex-direction:row;

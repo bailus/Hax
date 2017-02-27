@@ -10,10 +10,11 @@ export default (new Page({
 	'view': 'list',
 	'groupby': 'year',
 	'icon': state => 
-			state['group'] === 'actor' || state['actor'] ? 'img/icons/default/DefaultActor.png' :
-			state['group'] === 'year' || state['year'] ? 'img/icons/default/DefaultMovieYears.png' :
-			state['group'] === 'genre' || state['genre'] ? 'img/icons/default/DefaultGenre.png' :
-			'img/icons/default/DefaultMovieTitle.png',
+			state['group'] === 'actor' || state['actor'] ? 'img.estuary/default/DefaultActor.png' :
+			state['group'] === 'year' || state['year'] ? 'img.estuary/default/DefaultMovieYears.png' :
+			state['group'] === 'genre' || state['genre'] ? 'img.estuary/default/DefaultGenre.png' :
+			state['group'] === 'alpha' || state['alpha'] ? 'img.estuary/default/DefaultMovieTitle.png' :
+			'img.estuary/default/DefaultMovieYears.png',
 	'parentState': state => ({ 'page': 'Menu', 'media': 'Movies' }),
 	'data': function (state) {
 
@@ -61,7 +62,7 @@ export default (new Page({
 				'year': parseYear(year),
 				'link': '#page=Movie&movieid='+movieid,
 				'alpha': label.at(0).toUpperCase(),
-				'thumbnail': thumbnail ? xbmc.vfs2uri(thumbnail) : 'img/icons/default/DefaultVideo.png',
+				'thumbnail': thumbnail ? xbmc.vfs2uri(thumbnail) : 'img.estuary/default/DefaultVideo.png',
 				'actions': [
 					{
 						'label': '▶',

@@ -1,5 +1,6 @@
 import Page from '../js/page'
 import { makeJsLink } from '../js/util'
+import moment from 'moment'
 
 import Filter from '../js/xbmcFilter'
 
@@ -7,7 +8,7 @@ export default (new Page({
 	'id': 'Movie Set',
 	'view': 'list',
 	'groupby': 'year',
-	'icon': state => 'img/icons/default/DefaultMovieTitle.png',
+	'icon': state => 'img.estuary/default/DefaultSets.png',
 	'parentState': state => ({ 'page': 'Menu', 'media': 'Movies' }),
 	'data': function ({ setid }) {
 		
@@ -73,22 +74,47 @@ export default (new Page({
 		}) => ({
 			title: label,
 			items: movies.map(({
-				movieid,
-				label='',
-				thumbnail='',
-				year='',
-				rating='',
-				votes='',
-				top250='',
-				plot=''
+				movieid, label, title,  genre,  year,  rating,  director,  trailer,  tagline,  plot,  plotoutline,
+				originaltitle,  lastplayed,  playcount,  writer,  studio,  mpaa,  cast,  country,  imdbnumber,  runtime,
+				set,  showlink,  streamdetails,  top250,  votes,  fanart,  thumbnail,  file,  sorttitle,  resume,
+				setid,  dateadded,  tag,  art
 			}) => ({
 				label: label,
 				thumbnail: xbmc.vfs2uri(thumbnail),
 				link: `#page=Movie&movieid=${ movieid }`,
 				year: year,
 				detailList: [
-					{ 'name': 'Rating', 'value': `${ Math.round(rating*10)/10 }/10 (${ votes } votes)` + (top250 ? ' #'+top250 : '') },
-					{ 'name': 'Plot', 'value': plot }
+					tagline !== undefined && tagline.length > 0 && {
+						'class': 'tagline',
+						'name': 'Tagline',
+						'value': tagline
+					},
+					rating !== undefined && votes > 0 && {
+						'class': 'rating',
+						'name': 'Rating',
+						'flags': [
+							{
+								'class': 'starrating',
+								'value': Math.round(rating),
+								'caption': `(${votes} votes)`
+							}
+						]
+					},
+					mpaa !== undefined && mpaa.length > 0 && {
+						'class': 'mpaa',
+						'name': 'MPAA Rating',
+						'value': mpaa
+					},
+					plot !== undefined && plot.length > 0 && {
+						'class': 'plot',
+						'name': 'Plot',
+						'value': plot
+					},
+					runtime !== undefined && runtime > 0 && {
+						'class': 'runtime',
+						'name': 'Runtime',
+						'value': moment.duration(runtime, 'seconds').humanize()
+					}
 				],
 					actions: [
 						{	label: 'Play',

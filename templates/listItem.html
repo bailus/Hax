@@ -36,6 +36,10 @@
 			{{/if}}
 		{{/if}}
 
+		{{#more}}
+			<span class="more"><a href="{{.}}"></a></span>
+		{{/more}}
+
 	</div>
 
 
@@ -50,9 +54,11 @@
 			<a href="{{link}}" class="listAction">
 
 				{{#if thumbnail}}
-					<span class="thumbnail"><img src="{{thumbnail}}"></span>
-				{{else}}
-					{{label}}
+					<div class="thumbnail"><img src="{{thumbnail}}"></div>
+				{{/if}}
+
+				{{#if label}}
+					<div class="label">{{label}}</div>
 				{{/if}}
 
 			</a>

@@ -4,11 +4,43 @@
 }
 
 .page[data-page="Movie Set"] .listItem {
-	margin-bottom: 2em;
+	margin: 0.5ch;
 	text-align: justify;
+	margin-bottom: 2em;
+	margin-left: 1ch;
 }
 
-.page[data-page="Movie Set"] .listItem .label {
+.page[data-page="Movie Set"] .listItem .listActions {
+	width: 60px;
+	order:100;
+	overflow: hidden;
+}
+
+.page[data-page="Movie Set"] .listItem .listAction {
+	width:auto;
+	height: 50px;
+	min-width:50px;
+	flex-direction:row;
+	flex-wrap:nowrap;
+	padding: 0;
+	margin: 5px;
+	max-width: initial;
+	transform:translateY(-50px) rotate(90deg);
+	transform-origin:bottom left;
+}
+
+.page[data-page="Movie Set"] .listItem .listAction > .label {
+	font-size: 18px;
+	font-weight: bold;
+	padding: 0;
+}
+
+.page[data-page="Movie Set"] .listItem .action img {
+	/*transform:rotate(-90deg);*/
+}
+
+.page[data-page="Movie Set"] .listItem > .label,
+.page[data-page="Movie Set"] .listItem > a > .label {
 	font-size: 140%;
 	padding: 0;
 	white-space: normal;
@@ -17,20 +49,33 @@
 	text-align: left;
 }
 
-.page[data-page="Movie Set"] .leaf .label {
-	min-width: 100%;
-	order: -1;
+.page[data-page="Movie Set"] .listItem.leaf > a {
+	flex-direction: column;
+	align-items: stretch;
+	align-content: stretch;
 }
 
-.page[data-page="Movie Set"] .listItem .thumbnail {
-	width: auto;
-	height: 400px;
-	margin-right: 10px;
+.page[data-page="Movie Set"] .listItem.leaf > a > .label {
+	order: -1;
+	width: 200px;
+}
+
+.page[data-page="Movie Set"] .listItem > a > .thumbnail {
+	width:auto;
+}
+
+.page[data-page="Movie Set"] .listItem > a > .thumbnail a {
+}
+
+.page[data-page="Movie Set"] .listItem > a > .thumbnail {
+	height: 300px;
+	width: 200px;
+	flex-grow: 1;
+	max-width: initial;
+	flex-shrink: 1;
 }
 
 .page[data-page="Movie Set"] .listItem .listItem {
-	margin-left: 20px;
-	margin-right: 10px;
 	width: auto;
 }
 

@@ -118,3 +118,12 @@ export function sortItems (items, sortby) {
 		return 0
 	})
 }
+
+export function state2uri (state={}) {
+	return '#' + 
+		Object.keys(state)
+		.filter(key => (state[key] !== undefined))
+		.map(key =>
+			(encodeURIComponent(key) + '=' + encodeURIComponent(state[key]))
+		).join('&')
+}

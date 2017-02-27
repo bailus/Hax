@@ -100,7 +100,8 @@ export default (new Page({
 			'next': prevNext.next,
 			'title': setdetails.label,
 			'titleLink': setdetails.setid && `#page=Movie Set&setid=${setdetails.setid}`,
-			'label': `(${year}) ${title}` + ((originaltitle && originaltitle != title) ? ` [${originaltitle}]` : ''),
+			'label': `(${year}) ${title}`,
+			'subLabel': originaltitle != title && originaltitle,
 			'thumbnail': xbmc.vfs2uri(thumbnail),
 			'fanart': xbmc.vfs2uri(fanart),
 			'details': [
@@ -130,7 +131,7 @@ export default (new Page({
 					'name': 'Plot',
 					'value': plot
 				},
-				runtime !== undefined && runtime.length > 0 && {
+				runtime !== undefined && runtime > 0 && {
 					'class': 'runtime',
 					'name': 'Runtime',
 					'value': moment.duration(runtime, 'seconds').humanize()

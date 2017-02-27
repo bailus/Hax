@@ -1,5 +1,5 @@
 import Progress from './progress'
-import { seconds2string, makeJsLink } from './util'
+import { seconds2string, makeJsLink, seconds2shortstring } from './util'
 
 export default (function () {
 "use strict";
@@ -9,14 +9,6 @@ export default (function () {
 
 	function timeObjToSeconds (o) {
 		return ((((o.hours*60) + o.minutes)*60) + o.seconds)+(o.milliseconds/1e3);
-	}
-	function secondsToShortString(s) {
-		const seconds = Math.round(s%60)
-		const minutes = Math.floor((s/60)%60)
-		const hours = Math.floor(s/3600)
-		return (hours > 0 ? hours + ':' : '') +
-				(minutes < 10 ? '0' : '') + minutes + ':' +
-				(seconds < 10 ? '0' : '') + seconds
 	}
 
 	function renderPlayer(player) {
@@ -94,8 +86,8 @@ export default (function () {
 
 		progress = Progress(function (position, time, duration) {
 			const value = Math.round(position*10000)
-			const timeString = secondsToShortString(time)
-			const durationString = secondsToShortString(duration)
+			const timeString = seconds2shortstring(time)
+			const durationString = seconds2shortstring(duration)
 			const string = timeString + ' / ' + durationString
 			if (string !== oldString) {
 				timeElem.innerHTML = string
@@ -162,12 +154,23 @@ export default (function () {
 		let player = {}
 
 		new Promise((resolve, reject) => {
-			var cancel = false
-			xbmc.GetActivePlayerProperties()
+
+			xbmc.get({ 'method': 'Player.GetActivePlayers' })
+			.then((players={}) => (!players.length ? undefined : players[0]))
+			.then(player => {
+				if (!player)
+					return Promise.resolve()
+				else
+					return xbmc.get({
+						'method': 'Player.GetProperties',
+						'params': {
+							'properties': [ 'time', 'totaltime', 'speed', 'playlistid', 'position', 'repeat', 'type', 'partymode', 'shuffled', 'live' ],
+							'playerid': player.playerid
+						}
+					})
+			})
 			.then(x =>  new Promise(resolve => window.requestAnimationFrame(() => resolve(x))))
 			.then(p => {
-				
-				if (cancel) return
 				player = p
 				if (player) {
 					progress.update(timeObjToSeconds(player.totaltime), timeObjToSeconds(player.time))
@@ -193,17 +196,16 @@ export default (function () {
 						statusElem.innerHTML = ''
 					}
 				}
-				window.setTimeout(resolve, 1e3)
+				window.setTimeout(resolve, 1e2)
 			})
-			window.setTimeout(resolve, 3e3)
+			window.setTimeout(resolve, 3e2)
 		})
 		.then(() => new Promise((resolve, reject) => {
-			var cancel = false
 			if (player && player.playlistid !== undefined && player.position !== undefined) {
 				xbmc.get({
 					'method': 'Playlist.GetItems',
 					'params': {
-						'properties': [ 'title', 'art', 'tagline', 'showtitle', 'album', 'artist', 'season', 'episode', 'file', 'thumbnail', 'runtime', 'duration' ],
+						'properties': [ 'channel', 'title', 'art', 'tagline', 'showtitle', 'album', 'artist', 'season', 'episode', 'file', 'thumbnail', 'runtime', 'duration' ],
 						'playlistid': player.playlistid
 					}
 				})
@@ -215,6 +217,7 @@ export default (function () {
 					var item = playlist.items[player.position]
 					if (item) {
 						statusElem.innerHTML = ''+
+							(item.channel ? item.channel+' ' : '')+
 							(item.showtitle ? item.showtitle+' ' : '')+
 							(item.season>=0 ? item.episode>=0 && item.season+'x'+item.episode+' ' : '')+
 							(item.artist && item.artist.length ? item.artist.join(', ')+' - '+(item.album || '[unknown album]')+' ' : '')+
@@ -222,12 +225,12 @@ export default (function () {
 					}
 					else statusElem.innerHTML = ''
 
-					window.setTimeout(resolve, 1e3)
+					window.setTimeout(resolve, 1e2)
 				})
 			} else {
 				resolve()
 			}
-			window.setTimeout(resolve, 3e3)
+			window.setTimeout(resolve, 3e2)
 		}))
 		.catch(tick)
 		.then(tick)

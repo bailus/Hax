@@ -75,6 +75,16 @@ export default (new Page({
 					lyrics !== undefined && lyrics.length > 0 && {
 						'name': 'Lyrics',
 						'value': lyrics
+					},
+					file !== undefined && file.length > 0 && {
+						'class': '',
+						'name': 'File',
+						'links': [
+							{
+								'label': file,
+								'link': `${ xbmc.vfs2uri(file) }`
+							}
+						]
 					}
 				],
 				'actions': [

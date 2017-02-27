@@ -86,6 +86,7 @@ article > .details {
 	display: flex;
 	flex-direction: column;
 }
+article .details > li > .label {flex-direction:row;flex-wrap:nowrap;display: flex;justify-content: space-between;}
 article > .details > li {
 	display: flex;
 	flex-direction: column;
@@ -99,9 +100,7 @@ article > .details .detail {
     flex-shrink: 0;
     max-width: 100%;
 }
-article > .details > li > .links,
-article > .details > li > p,
-article > .details > li figure {
+article > .details > li > .links, .details > li > p, .details > li figure {
 	padding: 0 1ch;
 }
 article > .details .links {

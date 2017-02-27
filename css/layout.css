@@ -167,9 +167,7 @@ a img,:link img,:visited img {
 	}
 
 	.page article .thumbnails .previous img,
-	.page article .thumbnails .next img,
-	.page article .thumbnails .previous .label,
-	.page article .thumbnails .next .label {
+	.page article .thumbnails .next img {
 		opacity:0.666;
 	}
 

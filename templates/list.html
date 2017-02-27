@@ -13,7 +13,7 @@
 
 </header>
 
-<div class="article-container space-around">
+<div class="article-container space-around" style="{{#if fanart}}background-image: {{fanart}};{{/if}}">
 
 	<article>
 
@@ -99,7 +99,9 @@
 				{{else}}
 					{{label}}
 				{{/if}}
-			</h1>
+			</h3>
+
+			{{#subLabel}}<h4>{{.}}</h4>{{/subLabel}}
 
 		</div>{{/if}}
 
@@ -188,10 +190,6 @@
 				</ul>
 			</div>
 		{{/if}}
-
-		{{#fanart}}
-			<img class="fanart" src="{{.}}" />
-		{{/fanart}}
 
 	</article>
 

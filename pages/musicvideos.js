@@ -1,6 +1,7 @@
 import Page from '../js/page'
 import Filter from '../js/xbmcFilter'
 import { parseYear } from '../js/util'
+import icons from './icons'
 
 export default (new Page({
 	'id': 'Music Videos',
@@ -54,7 +55,7 @@ export default (new Page({
 				'artist': (mv.artist instanceof Array ? mv.artist : [mv.artist]).join(', '),
 				'label': mv.title,
 				'details': (mv.album ? mv.album+(mv.year ? ' ('+mv.year+')' : '') : ''),
-				'thumbnail': mv.thumbnail ? xbmc.vfs2uri(mv.thumbnail) : undefined,
+				'thumbnail': xbmc.vfs2uri(mv.thumbnail) || icons.media['Music Video'],
 				'play': () => { xbmc.Open({ 'item': { 'file': xbmc.vfs2uri(mv.file) } }) },
 				'year': parseYear(mv.year),
 				'genre': mv.genre,

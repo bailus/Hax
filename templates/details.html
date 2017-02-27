@@ -4,7 +4,15 @@
 			{{#.}}{{#if .}}
 				<li class="{{class}}">
 
-					<h5>{{name}}</h5>
+					<div class="label">
+
+						<h5>{{name}}</h5>
+
+						{{#more}}
+							<span class="more"><a href="{{.}}">more...</a></span>
+						{{/more}}
+						
+					</div>
 
 					{{#if flags}}
 						<ul class="flags">

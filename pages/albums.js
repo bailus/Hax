@@ -1,6 +1,7 @@
 import Page from '../js/page'
 import { makeJsLink, parseYear } from '../js/util'
 import Filter from '../js/xbmcFilter'
+import icons from './icons'
 
 export default (new Page({
 	'id': 'Albums',
@@ -37,7 +38,7 @@ export default (new Page({
 					details: album.artist,
 					year: parseYear(album.year),
 					link: '#page=Album&albumid='+album.albumid,
-					thumbnail: album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : 'img/icons/default/DefaultAlbumCover.png',
+					thumbnail: album.thumbnail ? xbmc.vfs2uri(album.thumbnail) : icons.media['Album'],
 					actions: [
 						{ label: '▶', link: makeJsLink(`xbmc.Play({ 'albumid': ${album.albumid} }, 0)`) }
 					]

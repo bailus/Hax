@@ -4,6 +4,7 @@ import episodesPage from './episodes'
 import tvshowsPage from './tvshows'
 import moviesPage from './movies'
 import musicvideosPage from './musicvideos'
+import { state2uri } from '../js/util'
 
 export default (new Page({
 	'id': 'Videos',
@@ -45,20 +46,48 @@ export default (new Page({
 			title: filter.toString(),
 			details: [
 				movies.items !== undefined && movies.items.length > 0 && {
-					name: `Movies`,
-					items: movies.items
+					'name': `Movies`,
+					'items': movies.items,
+					'more': (function () {
+						const s = {}
+						Object.assign(s, state) // create a shallow clone of the state object
+						s['page'] = 'Movies'
+						s['limit'] = undefined
+						return state2uri(s)
+					})()
 				},
 				tvshows.items !== undefined && tvshows.items.length > 0 && {
-					name: `TV Shows`,
-					items: tvshows.items
+					'name': `TV Shows`,
+					'items': tvshows.items,
+					'more': (function () {
+						const s = {}
+						Object.assign(s, state) // create a shallow clone of the state object
+						s['page'] = 'TV Shows'
+						s['limit'] = undefined
+						return state2uri(s)
+					})()
 				},
 				episodes.items !== undefined && episodes.items.length > 0 && {
-					name: `Episodes`,
-					items: episodes.items
+					'name': `Episodes`,
+					'items': episodes.items,
+					'more': (function () {
+						const s = {}
+						Object.assign(s, state) // create a shallow clone of the state object
+						s['page'] = 'Episodes'
+						s['limit'] = undefined
+						return state2uri(s)
+					})()
 				},
 				musicvideos.items !== undefined && musicvideos.items.length > 0 && {
-					name: `Music Videos`,
-					items: musicvideos.items
+					'name': `Music Videos`,
+					'items': musicvideos.items,
+					'more': (function () {
+						const s = {}
+						Object.assign(s, state) // create a shallow clone of the state object
+						s['page'] = 'Music Videos'
+						s['limit'] = undefined
+						return state2uri(s)
+					})()
 				}
 			]
 		}))

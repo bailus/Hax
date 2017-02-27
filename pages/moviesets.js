@@ -6,7 +6,7 @@ import Filter from '../js/xbmcFilter'
 export default (new Page({
 	'id': 'Movie Sets',
 	'view': 'list',
-	'icon': state => 'img/icons/default/DefaultMovieTitle.png',
+	'icon': state => 'img.estuary/default/DefaultSets.png',
 	'groupby': 'alpha',
 	'parentState': state => ({ 'page': 'Menu', 'media': 'Movies' }),
 	'data': function (state) {
@@ -20,13 +20,12 @@ export default (new Page({
 				]
 			}
 		})
-		//.then(x => {console.log(x);return x})
 		.then(({ sets=[] }) => (sets.map(({
 			label="", thumbnail, setid
 		}) => ({
 			'label': label,
 			'alpha': label.at(0).toUpperCase(),
-			'thumbnail': xbmc.vfs2uri(thumbnail),
+			'thumbnail': xbmc.vfs2uri(thumbnail) || 'img.estuary/default/DefaultSets.png',
 			'link': `#page=Movie Set&setid=${ setid }`
 		}))))
 

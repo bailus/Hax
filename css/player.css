@@ -246,6 +246,11 @@ body[data-status=playing] #player .playpause a { background-image:url('../img/bu
 	flex-grow: 0;
 	align-self: flex-end;
 }
+#progress .status,
+#progress .time {
+    line-height: 16px;
+    height: 16px;
+}
 #nowPlaying {
 	text-overflow: ellipsis;
 	white-space: nowrap;

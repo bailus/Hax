@@ -5,6 +5,9 @@
 	flex-shrink:0;
 }
 
+.items .listItem.leaf {
+	margin: 0.5ch 0;
+}
 .listItem, .listItem > a {
 	display: flex;
 	flex-direction: column;
@@ -13,7 +16,7 @@
 
 .listItem.leaf, .listItem.leaf > a {
 	flex-direction: row;
-	margin: 4px 0;
+	margin: 0;
 	display: flex;
 }
 .listItem.leaf > a {
@@ -26,7 +29,7 @@
 	max-width: 89px;
 	height: 50px;
 	line-height: 50px;
-	width: 15.625%;
+	width: 14%;
 }
 .listItem .listAction {
 	width: 50px;
@@ -34,7 +37,8 @@
 .listItem.leaf {
 	width: 100%;
 }
-.listItem.leaf .label {
+.listItem.leaf > .label,
+.listItem.leaf > a > .label {
 	height: 50px;
 	line-height: 50px;
 	padding-left: 1ch;
@@ -108,11 +112,17 @@
 	flex-shrink: 0;
 }
 .listItem .listAction {
-	display: block;
+	display: flex;
 	flex-shrink: 0;
 	text-align: center;
 	font-size: 32px;
 	z-index: 100;
+	align-items: center;
+}
+.listAction > .label {
+	text-align:center;
+	align-items:center;
+	justify-content: center;
 }
 
 

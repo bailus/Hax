@@ -1,6 +1,7 @@
 import Page from '../js/page'
 import { makeJsLink, parseYear } from '../js/util'
 import Filter from '../js/xbmcFilter'
+import icons from './icons'
 
 function makeDetail(page, name, key, value) {
 	return value !== undefined && value.length > 0 && {
@@ -109,12 +110,12 @@ export default (new Page({
 			'actions': [
 				{
 					'label': 'Play',
-					'thumbnail': 'img/icons/infodialogs/play.png',
+					'thumbnail': icons.actions['Play'],
 					'link': makeJsLink(`xbmc.Play({ 'artistid': (${ artistid }) }, 0)`)
 				},
 				{
 					'label': 'Add to playlist',
-					'thumbnail': 'img/buttons/add.png',
+					'thumbnail': icons.actions['Add'],
 					'link': makeJsLink(`xbmc.sendMessage('Playlist.add', { 'playlistid': 0, 'item': { 'artistid': (${ artistid }) } })`)
 				}
 			]
@@ -142,7 +143,7 @@ export default (new Page({
 				'label': label,
 				'details': [ year, playcount > 0 ? `played ${playcount} times` : '' ],
 				'link': '#page=Album&albumid=' + albumid + '&artistid=' + artistid,
-				'thumbnail': thumbnail ? xbmc.vfs2uri(thumbnail) : 'img/icons/default/DefaultAudio.png',
+				'thumbnail': xbmc.vfs2uri(thumbnail) || icons.media['Album'],
 				'year': year||undefined, //sometimes year is 0
 				'actions': [
 					{
@@ -162,7 +163,7 @@ export default (new Page({
 			}) => ({
 				'details': `${ displayartist || artist.join(', ')}`,
 				'link': '#page=Album&albumid=' + albumid + '&artistid=' + artistid,
-				'thumbnail': thumbnail ? xbmc.vfs2uri(thumbnail) : 'img/icons/default/DefaultAudio.png',
+				'thumbnail': xbmc.vfs2uri(thumbnail) || icons.media['Album'],
 				'label': (year ? `(${parseYear(year)}) ` : '') + title
 			}))
 		})
@@ -184,7 +185,7 @@ export default (new Page({
 		}) => ({
 			'label': title,
 			'details': (album ? album+(year ? ' ('+parseYear(year)+')' : '') : ''),
-			'thumbnail': thumbnail ? xbmc.vfs2uri(thumbnail) : undefined,
+			'thumbnail': xbmc.vfs2uri(thumbnail) || icons.media['Music Video'],
 			'link': '#page=Music Video&musicvideoid='+musicvideoid
 		}))))
 

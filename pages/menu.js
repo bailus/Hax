@@ -1,22 +1,12 @@
 import Page from '../js/page'
 import { seconds2string, makeJsLink } from '../js/util'
 import moment from 'moment'
+import icons from './icons'
 
 export default (new Page({
 	'id': 'Menu',
 	'view': 'list',
-	'icon': state => ({
-		'Default': 'img/icons/home/menu.png',
-		'Videos': 'img/icons/home/videos.png',
-		'Movies': 'img/icons/home/movies.png',
-		'TV Shows': 'img/icons/home/tv.png',
-		'Music Videos': 'img/icons/home/musicvideos.png',
-		'Music': 'img/icons/home/music.png',
-		'Pictures': 'img/icons/home/pictures.png',
-		'TV': 'img/icons/home/livetv.png',
-		'Radio': 'img/icons/home/radio.png',
-		'Addons': 'img/icons/home/addons.png'
-	}[state ? state['media'] : 'Default']),
+	'icon': state => (icons.menu[(state && state['media']) || 'Default']),
 	'parentState': state => {
 		const m = new Map()
 		const parent = {
@@ -42,24 +32,25 @@ export default (new Page({
 			'items': ({
 				'Videos': [
 					{ 'label': 'Library', 'items': [
-						{ 'label': 'Movies', 'link': '#page=Menu&media=Movies', 'thumbnail': 'img/icons/home/movies.png' },
-						{ 'label': 'TV Shows', 'link': '#page=Menu&media=TV Shows', 'thumbnail': 'img/icons/home/tv.png' },
-						{ 'label': 'Music Videos', 'link': '#page=Menu&media=Music Videos', 'thumbnail': 'img/icons/home/musicvideos.png' }
+						{ 'label': 'Movies', 'link': '#page=Menu&media=Movies', 'thumbnail': icons.menu['Movies'] },
+						{ 'label': 'TV Shows', 'link': '#page=Menu&media=TV Shows', 'thumbnail': icons.menu['TV Shows'] },
+						{ 'label': 'Music Videos', 'link': '#page=Menu&media=Music Videos', 'thumbnail': icons.menu['Music Videos'] },
+						{ 'label': 'By Actor', 'link': '#page=Actors', 'thumbnail': 'img.estuary/default/DefaultActor.png' }
 					] },
 					{ 'label': 'More', 'items': [
-						{ 'label': 'Files', 'link': '#page=Files&media=Videos', 'thumbnail': 'img/icons/default/DefaultFolder.png' },
-						{ 'label': 'Addons', 'link': '#page=Addons&content=video', 'thumbnail': 'img/icons/home/addons.png' }
+						{ 'label': 'Files', 'link': '#page=Files&media=Videos', 'thumbnail': icons.menu['Files'] },
+						{ 'label': 'Addons', 'link': '#page=Addons&content=video', 'thumbnail': icons.menu['Addons'] }
 					] }
 				],
 				'Movies': [
 					{ 'label': 'Movies', 'items': [
-						{ 'label': 'By Year', 'link': '#page=Movies&group=year', 'thumbnail': 'img/icons/default/DefaultMovieYears.png' },
-						{ 'label': 'By Title', 'link': '#page=Movies&group=alpha', 'thumbnail': 'img/icons/default/DefaultMovieTitle.png' },
-						{ 'label': 'By Genre', 'link': '#page=Genres&type=Movies', 'thumbnail': 'img/icons/default/DefaultGenre.png' },
-						{ 'label': 'By Actor', 'link': '#page=Actors&media=Movies', 'thumbnail': 'img/icons/default/DefaultActor.png' }
+						{ 'label': 'By Year', 'link': '#page=Movies&group=year', 'thumbnail': 'img.estuary/default/DefaultMovieYears.png' },
+						{ 'label': 'By Title', 'link': '#page=Movies&group=alpha', 'thumbnail': 'img.estuary/default/DefaultMovieTitle.png' },
+						{ 'label': 'By Genre', 'link': '#page=Genres&type=Movies', 'thumbnail': 'img.estuary/default/DefaultGenre.png' },
+						{ 'label': 'By Actor', 'link': '#page=Actors&media=Movies', 'thumbnail': 'img.estuary/default/DefaultActor.png' }
 					] },
 					{ 'label': 'Movie Sets', 'items': [
-						{ 'label': 'By Title', 'link': '#page=Movie Sets', 'thumbnail': 'img/icons/default/DefaultMovieTitle.png' }
+						{ 'label': 'By Title', 'link': '#page=Movie Sets', 'thumbnail': 'img.estuary/default/DefaultSets.png' }
 					] }
 				],
 				'TV Shows': [
@@ -87,26 +78,9 @@ export default (new Page({
 						{ 'label': 'By Genre', 'link': '#page=Genres&type=Albums', 'thumbnail': 'img/icons/default/DefaultMusicGenres.png' }
 					] },
 					{ 'label': 'More', 'items': [
-						{ 'label': 'Files', 'link': '#page=Files&media=Music', 'thumbnail': 'img/icons/default/DefaultFolder.png' },
-						{ 'label': 'Addons', 'link': '#page=Addons&content=audio', 'thumbnail': 'img/icons/home/addons.png' },
-						{ 'label': 'Music Videos', 'link': '#page=Menu&media=Music Videos', 'thumbnail': 'img/icons/home/musicvideos.png' }
-					] }
-				],
-				'Pictures': [ ],
-				'TV': [
-					{ 'label': '', 'items': [
-						{ 'label': 'Channels', 'link': '#page=Channels&media=TV', 'thumbnail': 'img/icons/home/livetv.png' },
-						{ 'label': 'Guide', 'link': '#page=Channels&media=TV&nextpage=Guide', 'thumbnail': 'img/icons/home/livetv.png' },
-						{ 'label': 'Recordings', 'link': '#page=Recordings&media=TV', 'thumbnail': 'img/icons/home/livetv.png' },
-						{ 'label': 'Timers', 'link': '#page=Timers&media=TV', 'thumbnail': 'img/icons/home/livetv.png' }
-					] }
-				],
-				'Radio': [
-					{ 'label': '', 'items': [
-						{ 'label': 'Channels', 'link': '#page=Channels&media=Radio', 'thumbnail': 'img/icons/home/radio.png' },
-						{ 'label': 'Guide', 'link': '#page=Channels&media=Radio&nextpage=Guide', 'thumbnail': 'img/icons/home/radio.png' },
-						{ 'label': 'Recordings', 'link': '#page=Recordings&media=Radio', 'thumbnail': 'img/icons/home/radio.png' },
-						{ 'label': 'Timers', 'link': '#page=Timers&media=Radio', 'thumbnail': 'img/icons/home/radio.png' }
+						{ 'label': 'Files', 'link': '#page=Files&media=Music', 'thumbnail': icons.menu['Files'] },
+						{ 'label': 'Addons', 'link': '#page=Addons&content=audio', 'thumbnail': icons.menu['Addons'] },
+						{ 'label': 'Music Videos', 'link': '#page=Menu&media=Music Videos', 'thumbnail': icons.menu['Music Videos'] }
 					] }
 				],
 				'Addons': [
@@ -117,7 +91,7 @@ export default (new Page({
 						{ 'label': 'Program Addons', 'link': '#page=Addons&content=executable', 'thumbnail': 'img/icons/home/addons.png' },
 					]},
 					{ 'label': 'More', 'items': [
-						{ 'label': 'Installed Addons', 'link': '#page=Addons&group=type', 'thumbnail': 'img/icons/home/addons.png' }
+						{ 'label': 'Installed Addons', 'link': '#page=Addons&group=type', 'thumbnail': icons.menu['Addons'] }
 					]}
 				]
 			})[media]

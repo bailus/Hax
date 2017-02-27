@@ -50,12 +50,12 @@ export default (new Page({
 						'previous': prev === undefined ? undefined : {
 							'label': `${prev.channelnumber}. ${prev.label}`,
 							'link': `#page=Channel&media=${ media }&channelid=${ prev.channelid }&groupid=${ groupid }`,
-							'thumbnail': prev.thumbnail ? xbmc.vfs2uri(prev.thumbnail) : 'img/icons/default/DefaultAddonNone.png'
+							'thumbnail': xbmc.vfs2uri(prev.thumbnail) || 'img/icons/default/DefaultTVShows.png'
 						},
 						'next': next === undefined ? undefined : {
 							'label': `${next.channelnumber}. ${next.label}`,
 							'link': `#page=Channel&media=${ media }&channelid=${ next.channelid }&groupid=${ groupid }`,
-							'thumbnail': next.thumbnail ? xbmc.vfs2uri(next.thumbnail) : 'img/icons/default/DefaultAddonNone.png'
+							'thumbnail': xbmc.vfs2uri(next.thumbnail) || 'img/icons/default/DefaultTVShows.png'
 						}
 					}
 				}
@@ -130,9 +130,13 @@ export default (new Page({
 						label, broadcastid, starttime, runtime, endtime, isactive
 					}, index) => ({
 						'label': label,
-						'link': `#page=Broadcast&channelid=${ channelid }&broadcastid=${ broadcastid }&media=${ media }`,
+						'link': `#page=Broadcast&channelid=${ channelid }&broadcastid=${ broadcastid }&media=${ media }&groupid=${ groupid }`,
 						'details': [ displayTime(starttime, index), minutes2string(runtime) ],
-						'class': (moment.utc(endtime).isBefore(moment()) ? 'isbefore ' : '') + (isactive ? 'isactive' : ''),
+						'class': [
+							(moment.utc(endtime).isBefore(moment()) ? 'isbefore' : undefined),
+							(isactive ? 'isactive' : undefined),
+							(isactive ? 'selected' : undefined)
+						].filter(x => x !== undefined).join(' '),
 						'displayDate': displayDate(starttime, index)
 					})), 'displayDate')
 				}

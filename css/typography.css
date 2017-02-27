@@ -8,9 +8,13 @@
 	.icon-list .line1
 	{ font-weight: bold; }
 
-	h2
+	h2, h3, h4
 	{
 		font-weight: normal;
+	}
+
+	h2, h4
+	{
 		font-style: italic;
 	}
 
@@ -24,7 +28,7 @@
 	}
 
 	.group.selected
-	{ font-weight: bold; }
+	{}
 
 	.details .listItem a, .details .listItem a:hover, .details .listItem a:visited {
 		text-decoration:none;
@@ -58,10 +62,10 @@
 	{ font-size: 115%; }
 	
 	h3
-	{ font-size: 111%; }
+	{ font-size: 115%; }
 	
 	h4
-	{ font-size: 105%; }
+	{ font-size: 90%; }
 	
 	.listItem,
 	h5,
@@ -97,7 +101,7 @@
 	h1.banner
 	{margin-top: 0;}
 
-	h1, h2, h3 {
+	h1, h2, h3, h4 {
 		margin: 0.4em 0;
 		text-align: center;
 	}

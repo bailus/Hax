@@ -22,36 +22,10 @@ export default (function () {
 		'Open': {
 			'method': 'Player.Open'
 		},
-		'GetActivePlayer': {
-			'method': 'Player.GetActivePlayers',
-			'wrapper': function (players, callback) {
-				if (!players.length) { callback(); return; };
-				callback(players[0]); //run callback with the active player
-			}
+		'GetActivePlayerID': function () {
+			return xbmc.get({ 'method': 'Player.GetActivePlayers' })
+			.then((players={}) => (!players.length > 0 ? undefined : players[0].playerid))
 		},
-		'GetActivePlayerID': {
-			'method': 'Player.GetActivePlayers',
-			'wrapper': function (players, callback) {
-				if (!players.length) return; //do nothing if there is nothing playing
-				callback(players[0].playerid); //run callback with the id of the active player
-			}
-		},
-		'GetActivePlayerProperties': () => new Promise((resolve, reject) => {
-			pub.GetActivePlayer()
-			.then(player => {
-				if (!player)
-					resolve()
-				else
-					pub.get({
-						'method': 'Player.GetProperties',
-						'params': {
-							'properties': [ 'time', 'totaltime', 'speed', 'playlistid', 'position', 'repeat', 'type', 'partymode', 'shuffled', 'live' ],
-							'playerid': player.playerid
-						}
-					})
-					.then(resolve).catch(reject)
-			})
-		}),
 		'GoTo': {
 			'requires': { 'name': 'playerid', 'value': 'GetActivePlayerID' },
 			'method': 'Player.GoTo'
@@ -204,7 +178,6 @@ export default (function () {
 				  	if (callback instanceof Function) {
 				  		cb = r.cache ? function (x) { cache.set(params, x); return callback(x); } : callback;
 						if (result.result) result = result.result;
-				  		if (r.wrapper) r.wrapper(result, cb);
 				  		else cb(result);
 					}
 				})

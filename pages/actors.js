@@ -38,8 +38,7 @@ export default (new Page({
 				'method': method,
 				'params': {
 					'properties': [ 'cast' ]
-				},
-				'cache': true
+				}
 			})
 			.then(x => {console.log(x); return x})
 			.then(result => result[resultProperty] || [])
@@ -47,7 +46,7 @@ export default (new Page({
 			.then(map_(({ name="", thumbnail }) => ({
 				'label': name,
 				'alpha': name.at(0).toUpperCase(),
-				'link': '#page='+page+'&actor='+encodeURIComponent(name),
+				'link': '#page='+(mediaType === undefined ? 'Videos' : page)+'&actor='+encodeURIComponent(name),
 				'thumbnail': thumbnail ? xbmc.vfs2uri(thumbnail) : 'img/icons/default/DefaultActor.png'
 			})))
 		}))
