@@ -107,6 +107,21 @@ export default (new Page({
 					'name': 'MPAA Rating',
 					'value': mpaa
 				},
+				lastplayed instanceof String && lastplayed.length > 0 && {
+					'class': 'lastplayed',
+					'name': 'Last Played',
+					'value': moment(lastplayed).format('LL')
+				},
+				premiered instanceof String && premiered.length > 0 && {
+					'class': 'premiered',
+					'name': 'Premiered',
+					'value': moment(premiered).format('LL')
+				},
+				dateadded instanceof String && dateadded.length > 0 && {
+					'class': 'dateadded',
+					'name': 'Added',
+					'value': moment(dateadded).format('LL')
+				},
 				plot !== undefined && plot.length > 0 && {
 					'class': 'plot',
 					'name': 'Plot',
@@ -116,13 +131,15 @@ export default (new Page({
 				makeDetail('TV Shows', 'Genre', 'genre', genre),
 				makeDetail('TV Shows', 'Tag', 'tag', tag),
 				{
-					'class': 'statistics',
-					'name': 'Statistics',
+					'class': 'links',
+					'name': 'Links',
 					'links': [
-						{ 'label': `Played ${ playcount } times` },
-						{ 'label': lastplayed instanceof String && lastplayed.length > 0 ? `Last Played ${ moment(lastplayed).format('LL') }` : undefined },
-						{ 'label': `Added ${ moment(dateadded).format('LL') }` },
-						{ 'label': `Premiered ${ moment(premiered).format('LL') }` }
+						{
+							'label': 'IMDB',
+							'link': ( (imdbnumber instanceof String) && (imdbnumber.length > 0) ) ? 
+									`http://www.imdb.com/title/${ imdbnumber }/` : 
+									`http://www.imdb.com/search/title?release_date=${ encodeURIComponent(year) },&title=${ encodeURIComponent(title) }&title_type=feature,tv_movie,documentary,short`
+						}
 					]
 				},
 				file !== undefined && file.length > 0 && {
@@ -132,18 +149,6 @@ export default (new Page({
 						{
 							'label': file,
 							'link': `#page=Directory&media=video&root=${ encodeURIComponent(file) }`
-						}
-					]
-				},
-				{
-					'class': 'links',
-					'name': 'Links',
-					'links': [
-						{
-							'label': 'IMDB',
-							'link': ( (imdbnumber instanceof String) && (imdbnumber.length > 0) ) ? 
-									`http://www.imdb.com/title/${ imdbnumber }/` : 
-									`http://www.imdb.com/search/title?release_date=${ encodeURIComponent(year) },&title=${ encodeURIComponent(title) }&title_type=feature,tv_movie,documentary,short`
 						}
 					]
 				}
@@ -174,9 +179,10 @@ export default (new Page({
 		//.then(x => {console.log(x);return x})
 		.then(({ seasons=[] }) => seasons.map(season => ({
 			'label': season.label,
-			'details': [ season.episode + ' episodes', season.watchedepisodes + ' watched' ],
+			'details': [ season.episode + ' episodes' ],
 			'link': `#page=Season&tvshowid=${ season.tvshowid }&season=${ season.season }`,
-			'thumbnail': season.thumbnail ? xbmc.vfs2uri(season.thumbnail) : 'img/icons/default/DefaultVideo.png'
+			'thumbnail': season.thumbnail ? xbmc.vfs2uri(season.thumbnail) : 'img/icons/default/DefaultVideo.png',
+			'progress': Math.round(season.watchedepisodes / season.episode * 100) + '%'
 		})))
 
 		return Promise.all([ getShowDetails, getSeasons ])

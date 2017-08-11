@@ -120,3 +120,11 @@ header,
 #progress .background {
   background-color: var(--grey);
 }
+
+/* Progress bar (under list items and thumbnails) */
+.progress {
+	background-color: hsla(0, 0%, var(--luminosity_high), var(--opacity_high));
+}
+.progress > .bar {
+	background-color: var(--red);
+}

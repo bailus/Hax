@@ -226,9 +226,11 @@ body[data-status=playing] #player .playpause a { background-image:url('../img/bu
 }
 #progress .bar {
 	height: 100%;
-	width: 0;
-
+	width: 100%;
 	background-color: white;
+	transition: transform 1s;
+	transition-timing-function: linear;
+	transform-origin: 0 0;
 }
 #progress .background {
 	height: 7px;

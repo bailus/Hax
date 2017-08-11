@@ -104,6 +104,7 @@ export default (new Page({
 			'subLabel': originaltitle != title && originaltitle,
 			'thumbnail': xbmc.vfs2uri(thumbnail),
 			'fanart': xbmc.vfs2uri(fanart),
+			'progress': resume !== undefined && resume.position > 0 && (Math.round(resume.position / resume.total * 100)+'%'),
 			'details': [
 				tagline !== undefined && tagline.length > 0 && {
 					'class': 'tagline',
@@ -123,55 +124,58 @@ export default (new Page({
 				},
 				mpaa !== undefined && mpaa.length > 0 && {
 					'class': 'mpaa',
-					'name': 'MPAA Rating',
+					'name': 'MPAA',
 					'value': mpaa
-				},
-				plot !== undefined && plot.length > 0 && {
-					'class': 'plot',
-					'name': 'Plot',
-					'value': plot
 				},
 				runtime !== undefined && runtime > 0 && {
 					'class': 'runtime',
 					'name': 'Runtime',
 					'value': moment.duration(runtime, 'seconds').humanize()
 				},
+				lastplayed instanceof String && lastplayed.length > 0 && {
+					'class': 'lastplayed',
+					'name': 'Last Played',
+					'value': moment(lastplayed).format('LL')
+				},
+				dateadded instanceof String && dateadded.length > 0 && {
+					'class': 'dateadded',
+					'name': 'Added',
+					'value': moment(dateadded).format('LL')
+				},
+				plot !== undefined && plot.length > 0 && {
+					'class': 'plot',
+					'name': 'Plot',
+					'value': plot
+				},
 				makeDetail('Videos', 'Studio', 'studio', studio),
 				makeDetail('Movies', 'Genre', 'genre', genre),
 				makeDetail('Movies', 'Tag', 'tag', tag),
 				makeDetail('Movies', 'Country', 'country', country),
 				{
-					'class': '',
-					'name': 'Statistics',
-					'links': [
-						{ 'label': `Played ${ playcount } times` },
-						{ 'label': lastplayed instanceof String && lastplayed.length > 0 ? `Last Played ${ moment(lastplayed).format('LL') }` : undefined },
-						{ 'label': `Added ${ moment(dateadded).format('LL') }` }
-					]
-				},
-				file !== undefined && file.length > 0 && {
-					'class': '',
-					'name': 'File',
-					'links': [
-						{
-							'label': file,
-							'link': `${ xbmc.vfs2uri(file) }`
-						}
-					]
-				},
-				{
-					'class': '',
+					'class': 'links',
 					'name': 'Links',
 					'links': [
 						{
+							'class': 'IMDB',
 							'label': 'IMDB',
 							'link': ( (imdbnumber instanceof String) && (imdbnumber.length > 0) ) ? 
 									`http://www.imdb.com/title/${ imdbnumber }/` : 
 									`http://www.imdb.com/search/title?release_date=${ encodeURIComponent(year) },&title=${ encodeURIComponent(title) }&title_type=feature,tv_movie,documentary,short`
 						},
 						{
+							'class': 'themoviedb',
 							'label': 'themoviedb.org',
 							'link': `https://www.themoviedb.org/search?query=${ encodeURIComponent(title) }`
+						}
+					]
+				},
+				file !== undefined && file.length > 0 && {
+					'class': 'file',
+					'name': 'File',
+					'links': [
+						{
+							'label': file,
+							'link': `${ xbmc.vfs2uri(file) }`
 						}
 					]
 				}

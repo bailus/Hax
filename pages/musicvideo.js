@@ -1,5 +1,5 @@
 import Page from '../js/page'
-import { seconds2string, ymd2string, makeJsLink, makeDetail } from '../js/util'
+import { seconds2string, ymd2string, makeJsLink, makeDetail, parseYear } from '../js/util'
 import moment from 'moment'
 
 export default (new Page({
@@ -71,7 +71,8 @@ export default (new Page({
 		}) => ({
 			'title': artist,
 			'titleLink': `#page=Artist&artist=${ artist }`,
-			'label': label,
+			'subtitle': `(${parseYear(year)}) ${album}`,
+			'label': (track > 0 ? `${ track }. ` : '') + title,
 			'thumbnail': xbmc.vfs2uri(thumbnail),
 			'fanart': xbmc.vfs2uri(fanart),
 			'details': [
@@ -86,20 +87,25 @@ export default (new Page({
 						}
 					]
 				},
-				album !== undefined && album.length > 0 && {
-					'class': 'album',
-					'name': 'Album',
-					'value': album + (track > 0 ? ` (Track ${ track })` : '')
+				runtime !== undefined && runtime > 0 && {
+					'class': 'runtime',
+					'name': 'Runtime',
+					'value': moment.duration(runtime, 'seconds').humanize()
+				},
+				lastplayed instanceof String && lastplayed.length > 0 && {
+					'class': 'lastplayed',
+					'name': 'Last Played',
+					'value': moment(lastplayed).format('LL')
+				},
+				dateadded instanceof String && dateadded.length > 0 && {
+					'class': 'dateadded',
+					'name': 'Added',
+					'value': moment(dateadded).format('LL')
 				},
 				plot !== undefined && plot.length > 0 && {
 					'class': 'plot',
 					'name': 'Plot',
 					'value': plot
-				},
-				runtime !== undefined && runtime.length > 0 && {
-					'class': 'runtime',
-					'name': 'Runtime',
-					'value': moment.duration(runtime, 'seconds').humanize()
 				},
 				makeDetail('Videos', 'Studio', 'studio', studio),
 				makeDetail('Music Videos', 'Genre', 'genre', genre),
@@ -112,12 +118,6 @@ export default (new Page({
 									'link': '#page=Videos&director='+director
 								}))
 				},
-				{ 'name': 'Statistics', 'links': [
-					{ 'label': `Runtime ${ seconds2string(runtime) }` },
-					{ 'label': `Played ${ playcount } times` },
-					{ 'label': lastplayed instanceof String && lastplayed.length > 0 ? `Last Played ${ moment(lastplayed).format('LL') }` : undefined },
-					{ 'label': `Added ${ moment(dateadded).format('LL') }` }
-				] },
 				file !== undefined && file.length > 0 && {
 					'name': 'File',
 					'links': [

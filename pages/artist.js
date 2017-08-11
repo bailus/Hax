@@ -128,7 +128,8 @@ export default (new Page({
 				'params': {
 					'properties': [ //http://kodi.wiki/view/JSON-RPC_API/v6#Audio.Fields.Album
 					'title', 'artist', 'year', 'thumbnail', 'artistid', 'displayartist', 'playcount' ],
-					'filter': { 'artistid': artistid }
+					'filter': { 'artistid': artistid },
+					'sort': { 'method': 'year' }
 				}
 			})
 		})

@@ -34,11 +34,12 @@ export default (new Page({
 
 		let group = state['group'] || this.groupby
 		
-		return xbmc.get({
+
+		const getMovies = xbmc.get({
 			'method': 'VideoLibrary.GetMovies', 
 			'params': {
 				'properties': [
-					'title', 'originaltitle', 'runtime', 'year', 'thumbnail', 'file', 'genre', 'lastplayed'
+					'title', 'originaltitle', 'runtime', 'year', 'thumbnail', 'file', 'genre', 'lastplayed', 'resume'
 				],
 				'sort': { method: 'sorttitle', ignorearticle: true },
 				'filter': filter.out(),
@@ -48,10 +49,14 @@ export default (new Page({
 			},
 			'cache': true
 		})
-		.then(({ movies=[] }) => ({ //format movies
+
+		getMovies.then(console.log)
+
+		const formatMovies = getMovies
+		.then(({ movies=[] }) => ({
 			'title': filter.toString(),
 			'items': movies.map(({
-				runtime, title, label, originaltitle, movieid, thumbnail, year, lastplayed
+				runtime, title, label, originaltitle, movieid, thumbnail, year, lastplayed, resume
 			}) => ({
 				'label': (title || label || '') +
 						(originaltitle && originaltitle != title ? ' [' + originaltitle + ']' : ''),
@@ -68,9 +73,12 @@ export default (new Page({
 						'label': '▶',
 						'link': makeJsLink(`xbmc.Play({ 'movieid': ${movieid} }, 1)`)
 					}
-				]
+				],
+				'progress': resume !== undefined && resume.position > 0 && (Math.round(resume.position / resume.total * 100)+'%')
 			}))
 		}))
+
+		return formatMovies
 
 	}
 }));

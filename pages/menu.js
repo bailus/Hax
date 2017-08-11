@@ -35,7 +35,7 @@ export default (new Page({
 						{ 'label': 'Movies', 'link': '#page=Menu&media=Movies', 'thumbnail': icons.menu['Movies'] },
 						{ 'label': 'TV Shows', 'link': '#page=Menu&media=TV Shows', 'thumbnail': icons.menu['TV Shows'] },
 						{ 'label': 'Music Videos', 'link': '#page=Menu&media=Music Videos', 'thumbnail': icons.menu['Music Videos'] },
-						{ 'label': 'By Actor', 'link': '#page=Actors', 'thumbnail': 'img.estuary/default/DefaultActor.png' }
+						{ 'label': 'Actors', 'link': '#page=Actors', 'thumbnail': 'img.estuary/default/DefaultActor.png' }
 					] },
 					{ 'label': 'More', 'items': [
 						{ 'label': 'Files', 'link': '#page=Files&media=Videos', 'thumbnail': icons.menu['Files'] },
@@ -55,27 +55,27 @@ export default (new Page({
 				],
 				'TV Shows': [
 					{ 'label': 'TV Shows', 'items': [
-						{ 'label': 'By Title', 'link': '#page=TV Shows', 'thumbnail': 'img/icons/default/DefaultTVShows.png' },
-						{ 'label': 'By Genre', 'link': '#page=Genres&type=TV Shows', 'thumbnail': 'img/icons/default/DefaultGenre.png' },
-						{ 'label': 'By Actor', 'link': '#page=Actors&media=TV Shows', 'thumbnail': 'img/icons/default/DefaultActor.png' }
+						{ 'label': 'By Title', 'link': '#page=TV Shows', 'thumbnail': 'img.estuary/default/DefaultTVShowTitle.png' },
+						{ 'label': 'By Genre', 'link': '#page=Genres&type=TV Shows', 'thumbnail': 'img.estuary/default/DefaultGenre.png' },
+						{ 'label': 'By Actor', 'link': '#page=Actors&media=TV Shows', 'thumbnail': 'img.estuary/default/DefaultActor.png' }
 					] }
 				],
 				'Music Videos': [
 					{ 'label': 'Music Videos', 'items': [
-						{ 'label': 'By Year', 'link': '#page=Music Videos&group=year', 'thumbnail': 'img/icons/default/DefaultYear.png' },
-						{ 'label': 'By Artist', 'link': '#page=Music Videos', 'thumbnail': 'img/icons/default/DefaultMusicArtists.png' },
-						{ 'label': 'By Genre', 'link': '#page=Music Videos&group=genre', 'thumbnail': 'img/icons/default/DefaultGenre.png' }
+						{ 'label': 'By Year', 'link': '#page=Music Videos&group=year', 'thumbnail': 'img.estuary/default/DefaultMusicYears.png' },
+						{ 'label': 'By Artist', 'link': '#page=Music Videos', 'thumbnail': 'img.estuary/default/DefaultMusicArtists.png' },
+						{ 'label': 'By Genre', 'link': '#page=Music Videos&group=genre', 'thumbnail': 'img.estuary/default/DefaultMusicGenres.png' }
 					] }
 				],
 				'Music': [
 					{ 'label': 'Artists', 'items': [
-						{ 'label': 'By Name', 'link': '#page=Artists', 'thumbnail': 'img/icons/default/DefaultMusicArtists.png' },
-						{ 'label': 'By Genre', 'link': '#page=Genres&type=Artists', 'thumbnail': 'img/icons/default/DefaultMusicGenres.png' }
+						{ 'label': 'By Name', 'link': '#page=Artists', 'thumbnail': 'img.estuary/default/DefaultMusicArtists.png' },
+						{ 'label': 'By Genre', 'link': '#page=Genres&type=Artists', 'thumbnail': 'img.estuary/default/DefaultMusicGenres.png' }
 					] },
 					{ 'label': 'Albums', 'items': [
-						{ 'label': 'By Year', 'link': '#page=Albums&group=year', 'thumbnail': 'img/icons/default/DefaultMusicYears.png' },
-						{ 'label': 'By Title', 'link': '#page=Albums', 'thumbnail': 'img/icons/default/DefaultMusicAlbums.png' },
-						{ 'label': 'By Genre', 'link': '#page=Genres&type=Albums', 'thumbnail': 'img/icons/default/DefaultMusicGenres.png' }
+						{ 'label': 'By Year', 'link': '#page=Albums&group=year', 'thumbnail': 'img.estuary/default/DefaultMusicYears.png' },
+						{ 'label': 'By Title', 'link': '#page=Albums', 'thumbnail': 'img.estuary/default/DefaultMusicAlbums.png' },
+						{ 'label': 'By Genre', 'link': '#page=Genres&type=Albums', 'thumbnail': 'img.estuary/default/DefaultMusicGenres.png' }
 					] },
 					{ 'label': 'More', 'items': [
 						{ 'label': 'Files', 'link': '#page=Files&media=Music', 'thumbnail': icons.menu['Files'] },
@@ -85,10 +85,10 @@ export default (new Page({
 				],
 				'Addons': [
 					{ 'label': 'My Addons', 'items': [
-						{ 'label': 'Video Addons', 'link': '#page=Addons&content=video', 'thumbnail': 'img/icons/home/videos.png' },
-						{ 'label': 'Music Addons', 'link': '#page=Addons&content=audio', 'thumbnail': 'img/icons/home/music.png' },
-						{ 'label': 'Picture Addons', 'link': '#page=Addons&content=image', 'thumbnail': 'img/icons/home/pictures.png' },
-						{ 'label': 'Program Addons', 'link': '#page=Addons&content=executable', 'thumbnail': 'img/icons/home/addons.png' },
+						{ 'label': 'Video Addons', 'link': '#page=Addons&content=video', 'thumbnail': icons.menu['Videos'] },
+						{ 'label': 'Music Addons', 'link': '#page=Addons&content=audio', 'thumbnail': icons.menu['Music'] },
+						{ 'label': 'Picture Addons', 'link': '#page=Addons&content=image', 'thumbnail': icons.menu['Pictures'] },
+						{ 'label': 'Program Addons', 'link': '#page=Addons&content=executable', 'thumbnail': icons.menu['Addons'] },
 					]},
 					{ 'label': 'More', 'items': [
 						{ 'label': 'Installed Addons', 'link': '#page=Addons&group=type', 'thumbnail': icons.menu['Addons'] }
@@ -325,6 +325,59 @@ export default (new Page({
 						],
 						'limits': {
 							'end': 10
+						}
+					},
+					'key': 'musicvideos',
+					'defaultThumbnail': 'img/icons/default/DefaultVideo.png',
+					'transformItem': ({
+						musicvideoid, artist, title, album, year, dateadded
+					}) => ({
+						'link': '#page=Music Video&musicvideoid='+musicvideoid,
+						'label': title,
+						'details': artist
+					})
+				},
+				{
+					'name': 'Unwatched',
+					'method': 'VideoLibrary.GetMusicVideos',
+					'params': {
+						"properties": [
+							"title", "runtime", "album", "artist", "year", "thumbnail", "dateadded"
+						],
+						'limits': {
+							'end': 10
+						},
+						'sort': {
+							'method': 'random'
+						},
+						'filter': {
+							'field': 'playcount',
+							'operator': 'is',
+							'value': '0'
+						}
+					},
+					'key': 'musicvideos',
+					'defaultThumbnail': 'img/icons/default/DefaultVideo.png',
+					'transformItem': ({
+						musicvideoid, artist, title, album, year, dateadded
+					}) => ({
+						'link': '#page=Music Video&musicvideoid='+musicvideoid,
+						'label': title,
+						'details': artist
+					})
+				},
+				{
+					'name': 'Random',
+					'method': 'VideoLibrary.GetMusicVideos',
+					'params': {
+						"properties": [
+							"title", "runtime", "album", "artist", "year", "thumbnail", "dateadded"
+						],
+						'limits': {
+							'end': 10
+						},
+						'sort': {
+							'method': 'random'
 						}
 					},
 					'key': 'musicvideos',

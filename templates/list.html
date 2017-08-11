@@ -1,3 +1,5 @@
+<div class="fanart" style="{{#if fanart}}background-image: url('{{fanart}}');{{/if}}"></div>
+
 <header>
 
 	<div class="crumbs">
@@ -13,7 +15,7 @@
 
 </header>
 
-<div class="article-container space-around" style="{{#if fanart}}background-image: {{fanart}};{{/if}}">
+<div class="article-container space-around">
 
 	<article>
 
@@ -73,6 +75,12 @@
 								{{#thumbnail}}<img src="{{.}}">{{/thumbnail}}
 							</div>
 						{{#thumbnailLink}}</a>{{/thumbnailLink}}
+
+						{{#if progress}}
+							<div class="progress">
+								<div class="bar" style="width:{{progress}};"></div>
+							</div>
+						{{/if}}
 					</div>
 				{{/if}}
 

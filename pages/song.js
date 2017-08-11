@@ -34,7 +34,7 @@ export default (new Page({
 			const page = {
 				'title': `${ displayartist || artist.join(', ')}`,
 				'titleLink': `#page=Artist&artistid=${ artistid }`,
-				'subtitle': `(${parseYear(year)}) ${title}`,
+				'subtitle': `(${parseYear(year)}) ${album}`,
 				'subtitleLink': `#page=Album&artistid=${ albumartistid }&albumid=${ albumid }`,
 				'label': (track > 0 ? `${ track }. ` : '') + title,
 				'thumbnail': thumbnail ? xbmc.vfs2uri(thumbnail) : 'img/icons/default/DefaultMusicSongs.png',
@@ -50,34 +50,38 @@ export default (new Page({
 							}
 						]
 					},
+					duration !== undefined && duration > 0 && {
+						'class': 'runtime',
+						'name': 'Runtime',
+						'value': seconds2shortstring(duration)
+					},
 					displayartist != albumartist && {
+						'class': 'artist',
 						'name': 'Artist',
 						'links': artist.map(artist => ({
 							'label': artist
 						}))
 					},
+					comment !== undefined && comment.length > 0 && {
+						'class': 'comment',
+						'name': 'Comment',
+						'value': comment
+					},
 					genre !== undefined && genre.length > 0 && {
+						'class': 'genre',
 						'name': 'Genre',
 						'links': genre.map(genre => ({
 									label: genre,
 									link: '#page=Albums&genre='+genre
 								}))
 					},
-					duration !== undefined && duration > 0 && {
-						'class': 'runtime',
-						'name': 'Runtime',
-						'value': seconds2shortstring(duration)
-					},
-					comment !== undefined && comment.length > 0 && {
-						'name': 'Comment',
-						'value': comment
-					},
 					lyrics !== undefined && lyrics.length > 0 && {
+						'class': 'lyrics',
 						'name': 'Lyrics',
 						'value': lyrics
 					},
 					file !== undefined && file.length > 0 && {
-						'class': '',
+						'class': 'file',
 						'name': 'File',
 						'links': [
 							{

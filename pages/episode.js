@@ -130,6 +130,7 @@ export default (new Page({
 			'thumbnail': xbmc.vfs2uri(art['thumb'] || art['season.poster'] || art['tvshow.poster']),
 			'banner': xbmc.vfs2uri(art['season.banner'] || art['tvshow.banner']),
 			'fanart': xbmc.vfs2uri(art['tvshow.fanart']),
+			'progress': resume !== undefined && resume.position > 0 && (Math.round(resume.position / resume.total * 100)+'%'),
 			'details': [
 				rating !== undefined && votes > 0 && {
 					'class': 'rating',
@@ -142,34 +143,25 @@ export default (new Page({
 						}
 					]
 				},
-				/*mpaa !== undefined && mpaa.length > 0 && {
-					'class': 'mpaa',
-					'name': 'MPAA Rating',
-					'value': mpaa
-				},*/
-				plot !== undefined && plot.length > 0 && {
-					'class': 'plot',
-					'name': 'Plot',
-					'value': plot
-				},
 				runtime !== undefined && runtime.length > 0 && {
 					'class': 'runtime',
 					'name': 'Runtime',
 					'value': moment.duration(runtime, 'seconds').humanize()
 				},
-				//makeDetail('Movies', 'Studio', 'studio', studio),
-				//makeDetail('Movies', 'Set', 'set', set),
-				//makeDetail('Movies', 'Genre', 'genre', genre),
-				//makeDetail('Movies', 'Tag', 'tag', tag),
-				//makeDetail('Movies', 'Country', 'country', country),
-				{
-					'class': '',
-					'name': 'Statistics',
-					'links': [
-						{ 'label': `Played ${ playcount } times` },
-						{ 'label': lastplayed instanceof String && lastplayed.length > 0 ? `Last Played ${ moment(lastplayed).format('LL') }` : undefined },
-						{ 'label': `Added ${ moment(dateadded).format('LL') }` }
-					]
+				lastplayed instanceof String && lastplayed.length > 0 && {
+					'class': 'lastplayed',
+					'name': 'Last Played',
+					'value': moment(lastplayed).format('LL')
+				},
+				dateadded instanceof String && dateadded.length > 0 && {
+					'class': 'dateadded',
+					'name': 'Added',
+					'value': moment(dateadded).format('LL')
+				},
+				plot !== undefined && plot.length > 0 && {
+					'class': 'plot',
+					'name': 'Plot',
+					'value': plot
 				},
 				file !== undefined && file.length > 0 && {
 					'class': '',

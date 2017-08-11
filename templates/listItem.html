@@ -10,6 +10,11 @@
 	{{#if thumbnail}}
 		<div class="thumbnail">
 			<img src="{{thumbnail}}" alt="">
+			{{#if progress}}
+				<div class="progress">
+					<div class="bar" style="width:{{progress}};"></div>
+				</div>
+			{{/if}}
 		</div>
 	{{/if}}
 
@@ -41,7 +46,6 @@
 		{{/more}}
 
 	</div>
-
 
 {{#link}}</a>{{/link}}
 

@@ -47,6 +47,7 @@ export default (new Page({
 			details: [
 				movies.items !== undefined && movies.items.length > 0 && {
 					'name': `Movies`,
+					'class': `items`,
 					'items': movies.items,
 					'more': (function () {
 						const s = {}
@@ -58,6 +59,7 @@ export default (new Page({
 				},
 				tvshows.items !== undefined && tvshows.items.length > 0 && {
 					'name': `TV Shows`,
+					'class': `items`,
 					'items': tvshows.items,
 					'more': (function () {
 						const s = {}
@@ -69,6 +71,7 @@ export default (new Page({
 				},
 				episodes.items !== undefined && episodes.items.length > 0 && {
 					'name': `Episodes`,
+					'class': `items`,
 					'items': episodes.items,
 					'more': (function () {
 						const s = {}
@@ -80,6 +83,7 @@ export default (new Page({
 				},
 				musicvideos.items !== undefined && musicvideos.items.length > 0 && {
 					'name': `Music Videos`,
+					'class': `items`,
 					'items': musicvideos.items,
 					'more': (function () {
 						const s = {}

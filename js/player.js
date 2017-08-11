@@ -85,13 +85,12 @@ export default (function () {
 		let backgroundElem = progressElem.querySelector('.background')
 
 		progress = Progress(function (position, time, duration) {
-			const value = Math.round(position*10000)
 			const timeString = seconds2shortstring(time)
 			const durationString = seconds2shortstring(duration)
 			const string = timeString + ' / ' + durationString
 			if (string !== oldString) {
 				timeElem.innerHTML = string
-				barElem.setAttribute('style', 'width: ' + (value/100) + '%;')
+				barElem.setAttribute('style', `transform: scaleX(${ position });`)
 			}
 			oldString = string
 		})
@@ -205,7 +204,7 @@ export default (function () {
 				xbmc.get({
 					'method': 'Playlist.GetItems',
 					'params': {
-						'properties': [ 'channel', 'title', 'art', 'tagline', 'showtitle', 'album', 'artist', 'season', 'episode', 'file', 'thumbnail', 'runtime', 'duration' ],
+						'properties': [ 'channel', 'title', 'art', 'tagline', 'showtitle', 'album', 'year', 'artist', 'season', 'episode', 'file', 'thumbnail', 'runtime', 'duration' ],
 						'playlistid': player.playlistid
 					}
 				})
@@ -216,12 +215,17 @@ export default (function () {
 
 					var item = playlist.items[player.position]
 					if (item) {
-						statusElem.innerHTML = ''+
-							(item.channel ? item.channel+' ' : '')+
-							(item.showtitle ? item.showtitle+' ' : '')+
-							(item.season>=0 ? item.episode>=0 && item.season+'x'+item.episode+' ' : '')+
-							(item.artist && item.artist.length ? item.artist.join(', ')+' - '+(item.album || '[unknown album]')+' ' : '')+
+						statusElem.innerHTML = [
+							(item.channel),
+							(item.showtitle),
+							(item.season>=0 && item.episode>=0 && `${item.season}x${item.episode}`),
+							(item.artist && item.artist.length && item.artist.join(', ')),
+							[
+								(item.year && `(${item.year})`),
+								(item.album)
+							].filter(x => !!x).join(' '),
 							(item.label||item.title||item.file)
+						].filter(x => !!x).join(' - ')
 					}
 					else statusElem.innerHTML = ''
 

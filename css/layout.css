@@ -139,6 +139,12 @@ a img,:link img,:visited img {
 		flex-grow: 1;
 	}
 
+	.page article .thumbnailWrapper {
+		display:flex;
+		flex-grow: 1;
+		justify-content: center;
+	}
+
 	.page article .thumbnails {
 		display: flex;
 		justify-content: center;
@@ -158,6 +164,7 @@ a img,:link img,:visited img {
 	.page article .thumbnails .next > * {
 		display: flex;
 		flex-direction: column;
+		justify-content: center;
 	}
 
 	.page article .thumbnails .previous,
@@ -168,17 +175,17 @@ a img,:link img,:visited img {
 
 	.page article .thumbnails .previous img,
 	.page article .thumbnails .next img {
-		opacity:0.666;
+		opacity: 0.5;
 	}
 
 	.page article .thumbnails .previous img,
 	.page article .thumbnails .next img {
 		width: 25%;
-		z-index:-100;
 	}
 
 	.page article .thumbnails .thumbnail img {
-		max-height:300px;
+	max-height: 294px;
+	height: auto;
 	}
 	.page article .thumbnails > * {
 		max-height: 300px;
@@ -186,23 +193,27 @@ a img,:link img,:visited img {
 
 	.page article .thumbnails .thumbnail img,
 	.page article .thumbnails > * {
-		flex-grow: 0;
 		width: auto;
-		flex-shrink: 1;
+		flex-shrink: 0;
+		flex-grow: 0;
 	}
 
 
 	.page article .thumbnails .previous {
-		transform: rotateY(30deg) translateZ(-5px);
+		transform: rotateY(30deg) translateZ(-30px);
 	}
 	.page article .thumbnails .next {
-		transform: rotateY(-30deg) translateZ(-5px);
+		transform: rotateY(-30deg) translateZ(-30px);
 	}
 
 	.page article .thumbnails p {
 		overflow:hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+	}
+
+	.page article .thumbnails .progress .bar {
+		height: 1ch;
 	}
 
 	.page article > .wrapper {
@@ -221,14 +232,15 @@ a img,:link img,:visited img {
 
 	.fanart {
 	    display: flex;
-	    position: absolute;
+	    position: fixed;
 	    left: 0;
 	    top: 0;
-	    z-index: -10 !important;
-	    min-width: 100%;
+	    width: 100%;
 	    height: 100%;
+	    background: no-repeat center center fixed;
+	    background-size: cover;
 	    opacity: 0.1;
-	    align-self: center;
+	    z-index: -100;
 	}
 
 /* Borders */

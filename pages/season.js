@@ -10,41 +10,43 @@ export default (new Page({
 	'icon': state => 'img/icons/default/DefaultTVShowTitle.png',
 	'parentState': state => ({ 'page': 'Menu', 'media': 'TV Shows' }),
 	'data': state => {
-		let tvshowid = +state['tvshowid']
-		const season = +state['season']
+		const tvshowid = +state['tvshowid']
+		const season = state['season'] === undefined ? 1 : +state['season']
 
-		let getShowDetails = xbmc.get({
+		const getEpisodes = state['season'] !== undefined && xbmc.get({
+			'method': 'VideoLibrary.GetEpisodes',
+			'params': {
+				'properties': [ 'tvshowid', 'title', 'episode', 'runtime', 'lastplayed', 'art', 'resume' ],
+				'tvshowid': tvshowid,
+				'season': +state['season']
+			},
+			'cache': true
+		})
+
+		getEpisodes.then(console.log)
+
+		const getSeasons = xbmc.get({
+			'method': 'VideoLibrary.GetSeasons',
+			'params': {
+				'properties': [ //http://kodi.wiki/view/JSON-RPC_API/v6#Video.Fields.Season
+					"season", "showtitle", "playcount", "episode", "fanart", "thumbnail", "tvshowid", "watchedepisodes", "art"
+				],
+				'tvshowid': tvshowid
+			},
+			'cache': true
+		})
+
+		const getShowDetails = xbmc.get({
 			'method': 'VideoLibrary.GetTVShowDetails',
 			'params': {
 				'properties': [ //http://kodi.wiki/view/JSON-RPC_API/v6#Video.Fields.TVShow
-					"title", 
-					"episode", 
-					"originaltitle"
+					"title", "episode", "originaltitle"
 				],
 				'tvshowid': tvshowid
 			},
 			'cache': true
 		})
 		.then(({ tvshowdetails={} }) => tvshowdetails)
-
-		const getSeasons = xbmc.get({
-			'method': 'VideoLibrary.GetSeasons',
-			'params': {
-				'properties': [ //http://kodi.wiki/view/JSON-RPC_API/v6#Video.Fields.Season
-					"season", 
-					"showtitle", 
-					"playcount", 
-					"episode", 
-					"fanart", 
-					"thumbnail", 
-					"tvshowid", 
-					"watchedepisodes", 
-					"art"
-				],
-				'tvshowid': tvshowid
-			},
-			'cache': true
-		})
 
 		const getSeasonDetails = getSeasons.then(({ seasons=[] }) => seasons.filter(s => (s.season == season))[0])
 
@@ -86,7 +88,8 @@ export default (new Page({
 						}))
 			}
 		}
-		let getDetails = Promise.all([ getShowDetails, getSeasonDetails, getPrevNext ])
+
+		const formatDetails = Promise.all([ getShowDetails, getSeasonDetails, getPrevNext ])
 		.then(([ show, season, prevNext ]) => ({
 			'previous': prevNext.previous,
 			'next': prevNext.next,
@@ -97,35 +100,13 @@ export default (new Page({
 			'banner': season.art && xbmc.vfs2uri(season.art['tvshow.banner']),
 			'thumbnail': season.thumbnail && xbmc.vfs2uri(season.thumbnail),
 			'fanart': xbmc.vfs2uri(season.art['tvshow.fanart']),
-			'details': [
-				{
-					'class': '',
-					'name': 'Statistics',
-					'links': [
-						{ 'label': `Episodes: ${ season.episode } (${ season.watchedepisodes } watched)` }
-					]
-				}
-			]
+			'progress': Math.round(season.watchedepisodes / season.episode * 100) + '%'
 		}))
-		
 
-		let getEpisodes = state['season'] !== undefined && xbmc.get({
-			'method': 'VideoLibrary.GetEpisodes',
-			'params': {
-				'properties': [ 'tvshowid', 'title', 'episode', 'runtime', 'lastplayed', 'art' ],
-				'tvshowid': tvshowid,
-				'season': +state['season']
-			},
-			'cache': true
-		})
-		.then(({ episodes=[] }) => episodes)
-		.then(episodes => episodes.map(({
-			episodeid,
-			title,
-			runtime,
-			lastplayed,
-			episode,
-			art={}
+
+		const formatEpisodes = getEpisodes
+		.then(({ episodes=[] }) => episodes.map(({
+			episodeid, title, runtime, lastplayed, episode, art={}, resume
 		}) => ({
 			'link': `#page=Episode&episodeid=${ episodeid }`,
 			'label': title,
@@ -141,17 +122,19 @@ export default (new Page({
 					'label': '▶',
 					'link': makeJsLink(`xbmc.Play({ 'episodeid': ${ episodeid } }, 1)`)
 				}
-			]
+			],
+			'progress': resume !== undefined && resume.position > 0 && Math.round(resume.position / resume.total * 100)+'%'
 		})))
 
-		return Promise.all([ getDetails, getEpisodes ])
+		return Promise.all([ formatDetails, formatEpisodes ])
 		.then(([ page, episodes ]) => {
-			page.details.splice(0, 0, {
+			page.details = {
+				'class': 'items',
 				'items': [ {
 					'label': 'Episodes',
 					'items': episodes
 				} ]
-			})
+			}
 			return page
 		})
 

@@ -36,23 +36,27 @@
 }
 .listItem.leaf {
 	width: 100%;
+	flex-wrap: wrap;
 }
 .listItem.leaf > .label,
 .listItem.leaf > a > .label {
 	height: 50px;
 	line-height: 50px;
-	padding-left: 1ch;
+	padding: 0 0.5ch;
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
 	justify-content: center;
 	margin-bottom: 0;
 }
-.listItem .line1,
+.listItem .line1 {
+	line-height: 22px;
+	height: 22px;
+}
+
 .listItem .line2 {
-	line-height: 20px;
-	height: 20px;
-	margin: 0 1ch;
+	line-height: 15px;
+	height: 15px;
 }
 
 /* Thumbnail */
@@ -60,14 +64,15 @@
 	display: flex;
 	flex-shrink: 0;
 	justify-content:center;
-	align-items:center;
 	align-content:center;
+	flex-direction: column;
+	align-items: center;
 }
 .listItem .thumbnail img {
 	max-width: 100%;
 	max-height: 100%;
 }
-@media all and (max-width : 300px) {
+@media (max-width: 280px) {
 	.listItem .thumbnail {
 		display: none !important;
 	}
@@ -93,6 +98,7 @@
 	display: flex;
 	flex-direction: row;
 	flex-wrap: nowrap;
+	padding: 0 0.5ch;
 }
 .listItem .line2 span + span {
 }
@@ -125,7 +131,20 @@
 	justify-content: center;
 }
 
+/* progress */
 
+.listItem .progress > .bar,
+.listItem .progress,
+.icon-list .progress > .bar {
+	height: 0.75ch;
+}
+.listItem .progress {
+	width: 100%;
+	flex-grow: 1;
+}
+.icon-list .progress {
+	width: 100%;
+}
 
 /* icon view */
 .icon-list {
@@ -142,6 +161,7 @@
 	width:128px;
 	flex-grow: 0;
 	flex-shrink: 0;
+	align-items: center;
 }
 .icon-list .label > .line2 {
 	flex-direction:row;
@@ -158,6 +178,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	flex-direction: column;
 }
 
 .icon-list > li {
@@ -167,6 +188,13 @@
 }
 
 .thumbnail img {max-width: 100%;max-height: 100%;}
+
+.icon-list > li > a {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	align-items: center;
+}
 
 .icon-list .label {
 	display: flex;
@@ -193,6 +221,7 @@
 }
 .icon-list.seasons .thumbnail {
 	height:192px;
+	max-width: 192px;
 }
 
 

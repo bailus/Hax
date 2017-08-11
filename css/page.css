@@ -84,7 +84,9 @@ h1 > img + span {
 /* details */
 article > .details {
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content:space-between;
 }
 article .details > li > .label {flex-direction:row;flex-wrap:nowrap;display: flex;justify-content: space-between;}
 article > .details > li {
@@ -94,6 +96,18 @@ article > .details > li {
 	flex-wrap: wrap;
 	flex-grow: 0;
 	margin-top: 1.2em;
+	max-width: 100%;
+}
+article > .details > li.tagline,
+article > .details > li.plot,
+article > .details > li.file,
+article > .details > li.filename,
+article > .details > li.directory,
+article > .details > li.items,
+article > .details > li.artist,
+article > .details > li.comment,
+article > .details > li.lyrics {
+	width: 100%;
 }
 article > .details .detail {
     flex-grow: 1;
@@ -122,6 +136,10 @@ article > .details > li > p > span + span::before {
 article > .details ul {
 	display: flex;
 	flex-direction: row;
+}
+article > .details .wrapper {
+	width: 100%;
+	flex-grow: 1;
 }
 
 /* groups and options */

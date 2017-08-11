@@ -5,7 +5,7 @@ export default (new Page({
 	'view': 'list',
 	'groupby': 'alpha',
 	'icon': () => 'img/icons/default/DefaultActor.png',
-	'parentState': state => ({ 'page': 'Menu', 'media': state['media'] }),
+	'parentState': state => ({ 'page': 'Menu', 'media': state['media'] || 'Videos' }),
 	'data': function (state) {
 
 		//higher order map functions (for use in promise api .then() calls)
