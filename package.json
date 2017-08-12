@@ -6,7 +6,7 @@
         "build:zip": "cd build && zip -r build.zip ./* && file build.zip && cd ..",
         "build:index.html": "node_modules/.bin/hbsrender -c package.json -t templates/index.html > build/webinterface.hax/index.html",
         "build": "npm run clean && npm run build:script.js && npm run build:style.css && npm run build:index.html && npm run build:addon.xml && npm run build:readme.md && npm run build:assets && npm run build:zip",
-        "build:assets": "cp -r templates img assets/* build/webinterface.hax/",
+        "build:assets": "cp -r templates img img.estuary assets/* build/webinterface.hax/",
         "build:addon.xml": "node_modules/.bin/hbsrender -c package.json -t templates/addon.xml > build/webinterface.hax/addon.xml",
         "build:readme.md": "node_modules/.bin/hbsrender -c package.json -t templates/README.md > build/webinterface.hax/README.md"
     },
@@ -18,7 +18,7 @@
         "Forum thread": "http://forum.kodi.tv/showthread.php?tid=270698",
         "Screenshots": "http://imgur.com/a/ss0uj"
     },
-    "version": "0.7.4",
+    "version": "0.7.5",
     "description": "Hax is a web interface for the Kodi\u00ae media center. Designed to be fast and easy to use, it supports modern browsers including Android, Internet Explorer 9 and Edge.",
     "homepage": "http://bailey.geek.nz/remote",
     "keywords": [
