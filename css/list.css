@@ -36,7 +36,7 @@
 }
 .listItem.leaf {
 	width: 100%;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 }
 .listItem.leaf > .label,
 .listItem.leaf > a > .label {
