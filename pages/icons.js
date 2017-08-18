@@ -16,7 +16,7 @@ export default ({
 	},
 	'media': {
 		'Album': 'img.estuary/default/DefaultAlbumCover.png',
-		'Music Video': 'img.estuary/default/DefaultMusicVideoTitle.png'
+		'Music Video': 'img.estuary/icons/sidemenu/musicvideos.png'
 	},
 	'actions': {
 		'Play': 'img/icons/infodialogs/play.png',
