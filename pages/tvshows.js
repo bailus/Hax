@@ -24,7 +24,9 @@ export default (new Page({
 			{ name: 'Director', key: 'director', type: 'string' },
 			{ name: 'Tag', key: 'tag', type: 'string' }
 		]
-		const filter = Filter.fromState(state, fields)
+		const filterFromState = Filter.fromState(state, fields)
+		const filterNoEpisodes = new Filter.operator('Episodes', 'numepisodes', '0', 'isnot')
+		const filter = new Filter.combine('and', [ filterNoEpisodes, filterFromState ])
 
 		let group = state['group'] || this.groupby
 
@@ -50,7 +52,7 @@ export default (new Page({
 			title: (tvshow.sorttitle || tvshow.title || tvshow.originaltitle)[0].toUpperCase()
 		})))
 		.then(items => ({
-			title: filter.toString(),
+			title: filterFromState.toString(),
 			items: items
 		}))
 

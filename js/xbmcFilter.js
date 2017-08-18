@@ -83,7 +83,7 @@ Filter.combine = class extends Filter {
 		if (this.isEmpty()) return undefined
 
 		const o = {}
-		o[this.operator] = this.children.map(filter => filter.out())
+		o[this.operator] = this.children.filter(filter => !filter.isEmpty()).map(filter => filter.out())
 		return o
 	}
 
