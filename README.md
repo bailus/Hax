@@ -8,20 +8,11 @@ A fast and simple remote control for mobile devices.
 ![oUNe3E9.png](https://bitbucket.org/repo/dMaXXg/images/3495096627-oUNe3E9.png)
 
 
-## Links
- * [Homepage](http://bailey.geek.nz/remote)
- * [Source](https://bitbucket.org/bailus/hax-for-kodi)
- * [Issues, Bugs and Feature Requests](https://bitbucket.org/bailus/hax-for-kodi/issues)
- * [Screenshots](http://imgur.com/a/ss0uj)
- * [Forum thread](http://forum.kodi.tv/showthread.php?tid=270698)
- * [Official Kodi addon repository](http://addons.kodi.tv/show/webinterface.hax/)
- * [Sam's Kodi addon repository](http://bailey.geek.nz/) [(source)](https://bitbucket.org/bailus/kodi-addons)
-
-
 ## Installation (Stable version)
 The stable version is available from the official Kodi add-on repository. It can be downloaded and installed using Kodi's add-on manager.
 
 Install the stable version of Hax from within Kodi [(v16 or above)](https://kodi.tv/download/) by going to:
+
  1. Settings
  2. Add-ons
  3. Install from repository
@@ -35,6 +26,7 @@ Install the stable version of Hax from within Kodi [(v16 or above)](https://kodi
 The latest version can be installed from within Kodi after installing [Sam's Kodi addon repository](http://kodi.bailey.geek.nz/). Instructions for adding the repository to Kodi can be found [here](https://superrepo.org/get-started/) - just replace "http://srp.nu/" with "http://kodi.bailey.geek.nz/".
 
 Install Hax from within Kodi [(v17 or above)](https://kodi.tv/download/) by going to:
+
  1. Settings
  2. Add-ons
  3. Install from repository
@@ -48,11 +40,13 @@ Install Hax from within Kodi [(v17 or above)](https://kodi.tv/download/) by goin
 See also: http://kodi.wiki/view/web_interface
 
 After installation, Kodi's web interface can be enabled by going to:
+
  1. Settings
  2. Service Settings
  3. Control
 
 To access the interface, you need to turn on "Allow remote control via HTTP". I use the following settings:
+
  - Allow remote control via HTTP: on
  - Port: 80
  - Username: kodi
@@ -93,3 +87,14 @@ A self-contained build will be saved into the ./build folder.
 #### Libraries
  * [handlebars](http://handlebarsjs.com/) - Templating
  * [Moment.js](http://momentjs.com/) - Date parsing and formatting
+
+
+## Links
+
+ * [Homepage](http://bailey.geek.nz/remote)
+ * [Source](https://bitbucket.org/bailus/hax-for-kodi)
+ * [Issues, Bugs and Feature Requests](https://bitbucket.org/bailus/hax-for-kodi/issues)
+ * [Screenshots](http://imgur.com/a/ss0uj)
+ * [Forum thread](http://forum.kodi.tv/showthread.php?tid=270698)
+ * [Official Kodi addon repository](http://addons.kodi.tv/show/webinterface.hax/)
+ * [Sam's Kodi addon repository](http://bailey.geek.nz/) [(source)](https://bitbucket.org/bailus/kodi-addons)
