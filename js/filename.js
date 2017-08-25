@@ -18,8 +18,17 @@ export function trim(str, chars) {
 	return str //No more characters to remove
 }
 
+export function trimRight(str, chars) {
+	if (str === undefined || str.length <= 0) return ''
+
+	if (chars[str.slice(-1)])
+		return trimRight(str.slice(0, -1), chars) //Remove the last character then repeat
+
+	return str //No more characters to remove
+}
+
 export function trimFilename(str) {
-	return trim(str, { '/': true, '\\': true })
+	return trimRight(str, { '/': true, '\\': true })
 }
 
 export function joinFilenameComponents(filenameComponents, slash) {
@@ -28,7 +37,8 @@ export function joinFilenameComponents(filenameComponents, slash) {
 
 	return filenameComponents
 		.map(trimFilename)
-		.filter(str => (str !== undefined && str.length > 0))
+		//.filter(str => (str !== undefined && str.lddength > 0))
+		.map(str => (str === undefined ? '' : str))
 		//.map(str => (str.slice(-1) == ':' ? str+'/' : str)) //support directories like "smb://" and "videoplaylists://"
 		.join(slash)
 }
@@ -36,6 +46,6 @@ export function joinFilenameComponents(filenameComponents, slash) {
 export function joinDirectoryComponents(filenameComponents, slash) {
 	if (slash === undefined)
 		slash = getSlash(filenameComponents)
-
-	return joinFilenameComponents(filenameComponents, slash) + slash
+console.log(filenameComponents)
+	return joinFilenameComponents(filenameComponents, slash)
 }
