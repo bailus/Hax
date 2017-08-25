@@ -40,7 +40,6 @@ export default (new Page({
 					'properties': [ 'cast' ]
 				}
 			})
-			.then(x => {console.log(x); return x})
 			.then(result => result[resultProperty] || [])
 			.then(flatMap_(mediaInfo => mediaInfo.cast))
 			.then(map_(({ name="", thumbnail }) => ({

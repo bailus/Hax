@@ -62,7 +62,6 @@ export default (new Page({
 				}
 			}
 		})
-		//.then(x => {console.log(x);return x})
 		.then(({ setdetails={} }) => setdetails)
 		.then(({
 			label='',

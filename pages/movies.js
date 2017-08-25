@@ -50,8 +50,6 @@ export default (new Page({
 			'cache': true
 		})
 
-		getMovies.then(console.log)
-
 		const formatMovies = getMovies
 		.then(({ movies=[] }) => ({
 			'title': filter.toString(),

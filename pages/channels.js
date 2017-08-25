@@ -18,7 +18,6 @@ export default (new Page({
 				'channeltype': mediaToLower[state['media']] || 'TV'
 			}
 		})
-		.then(x => {console.log(x); return x})
 
 		let getGroupId = Promise.resolve(+state['groupid'])
 		if (state['groupid'] === undefined)  //if there was no groupid specified, display the first group (of the correct type) to the user. (This should be the 'all channels' group?)
@@ -85,7 +84,6 @@ export default (new Page({
 
 			}))
 		}))
-		.then(x => {console.log(x); return x})
 
 	}
 }));

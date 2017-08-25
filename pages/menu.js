@@ -573,7 +573,6 @@ export default (new Page({
 					}))
 				}))
 				.then(iconLists => {
-					console.log(iconLists)
 					if (page.details)
 						page.details = page.details.concat(iconLists)
 					else

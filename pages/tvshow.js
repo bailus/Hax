@@ -176,7 +176,6 @@ export default (new Page({
 			},
 			cache: true
 		})
-		//.then(x => {console.log(x);return x})
 		.then(({ seasons=[] }) => seasons.map(season => ({
 			'label': season.label,
 			'details': [ season.episode + ' episodes' ],

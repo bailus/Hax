@@ -23,7 +23,6 @@ export default (new Page({
 			cache: true
 		})
 		.then(({ albumdetails={} }) => albumdetails)
-		//.then(x => {console.log(x);return x})
 
 		const getPage = getAlbumDetails
 		.then(({
@@ -150,7 +149,6 @@ export default (new Page({
 
 		const getOtherArtists = getSongs
 		.then(({ songs=[] }) => {
-			console.log(songs)
 			const artists = {}
 			songs.forEach(({
 				artistid =[], artist =[]
@@ -164,7 +162,6 @@ export default (new Page({
 					}
 				}
 			})
-			console.log(artists)
 			return Object.keys(artists).map(artistid => artists[artistid]) //convert the object to an array
 		})
 

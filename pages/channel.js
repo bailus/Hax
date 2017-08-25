@@ -72,8 +72,6 @@ export default (new Page({
 			}
 		})
 
-		getBroadcasts.then(console.log)
-
 		const nextBroadcasts = getBroadcasts.then(({ broadcasts=[] }) => ({
 			'broadcasts': broadcasts.filter(({ endtime }) => moment.utc(endtime).isAfter(now))
 		}))

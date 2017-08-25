@@ -23,8 +23,6 @@ export default (new Page({
 			cache: true
 		})
 
-		getSongDetails.then(console.log)
-
 		const formatSongDetails = getSongDetails
 		.then(({ songdetails: {
 			title, artist, albumartist, genre, year, rating, votes, album, track, duration, comment, lyrics, musicbrainztrackid,

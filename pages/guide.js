@@ -48,7 +48,6 @@ export default (new Page({
 				.catch(x => ([]))
 		})))
 		.then(channels => {
-			console.log(channels)
 			return Promise.all(channels.map(channel => {
 				return channel.itemsP
 				.then(items => ({
