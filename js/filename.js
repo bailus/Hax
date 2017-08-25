@@ -27,8 +27,9 @@ export function trimRight(str, chars) {
 	return str //No more characters to remove
 }
 
-export function trimFilename(str) {
-	return trimRight(str, { '/': true, '\\': true })
+export function trimFilename(str, i) {
+	const chars = { '/': true, '\\': true }
+	return i === 0 ? trimRight(str, chars) : trim(str, chars)
 }
 
 export function joinFilenameComponents(filenameComponents, slash) {

@@ -59,13 +59,13 @@ export default (new Page({
 				file.actions = [
 					{
 						label: '▶',
-						link: makeJsLink(`xbmc.Open({ 'item': { 'file': '${xbmc.vfs2uri(file.file)}'  } })`)
+						link: makeJsLink(`xbmc.Open({ 'item': { 'file': '${file.file}'  } })`)
 					}
 				]
 				file.link = `#page=File&media=${ media }&sortby=${ sortby }&order=${ order }&root=${ encodeURIComponent(root) }&path=${ encodeURIComponent(path || '') }&filename=${ encodeURIComponent(filename) }`
 
-				//if (media === 'pictures')
-				//	file.thumbnail = file.thumbnail || file.file
+				if (media === 'pictures')
+					file.thumbnail = file.thumbnail || file.file
 				file.thumbnail = file.thumbnail ? xbmc.vfs2uri(file.thumbnail) : 'img/icons/default/DefaultFile.png'
 			}
 
