@@ -46,6 +46,6 @@ export function joinFilenameComponents(filenameComponents, slash) {
 export function joinDirectoryComponents(filenameComponents, slash) {
 	if (slash === undefined)
 		slash = getSlash(filenameComponents)
-console.log(filenameComponents)
+
 	return joinFilenameComponents(filenameComponents, slash)
 }
