@@ -23,9 +23,13 @@ Install the stable version of Hax from within Kodi [(v16 or above)](https://kodi
 
 
 ## Installation (Latest version)
-The latest version can be installed from within Kodi after installing [Sam's Kodi addon repository](http://kodi.bailey.geek.nz/). Instructions for adding the repository to Kodi can be found [here](https://superrepo.org/get-started/) - just replace "http://srp.nu/" with "http://kodi.bailey.geek.nz/".
+The latest version can be installed from within Kodi after installing [Sam's Kodi addon repository](http://kodi.bailey.geek.nz/).
 
-Install Hax from within Kodi [(v17 or above)](https://kodi.tv/download/) by going to:
+[repository.samsaddons-1.0.1.zip](https://bitbucket.org/bailus/kodi-addons/raw/master/repository.samsaddons-1.0.1.zip)
+
+Download the zip file above then use "Install add-on from zip file" in Kodi to install. The repository will be added to the "Install from repository" menu in Kodi's Add-on browser.
+
+Then install Hax from within Kodi [(v17 or above)](https://kodi.tv/download/) by going to:
 
  1. Settings
  2. Add-ons
