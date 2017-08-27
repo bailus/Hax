@@ -20,8 +20,6 @@ export default (new Page({
 		if (filteredTypes.length > 0)
 			types = filteredTypes
 
-		console.log(filteredTypes)
-
 		return Promise.all(types.map(type => {
 			return xbmc.get({
 				'method': 'Files.GetSources',

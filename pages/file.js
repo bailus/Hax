@@ -66,15 +66,15 @@ export default (new Page({
 					thumbnail: 'img/buttons/download.png',
 					link: downloadLink
 				},
-				playlistid < 0 ? undefined : {
+				{
 					label: 'Play',
 					thumbnail: 'img/buttons/play.png',
-					link: makeJsLink(`xbmc.Open({ 'item': { 'file': '${xbmc.vfs2uri(file)}'  } })`)
+					link: makeJsLink(`xbmc.Open({ 'item': { 'file': '${file}'  } })`)
 				},
 				playlistid < 0 ? undefined : {
 					label: 'Add to Playlist',
 					thumbnail: 'img/buttons/add.png',
-					link: makeJsLink(`xbmc.sendMessage('Playlist.Add',{ 'playlistid': ${ playlistid }, 'item': { 'file': '${xbmc.vfs2uri(file)}'  } })`)
+					link: makeJsLink(`xbmc.sendMessage('Playlist.Add',{ 'playlistid': ${ playlistid }, 'item': { 'file': '${file}'  } })`)
 				}
 			]
 		}))

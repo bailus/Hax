@@ -23,8 +23,6 @@ export default (new Page({
 			'cache': true
 		})
 
-		getEpisodes.then(console.log)
-
 		const getSeasons = xbmc.get({
 			'method': 'VideoLibrary.GetSeasons',
 			'params': {

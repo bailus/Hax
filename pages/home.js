@@ -55,11 +55,11 @@ export default (new Page({
 				'items': items,
 				'hideNavigation': true,
 				'actions': [
-					/*{	'label': 'Power',
-						'thumbnail': 'img/icons/power.png',
+					{	'label': 'Power',
+						'thumbnail': 'img.hax/power.png',
 						'link': '#page=Power'
 					},
-					{	'label': 'Settings',
+					/*{	'label': 'Settings',
 						'thumbnail': 'img/icons/settings.png',
 						'link': '#page=Settings'
 					},*/

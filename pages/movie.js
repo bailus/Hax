@@ -23,7 +23,6 @@ export default (new Page({
 				'movieid': movieid
 			}
 		})
-		//.then(x => {console.log(x);return x})
 		.then(({ moviedetails={} }) => moviedetails)
 
 		const getMovieSetDetails = getMovieDetails.then(({ setid }) => {
@@ -52,8 +51,6 @@ export default (new Page({
 		.then(({ setdetails={} }) => {
 			const movies = setdetails.movies || []
 			let o = {}
-
-			console.log(movies)
 
 			movies.forEach((curr, s) => {
 				const prev = movies[s-1]

@@ -42,7 +42,6 @@ export default (new Page({
 			}
 		})
 		.then(({ musicvideodetails={} }) => musicvideodetails)
-		//.then(x => {console.log(x);return x})
 		.then(({
 			title,
 			playcount,

@@ -16,7 +16,6 @@ export default (new Page({
 			},
 			cache: true
 		})
-		.then(x => { console.log(x); return x })
 		.then(({ timerdetails: timerdetails } = { timerdetails: {} }) => ({
 			title: timerdetails.title || 'Timer',
 			subtitle: timerdetails.summary,

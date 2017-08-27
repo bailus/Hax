@@ -15,7 +15,6 @@ export default (new Page({
 				'properties': [ 'channelid', 'isradio', 'state', 'summary', 'title' ]
 			}
 		})
-		.then(x => { console.log(x); return x })
 		.then(({ timers: timers } = { timers: [] }) => ({
 			title: 'Timers',
 			items: timers.map(timer => ({

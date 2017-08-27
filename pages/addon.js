@@ -34,8 +34,7 @@ export default (new Page({
 				'cache': false
 			})
 
-getAddonDetails.then(console.log)
-			const formatAddonDetails = getAddonDetails.then(x => {console.log(x); return x})
+			const formatAddonDetails = getAddonDetails
 			.then(({ addon: {
 				addonid,
 				label,

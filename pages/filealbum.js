@@ -31,7 +31,6 @@ export default (new Page({
 				'media': media
 			}
 		})
-		.then(x => { console.log(x); return x })
 		.then(({ files }) => files.map(file => ({
 			label: file.label,
 			link: ''
@@ -46,7 +45,6 @@ export default (new Page({
 				'properties': [ 'thumbnail', 'file', 'size', 'mimetype', 'lastmodified' ]
 			}
 		})
-		.then(x => { console.log(x); return x })
 		.then(({ filedetails }) => ({
 			title: filedetails.label,
 			thumbnail: xbmc.vfs2uri(media === 'pictures' ? filedetails.file : filedetails.thumbnail),
