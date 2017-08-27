@@ -552,6 +552,17 @@ export default (new Page({
 			]
 		})[media]
 
+		const actions = ({
+				'Videos': [ 
+						{ 'label': 'Update Video Library', 'link': makeJsLink(`xbmc.get({ 'method': 'VideoLibrary.Scan' })`),  'thumbnail': icons.actions['Update'] },
+						{ 'label': 'Clean Video Library',  'link': makeJsLink(`xbmc.get({ 'method': 'VideoLibrary.Clean' })`) }
+					],
+				'Music': [ 
+						{ 'label': 'Update Music Library', 'link': makeJsLink(`xbmc.get({ 'method': 'AudioLibrary.Scan' })`),  'thumbnail': icons.actions['Update'] },
+						{ 'label': 'Clean Music Library',  'link': makeJsLink(`xbmc.get({ 'method': 'AudioLibrary.Clean' })`) }
+					]
+		})[media]
+
 		if (iconLists !== undefined) {
 			getPage = getPage.then(page => {
 				return Promise.all(iconLists.map(({
@@ -577,10 +588,16 @@ export default (new Page({
 						page.details = page.details.concat(iconLists)
 					else
 						page.details = iconLists
+
 					return page
 				})
 			})
 		}
+
+		if (actions !== undefined) getPage = getPage.then(page => {
+			page.actions = actions
+			return page
+		})
 
 		return getPage
 

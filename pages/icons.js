@@ -19,7 +19,8 @@ export default ({
 		'Music Video': 'img.estuary/icons/sidemenu/musicvideos.png'
 	},
 	'actions': {
-		'Play': 'img/icons/infodialogs/play.png',
+		'Play': 'img.estuary/icons/infodialogs/play.png',
+		'Update': 'img.estuary/icons/infodialogs/update.png',
 		'Add': 'img/buttons/add.png'
 	}
 })
