@@ -145,6 +145,7 @@ export default (new Page({
 				},
 				{
 					'name': 'Unwatched',
+					'cache': false,
 					'method': 'VideoLibrary.GetTVShows',
 					'params': {
 						'properties': [
@@ -257,6 +258,7 @@ export default (new Page({
 				},
 				{
 					'name': 'Unwatched',
+					'cache': false,
 					'method': 'VideoLibrary.GetMovies',
 					'params': {
 						"properties": [
@@ -339,6 +341,7 @@ export default (new Page({
 				},
 				{
 					'name': 'Unwatched',
+					'cache': false,
 					'method': 'VideoLibrary.GetMusicVideos',
 					'params': {
 						"properties": [
@@ -368,6 +371,7 @@ export default (new Page({
 				},
 				{
 					'name': 'Random',
+					'cache': false,
 					'method': 'VideoLibrary.GetMusicVideos',
 					'params': {
 						"properties": [
@@ -444,6 +448,7 @@ export default (new Page({
 				},
 				{
 					'name': 'Random Albums',
+					'cache': false,
 					'method': 'AudioLibrary.GetAlbums',
 					'params': {
 						"properties": [ // http://kodi.wiki/view/JSON-RPC_API/v6#Audio.Fields.Album
@@ -470,6 +475,7 @@ export default (new Page({
 				},
 				{
 					'name': 'Random Artists',
+					'cache': false,
 					'method': 'AudioLibrary.GetArtists',
 					'params': {
 						"properties": [ // http://kodi.wiki/view/JSON-RPC_API/v6#Audio.Fields.Album
@@ -566,11 +572,12 @@ export default (new Page({
 		if (iconLists !== undefined) {
 			getPage = getPage.then(page => {
 				return Promise.all(iconLists.map(({
-					method, params, key, transformItem, defaultThumbnail, name
+					method, params, key, transformItem, defaultThumbnail, name, cache=true
 				}) => {
 					return xbmc.get({
 						'method': method,
-						'params': params
+						'params': params,
+						'cache': cache
 					})
 					.then(result => result[key] || [])
 					.then(items => items.map(item => {
