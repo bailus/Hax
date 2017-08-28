@@ -6,14 +6,15 @@
 	align-items: center;
 	align-items: stretch;
 }
-@media (max-width: 400px) {
-	#player {
-		flex-wrap: wrap;
+@media (max-width: 600px) {
+	#player .skipprevious,
+	#player .stop {
+		display: none;
 	}
 }	
 #player > .player {
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 	flex-shrink: 1;
 	flex-grow: 1;
 	justify-content: space-between;
@@ -21,25 +22,13 @@
 }
 #player .buttons {
     display: flex;
-    flex-shrink: 1;
     justify-content: space-around;
-    flex-wrap: wrap;
+    flex-shrink: 0;
 }
 #player .buttons.right {
-	flex-direction: column;
+	flex-direction: row;
 	flex-shrink: 0;
 	
-}
-#player > .nav {
-	flex-shrink: 1;
-	flex-grow: 0;
-	min-width: 150px;
-	flex-basis: 225px;
-	max-width: 250px;
-	margin:0 auto;
-	padding: 0;
-	position:relative;
-	text-align:center;
 }
 
 #player .thumbnailWrapper {
@@ -63,106 +52,14 @@
 	#player {
 	    flex-direction: row;
 	    align-items: stretch;
-	    flex-wrap: wrap;
-	    overflow-y: auto;
+	    flex-wrap: nowrap;
+	    overflow: visible;
 	    max-height: 100%;
 	    max-width: 100%;
 	}
 	#player > .thumbnailWrapper > .thumbnail,
-	#player > .nav {
-		height: 150px;
-	}
 
-	#player .show > div {
-		height: 50px;
-		width: 50px;
-		flex-shrink: 0;
-		background-image: url('../img/buttons/drawer_close.png');
-		background-position: center center;
-  		background-repeat: no-repeat;
-  		align-self: flex-end;
-	}
-	#player.minimize > * {
-		display: none;
-	}
-	#player.minimize,
-	#player.minimize > .right.buttons,
-	#player.minimize > .player,
-	#player.minimize > .player > .buttons {
-		justify-content: flex-end;
-		display: flex;
-		flex-direction: row;
-		flex-wrap: nowrap;
-	}
-	#player.minimize #progress {
-		min-width: auto;
-		flex-basis: 300px;
-		flex-grow: 1;
-		flex-shrink: 1e9;
-		flex-direction: column;
-	}
-	#player.minimize {
-		display: flex;
-		width: 100%;
-		flex-wrap: nowrap;
-	}
-	#player.minimize > .player,
-	#player.minimize > .player > .nav.buttons {
-		flex-shrink: 1e6;
-		overflow: hidden;
-	}
-	#player.minimize .show > div {
-		background-image: url('../img/buttons/drawer_open.png');
-		display: block;
-	}
-	#player.minimize .volumedown {
-		order: -10;
-	}
-	#player.minimize > .player > * {
-		flex-shrink: 1;
-	}
-
-
-	@media (max-width: 270px) {
-		#player .buttons.right {
-			flex-direction: row;
-			flex-wrap: nowrap;
-		}
-		#player .buttons.right .volumedown {
-			order: -1;
-		}
-	}
-
-
-	@media (max-width: 800px) {
-		#player.minimize .buttons > * {
-			display: none;
-		}
-		#player.minimize .buttons > .show {
-			display: block;
-		}
-	}	
-	@media (min-width: 300px) {
-		#player.minimize .buttons > .playpause {
-			display: block;
-		}
-	}	
-	@media (min-width: 500px) {
-		#player.minimize .buttons > .volumeup,
-		#player.minimize .buttons > .volumedown {
-			display: block;
-		}
-	}
-	@media (min-width: 700px) {
-		#player.minimize .buttons > .skipnext {
-			display: block;
-		}
-	}
-
-
-
-
-#player .buttons a {
+#player .buttons .label {
 	display:block;
 	width:100%;height:100%;
 	background-repeat: no-repeat;
@@ -187,27 +84,58 @@
 	background:url('../img/buttons/hover.png');
 	cursor:pointer;
 }
-#player .skipprevious a { background-image:url('../img/buttons/skipprevious.png'); }
-#player .skipnext a { background-image:url('../img/buttons/skipnext.png'); }
-#player .playpause a { background-image:url('../img/buttons/play.png'); }
-body[data-status=playing] #player .playpause a { background-image:url('../img/buttons/pause.png'); }
-#player .stop a { background-image:url('../img/buttons/stop.png'); }
+#player .skipprevious > .label { background-image:url('../img/buttons/skipprevious.png'); }
+#player .skipnext > .label { background-image:url('../img/buttons/skipnext.png'); }
+#player .playpause > .label { background-image:url('../img/buttons/play.png'); }
+body[data-status=playing] #player .playpause .label { background-image:url('../img/buttons/pause.png'); }
+#player .stop > .label { background-image:url('../img/buttons/stop.png'); }
 
-#player .up a { background-image:url('../img/buttons/up.png'); }
-#player .down a { background-image:url('../img/buttons/down.png'); }
-#player .left a { background-image:url('../img/buttons/left.png'); }
-#player .right a { background-image:url('../img/buttons/right.png'); }
-#player .enter a,
-#player .select a { background-image:url('../img/buttons/select.png'); }
+#player .up > .label { background-image:url('../img/buttons/up.png'); }
+#player .down > .label { background-image:url('../img/buttons/down.png'); }
+#player .left > .label { background-image:url('../img/buttons/left.png'); }
+#player .right > .label { background-image:url('../img/buttons/right.png'); }
+#player .enter > .label,
+#player .select > .label { background-image:url('../img/buttons/select.png'); }
 
-#player .back a { background-image:url('../img/buttons/back.png'); }
-#player .info a { background-image:url('../img/buttons/info.png'); }
-#player .contextmenu a { background-image:url('../img/buttons/menu.png'); }
-#player .previousmenu a { background-image:url('../img/buttons/home.png'); }
+#player .back > .label { background-image:url('../img/buttons/back.png'); }
+#player .info > .label { background-image:url('../img/buttons/info.png'); }
+#player .contextmenu > .label { background-image:url('../img/buttons/menu.png'); }
+#player .previousmenu > .label { background-image:url('../img/buttons/home.png'); }
 
-#player .mute a { background-image:url('../img/buttons/mute.png'); }
-#player .volumedown a { background-image:url('../img/buttons/volumedown.png'); }
-#player .volumeup a { background-image:url('../img/buttons/volumeup.png'); }
+#player .mute > .label { background-image:url('../img.estuary/buttons/volume/mute.png'); }
+#player .volumedown > .label { background-image:url('../img.estuary/buttons/volume/volume1.png'); }
+#player .volumeup > .label { background-image:url('../img.estuary/buttons/volume/volume.png'); }
+
+#player .navigation > .label { background-image:url('../img/buttons/navigation.png'); }
+#player .expand[data-expand=expand] > .label { background-image:url('../img/buttons/drawer_close.png'); }
+
+#player .volume > .label { background-image:url('../img.estuary/buttons/volume/volume2.png'); }
+
+
+#player .volume > .expandable > .buttons {
+	height: 150px;
+	width: 50px;
+	flex-direction: column;
+}
+#player .navigation > .expandable > .buttons {
+	height: 150px;
+	width: 250px;
+}
+#player .expand > .expandable {
+	display: none;
+	position: absolute;
+	background: #000;
+	z-index: 10000;
+	opacity: 0.9;
+	bottom:50px;
+	right:0px;
+	max-width:100%;
+	padding: 25px;
+}
+
+#player .expand[data-expand=expand] > .expandable {
+	display: flex;
+}
 
 
 #progress {
@@ -219,6 +147,7 @@ body[data-status=playing] #player .playpause a { background-image:url('../img/bu
 	color: white;
 	flex-direction: column;
 	flex-shrink: 1;
+	flex-grow: 1;
 	max-width: 100%;
 }
 #progress > * {
@@ -258,6 +187,7 @@ body[data-status=playing] #player .playpause a { background-image:url('../img/bu
 	white-space: nowrap;
 }
 
+
 #player .buttons .info,
 #player .buttons .back,
 #player .buttons .up,
@@ -273,15 +203,15 @@ body[data-status=playing] #player .playpause a { background-image:url('../img/bu
 	text-align:center;
 }
 
-#player .buttons .info         { top:0; left: 25px; }
-#player .buttons .back         { top:0;	right: 25px; }
-#player .buttons .previousmenu { top:100px; left: 25px; }
-#player .buttons .contextmenu  { top:100px; right: 25px; }
+#player .buttons .info         { top:25px; left: 50px; }
+#player .buttons .back         { top:25px;	right: 50px; }
+#player .buttons .previousmenu { top:125px; left: 50px; }
+#player .buttons .contextmenu  { top:125px; right: 50px; }
 
 #player .buttons .enter,
-#player .buttons .select    { top:50px; left: 50%;  }
+#player .buttons .select    { top:75px; left: 50%;  }
 
-#player .buttons .left      { top:50px; left: 50%; margin-left:-75px;  }
-#player .buttons .right     { top:50px; right:50%; margin-right:-75px; }
-#player .buttons .up        { top:0;	left: 50%;  }
-#player .buttons .down      { top:100px; left: 50%;  }
+#player .buttons .left      { top:75px; left: 50%; margin-left:-75px;  }
+#player .buttons .right     { top:75px; right:50%; margin-right:-75px; }
+#player .buttons .up        { top:25px;	left: 50%;  }
+#player .buttons .down      { top:125px; left: 50%;  }

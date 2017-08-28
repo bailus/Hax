@@ -10,7 +10,7 @@
 		{{#buttons}}
 
 			<li class="{{class}}">
-				<a href="{{link}}">
+				<a href="{{link}}" class="label">
 					<span>{{label}}</span>
 				</a>
 			</li>
@@ -23,31 +23,31 @@
 		<div class="background"><div class="bar"></div></div>
 		<div class="time"></div>
 	</div>
-
-</div>
-
-<ul class="nav buttons">
-	{{#navbuttons}}
-
-		<li class="{{class}}">
-			<a href="{{link}}">
-				<span>{{label}}</span>
-			</a>
-		</li>
-
-	{{/navbuttons}}
-</ul>
-
 <ul class="right buttons">
 	{{#rightbuttons}}
 
 		<li class="{{class}}">
-			<a href="{{link}}">
+			{{#if link}}<a href="{{link}}" class="label">
 				<span>{{label}}</span>
 			</a>
+			{{else}}<div class="label">
+				<span>{{label}}</span>
+			</div>{{/if}}
+			<div class="expandable">
+				<ul class="buttons">
+					{{#buttons}}
+						<li class="{{class}}">
+							<a href="{{link}}" class="label">
+								<span>{{label}}</span>
+							</a>
+						</li>
+					{{/buttons}}
+				</ul>
+			</div>
 		</li>
 
 	{{/rightbuttons}}
-
-	<li class="show"><div>&nbsp;</div></li>
 </ul>
+
+</div>
+

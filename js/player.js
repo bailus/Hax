@@ -1,5 +1,6 @@
 import Progress from './progress'
 import { seconds2string, makeJsLink, seconds2shortstring } from './util'
+import _ from 'npm:lodash'
 
 export default (function () {
 "use strict";
@@ -37,39 +38,52 @@ export default (function () {
 				{ 'text': 'Stop', 			'action':'stop' },
 				{ 'text': 'Next',			'action':'skipnext' }
 			]).map(makeButton),
-			'navbuttons': ([
-				{ 'text': 'Up',				'action':'up' },
-				{ 'text': 'Down',			'action':'down' },
-				{ 'text': 'Left',			'action':'left' },
-				{ 'text': 'Right',			'action':'right' },
-				{ 'text': 'Select',			'action':'select' },
-				{ 'text': 'Back',			'action':'back' },
-				{ 'text': 'Information',	'action':'info' },
-				//{ 'text': 'Menu',			'action':'contextmenu' },
-				{ 'text': 'Home',			'action':'previousmenu' }
-			]).map(makeButton),
 			'rightbuttons': ([
-				//{ 'text': 'Mute',			'action':'mute' },
-				{ 'text': 'Volume Up',		'action':'volumeup' },
-				{ 'text': 'Volume Down',	'action':'volumedown' }
-			]).map(makeButton),
+				{ 'label': 'Navigation', class: 'expand navigation', 'buttons': ([
+						makeButton({ 'text': 'Up',			'action':'up' }),
+						makeButton({ 'text': 'Down',			'action':'down' }),
+						makeButton({ 'text': 'Left',			'action':'left' }),
+						makeButton({ 'text': 'Right',			'action':'right' }),
+						makeButton({ 'text': 'Select',			'action':'select' }),
+						makeButton({ 'text': 'Back',			'action':'back' }),
+						makeButton({ 'text': 'Information',		'action':'info' }),
+						makeButton({ 'text': 'Home',			'action':'previousmenu' }),
+						{ //the context menu button is a bit more complicated, since it does different things depending on the state of kodi
+							'label': 'Menu',
+							'class': 'contextmenu',
+							'link': makeJsLink(`
+								xbmc.get({
+									method: 'GUI.GetProperties',
+									params: {
+										properties: [ 'fullscreen' ] 
+									}
+								})
+								.then(result => xbmc.sendMessage('Input.ExecuteAction', {
+									action: result.fullscreen ? 'osd' : 'contextmenu'
+								}))
+							`)
+						}
+					])
+				},
+				{ 'label': 'Volume', class: 'expand volume', 'buttons': [
+					makeButton({ 'text': 'Up', 'action': 'volumeup' }),
+					makeButton({ 'text': 'Down', 'action': 'volumedown' }),
+					{
+						'label': 'Mute',
+						'class': 'mute',
+						'link': makeJsLink(`
+							xbmc.get({
+								method: 'Application.setMute',
+								params: {
+									mute: 'toggle'
+								}
+							})
+						`)
+					}
+				]}
+			]),
 			'hideNavigation': true
 		}
-		data.navbuttons.push({ //the context menu button is a bit more complicated, since it does different things depending on the state of kodi
-			'label': 'Menu',
-			'class': 'contextmenu',
-			'link': makeJsLink(`
-				xbmc.get({
-					method: 'GUI.GetProperties',
-					params: {
-						properties: [ 'fullscreen' ] 
-					}
-				})
-				.then(result => xbmc.sendMessage('Input.ExecuteAction', {
-					action: result.fullscreen ? 'osd' : 'contextmenu'
-				}))
-			`)
-		})
 		
 		//render the data to the DOM via the player template
 		while (player.firstChild) player.removeChild(player.firstChild) //remove child elements
@@ -109,9 +123,19 @@ export default (function () {
 		})
 
 		//toggle the player.visible class when the player.show button is clicked
-		player.querySelector('.show').addEventListener('click', () => {
-			player.className = player.className ? '' : 'minimize'
-		}, false)
+		const expandElems = Array.from(player.querySelectorAll('.expand'))
+		const collapseOthers = (selected) => {
+			expandElems.
+				filter(expandElem => expandElem !== selected).
+				forEach(expandElem => expandElem.dataset.expand = '')
+		}
+		const onclicks = expandElems.map(expandElem => {
+			return () => {
+				expandElem.dataset.expand = (expandElem.dataset.expand === 'expand') ? '' : 'expand'
+				collapseOthers(expandElem);
+			}
+		})
+		_.zip(expandElems, onclicks).map(([ expandElem, onclick ]) => expandElem.querySelector('.label').addEventListener('click', onclick, false) )
 
 	}
 

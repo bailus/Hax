@@ -139,81 +139,48 @@ a img,:link img,:visited img {
 		flex-grow: 1;
 	}
 
-	.page article .thumbnailWrapper {
-		display:flex;
-		flex-grow: 1;
-		justify-content: center;
+	.page article .thumbnails,
+	.page article .thumbnails * {
+		display: flex;
 	}
-
 	.page article .thumbnails {
-		display: flex;
+		flex-direction: row;
 		justify-content: center;
-		align-items: center;
-		overflow-x: visible;
-		perspective: 800px;
-		z-index: 10;
-		margin: 20px 0;
 	}
-
-	.page article .thumbnails > * {
-		max-width: 50%;
-		text-align: center;
+	.page article .thumbnails > .thumbnail {
+		justify-content: center;
 	}
-
-	.page article .thumbnails .previous > *,
-	.page article .thumbnails .next > * {
-		display: flex;
+	.page article .thumbnails > .thumbnail,
+	.page article .thumbnails > .thumbnail > a {
 		flex-direction: column;
-		justify-content: center;
+		flex-shrink: 1;
 	}
-
-	.page article .thumbnails .previous,
-	.page article .thumbnails .next {
-		width: 25%;
-		z-index:-100;
+	.page article .thumbnailWrapper {
+		flex-direction:column;
 	}
-
-	.page article .thumbnails .previous img,
-	.page article .thumbnails .next img {
+	.page article .thumbnails > .previous,
+	.page article .thumbnails > .next {
+		max-width: 25%;
+		flex-shrink: 10;
 		opacity: 0.5;
-	}
-
-	.page article .thumbnails .previous img,
-	.page article .thumbnails .next img {
-		width: 25%;
-	}
-
-	.page article .thumbnails .thumbnail img {
-	max-height: 294px;
-	height: auto;
-	}
-	.page article .thumbnails > * {
-		max-height: 300px;
-	}
-
-	.page article .thumbnails .thumbnail img,
-	.page article .thumbnails > * {
-		width: auto;
-		flex-shrink: 0;
-		flex-grow: 0;
-	}
-
-
-	.page article .thumbnails .previous {
-		transform: rotateY(30deg) translateZ(-30px);
-	}
-	.page article .thumbnails .next {
-		transform: rotateY(-30deg) translateZ(-30px);
+		flex-grow: 1;
 	}
 
 	.page article .thumbnails p {
 		overflow:hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+		width: 100%;
 	}
 
+	.page article .thumbnails .progress {
+		justify-content:left;
+		position:relative;
+		top:-1em;
+		opacity:.75;
+	}
 	.page article .thumbnails .progress .bar {
-		height: 1ch;
+		height: 1em;
 	}
 
 	.page article > .wrapper {

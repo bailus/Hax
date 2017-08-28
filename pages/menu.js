@@ -204,6 +204,84 @@ export default (new Page({
 					})
 				}
 			],
+			'Videos': [
+				{
+					'name': 'TV shows in progress',
+					'method': 'VideoLibrary.GetTVShows',
+					'params': {
+						'properties': [
+							'title', 'originaltitle', 'sorttitle', 'thumbnail', 'lastplayed', 'watchedepisodes'
+						],
+						'limits': {
+							'end': 10
+						},
+						'sort': {
+							'method': 'lastplayed',
+							'order': 'descending'
+						},
+						'filter': {
+							'field': 'inprogress',
+							'operator': 'is',
+							'value': 'true'
+						}
+					},
+					'key': 'tvshows',
+					'defaultThumbnail': 'img/icons/default/DefaultVideo.png',
+					'transformItem': ({
+						tvshowid, title, lastplayed, watchedepisodes
+					}) => ({
+						'link': '#page=TV Show&tvshowid='+tvshowid,
+						'label': title,
+						'details': `${watchedepisodes} watched`
+					})
+				},
+				{
+					'name': 'Recently added movies',
+					'method': 'VideoLibrary.GetRecentlyAddedMovies',
+					'params': {
+						"properties": [
+							"title", "originaltitle", "runtime", "year", "thumbnail", "tagline", "dateadded"
+						],
+						'limits': {
+							'end': 10
+						}
+					},
+					'key': 'movies',
+					'defaultThumbnail': 'img/icons/default/DefaultVideo.png',
+					'transformItem': ({
+						movieid, label, year, dateadded
+					}) => ({
+						'link': `#page=Movie&movieid=${movieid}`,
+						'label': `(${year}) ${label}`,
+						'details': `Added ${moment(dateadded).calendar()}`,
+					})
+				},
+				{
+					'name': 'Random Music Videos',
+					'cache': false,
+					'method': 'VideoLibrary.GetMusicVideos',
+					'params': {
+						"properties": [
+							"title", "runtime", "album", "artist", "year", "thumbnail", "dateadded"
+						],
+						'limits': {
+							'end': 10
+						},
+						'sort': {
+							'method': 'random'
+						}
+					},
+					'key': 'musicvideos',
+					'defaultThumbnail': 'img/icons/default/DefaultVideo.png',
+					'transformItem': ({
+						musicvideoid, artist, title, album, year, dateadded
+					}) => ({
+						'link': '#page=Music Video&musicvideoid='+musicvideoid,
+						'label': title,
+						'details': artist
+					})
+				}
+			],
 			'Movies': [
 				{
 					'name': 'In Progress',
@@ -315,7 +393,7 @@ export default (new Page({
 						'label': `(${year}) ${label}`,
 						'details': (top250 ? `#${top250} ` : '')+`${Math.round(rating*10)/10}/10 (${votes} votes)`
 					})
-				}
+				},
 			],
 			'Music Videos': [
 				{
@@ -370,7 +448,7 @@ export default (new Page({
 					})
 				},
 				{
-					'name': 'Random',
+					'name': 'Random Music Videos',
 					'cache': false,
 					'method': 'VideoLibrary.GetMusicVideos',
 					'params': {
