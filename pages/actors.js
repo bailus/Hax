@@ -38,7 +38,8 @@ export default (new Page({
 				'method': method,
 				'params': {
 					'properties': [ 'cast' ]
-				}
+				},
+				'cache': true
 			})
 			.then(result => result[resultProperty] || [])
 			.then(flatMap_(mediaInfo => mediaInfo.cast))

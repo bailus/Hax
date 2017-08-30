@@ -20,6 +20,9 @@ export default ({
 	},
 	'actions': {
 		'Play': 'img.estuary/icons/infodialogs/play.png',
+		'Play': 'img.eminence/extras/icons/play.png',
+		'Download': 'img.eminence/extras/icons/download.png',
+		'Clean': 'img.eminence/extras/icons/paintbrush.png',
 		'Update': 'img.estuary/icons/infodialogs/update.png',
 		'Add': 'img/buttons/add.png'
 	}

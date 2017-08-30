@@ -126,6 +126,7 @@ export default (new Page({
 				makeDetail(undefined, 'Genre', 'genre', genre),
 				moreBroadcasts !== undefined && moreBroadcasts.length > 0 && {
 					'name': 'Broadcasts',
+					'class': 'broadcasts',
 					'items': moreBroadcasts.map(({
 						label, broadcastid, starttime, runtime, endtime, isactive, isSelected
 					}) => ({

@@ -145,25 +145,26 @@ a img,:link img,:visited img {
 	}
 	.page article .thumbnails {
 		flex-direction: row;
-		justify-content: center;
+		justify-content: stretch;
 	}
 	.page article .thumbnails > .thumbnail {
 		justify-content: center;
+		width: 50%;
 	}
 	.page article .thumbnails > .thumbnail,
 	.page article .thumbnails > .thumbnail > a {
 		flex-direction: column;
-		flex-shrink: 1;
+		flex-shrink: 0;
+		flex-grow: 0;
 	}
 	.page article .thumbnailWrapper {
 		flex-direction:column;
 	}
 	.page article .thumbnails > .previous,
 	.page article .thumbnails > .next {
-		max-width: 25%;
-		flex-shrink: 10;
+		width: 25%;
 		opacity: 0.5;
-		flex-grow: 1;
+		0: 0
 	}
 
 	.page article .thumbnails p {
@@ -176,11 +177,11 @@ a img,:link img,:visited img {
 	.page article .thumbnails .progress {
 		justify-content:left;
 		position:relative;
-		top:-1em;
+		top:-1ch;
 		opacity:.75;
 	}
 	.page article .thumbnails .progress .bar {
-		height: 1em;
+		height: 1ch;
 	}
 
 	.page article > .wrapper {

@@ -124,6 +124,7 @@ export default (new Page({
 				moment.utc(channeldetails.lastplayed) > 0 && { 'name': 'Last Played', 'value': moment.utc(channeldetails.lastplayed).fromNow() },
 				{
 					'name': 'Broadcasts',
+					'class': 'broadcasts',
 					'items': groupItems(broadcasts.map(({
 						label, broadcastid, starttime, runtime, endtime, isactive
 					}, index) => ({

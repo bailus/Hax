@@ -1,8 +1,14 @@
 .page[data-page="Movie Set"] .leaf {
-	flex-direction: row;
+	flex-direction: column;
 	flex-wrap: wrap;
+	justify-content: stretch;
+	align-items: stretch;
+	align-content: stretch;
+	height: 450px;
 }
-
+.page[data-page="Movie Set"] .leaf > * {
+	width: 59%;
+}
 .page[data-page="Movie Set"] .listItem {
 	margin: 0.5ch;
 	text-align: justify;
@@ -11,9 +17,8 @@
 }
 
 .page[data-page="Movie Set"] .listItem .listActions {
-	width: 60px;
 	order:100;
-	overflow: hidden;
+	flex-direction:row-reverse;
 }
 
 .page[data-page="Movie Set"] .listItem .listAction {
@@ -25,7 +30,6 @@
 	padding: 0;
 	margin: 5px;
 	max-width: initial;
-	transform:translateY(-50px) rotate(90deg);
 	transform-origin:bottom left;
 }
 
@@ -50,14 +54,16 @@
 }
 
 .page[data-page="Movie Set"] .listItem.leaf > a {
+	display: inline-flex;
 	flex-direction: column;
-	align-items: stretch;
-	align-content: stretch;
+	width: 39%;
+	overflow: visible;
 }
 
 .page[data-page="Movie Set"] .listItem.leaf > a > .label {
-	order: -1;
 	width: 200px;
+	order: -1;
+	font-weight: bold;
 }
 
 .page[data-page="Movie Set"] .listItem > a > .thumbnail {
@@ -68,19 +74,23 @@
 }
 
 .page[data-page="Movie Set"] .listItem > a > .thumbnail {
-	height: 300px;
-	width: 200px;
+	width: auto;
 	flex-grow: 1;
 	max-width: initial;
-	flex-shrink: 1;
+	flex-shrink: 0;
+	height: auto;
 }
 
 .page[data-page="Movie Set"] .listItem .listItem {
 	width: auto;
 }
 
+.page[data-page="Movie Set"] .details li {
+	margin: 2ch 0;
+}
+
 .page[data-page="Movie Set"] .details {
-	flex-basis: 50%;
 	flex-shrink: 10;
 	flex-grow: 10;
+	margin-top: 3em;
 }

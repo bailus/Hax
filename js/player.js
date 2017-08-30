@@ -12,6 +12,19 @@ export default (function () {
 		return ((((o.hours*60) + o.minutes)*60) + o.seconds)+(o.milliseconds/1e3);
 	}
 
+	const runIfChanged = func => cache => string => {
+		if (cache.string != string) { //check javascript cache to avoid unnecessary dom calls
+			func(string)
+			cache.string = string
+		}
+	}
+	const setTextIfChanged = elems => runIfChanged(string => { 
+		Array.prototype.forEach.call(elems, elem => { elem.innerHTML = string })
+	})
+	const setBarIfChanged = elems => runIfChanged(string => { 
+		Array.prototype.forEach.call(elems, elem => { elem.setAttribute('style', `transform: scaleX(${ string });`) })
+	})
+
 	function renderPlayer(player) {
 		var slider, volume, data
 
@@ -19,69 +32,52 @@ export default (function () {
 			return {
 				'label': o.text,
 				'class': o.action,
-				'link': makeJsLink(`
-					xbmc.get({
-						'method': 'Input.ExecuteAction',
-						'params': {
-							'action': '${ o.action }'
-						}
-					})
-				`)
+				'link': makeJsLink(`xbmc.get({ 'method': 'Input.ExecuteAction', 'params': { 'action': '${ o.action }' } })`)
 			}
 		}
 
 		//construct data
 		data = {
-			'buttons': ([
-				{ 'text': 'Previous',		'action': 'skipprevious' },
-				{ 'text': 'Play / Pause',	'action': 'playpause' },
-				{ 'text': 'Stop', 			'action':'stop' },
-				{ 'text': 'Next',			'action':'skipnext' }
-			]).map(makeButton),
-			'rightbuttons': ([
-				{ 'label': 'Navigation', class: 'expand navigation', 'buttons': ([
-						makeButton({ 'text': 'Up',			'action':'up' }),
-						makeButton({ 'text': 'Down',			'action':'down' }),
-						makeButton({ 'text': 'Left',			'action':'left' }),
-						makeButton({ 'text': 'Right',			'action':'right' }),
-						makeButton({ 'text': 'Select',			'action':'select' }),
-						makeButton({ 'text': 'Back',			'action':'back' }),
-						makeButton({ 'text': 'Information',		'action':'info' }),
-						makeButton({ 'text': 'Home',			'action':'previousmenu' }),
-						{ //the context menu button is a bit more complicated, since it does different things depending on the state of kodi
-							'label': 'Menu',
-							'class': 'contextmenu',
-							'link': makeJsLink(`
-								xbmc.get({
-									method: 'GUI.GetProperties',
-									params: {
-										properties: [ 'fullscreen' ] 
-									}
-								})
-								.then(result => xbmc.sendMessage('Input.ExecuteAction', {
-									action: result.fullscreen ? 'osd' : 'contextmenu'
-								}))
-							`)
-						}
-					])
-				},
-				{ 'label': 'Volume', class: 'expand volume', 'buttons': [
+			'buttons': [
+				{ 'label': 'Player', class: 'expand playButtons', 'buttons': [
+					makeButton({ 'text': 'Previous',		'action': 'skipprevious' }),
+					makeButton({ 'text': 'Play / Pause',	'action': 'playpause' }),
+					makeButton({ 'text': 'Stop', 			'action':'stop' }),
+					makeButton({ 'text': 'Next',			'action':'skipnext' }),
+					{ 'label': 'Progress', 'id': 'progress' }
+				]},
+				{ 'label': 'Info', class: 'expand infoButtons', 'buttons': [
+					{ 'label': 'Info', 'id': 'info' }
+				]},
+				{ 'class': 'spacer' },
+				{ 'label': 'Volume', class: 'expand volume expandRight', 'buttons': [
 					makeButton({ 'text': 'Up', 'action': 'volumeup' }),
 					makeButton({ 'text': 'Down', 'action': 'volumedown' }),
-					{
-						'label': 'Mute',
-						'class': 'mute',
+					{ 'label': 'Mute', 'class': 'mute', 'link': makeJsLink(`xbmc.get({ method: 'Application.setMute', params: { mute: 'toggle' } })`) }
+				]},
+				{ 'label': 'Navigation', class: 'expand navigation expandRight', 'buttons': [
+					makeButton({ 'text': 'Up',			'action':'up' }),
+					makeButton({ 'text': 'Down',			'action':'down' }),
+					makeButton({ 'text': 'Left',			'action':'left' }),
+					makeButton({ 'text': 'Right',			'action':'right' }),
+					makeButton({ 'text': 'Select',			'action':'select' }),
+					makeButton({ 'text': 'Back',			'action':'back' }),
+					makeButton({ 'text': 'Information',		'action':'info' }),
+					makeButton({ 'text': 'Home',			'action':'previousmenu' }),
+					{ //the context menu button is a bit more complicated, since it does different things depending on the state of kodi
+						'label': 'Menu', 'class': 'contextmenu',
 						'link': makeJsLink(`
 							xbmc.get({
-								method: 'Application.setMute',
-								params: {
-									mute: 'toggle'
-								}
+								method: 'GUI.GetProperties',
+								params: { properties: [ 'fullscreen' ] }
 							})
+							.then(result => xbmc.sendMessage('Input.ExecuteAction', {
+								action: result.fullscreen ? 'osd' : 'contextmenu'
+							}))
 						`)
 					}
 				]}
-			]),
+			],
 			'hideNavigation': true
 		}
 		
@@ -90,23 +86,30 @@ export default (function () {
 		player.innerHTML = templates.player(data)
 		
 		//make the progress bar work
-		var oldString
+		const progressElem = document.getElementById('progress')
+		progressElem.innerHTML = `
+				<div class="background"><div class="bar"></div></div>
+				<div class="time"></div>`
+		const barElems = document.body.querySelectorAll('.bar')
+		const setBar = setBarIfChanged(barElems)({})
+		const backgroundElem = progressElem.querySelector('.background')
 
-		let progressElem = document.getElementById('progress')
-		let statusElem = progressElem.querySelector('.status')
-		let timeElem = progressElem.querySelector('.time')
-		let barElem = progressElem.querySelector('.bar')
-		let backgroundElem = progressElem.querySelector('.background')
+		const infoElem = document.getElementById('info')
+		infoElem.innerHTML = `
+				<div class="status"></div>
+				<div class="time"></div>`
+		const statusElems = document.body.querySelectorAll('.status')
+		const setStatus = setTextIfChanged(statusElems)({})
+		const timeElems = document.body.querySelectorAll('.time')
+		const setTime = setTextIfChanged(timeElems)({})
+
 
 		progress = Progress(function (position, time, duration) {
 			const timeString = seconds2shortstring(time)
 			const durationString = seconds2shortstring(duration)
 			const string = timeString + ' / ' + durationString
-			if (string !== oldString) {
-				timeElem.innerHTML = string
-				barElem.setAttribute('style', `transform: scaleX(${ position });`)
-			}
-			oldString = string
+			setTime(string)
+			setBar(''+position)
 		})
 		progressElem.addEventListener('mouseup', function (e) { //enable seeking
 			let boundingRect = backgroundElem.getBoundingClientRect()
@@ -154,7 +157,7 @@ export default (function () {
 				progress.start(timeObjToSeconds(player.totaltime), timeObjToSeconds(player.time))
 			})
 		},
-		'Player.OnPause': function (data) {
+		'Player.MOnPause': function (data) {
 			document.body.setAttribute('data-status','paused')
 			progress.pause()
 		},
@@ -171,8 +174,10 @@ export default (function () {
 	let playerStatus = 'stopped'
 	
 	function tick() {
-		let progressElem = document.getElementById('progress')
-		let statusElem = progressElem.querySelector('.status')
+
+		const setStatusBody = runIfChanged(string => { document.body.setAttribute('data-status',string) })
+
+		const setStatusElem = setTextIfChanged(document.body.querySelectorAll('.status'))({})
 
 		let player = {}
 
@@ -201,22 +206,22 @@ export default (function () {
 						if (playerStatus !== 'playing') {
 							progress.unpause()
 							playerStatus = 'playing'
-							document.body.setAttribute('data-status','playing')
+							setStatusBody('playing')
 						}
 					} else {
 						if (playerStatus !== 'paused') {
 							progress.pause('paused')
 							playerStatus = 'paused'
-							document.body.setAttribute('data-status','paused')
+							setStatusBody('paused')
 						}
 					}
 				} else {
 					if (playerStatus !== 'stopped') {
 						progress.stop()
 						playerStatus = 'stopped'
-						document.body.setAttribute('data-status','stopped')
-						
-						statusElem.innerHTML = ''
+
+						setStatusBody('stopped')
+						setStatusElem('')
 					}
 				}
 				window.setTimeout(resolve, 1e2)
@@ -239,7 +244,7 @@ export default (function () {
 
 					var item = playlist.items[player.position]
 					if (item) {
-						statusElem.innerHTML = [
+						setStatusElem([
 							(item.channel),
 							(item.showtitle),
 							(item.season>=0 && item.episode>=0 && `${item.season}x${item.episode}`),
@@ -249,9 +254,9 @@ export default (function () {
 								(item.album)
 							].filter(x => !!x).join(' '),
 							(item.label||item.title||item.file)
-						].filter(x => !!x).join(' - ')
+						].filter(x => !!x).join(' - '))
 					}
-					else statusElem.innerHTML = ''
+					else setStatusElem('')
 
 					window.setTimeout(resolve, 1e2)
 				})

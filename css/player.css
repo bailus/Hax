@@ -6,12 +6,6 @@
 	align-items: center;
 	align-items: stretch;
 }
-@media (max-width: 600px) {
-	#player .skipprevious,
-	#player .stop {
-		display: none;
-	}
-}	
 #player > .player {
 	display: flex;
 	flex-direction: row;
@@ -19,11 +13,19 @@
 	flex-grow: 1;
 	justify-content: space-between;
 	max-width: 100%;
+	height: 50px;
 }
 #player .buttons {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     flex-shrink: 0;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    flex-grow: 1;
+    max-width: 100%;
+}
+#player .expandable .buttons {
+    flex-wrap: wrap;
 }
 #player .buttons.right {
 	flex-direction: row;
@@ -61,9 +63,12 @@
 
 #player .buttons .label {
 	display:block;
-	width:100%;height:100%;
+	width:100%;
+	height:100%;
 	background-repeat: no-repeat;
 	background-position: center center;
+	flex-shrink: 0;
+	width: 50px;
 }
 #player .buttons img + span {
 	display: none;
@@ -72,7 +77,8 @@
 	display:none;
 }
 #player .buttons > li {
-	width:50px;height:50px;
+	width:50px;
+	height: 50px;
 	background-repeat: no-repeat;
 	background-position: center center;
 }
@@ -83,6 +89,20 @@
 #player .buttons > li:hover {
 	background:url('../img/buttons/hover.png');
 	cursor:pointer;
+}
+#player .buttons > li.expand:active,
+#player .buttons > li.expand:hover {
+	background:initial;
+}
+#player .spacer {
+	flex-basis:0;
+	width: initial !important;
+	background:initial;
+	flex-grow: 10;
+	flex-shrink: 1000;
+}
+#player .buttons > li.spacer > * {
+	display: none;
 }
 #player .skipprevious > .label { background-image:url('../img/buttons/skipprevious.png'); }
 #player .skipnext > .label { background-image:url('../img/buttons/skipnext.png'); }
@@ -107,9 +127,11 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 #player .volumeup > .label { background-image:url('../img.estuary/buttons/volume/volume.png'); }
 
 #player .navigation > .label { background-image:url('../img/buttons/navigation.png'); }
-#player .expand[data-expand=expand] > .label { background-image:url('../img/buttons/drawer_close.png'); }
+#player .expand[data-expand=expand] > .label { opacity:0.4; }
 
 #player .volume > .label { background-image:url('../img.estuary/buttons/volume/volume2.png'); }
+#player .playButtons > .label {background-image: url('../img/icons/remote.png');}
+#player .infoButtons > .label { background-image:url('../img/buttons/info.png'); }
 
 
 #player .volume > .expandable > .buttons {
@@ -117,38 +139,171 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 	width: 50px;
 	flex-direction: column;
 }
-#player .navigation > .expandable > .buttons {
-	height: 150px;
-	width: 250px;
-}
 #player .expand > .expandable {
 	display: none;
-	position: absolute;
-	background: #000;
+	position: relative;
+	background: var(--expandable_background);
 	z-index: 10000;
 	opacity: 0.9;
 	bottom:50px;
-	right:0px;
-	max-width:100%;
+	max-width: initial;
+}
+#player .expand.infoButtons > .expandable,
+#player .expand.playButtons > .expandable {
+	left:0;
+	width:100%;
+	position: absolute;
+	height: auto;
+}
+#player .expand.playButtons > .expandable {
+	padding:25px 0;
+}
+#player .expand.playButtons > .expandable .buttons {
+	justify-content: space-evenly;
+}
+#player .expand.infoButtons > .expandable #info {
+	width:auto;
+	margin:25px;
+	width:100%;
+	display: flex;
+	flex-direction:column;
+	justify-content:space-between;
+	background:none;
+}
+#player .expand.infoButtons > .expandable #info > * {
+	font-weight:bold;
+}
+#player .expand.infoButtons > .expandable #info .time {
+	text-align: right;
+	font-size: 85%;
+}
+#player .expand.navigation > .expandable {
+	right: 200px;
+	width: 250px;
+	bottom:250px;
+}
+#player .navigation > .expandable > .buttons {
+	height: 200px;
+	width: 250px;
+	flex-shrink: 10;
+}
+#player .expand.volume > .expandable {
+	width: 50px;
+	right:25px;
+	bottom: 250px;
+	top:initial;
+	height: 150px;
 	padding: 25px;
 }
 
 #player .expand[data-expand=expand] > .expandable {
 	display: flex;
+	z-index: 1000;
+	border: 1px solid rgba(255,255,255,0.1);
 }
 
+@media (min-width: 1000px) {
+	#player .playButtons {
+		width: auto !important;
+		height: auto !important;
+		flex-grow: 100;
+	}
+	#player .playButtons > .expandable {
+		position:initial !important;
+		bottom: initial;
+		left: initial;
+		right: initial;
+		top: initial;
+		display: flex;
+		background: initial;
+		padding: 0 !important;
+	}
+	#player .playButtons > .label {
+		display:none;
+	}
+	#player .playButtons > .expandable > .buttons {
+		flex-wrap:nowrap;
+	}
+	#player .infoButtons {
+		order:-1;
+	}
+	#player .spacer {
+		display: none;
+	}
+}
+
+@media (min-width: 375px) {
+	#player .infoButtons:not([data-expand=expand]) {
+		width: auto !important;
+		height: auto !important;
+		flex-grow: 100;
+		background:initial !important;
+		flex-shrink: 10;
+		position:relative;
+	}
+	#player .infoButtons:not([data-expand=expand]) > .expandable {
+		position:initial !important;
+		bottom: initial;
+		left: initial;
+		right: initial;
+		top: initial;
+		display: flex;
+		background: initial;
+		z-index: 10;
+	}
+	#player .infoButtons:not([data-expand=expand]) > .expandable #info {
+		background: var(--info_background) !important;
+		color: var(--info_text) !important;
+	}
+	#player .infoButtons:not([data-expand=expand]) > * {
+		position:absolute;
+		top:0;
+		left:0;
+		width:100%;
+		height:100%;
+	}
+	#player .infoButtons:not([data-expand=expand]) > .label {
+		z-index: -1000;
+		order: 100;
+		width: 100%;
+		background:initial;
+	}
+	#player .infoButtons:not([data-expand=expand]) > .label > * {
+		display:none;
+	}
+	#player .infoButtons:not([data-expand=expand]) > .expandable > .buttons {
+		flex-wrap:nowrap;
+		font-family: monospace;
+	}
+	#player :not([data-expand=expand]) #info {
+		margin: 4px 0.5ch !important;
+		justify-content: space-evenly !important;
+		height: 42px;
+		padding: 0 0.5ch;
+	}
+	#player :not([data-expand=expand]) .status {
+		flex-shrink: 10;
+		overflow:hidden;
+		display:block;
+		text-overflow:ellipsis;
+		max-height: 26px;
+	}
+}
 
 #progress {
 	display: flex;
 	justify-content: space-around;
 	overflow:hidden;
-	height: 46px;
-	padding: 2px 12px;
+	padding: 0 5%;
 	color: white;
 	flex-direction: column;
 	flex-shrink: 1;
-	flex-grow: 1;
-	max-width: 100%;
+	flex-grow: 100;
+	width: 300px !important;
+	position: relative;
+	display: block;
+	max-width: 90%;
+	background-image: initial !important;
 }
 #progress > * {
 	z-index: 100;
@@ -162,8 +317,9 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 	transform-origin: 0 0;
 }
 #progress .background {
-	height: 7px;
+	height: 30px;
 	width: 100%;
+	margin: 10px 0;
 }
 #progress .status {
     align-self: stretch;
@@ -181,6 +337,7 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 #progress .time {
     line-height: 16px;
     height: 16px;
+    display: none;
 }
 #nowPlaying {
 	text-overflow: ellipsis;
