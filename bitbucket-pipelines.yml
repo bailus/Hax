@@ -14,9 +14,17 @@ pipelines:
             - cd tools
             - sh versionBump.sh
             - cd ..
-  default:  # Pipelines that run automatically on any commit
-    - step:
-        image: node:latest
-        script: # Modify the commands below to build your repository.
-          - apt-get update && apt-get install -y zip python3
-          - sh tools/build.sh
+            - apt-get update && apt-get install -y zip python3
+            - sh tools/build.sh
+    build:
+      - step:
+          image: node:latest
+          script: # Modify the commands below to build your repository.
+            - apt-get update && apt-get install -y zip python3
+            - sh tools/build.sh
+#  default:  # Pipelines that run automatically on any commit
+#    - step:
+#        image: node:latest
+#        script: # Modify the commands below to build your repository.
+#          - apt-get update && apt-get install -y zip python3
+#          - sh tools/build.sh
