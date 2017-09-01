@@ -295,6 +295,7 @@ SystemJS.config({
     "github:*/*.json"
   ],
   map: {
+    "lodash": "npm:lodash@4.17.4",
     "events": "npm:jspm-nodelibs-events@0.2.0",
     "assert": "npm:jspm-nodelibs-assert@0.2.0",
     "babel-plugin-transform-es2015-arrow-functions": "npm:babel-plugin-transform-es2015-arrow-functions@6.8.0",
@@ -347,7 +348,7 @@ SystemJS.config({
         "convert-source-map": "npm:convert-source-map@1.2.0",
         "debug": "npm:debug@2.2.0",
         "json5": "npm:json5@0.4.0",
-        "lodash": "npm:lodash@4.13.1",
+        "lodash": "npm:lodash@4.17.4",
         "minimatch": "npm:minimatch@3.0.2",
         "path-exists": "npm:path-exists@1.0.0",
         "path-is-absolute": "npm:path-is-absolute@1.0.0",
@@ -364,7 +365,7 @@ SystemJS.config({
         "babel-runtime": "npm:babel-runtime@6.9.2",
         "babel-types": "npm:babel-types@6.10.2",
         "detect-indent": "npm:detect-indent@3.0.1",
-        "lodash": "npm:lodash@4.13.1",
+        "lodash": "npm:lodash@4.17.4",
         "source-map": "npm:source-map@0.5.6"
       }
     },
@@ -381,7 +382,7 @@ SystemJS.config({
         "babel-helper-function-name": "npm:babel-helper-function-name@6.8.0",
         "babel-runtime": "npm:babel-runtime@6.9.2",
         "babel-types": "npm:babel-types@6.10.2",
-        "lodash": "npm:lodash@4.13.1"
+        "lodash": "npm:lodash@4.17.4"
       }
     },
     "npm:babel-helper-function-name@6.8.0": {
@@ -415,7 +416,7 @@ SystemJS.config({
       "map": {
         "babel-runtime": "npm:babel-runtime@6.9.2",
         "babel-types": "npm:babel-types@6.10.2",
-        "lodash": "npm:lodash@4.13.1"
+        "lodash": "npm:lodash@4.17.4"
       }
     },
     "npm:babel-helper-replace-supers@6.8.0": {
@@ -465,7 +466,7 @@ SystemJS.config({
         "babel-template": "npm:babel-template@6.9.0",
         "babel-traverse": "npm:babel-traverse@6.10.4",
         "babel-types": "npm:babel-types@6.10.2",
-        "lodash": "npm:lodash@4.13.1"
+        "lodash": "npm:lodash@4.17.4"
       }
     },
     "npm:babel-plugin-transform-es2015-classes@6.9.0": {
@@ -632,7 +633,7 @@ SystemJS.config({
         "babel-runtime": "npm:babel-runtime@6.9.2",
         "core-js": "npm:core-js@2.4.0",
         "home-or-tmp": "npm:home-or-tmp@1.0.0",
-        "lodash": "npm:lodash@4.13.1",
+        "lodash": "npm:lodash@4.17.4",
         "mkdirp": "npm:mkdirp@0.5.1",
         "path-exists": "npm:path-exists@1.0.0",
         "source-map-support": "npm:source-map-support@0.2.10"
@@ -650,7 +651,7 @@ SystemJS.config({
         "babel-traverse": "npm:babel-traverse@6.10.4",
         "babel-types": "npm:babel-types@6.10.2",
         "babylon": "npm:babylon@6.8.1",
-        "lodash": "npm:lodash@4.13.1"
+        "lodash": "npm:lodash@4.17.4"
       }
     },
     "npm:babel-traverse@6.10.4": {
@@ -663,7 +664,7 @@ SystemJS.config({
         "debug": "npm:debug@2.2.0",
         "globals": "npm:globals@8.18.0",
         "invariant": "npm:invariant@2.2.1",
-        "lodash": "npm:lodash@4.13.1"
+        "lodash": "npm:lodash@4.17.4"
       }
     },
     "npm:babel-types@6.10.2": {
@@ -671,7 +672,7 @@ SystemJS.config({
         "babel-runtime": "npm:babel-runtime@6.9.2",
         "babel-traverse": "npm:babel-traverse@6.10.4",
         "esutils": "npm:esutils@2.0.2",
-        "lodash": "npm:lodash@4.13.1",
+        "lodash": "npm:lodash@4.17.4",
         "to-fast-properties": "npm:to-fast-properties@1.0.2"
       }
     },
@@ -755,9 +756,6 @@ SystemJS.config({
       "map": {
         "systemjs-json": "github:systemjs/plugin-json@0.1.2"
       }
-    },
-    "npm:lodash@4.13.1": {
-      "map": {}
     },
     "npm:loose-envify@1.2.0": {
       "map": {
