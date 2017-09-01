@@ -97,7 +97,7 @@
 #player .spacer {
 	flex-basis:0;
 	width: initial !important;
-	background:initial;
+	background: initial !important;
 	flex-grow: 10;
 	flex-shrink: 1000;
 }
@@ -139,55 +139,66 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 	width: 50px;
 	flex-direction: column;
 }
-#player .expand > .expandable {
+
+#player .expand > .expandable > * {
 	display: none;
-	position: relative;
+}
+#player .expand[data-expand=expand] > .expandable > * {
+	display: flex;
+}
+#player .expand.infoButtons > .infoText {
+	display: flex;
+}
+
+#player .expand[data-expand=expand] > .expandable {
 	background: var(--expandable_background);
 	z-index: 10000;
 	opacity: 0.9;
 	bottom:50px;
 	max-width: initial;
 }
-#player .expand.infoButtons > .expandable,
-#player .expand.playButtons > .expandable {
+#player .expand.infoButtons[data-expand=expand] > .expandable {
 	left:0;
 	width:100%;
-	position: absolute;
 	height: auto;
+	position: absolute;
 }
-#player .expand.playButtons > .expandable {
-	padding:25px 0;
+#player .expand.infoButtons[data-expand=expand] .buttons {
+	justify-content:center;
 }
-#player .expand.playButtons > .expandable .buttons {
-	justify-content: space-evenly;
-}
-#player .expand.infoButtons > .expandable #info {
+#player .expand.infoButtons[data-expand=expand] > .expandable #info {
 	width:auto;
 	margin:25px;
 	width:100%;
 	display: flex;
-	flex-direction:column;
 	justify-content:space-between;
 	background:none;
 }
-#player .expand.infoButtons > .expandable #info > * {
+#player .expand.infoButtons[data-expand=expand] > .expandable #info > * {
 	font-weight:bold;
 }
-#player .expand.infoButtons > .expandable #info .time {
+#player .expand.infoButtons[data-expand=expand] > .expandable .infoText {
+	margin: 0 0.5ch;
+	justify-content: space-evenly;
+	display:flex;
+	flex-direction:column;
+	height:100%;
+}
+#player .expand.infoButtons[data-expand=expand] > .expandable #info .time {
 	text-align: right;
 	font-size: 85%;
 }
-#player .expand.navigation > .expandable {
+#player .expand.navigation[data-expand=expand] > .expandable {
 	right: 200px;
 	width: 250px;
 	bottom:250px;
 }
-#player .navigation > .expandable > .buttons {
+#player .navigation[data-expand=expand] > .expandable > .buttons {
 	height: 200px;
 	width: 250px;
 	flex-shrink: 10;
 }
-#player .expand.volume > .expandable {
+#player .expand.volume[data-expand=expand] > .expandable {
 	width: 50px;
 	right:25px;
 	bottom: 250px;
@@ -200,94 +211,69 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 	display: flex;
 	z-index: 1000;
 	border: 1px solid rgba(255,255,255,0.1);
+	position: relative;
 }
 
-@media (min-width: 1000px) {
-	#player .playButtons {
-		width: auto !important;
-		height: auto !important;
-		flex-grow: 100;
-	}
-	#player .playButtons > .expandable {
-		position:initial !important;
-		bottom: initial;
-		left: initial;
-		right: initial;
-		top: initial;
-		display: flex;
-		background: initial;
-		padding: 0 !important;
-	}
-	#player .playButtons > .label {
-		display:none;
-	}
-	#player .playButtons > .expandable > .buttons {
-		flex-wrap:nowrap;
-	}
-	#player .infoButtons {
-		order:-1;
-	}
-	#player .spacer {
-		display: none;
-	}
+#player .infoButtons {
+	width: auto !important;
+	height: auto !important;
+	flex-grow: 100;
+	background:initial !important;
+	flex-shrink: 10;
+	position:relative;
+	flex-basis: 40%;
 }
-
-@media (min-width: 375px) {
-	#player .infoButtons:not([data-expand=expand]) {
-		width: auto !important;
-		height: auto !important;
-		flex-grow: 100;
-		background:initial !important;
-		flex-shrink: 10;
-		position:relative;
-	}
-	#player .infoButtons:not([data-expand=expand]) > .expandable {
-		position:initial !important;
-		bottom: initial;
-		left: initial;
-		right: initial;
-		top: initial;
-		display: flex;
-		background: initial;
-		z-index: 10;
-	}
-	#player .infoButtons:not([data-expand=expand]) > .expandable #info {
-		background: var(--info_background) !important;
-		color: var(--info_text) !important;
-	}
-	#player .infoButtons:not([data-expand=expand]) > * {
-		position:absolute;
-		top:0;
-		left:0;
-		width:100%;
-		height:100%;
-	}
-	#player .infoButtons:not([data-expand=expand]) > .label {
-		z-index: -1000;
-		order: 100;
-		width: 100%;
-		background:initial;
-	}
-	#player .infoButtons:not([data-expand=expand]) > .label > * {
-		display:none;
-	}
-	#player .infoButtons:not([data-expand=expand]) > .expandable > .buttons {
-		flex-wrap:nowrap;
-		font-family: monospace;
-	}
-	#player :not([data-expand=expand]) #info {
-		margin: 4px 0.5ch !important;
-		justify-content: space-evenly !important;
-		height: 42px;
-		padding: 0 0.5ch;
-	}
-	#player :not([data-expand=expand]) .status {
-		flex-shrink: 10;
-		overflow:hidden;
-		display:block;
-		text-overflow:ellipsis;
-		max-height: 26px;
-	}
+#player .infoButtons[data-expand=expand] > .expandable {
+	top:initial;
+	right:0;
+	bottom:50px;
+	display: flex;
+}
+#player .expand[data-expand=expand] #info > * {
+	opacity:1.0;
+}
+#player .expand #info > * {
+	opacity:0.9;
+}
+#player .expand #info {
+	flex-direction:row;
+	background: var(--info_background) !important;
+	color: var(--info_text) !important;
+	display: flex;
+	overflow: hidden;
+	flex-wrap: nowrap;
+}
+#player .infoButtons .infoText {
+	flex-wrap:nowrap;
+	font-family: monospace;
+	flex-grow: 1e4;
+	flex-shrink: 100;
+	margin: 0 1ch;
+	justify-content: space-evenly;
+	display: flex;
+	flex-direction: column;
+	width: 0;
+}
+#player .infoButtons > * {
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+}
+#player .infoButtons > .label {
+	z-index: 1000;
+	order: 100;
+	width: 100%;
+	background:initial;
+}
+#player .infoButtons > .label > * {
+	display:none;
+}
+#player #info {
+	margin: 4px 0.5ch !important;
+	justify-content: stretch !important;
+	height: 42px;
 }
 
 #progress {
@@ -312,8 +298,6 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 	height: 100%;
 	width: 100%;
 	background-color: white;
-	transition: transform 1s;
-	transition-timing-function: linear;
 	transform-origin: 0 0;
 }
 #progress .background {
@@ -321,27 +305,52 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 	width: 100%;
 	margin: 10px 0;
 }
-#progress .status {
-    align-self: stretch;
-    flex-shrink: 1e3;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 100%;
+#player .status {
+	flex-shrink: 10;
+	display: block;
+	align-self: stretch;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 14px;
+	font-size: 12px;
+	width: 100%;
+	max-height: 28px;
+	text-align: justify;
+	min-height: 14px;
 }
-#progress .time {
+#player .time {
 	flex-grow: 0;
 	align-self: flex-end;
+	text-align: right;
+	line-height: 12px;
+	font-size: 10px;
 }
 #progress .status,
 #progress .time {
-    line-height: 16px;
-    height: 16px;
     display: none;
 }
 #nowPlaying {
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+
+#player .nowPlayingThumbnail {
+	height:42px !important;
+	width: auto !important;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+	background:initial !important;
+	flex-shrink: 0;
+	flex-grow: 0;
+}
+
+#player .nowPlayingThumbnail > img {
+	max-width:100%;
+	max-height:100%;
+	width: auto !important;
+	height: auto !important;
 }
 
 
@@ -372,3 +381,4 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 #player .buttons .right     { top:75px; right:50%; margin-right:-75px; }
 #player .buttons .up        { top:25px;	left: 50%;  }
 #player .buttons .down      { top:125px; left: 50%;  }
+  p                     p�SMB@      

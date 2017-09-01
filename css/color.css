@@ -7,7 +7,7 @@
 	--red: hsl(12, 72%, 47%);
 
 	--saturation_none: 0%;
-	--saturation_lower: 33%;
+	--saturation_lower: 15%;
 	--saturation_low: 66%;
 	--saturation_medium: 83%;
 	--saturation_high: 88%;
@@ -30,6 +30,7 @@
 	--opacity_higher: 0.99;
 	
 	--luminosity_black: 0%;
+	--luminosity_lower: 6%;
 	--luminosity_low: 12%;
 	--luminosity_medium: 23%;
 	--luminosity_high: 55%;
@@ -45,7 +46,7 @@
 	--bg_image: hsl(0, 0%, var(--opacity_high));
 	--bg_overlay: hsla(0, 0%, 100%, var(--opacity_low));
 	--info_text: hsl(var(--hue_orange), var(--saturation_high), var(--luminosity_high));
-	--info_background: hsla(var(--hue_orange), var(--saturation_lower), var(--luminosity_low), 0.9);
+	--info_background: hsla(var(--hue_orange), var(--saturation_lower), var(--luminosity_low), var(--opacity_high));
 	--progress_bar_back: hsla(0, 0%, var(--luminosity_black), var(--opacity_medium));
 	--progress_bar: hsla(var(--hue_red), var(--saturation_high), var(--luminosity_high), var(--opacity_high));
 	--button_focus: hsl(var(--hue_primary), var(--saturation_medium), var(--luminosity_high));

@@ -21,9 +21,6 @@ export default (function () {
 	const setTextIfChanged = elems => runIfChanged(string => { 
 		Array.prototype.forEach.call(elems, elem => { elem.innerHTML = string })
 	})
-	const setBarIfChanged = elems => runIfChanged(string => { 
-		Array.prototype.forEach.call(elems, elem => { elem.setAttribute('style', `transform: scaleX(${ string });`) })
-	})
 
 	function renderPlayer(player) {
 		var slider, volume, data
@@ -39,15 +36,12 @@ export default (function () {
 		//construct data
 		data = {
 			'buttons': [
-				{ 'label': 'Player', class: 'expand playButtons', 'buttons': [
+				{ 'label': 'Info', class: 'expand infoButtons', 'buttons': [
 					makeButton({ 'text': 'Previous',		'action': 'skipprevious' }),
 					makeButton({ 'text': 'Play / Pause',	'action': 'playpause' }),
 					makeButton({ 'text': 'Stop', 			'action':'stop' }),
 					makeButton({ 'text': 'Next',			'action':'skipnext' }),
-					{ 'label': 'Progress', 'id': 'progress' }
-				]},
-				{ 'label': 'Info', class: 'expand infoButtons', 'buttons': [
-					{ 'label': 'Info', 'id': 'info' }
+					{ 'label': 'Progress', 'id': 'progress' },
 				]},
 				{ 'class': 'spacer' },
 				{ 'label': 'Volume', class: 'expand volume expandRight', 'buttons': [
@@ -90,26 +84,38 @@ export default (function () {
 		progressElem.innerHTML = `
 				<div class="background"><div class="bar"></div></div>
 				<div class="time"></div>`
+
 		const barElems = document.body.querySelectorAll('.bar')
-		const setBar = setBarIfChanged(barElems)({})
 		const backgroundElem = progressElem.querySelector('.background')
-
-		const infoElem = document.getElementById('info')
+		
+		const infoElem = document.createElement('div')
+		infoElem.id = 'info'
+		player.querySelector('.infoButtons').append(infoElem)
 		infoElem.innerHTML = `
-				<div class="status"></div>
-				<div class="time"></div>`
-		const statusElems = document.body.querySelectorAll('.status')
-		const setStatus = setTextIfChanged(statusElems)({})
-		const timeElems = document.body.querySelectorAll('.time')
-		const setTime = setTextIfChanged(timeElems)({})
+				<div class="nowPlayingThumbnail"><img></img></div>
+				<div class="infoText">
+					<div class="status"></div>
+					<div class="time"></div>
+				</div>`
 
+		const thumbnailContainerElems = document.body.querySelectorAll('.nowPlayingThumbnail')
+		Array.prototype.forEach.call(thumbnailContainerElems, elem => { elem.innerHTML = `<img>` })
+		const thumbnailElems = document.body.querySelectorAll('.nowPlayingThumbnail img')
+
+		const elems = {
+			setBar: runIfChanged(string => { Array.prototype.forEach.call(barElems, elem => { elem.setAttribute('style', `transform: scaleX(${ string });`) }) })({}),
+			setThumbnail: runIfChanged(string => { Array.prototype.forEach.call(thumbnailElems, elem => { elem.src = xbmc.vfs2uri(string) }) })({}),
+			setTime: setTextIfChanged(document.body.querySelectorAll('.time'))({}),
+			setStatus: setTextIfChanged(document.body.querySelectorAll('.status'))({}),
+			setStatusBody: runIfChanged(string => { document.body.setAttribute('data-status',string) })({})
+		}
 
 		progress = Progress(function (position, time, duration) {
 			const timeString = seconds2shortstring(time)
 			const durationString = seconds2shortstring(duration)
 			const string = timeString + ' / ' + durationString
-			setTime(string)
-			setBar(''+position)
+			elems.setTime(string)
+			elems.setBar(''+position)
 		})
 		progressElem.addEventListener('mouseup', function (e) { //enable seeking
 			let boundingRect = backgroundElem.getBoundingClientRect()
@@ -139,6 +145,8 @@ export default (function () {
 			}
 		})
 		_.zip(expandElems, onclicks).map(([ expandElem, onclick ]) => expandElem.querySelector('.label').addEventListener('click', onclick, false) )
+
+		return elems
 
 	}
 
@@ -173,11 +181,7 @@ export default (function () {
 
 	let playerStatus = 'stopped'
 	
-	function tick() {
-
-		const setStatusBody = runIfChanged(string => { document.body.setAttribute('data-status',string) })
-
-		const setStatusElem = setTextIfChanged(document.body.querySelectorAll('.status'))({})
+	function tick(elems) {
 
 		let player = {}
 
@@ -206,13 +210,13 @@ export default (function () {
 						if (playerStatus !== 'playing') {
 							progress.unpause()
 							playerStatus = 'playing'
-							setStatusBody('playing')
+							elems.setStatusBody('playing')
 						}
 					} else {
 						if (playerStatus !== 'paused') {
 							progress.pause('paused')
 							playerStatus = 'paused'
-							setStatusBody('paused')
+							elems.setStatusBody('paused')
 						}
 					}
 				} else {
@@ -220,8 +224,8 @@ export default (function () {
 						progress.stop()
 						playerStatus = 'stopped'
 
-						setStatusBody('stopped')
-						setStatusElem('')
+						elems.setStatusBody('stopped')
+						elems.setStatus('')
 					}
 				}
 				window.setTimeout(resolve, 1e2)
@@ -244,7 +248,7 @@ export default (function () {
 
 					var item = playlist.items[player.position]
 					if (item) {
-						setStatusElem([
+						elems.setStatus([
 							(item.channel),
 							(item.showtitle),
 							(item.season>=0 && item.episode>=0 && `${item.season}x${item.episode}`),
@@ -255,8 +259,9 @@ export default (function () {
 							].filter(x => !!x).join(' '),
 							(item.label||item.title||item.file)
 						].filter(x => !!x).join(' - '))
+						elems.setThumbnail(item.thumbnail)
 					}
-					else setStatusElem('')
+					else elems.setStatus('')
 
 					window.setTimeout(resolve, 1e2)
 				})
@@ -265,16 +270,16 @@ export default (function () {
 			}
 			window.setTimeout(resolve, 3e2)
 		}))
-		.catch(tick)
-		.then(tick)
+		.catch(x => tick(elems))
+		.then(x => tick(elems))
 	}
 	
 	function init() {
 		//render the player
-		renderPlayer(document.querySelector('#player'))
+		const elems = renderPlayer(document.querySelector('#player'))
 		
 		//start polling
-		tick()
+		tick(elems)
 		
 		//bind event handlers to the xbmc websocket api
 		Object.getOwnPropertyNames(onNotification).forEach(name => xbmc.onNotification(name, onNotification[name]))
