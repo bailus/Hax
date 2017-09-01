@@ -12,7 +12,6 @@ pipelines:
           image: python:latest
           caches:
             - node
-            - pip
           script: # Modify the commands below to build your repository.
             - cd tools
             - sh versionBump.sh
