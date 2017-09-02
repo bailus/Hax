@@ -1,5 +1,5 @@
-import Page from '../js/page'
-import { makeJsLink, minutes2string, seconds2shortstring } from '../js/util'
+import Page from '../js/page.js'
+import { makeJsLink, minutes2string, seconds2shortstring } from '../js/util.js'
 import moment from 'moment'
 
 function makeDetail(page, name, key, value) {

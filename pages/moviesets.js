@@ -1,7 +1,7 @@
-import Page from '../js/page'
-import { makeJsLink } from '../js/util'
+import Page from '../js/page.js'
+import { makeJsLink } from '../js/util.js'
 
-import Filter from '../js/xbmcFilter'
+import Filter from '../js/xbmcFilter.js'
 
 export default (new Page({
 	'id': 'Movie Sets',

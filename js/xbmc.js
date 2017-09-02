@@ -1,4 +1,4 @@
-import JSONRPC from './jsonrpc'
+import JSONRPC from './jsonrpc.js'
 
 export default (function () {
 	"use strict";

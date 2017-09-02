@@ -1,7 +1,7 @@
-import Page from '../js/page'
-import { makeJsLink, parseYear } from '../js/util'
-import Filter from '../js/xbmcFilter'
-import icons from './icons'
+import Page from '../js/page.js'
+import { makeJsLink, parseYear } from '../js/util.js'
+import Filter from '../js/xbmcFilter.js'
+import icons from './icons.js'
 
 function makeDetail(page, name, key, value) {
 	return value !== undefined && value.length > 0 && {

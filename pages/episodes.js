@@ -1,6 +1,6 @@
-import Page from '../js/page'
-import { seconds2string, ymd2string, makeJsLink } from '../js/util'
-import Filter from '../js/xbmcFilter'
+import Page from '../js/page.js'
+import { seconds2string, ymd2string, makeJsLink } from '../js/util.js'
+import Filter from '../js/xbmcFilter.js'
 
 export default (new Page({
 	'id': 'Episodes',

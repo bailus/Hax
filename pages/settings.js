@@ -1,4 +1,4 @@
-import Page from '../js/page'
+import Page from '../js/page.js'
 
 const SETTINGS = new Map();
 

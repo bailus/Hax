@@ -1,5 +1,5 @@
-import { hashArrayToURL } from './hash'
-import { sortItems, groupItems } from './util'
+import { hashArrayToURL } from './hash.js'
+import { sortItems, groupItems } from './util.js'
 
 export default class {
 	

@@ -1,6 +1,6 @@
-import Page from '../js/page'
-import { makeJsLink } from '../js/util'
-import { getSlash, trimFilename, joinFilenameComponents, joinDirectoryComponents } from '../js/filename'
+import Page from '../js/page.js'
+import { makeJsLink } from '../js/util.js'
+import { getSlash, trimFilename, joinFilenameComponents, joinDirectoryComponents } from '../js/filename.js'
 
 export default (new Page({
 	'id': 'File',

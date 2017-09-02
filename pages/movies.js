@@ -1,9 +1,7 @@
-import Page from '../js/page'
-import { seconds2string, makeJsLink, parseYear } from '../js/util'
+import Page from '../js/page.js'
+import { seconds2string, makeJsLink, parseYear } from '../js/util.js'
 import moment from 'moment'
-
-
-import Filter from '../js/xbmcFilter'
+import Filter from '../js/xbmcFilter.js'
 
 export default (new Page({
 	'id': 'Movies',

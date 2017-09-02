@@ -24,6 +24,29 @@
     flex-grow: 1;
     max-width: 100%;
 }
+#player .infoButtons .expandable .buttons > * {
+	margin: 1ch;
+	justify-self: center;
+	width: 32px;
+	height: 32px;
+}
+#player .infoButtons .buttons > *,
+#player .infoButtons .buttons .label {
+	background-size: 32px 32px;
+	background-position: 50% 50%;
+	background-repeat:no-repeat;
+}
+#player .infoButtons .expandable .buttons > * > .label {
+	width: 100%;
+	height: 100%;
+	display: block;
+}
+#player .infoButtons .expandable .break-after ~ li {
+	justify-self: left !important;
+	width: 42px;
+	height: 42px;
+	background-size: 42px 42px;
+}
 #player .expandable .buttons {
     flex-wrap: wrap;
 }
@@ -77,7 +100,7 @@
 	display:none;
 }
 #player .buttons > li {
-	width:50px;
+	width: 50px;
 	height: 50px;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -95,11 +118,18 @@
 	background:initial;
 }
 #player .spacer {
-	flex-basis:0;
-	width: initial !important;
 	background: initial !important;
 	flex-grow: 10;
 	flex-shrink: 1000;
+	width: 0 !important;
+	flex-basis: 0;
+}
+#player .buttons .break-after {
+	flex-basis: 100%;
+	height: 1ch !important;
+	overflow: hidden;
+	margin: 0 !important;
+	width: initial !important;
 }
 #player .buttons > li.spacer > * {
 	display: none;
@@ -133,6 +163,13 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 #player .playButtons > .label {background-image: url('../img/icons/remote.png');}
 #player .infoButtons > .label { background-image:url('../img/buttons/info.png'); }
 
+#player .togglestereomode > .label { background-image:url('../img.eminence/media/indicator/3D.png'); }
+#player .rotate > .label { background-image:url('../img.estuary/icons/submenu/updatelibrary.png'); }
+#player .rotateccw > .label { background-image:url('../img.estuary/icons/submenu/updatelibrary.png'); transform:scaleX(-1); }
+#player .cyclesubtitle > .label { background-image:url('../img.estuary/buttons/fullscreen/settings-subtitle-50px.png'); }
+#player .aspectratio > .label { background-image:url('../img.hax/aspect.png'); }
+
+
 
 #player .volume > .expandable > .buttons {
 	height: 150px;
@@ -142,6 +179,16 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 
 #player .expand > .expandable > * {
 	display: none;
+}
+#player .expand[data-expand=expand] > .expandable > .close {
+	display: block;
+	position: fixed;
+	top:0;
+	left:0;
+	width:100%;
+	bottom:50px;
+	background-color:rgba(0,0,0,0.4);
+	z-index:-100;
 }
 #player .expand[data-expand=expand] > .expandable > * {
 	display: flex;
@@ -161,11 +208,10 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 	left:0;
 	width:100%;
 	height: auto;
-	position: absolute;
+	position: fixed;
+	padding: 2ch 0;
 }
-#player .expand.infoButtons[data-expand=expand] .buttons {
-	justify-content:center;
-}
+#player .expand.infoButtons[data-expand=expand] .buttons {justify-content: left;}
 #player .expand.infoButtons[data-expand=expand] > .expandable #info {
 	width:auto;
 	margin:25px;
@@ -183,10 +229,6 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 	display:flex;
 	flex-direction:column;
 	height:100%;
-}
-#player .expand.infoButtons[data-expand=expand] > .expandable #info .time {
-	text-align: right;
-	font-size: 85%;
 }
 #player .expand.navigation[data-expand=expand] > .expandable {
 	right: 200px;
@@ -220,8 +262,9 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 	flex-grow: 100;
 	background:initial !important;
 	flex-shrink: 10;
-	position:relative;
 	flex-basis: 40%;
+	display: flex;
+	position: relative;
 }
 #player .infoButtons[data-expand=expand] > .expandable {
 	top:initial;
@@ -242,6 +285,7 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 	display: flex;
 	overflow: hidden;
 	flex-wrap: nowrap;
+	width: 100%;
 }
 #player .infoButtons .infoText {
 	flex-wrap:nowrap;
@@ -254,7 +298,7 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 	flex-direction: column;
 	width: 0;
 }
-#player .infoButtons > * {
+#player .infoButtons > .label {
 	position:absolute;
 	top:0;
 	left:0;
@@ -276,7 +320,7 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 	height: 42px;
 }
 
-#progress {
+#player #progress {
 	display: flex;
 	justify-content: space-around;
 	overflow:hidden;
@@ -301,33 +345,40 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 	transform-origin: 0 0;
 }
 #progress .background {
-	height: 30px;
+	height: 8px;
 	width: 100%;
-	margin: 10px 0;
+	margin: 17px 0;
+}
+#player .time,
+#player .status {
+	display: block;
 }
 #player .status {
-	flex-shrink: 10;
-	display: block;
-	align-self: stretch;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	line-height: 14px;
 	font-size: 12px;
 	width: 100%;
-	max-height: 28px;
+	height: 28px;
 	text-align: justify;
-	min-height: 14px;
 }
-#player .time {
-	flex-grow: 0;
+#player .time,
+#progress .time {
 	align-self: flex-end;
 	text-align: right;
-	line-height: 12px;
-	font-size: 10px;
+	wrap: nowrap;
 }
-#progress .status,
+#player .time {
+	font-size:11px;
+	line-height: 12px;
+}
 #progress .time {
-    display: none;
+	position: relative;
+	font-size: 10px;
+	line-height: 17px;
+	top: -17px;
+	padding: 0 0.5ch;
+	z-index: -10;
 }
 #nowPlaying {
 	text-overflow: ellipsis;
@@ -380,5 +431,4 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 #player .buttons .left      { top:75px; left: 50%; margin-left:-75px;  }
 #player .buttons .right     { top:75px; right:50%; margin-right:-75px; }
 #player .buttons .up        { top:25px;	left: 50%;  }
-#player .buttons .down      { top:125px; left: 50%;  }
-  p                     p�SMB@      
+#player .buttons .down      { top:125px;	left: 50%;  }

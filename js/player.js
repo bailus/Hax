@@ -1,6 +1,8 @@
-import Progress from './progress'
-import { seconds2string, makeJsLink, seconds2shortstring } from './util'
-import _ from 'npm:lodash'
+import Progress from './progress.js'
+import { seconds2string, makeJsLink, seconds2shortstring } from './util.js'
+import _ from 'lodash'
+
+const zip = _.zip
 
 export default (function () {
 "use strict";
@@ -37,6 +39,14 @@ export default (function () {
 		data = {
 			'buttons': [
 				{ 'label': 'Info', class: 'expand infoButtons', 'buttons': [
+					//makeButton({ 'text': '', 'action':'' }),
+					makeButton({ 'text': 'Rotate Counter-clockwise', 'action':'rotateccw' }),
+					makeButton({ 'text': 'Rotate Clockwise', 'action':'rotate' }),
+					{ 'class': 'spacer' },
+					makeButton({ 'text': 'Aspect Ratio', 'action':'aspectratio' }),
+					makeButton({ 'text': 'Stereo Mode', 'action':'togglestereomode' }),
+					makeButton({ 'text': 'Subtitle', 'action':'cyclesubtitle' }),
+					{ 'class': 'break-after' },
 					makeButton({ 'text': 'Previous',		'action': 'skipprevious' }),
 					makeButton({ 'text': 'Play / Pause',	'action': 'playpause' }),
 					makeButton({ 'text': 'Stop', 			'action':'stop' }),
@@ -144,7 +154,8 @@ export default (function () {
 				collapseOthers(expandElem);
 			}
 		})
-		_.zip(expandElems, onclicks).map(([ expandElem, onclick ]) => expandElem.querySelector('.label').addEventListener('click', onclick, false) )
+		expandElems.map(expandElem => expandElem.querySelector('.close').addEventListener('click', collapseOthers, false))
+		zip(expandElems, onclicks).map(([ expandElem, onclick ]) => expandElem.querySelector('.label').addEventListener('click', onclick, false) )
 
 		return elems
 

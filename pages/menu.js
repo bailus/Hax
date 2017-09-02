@@ -1,7 +1,7 @@
-import Page from '../js/page'
-import { seconds2string, makeJsLink } from '../js/util'
+import Page from '../js/page.js'
+import { seconds2string, makeJsLink } from '../js/util.js'
 import moment from 'moment'
-import icons from './icons'
+import icons from './icons.js'
 
 export default (new Page({
 	'id': 'Menu',

@@ -10,26 +10,35 @@
 		{{#buttons}}
 
 		<li class="{{class}}">
-			{{#if link}}<a href="{{link}}" class="label">
+
+			{{#if link}}
+			<a href="{{link}}" class="label">
 				<span>{{label}}</span>
 			</a>
-			{{else}}<div class="label">
+			{{else}}
+			<div class="label">
 				<span>{{label}}</span>
-			</div>{{/if}}
+			</div>
+			{{/if}}
+
+			{{#if buttons}}
 			<div class="expandable">
+				<div class="close"></div>
 				<ul class="buttons">
 					{{#buttons}}
-						<li class="{{class}}" id="{{id}}">
-							{{#if link}}<a href="{{link}}" class="label">
-								<span>{{label}}</span>
-							</a>
-							{{else}}<div class="label">
-								<span>{{label}}</span>
-							</div>{{/if}}
-						</li>
+					<li class="{{class}}" id="{{id}}">
+						{{#if link}}<a href="{{link}}" class="label">
+							<span>{{label}}</span>
+						</a>
+						{{else}}<div class="label">
+							<span>{{label}}</span>
+						</div>{{/if}}
+					</li>
 					{{/buttons}}
 				</ul>
 			</div>
+			{{/if}}
+
 		</li>
 
 		{{/buttons}}

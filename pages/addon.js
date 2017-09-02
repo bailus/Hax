@@ -1,5 +1,5 @@
-import Page from '../js/page'
-import { makeJsLink, makeDetail } from '../js/util'
+import Page from '../js/page.js'
+import { makeJsLink, makeDetail } from '../js/util.js'
 
 export default (new Page({
 	'id': 'Addon',

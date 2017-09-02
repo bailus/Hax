@@ -1,7 +1,7 @@
-import Page from '../js/page'
-import { makeJsLink } from '../js/util'
+import Page from '../js/page.js'
+import { makeJsLink } from '../js/util.js'
 import moment from 'moment'
-import { getSlash, trimFilename, joinFilenameComponents, joinDirectoryComponents } from '../js/filename'
+import { getSlash, trimFilename, joinFilenameComponents, joinDirectoryComponents } from '../js/filename.js'
 
 export default (new Page({
 	'id': 'Directory',

@@ -18,7 +18,7 @@
     "Forum thread": "http://forum.kodi.tv/showthread.php?tid=270698",
     "Screenshots": "http://imgur.com/a/ss0uj"
   },
-  "version": "0.8.3",
+  "version": "0.9.0",
   "description": "Hax is a web interface for the Kodi® media center. Designed to be fast and easy to use, it supports modern browsers including Android, Internet Explorer 9 and Edge.",
   "homepage": "http://bailey.geek.nz/remote",
   "keywords": [
@@ -38,14 +38,14 @@
   "jspm": {
     "main": "main.js",
     "devDependencies": {
-      "plugin-typescript": "github:frankwallis/plugin-typescript@^5.3.3",
       "tty": "npm:jspm-nodelibs-tty@^0.2.0",
       "babel": "npm:babel-core@^5.8.24",
       "net": "npm:jspm-nodelibs-net@^0.2.0",
       "core-js": "npm:core-js@^1.1.4",
       "uglify-js": "npm:uglify-js@^2.6",
       "hbsrender": "npm:hbsrender@^1.0.9",
-      "babel-runtime": "npm:babel-runtime@^5.8.24"
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "uglify-to-browserify": "npm:uglify-to-browserify@1.0"
     },
     "buildConfig": {
       "transpileES6": true,
@@ -73,83 +73,42 @@
         },
         "jspmNodeConversion": false
       },
-      "npm:lodash@4.17.4": {
-        "map": {
-          "process": "@empty",
-          "buffer": "@empty"
-        }
-      },
-      "npm:typescript@2.1.4": {
-        "dependencies": {
-          "source-map-support": "*"
-        },
-        "browser": {},
-        "map": {
-          "path": "@empty",
-          "process": "@empty",
-          "fs": "@empty",
-          "readline": "@empty",
-          "buffer": "@empty",
-          "child_process": "@empty"
-        }
-      },
-      "github:jmcriffey/bower-traceur-runtime@0.0.93": {
-        "format": "global",
-        "meta": {
-          "traceur-runtime.js": {
-            "format": "global",
-            "exports": "$traceurRuntime"
-          }
-        }
-      },
-      "npm:ms@0.7.1": {
+      "npm:debug@2.6.8": {
+        "main": "src/browser.js",
+        "jspmNodeConversion": false,
         "format": "cjs",
-        "jspmNodeConversion": false
-      },
-      "npm:typescript@1.8.10": {
-        "browser": {},
         "map": {
-          "path": "@empty",
-          "process": "@empty",
-          "fs": "@empty",
-          "readline": "@empty",
-          "buffer": "@empty",
-          "child_process": "@empty"
+          "./src/browser.js": {
+            "node": "./src/node.js"
+          },
+          "./node.js": {
+            "browser": "./src/browser.js"
+          },
+          "fs": "@node/fs",
+          "net": "@node/net",
+          "tty": "@node/tty",
+          "util": "@node/util"
         }
       },
-      "npm:inherits@2.0.1": {
+      "npm:inherits@2.0.3": {
         "ignore": [
           "test.js"
         ]
       },
-      "github:jmcriffey/bower-traceur@0.0.93": {
-        "format": "global",
-        "meta": {
-          "traceur.js": {
-            "format": "global",
-            "exports": "traceur"
-          }
+      "npm:lodash@4.17.4": {
+        "map": {
+          "buffer": "@empty",
+          "process": "@empty"
         }
       },
-      "npm:debug@2.2.0": {
-        "main": "browser.js",
-        "format": "cjs",
-        "map": {
-          "./browser.js": {
-            "node": "./node.js"
-          },
-          "tty": "@node/tty",
-          "util": "@node/util",
-          "net": "@node/net",
-          "fs": "@node/fs",
-          "./node.js": {
-            "browser": "./browser.js"
-          }
-        },
+      "npm:moment@2.18.1": {
         "jspmNodeConversion": false
       },
-      "npm:moment@2.13.0": {
-        "jspmNodeConversion": false
+      "npm:pbkdf2@3.0.13": {
+        "main": "browser.js"
+      },
+      "npm:safe-buffer@5.1.1": {
+        "browser": "index.js"
       }
     },
     "peerDependencies": {
