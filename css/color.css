@@ -7,10 +7,12 @@
 	--red: hsl(12, 72%, 47%);
 
 	--saturation_none: 0%;
-	--saturation_lower: 15%;
-	--saturation_low: 66%;
-	--saturation_medium: 83%;
-	--saturation_high: 88%;
+	--saturation_lower: 30%;
+	--saturation_low: 60%;
+	--saturation_medium: 70%;
+	--saturation_high: 80%;
+	--saturation_higher: 90%;
+	--saturation_highest: 100%;
 
 	--hue_blue: 193;
 	--blue: hsl(193, 88%, 50%);
@@ -41,7 +43,8 @@
 	--player_background: hsl(var(--hue_primary), var(--saturation_low), var(--luminosity_medium));
 	--selected_background: hsla(0, var(--saturation_none), var(--luminosity_high), var(--opacity_high));
 	--secondary_background: rgba(0, 0, 0, var(--opacity_low));
-	--expandable_background: hsl(var(--hue_primary), var(--saturation_low), var(--luminosity_low));
+	--expandable_background: hsla(var(--hue_primary), var(--saturation_medium), var(--luminosity_medium), 0.96);
+	--expandable_background_overlay: hsla(var(--hue_primary), var(--saturation_low), var(--luminosity_lower), 0.6);
 	--background: hsl(var(--hue_primary), var(--saturation_lower), var(--luminosity_low));
 	--bg_image: hsl(0, 0%, var(--opacity_high));
 	--bg_overlay: hsla(0, 0%, 100%, var(--opacity_low));

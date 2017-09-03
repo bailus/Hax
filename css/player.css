@@ -187,7 +187,7 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 	left:0;
 	width:100%;
 	bottom:50px;
-	background-color:rgba(0,0,0,0.4);
+	background-color: var(--expandable_background_overlay);
 	z-index:-100;
 }
 #player .expand[data-expand=expand] > .expandable > * {
@@ -200,7 +200,6 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 #player .expand[data-expand=expand] > .expandable {
 	background: var(--expandable_background);
 	z-index: 10000;
-	opacity: 0.9;
 	bottom:50px;
 	max-width: initial;
 }
@@ -252,7 +251,6 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 #player .expand[data-expand=expand] > .expandable {
 	display: flex;
 	z-index: 1000;
-	border: 1px solid rgba(255,255,255,0.1);
 	position: relative;
 }
 
