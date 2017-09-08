@@ -77,7 +77,7 @@
 
 	.line2,
 	article > .details > li figcaption
-	{font-size: 11px;}
+	{font-size: 11px;text-align: right;}
 
 
 /* White space */

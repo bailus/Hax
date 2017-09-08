@@ -141,6 +141,7 @@ export default (function () {
 			xbmc.Seek({ 'value': value })
 		})
 
+
 		//toggle the player.visible class when the player.show button is clicked
 		const expandElems = Array.from(player.querySelectorAll('.expand'))
 		const collapseOthers = (selected) => {

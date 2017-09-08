@@ -5,6 +5,7 @@ import XBMC from './xbmc.js'
 import Handlebars from 'handlebars'
 import loadPages from './loadPages.js'
 import player from './player.js'
+import drop from './drop.js'
 
 
 ready().then(function () { //on document load
@@ -72,9 +73,11 @@ ready().then(function () { //on document load
 
 		createSkeleton()
 
-		pages.renderPage();
+		pages.renderPage()
 
-		player.init();
+		player.init()
+
+		drop.addDropHandlers()
 
 	})
 	
