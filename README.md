@@ -76,7 +76,7 @@ After installation, Kodi's web interface can be enabled by going to:
  2. Service Settings
  3. Control
 
-To access the interface, you need to turn on "Allow remote control via HTTP". I use the following settings:
+You need to turn on "Allow remote control via HTTP". I use the following settings:
 
  - Allow remote control via HTTP: `on`
  - Port: `80`
@@ -86,22 +86,22 @@ To access the interface, you need to turn on "Allow remote control via HTTP". I 
 
 You can then visit `http://localhost/` in your web browser to use Hax.
 
-To access Hax from another computer (or phone .etc) on your network you'll need to [find your computer's name](http://its.yale.edu/how-to/article-how-find-your-computers-name) or [ip address](http://its.yale.edu/how-to/article-finding-your-ip-and-network-hardware-addresses). Then visit `http://<computer name>/` or `http://<ip address>/` in your web browser to use Hax.
+To access Kodi from another device on your network you'll need to [find your computer's name](http://its.yale.edu/how-to/article-how-find-your-computers-name) or [ip address](http://its.yale.edu/how-to/article-finding-your-ip-and-network-hardware-addresses).
+Then visit `http://<computer name>/` or `http://<ip address>/` in your web browser to use Hax.
 
 
-## Stack
-### Development
+## Dependencies
+#### Artwork
+ * [Eminence (Kodi skin)](https://github.com/jurialmunkey/skin.eminence.2/)
+ * [Estuary (Kodi skin)](https://github.com/xbmc/xbmc/tree/master/addons/skin.estuary)
+ 
+#### Libraries
+ * [handlebars](http://handlebarsjs.com/) - Templating
+ * [Moment.js](http://momentjs.com/) - Date parsing and formatting
+ 
+#### Development tools
  * [Babel](https://babeljs.io/) - Latest JavaScript (ES7) syntax support
  * [PostCSS-cssnext](http://cssnext.io/) - Latest CSS syntax support
  * [SystemJS](https://github.com/systemjs/systemjs) - Dynamic Module loader
  * [jspm](http://jspm.io/) - Browser package management
  * [npm](https://www.npmjs.com/) - Build tool
-
-### Libraries
- * [handlebars](http://handlebarsjs.com/) - Templating
- * [Moment.js](http://momentjs.com/) - Date parsing and formatting
-
-### Artwork (Icons)
- * [Eminence (Kodi skin)](https://github.com/jurialmunkey/skin.eminence.2/)
- * [Estuary (Kodi skin)](https://github.com/xbmc/xbmc/tree/master/addons/skin.estuary)
- 
