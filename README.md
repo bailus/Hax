@@ -31,7 +31,7 @@ The latest version can be installed from within Kodi after installing [Sam's Kod
 
 Download the zip file above then use "Install add-on from zip file" in Kodi to install. The repository will be added to the "Install from repository" menu in Kodi's Add-on browser.
 
-Then install Hax from within Kodi [(v17 or above)](https://kodi.tv/download/) by going to:
+Then install Hax from within [Kodi](https://kodi.tv/download/) (v18 or above) by going to:
 
  1. Settings
  2. Add-ons
@@ -53,15 +53,15 @@ After installation, Kodi's web interface can be enabled by going to:
 
 To access the interface, you need to turn on "Allow remote control via HTTP". I use the following settings:
 
- - Allow remote control via HTTP: on
- - Port: 80
- - Username: kodi
- - Password: 
- - Web interface: Hax
+ - Allow remote control via HTTP: `on`
+ - Port: `80`
+ - Username: `kodi`
+ - Password: ` `
+ - Web interface: `Hax`
 
-You can then visit "http://localhost/" in your web browser to use Hax.
+You can then visit `http://localhost/` in your web browser to use Hax.
 
-To access it from another computer (or phone .etc) on your network you'll need to [find your computer's name](http://its.yale.edu/how-to/article-how-find-your-computers-name) or [ip address](http://its.yale.edu/how-to/article-finding-your-ip-and-network-hardware-addresses). Then visit "http://<computer name>/" or "http://<ip address>/" in your web browser to use Hax.
+To access it from another computer (or phone .etc) on your network you'll need to [find your computer's name](http://its.yale.edu/how-to/article-how-find-your-computers-name) or [ip address](http://its.yale.edu/how-to/article-finding-your-ip-and-network-hardware-addresses). Then visit `http://<computer name>/` or `http://<ip address>/` in your web browser to use Hax.
 
 
 ## Development
@@ -69,7 +69,7 @@ To install the development version, use [Git](https://git-scm.com/) to clone thi
 
 This version of Hax can be used without running the build command. It's useful for development but can be slow and takes a *very* long time to load, especially on mobile devices. A faster version can be built using the `npm run build` command (see below).
 
-The index.html file in the root directory uses SystemJS, jspm and Babel to dynamically download, compile and load the modules and their dependencies from within the browser. Note that styles (CSS) can't be compiled in the browser using [PostCSS-cssnext](http://cssnext.io/) so those features won't be available.
+The `index.html` file in the root directory uses SystemJS, jspm and Babel to dynamically download, compile and load the modules and their dependencies from within the browser. Note that styles (CSS) can't be compiled in the browser using [PostCSS-cssnext](http://cssnext.io/) so those features won't be available.
 
 
 ### Building
@@ -79,12 +79,12 @@ jspm install
 npm run build
 ```
 
-A self-contained build will be saved into the ./build folder.
+A self-contained build will be saved into the `./build` folder.
 
 
 ### Stack
 #### Development
- * [Babel](https://babeljs.io/) - Latest JavaScript (es2015/es6) syntax support
+ * [Babel](https://babeljs.io/) - Latest JavaScript (ES7) syntax support
  * [PostCSS-cssnext](http://cssnext.io/) - Latest CSS syntax support
  * [SystemJS](https://github.com/systemjs/systemjs) - Dynamic Module loader
  * [jspm](http://jspm.io/) - Browser package management
@@ -94,13 +94,17 @@ A self-contained build will be saved into the ./build folder.
  * [handlebars](http://handlebarsjs.com/) - Templating
  * [Moment.js](http://momentjs.com/) - Date parsing and formatting
 
+#### Artwork (Icons)
+ * [Eminence (Kodi skin)](https://github.com/jurialmunkey/skin.eminence.2/)
+ * [Estuary (Kodi skin)](https://github.com/xbmc/xbmc/tree/master/addons/skin.estuary)
+
 
 ## Links
 
  * [Homepage](http://bailey.geek.nz/remote)
- * [Source](https://bitbucket.org/bailus/hax-for-kodi)
- * [Issues, Bugs and Feature Requests](https://bitbucket.org/bailus/hax-for-kodi/issues)
- * [Screenshots](http://imgur.com/a/ss0uj)
- * [Forum thread](http://forum.kodi.tv/showthread.php?tid=270698)
- * [Official Kodi addon repository](http://addons.kodi.tv/show/webinterface.hax/)
+ * [Source (main - bitbucket.org)](https://bitbucket.org/bailus/hax-for-kodi)
+ * [Source (backup - github.org)](https://github.com/bailus/Hax)
+ * [Issues, Bugs and Feature Requests](https://github.com/bailus/Hax/issues)
  * [Sam's Kodi addon repository](http://bailey.geek.nz/) [(source)](https://bitbucket.org/bailus/kodi-addons)
+ * [Official Kodi addon repository](http://addons.kodi.tv/show/webinterface.hax/)
+ 
