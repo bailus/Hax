@@ -1,5 +1,5 @@
-import Page from '../js/page'
-import { seconds2shortstring, makeJsLink, parseYear } from '../js/util'
+import Page from '../js/page.js'
+import { seconds2shortstring, makeJsLink, parseYear } from '../js/util.js'
 
 export default (new Page({
 	'id': 'Song',

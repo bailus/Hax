@@ -1,10 +1,10 @@
-import Page from '../js/page'
-import Filter from '../js/xbmcFilter'
-import episodesPage from './episodes'
-import tvshowsPage from './tvshows'
-import moviesPage from './movies'
-import musicvideosPage from './musicvideos'
-import { state2uri } from '../js/util'
+import Page from '../js/page.js'
+import Filter from '../js/xbmcFilter.js'
+import episodesPage from './episodes.js'
+import tvshowsPage from './tvshows.js'
+import moviesPage from './movies.js'
+import musicvideosPage from './musicvideos.js'
+import { state2uri } from '../js/util.js'
 
 export default (new Page({
 	'id': 'Videos',

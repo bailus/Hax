@@ -1,5 +1,5 @@
-import Page from '../js/page'
-import { seconds2string, ymd2string, makeJsLink, makeDetail, parseYear } from '../js/util'
+import Page from '../js/page.js'
+import { seconds2string, ymd2string, makeJsLink, makeDetail, parseYear } from '../js/util.js'
 import moment from 'moment'
 
 export default (new Page({

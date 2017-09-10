@@ -127,6 +127,9 @@ article > .details .links .link {
 	flex-grow: 0;
 	line-height: 38px;
 }
+article > .details .links .label {
+	display:inline;
+}
 article > .details > li > p {
 	text-align: justify;
 }
@@ -148,6 +151,7 @@ article .groups {
 	flex-direction: row;
 	flex-wrap: wrap;
 	flex-grow: 0 !important;
+	align-items: flex-start;
 }
 .options {
 	display: flex;
@@ -166,7 +170,6 @@ article .groups {
 	max-width: 100%;
 }
 .group {
-	flex-grow: 1;
 	text-align: center;
 }
 .group a {
@@ -187,7 +190,6 @@ article .groups {
 	flex-shrink: 0;
 	flex-direction: row;
 	justify-content: center;
-	flex-grow: 1;
 	align-items: center;
 	min-width: 38px;
 }

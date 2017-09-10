@@ -5,7 +5,9 @@
 
 A fast and simple remote control for mobile devices.
 
-![oUNe3E9.png](https://bitbucket.org/repo/dMaXXg/images/3495096627-oUNe3E9.png)
+![Screenshot 1](https://bytebucket.org/bailus/hax-for-kodi/raw/master/screenshots/screenshot1-small.png)
+![Screenshot 2](https://bytebucket.org/bailus/hax-for-kodi/raw/master/screenshots/screenshot2-small.png)
+![Screenshot 3](https://bytebucket.org/bailus/hax-for-kodi/raw/master/screenshots/screenshot3-small.png)
 
 
 ## Installation (Stable version)

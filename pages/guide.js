@@ -1,5 +1,5 @@
-import Page from '../js/page'
-import { minutes2string, makeJsLink } from '../js/util'
+import Page from '../js/page.js'
+import { minutes2string, makeJsLink } from '../js/util.js'
 import moment from 'moment'
 
 export default (new Page({

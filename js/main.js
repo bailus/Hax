@@ -1,10 +1,11 @@
 import 'babel-polyfill'
 import 'whatwg-fetch'
-import { ready } from './util'
-import XBMC from './xbmc'
+import { ready } from './util.js'
+import XBMC from './xbmc.js'
 import Handlebars from 'handlebars'
-import loadPages from './loadPages'
-import player from './player'
+import loadPages from './loadPages.js'
+import player from './player.js'
+import drop from './drop.js'
 
 
 ready().then(function () { //on document load
@@ -72,9 +73,11 @@ ready().then(function () { //on document load
 
 		createSkeleton()
 
-		pages.renderPage();
+		pages.renderPage()
 
-		player.init();
+		player.init()
+
+		drop.addDropHandlers()
 
 	})
 	

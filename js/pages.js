@@ -1,4 +1,4 @@
-import { getHashArray, hashArrayToURL } from './hash'
+import { getHashArray, hashArrayToURL } from './hash.js'
 
 export default (() => {
 "use strict";

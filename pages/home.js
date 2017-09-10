@@ -1,6 +1,6 @@
-import Page from '../js/page'
-import { makeJsLink } from '../js/util'
-import icons from './icons'
+import Page from '../js/page.js'
+import { makeJsLink } from '../js/util.js'
+import icons from './icons.js'
 
 export default (new Page({
 	'id': 'Home',

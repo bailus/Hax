@@ -1,5 +1,5 @@
-import Page from '../js/page'
-import { makeJsLink, minutes2string, sortItems, groupItems } from '../js/util'
+import Page from '../js/page.js'
+import { makeJsLink, minutes2string, sortItems, groupItems } from '../js/util.js'
 import moment from 'moment'
 
 export default (new Page({
@@ -124,6 +124,7 @@ export default (new Page({
 				moment.utc(channeldetails.lastplayed) > 0 && { 'name': 'Last Played', 'value': moment.utc(channeldetails.lastplayed).fromNow() },
 				{
 					'name': 'Broadcasts',
+					'class': 'broadcasts',
 					'items': groupItems(broadcasts.map(({
 						label, broadcastid, starttime, runtime, endtime, isactive
 					}, index) => ({

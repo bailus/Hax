@@ -1,4 +1,4 @@
-import Page from '../js/page'
+import Page from '../js/page.js'
 
 export default (new Page({
 	'id': 'Actors',
@@ -38,7 +38,8 @@ export default (new Page({
 				'method': method,
 				'params': {
 					'properties': [ 'cast' ]
-				}
+				},
+				'cache': true
 			})
 			.then(result => result[resultProperty] || [])
 			.then(flatMap_(mediaInfo => mediaInfo.cast))

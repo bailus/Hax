@@ -1,5 +1,5 @@
-import Page from '../js/page'
-import { makeJsLink } from '../js/util'
+import Page from '../js/page.js'
+import { makeJsLink } from '../js/util.js'
 
 export default (new Page({
 	'id': 'File Album',

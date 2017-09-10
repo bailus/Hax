@@ -6,40 +6,54 @@
 	align-items: center;
 	align-items: stretch;
 }
-@media (max-width: 400px) {
-	#player {
-		flex-wrap: wrap;
-	}
-}	
 #player > .player {
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 	flex-shrink: 1;
 	flex-grow: 1;
 	justify-content: space-between;
 	max-width: 100%;
+	height: 50px;
 }
 #player .buttons {
     display: flex;
-    flex-shrink: 1;
-    justify-content: space-around;
+    justify-content: space-between;
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    flex-grow: 1;
+    max-width: 100%;
+}
+#player .infoButtons .expandable .buttons > * {
+	margin: 1ch;
+	justify-self: center;
+	width: 32px;
+	height: 32px;
+}
+#player .infoButtons .buttons > *,
+#player .infoButtons .buttons .label {
+	background-size: 32px 32px;
+	background-position: 50% 50%;
+	background-repeat:no-repeat;
+}
+#player .infoButtons .expandable .buttons > * > .label {
+	width: 100%;
+	height: 100%;
+	display: block;
+}
+#player .infoButtons .expandable .break-after ~ li {
+	justify-self: left !important;
+	width: 42px;
+	height: 42px;
+	background-size: 42px 42px;
+}
+#player .expandable .buttons {
     flex-wrap: wrap;
 }
 #player .buttons.right {
-	flex-direction: column;
+	flex-direction: row;
 	flex-shrink: 0;
 	
-}
-#player > .nav {
-	flex-shrink: 1;
-	flex-grow: 0;
-	min-width: 150px;
-	flex-basis: 225px;
-	max-width: 250px;
-	margin:0 auto;
-	padding: 0;
-	position:relative;
-	text-align:center;
 }
 
 #player .thumbnailWrapper {
@@ -63,110 +77,21 @@
 	#player {
 	    flex-direction: row;
 	    align-items: stretch;
-	    flex-wrap: wrap;
-	    overflow-y: auto;
+	    flex-wrap: nowrap;
+	    overflow: visible;
 	    max-height: 100%;
 	    max-width: 100%;
 	}
 	#player > .thumbnailWrapper > .thumbnail,
-	#player > .nav {
-		height: 150px;
-	}
 
-	#player .show > div {
-		height: 50px;
-		width: 50px;
-		flex-shrink: 0;
-		background-image: url('../img/buttons/drawer_close.png');
-		background-position: center center;
-  		background-repeat: no-repeat;
-  		align-self: flex-end;
-	}
-	#player.minimize > * {
-		display: none;
-	}
-	#player.minimize,
-	#player.minimize > .right.buttons,
-	#player.minimize > .player,
-	#player.minimize > .player > .buttons {
-		justify-content: flex-end;
-		display: flex;
-		flex-direction: row;
-		flex-wrap: nowrap;
-	}
-	#player.minimize #progress {
-		min-width: auto;
-		flex-basis: 300px;
-		flex-grow: 1;
-		flex-shrink: 1e9;
-		flex-direction: column;
-	}
-	#player.minimize {
-		display: flex;
-		width: 100%;
-		flex-wrap: nowrap;
-	}
-	#player.minimize > .player,
-	#player.minimize > .player > .nav.buttons {
-		flex-shrink: 1e6;
-		overflow: hidden;
-	}
-	#player.minimize .show > div {
-		background-image: url('../img/buttons/drawer_open.png');
-		display: block;
-	}
-	#player.minimize .volumedown {
-		order: -10;
-	}
-	#player.minimize > .player > * {
-		flex-shrink: 1;
-	}
-
-
-	@media (max-width: 270px) {
-		#player .buttons.right {
-			flex-direction: row;
-			flex-wrap: nowrap;
-		}
-		#player .buttons.right .volumedown {
-			order: -1;
-		}
-	}
-
-
-	@media (max-width: 800px) {
-		#player.minimize .buttons > * {
-			display: none;
-		}
-		#player.minimize .buttons > .show {
-			display: block;
-		}
-	}	
-	@media (min-width: 300px) {
-		#player.minimize .buttons > .playpause {
-			display: block;
-		}
-	}	
-	@media (min-width: 500px) {
-		#player.minimize .buttons > .volumeup,
-		#player.minimize .buttons > .volumedown {
-			display: block;
-		}
-	}
-	@media (min-width: 700px) {
-		#player.minimize .buttons > .skipnext {
-			display: block;
-		}
-	}
-
-
-
-
-#player .buttons a {
+#player .buttons .label {
 	display:block;
-	width:100%;height:100%;
+	width:100%;
+	height:100%;
 	background-repeat: no-repeat;
 	background-position: center center;
+	flex-shrink: 0;
+	width: 50px;
 }
 #player .buttons img + span {
 	display: none;
@@ -175,7 +100,8 @@
 	display:none;
 }
 #player .buttons > li {
-	width:50px;height:50px;
+	width: 50px;
+	height: 50px;
 	background-repeat: no-repeat;
 	background-position: center center;
 }
@@ -187,76 +113,323 @@
 	background:url('../img/buttons/hover.png');
 	cursor:pointer;
 }
-#player .skipprevious a { background-image:url('../img/buttons/skipprevious.png'); }
-#player .skipnext a { background-image:url('../img/buttons/skipnext.png'); }
-#player .playpause a { background-image:url('../img/buttons/play.png'); }
-body[data-status=playing] #player .playpause a { background-image:url('../img/buttons/pause.png'); }
-#player .stop a { background-image:url('../img/buttons/stop.png'); }
+#player .buttons > li.break-after:active,
+#player .buttons > li.break-after:hover,
+#player .buttons > li.expand:active,
+#player .buttons > li.expand:hover {
+	background:initial;
+}
+#player .spacer {
+	background: initial !important;
+	flex-grow: 10;
+	flex-shrink: 1000;
+	width: 0 !important;
+	flex-basis: 0;
+}
+#player .buttons .break-after {
+	flex-basis: 100%;
+	height: 1ch !important;
+	overflow: hidden;
+	margin: 0 !important;
+	width: initial !important;
+}
+#player .buttons > li.spacer > * {
+	display: none;
+}
+#player .skipprevious > .label { background-image:url('../img/buttons/skipprevious.png'); }
+#player .skipnext > .label { background-image:url('../img/buttons/skipnext.png'); }
+#player .playpause > .label { background-image:url('../img/buttons/play.png'); }
+body[data-status=playing] #player .playpause .label { background-image:url('../img/buttons/pause.png'); }
+#player .stop > .label { background-image:url('../img/buttons/stop.png'); }
 
-#player .up a { background-image:url('../img/buttons/up.png'); }
-#player .down a { background-image:url('../img/buttons/down.png'); }
-#player .left a { background-image:url('../img/buttons/left.png'); }
-#player .right a { background-image:url('../img/buttons/right.png'); }
-#player .enter a,
-#player .select a { background-image:url('../img/buttons/select.png'); }
+#player .up > .label { background-image:url('../img/buttons/up.png'); }
+#player .down > .label { background-image:url('../img/buttons/down.png'); }
+#player .left > .label { background-image:url('../img/buttons/left.png'); }
+#player .right > .label { background-image:url('../img/buttons/right.png'); }
+#player .enter > .label,
+#player .select > .label { background-image:url('../img/buttons/select.png'); }
 
-#player .back a { background-image:url('../img/buttons/back.png'); }
-#player .info a { background-image:url('../img/buttons/info.png'); }
-#player .contextmenu a { background-image:url('../img/buttons/menu.png'); }
-#player .previousmenu a { background-image:url('../img/buttons/home.png'); }
+#player .back > .label { background-image:url('../img/buttons/back.png'); }
+#player .info > .label { background-image:url('../img/buttons/info.png'); }
+#player .contextmenu > .label { background-image:url('../img/buttons/menu.png'); }
+#player .previousmenu > .label { background-image:url('../img/buttons/home.png'); }
 
-#player .mute a { background-image:url('../img/buttons/mute.png'); }
-#player .volumedown a { background-image:url('../img/buttons/volumedown.png'); }
-#player .volumeup a { background-image:url('../img/buttons/volumeup.png'); }
+#player .mute > .label { background-image:url('../img.estuary/buttons/volume/mute.png'); }
+#player .volumedown > .label { background-image:url('../img.estuary/buttons/volume/volume1.png'); }
+#player .volumeup > .label { background-image:url('../img.estuary/buttons/volume/volume.png'); }
+
+#player .navigation > .label { background-image:url('../img/buttons/navigation.png'); }
+#player .expand[data-expand=expand] > .label { opacity:0.4; }
+
+#player .volume > .label { background-image:url('../img.estuary/buttons/volume/volume2.png'); }
+#player .playButtons > .label {background-image: url('../img/icons/remote.png');}
+#player .infoButtons > .label { background-image:url('../img/buttons/info.png'); }
+
+#player .togglestereomode > .label { background-image:url('../img.eminence/media/indicator/3D.png'); }
+#player .rotate > .label { background-image:url('../img.estuary/icons/submenu/updatelibrary.png'); }
+#player .rotateccw > .label { background-image:url('../img.estuary/icons/submenu/updatelibrary.png'); transform:scaleX(-1); }
+#player .cyclesubtitle > .label { background-image:url('../img.estuary/buttons/fullscreen/settings-subtitle-50px.png'); }
+#player .aspectratio > .label { background-image:url('../img.hax/aspect.png'); }
 
 
-#progress {
+
+#player .volume > .expandable > .buttons {
+	height: 150px;
+	width: 100px;
+	flex-direction: column;
+	align-content: space-between;
+}
+#player .volume > .expandable > .buttons > .volumeBar {
+	height: 150px;
+	width: 50px;
+	flex-direction: column;
+	background: initial;
+	padding: 20px 0;
+	display: flex;
+	margin: -20px 0;
+}
+#player .volumeBar .bar {
+	width: 8px;
+	margin:  auto;
+}
+
+#player .expand > .expandable > * {
+	display: none;
+}
+#player .expand[data-expand=expand] > .expandable > .close {
+	display: block;
+	position: fixed;
+	top:0;
+	left:0;
+	width:100%;
+	bottom:50px;
+	background-color: var(--expandable_background_overlay);
+	z-index:-100;
+}
+#player .expand[data-expand=expand] > .expandable > * {
+	display: flex;
+}
+#player .expand.infoButtons > .infoText {
+	display: flex;
+}
+
+#player .expand[data-expand=expand] > .expandable {
+	background: var(--expandable_background);
+	z-index: 10000;
+	bottom:50px;
+	max-width: initial;
+}
+#player .expand.infoButtons[data-expand=expand] > .expandable {
+	left:0;
+	width:100%;
+	height: auto;
+	position: fixed;
+	padding: 2ch 0;
+}
+#player .expand.infoButtons[data-expand=expand] .buttons {justify-content: left;}
+#player .expand.infoButtons[data-expand=expand] > .expandable #info {
+	width:auto;
+	margin:25px;
+	width:100%;
+	display: flex;
+	justify-content:space-between;
+	background:none;
+}
+#player .expand.infoButtons[data-expand=expand] > .expandable #info > * {
+	font-weight:bold;
+}
+#player .expand.infoButtons[data-expand=expand] > .expandable .infoText {
+	margin: 0 0.5ch;
+	justify-content: space-evenly;
+	display:flex;
+	flex-direction:column;
+	height:100%;
+}
+#player .expand.navigation[data-expand=expand] > .expandable {
+	right: 200px;
+	width: 250px;
+	bottom:250px;
+}
+#player .navigation[data-expand=expand] > .expandable > .buttons {
+	height: 200px;
+	width: 250px;
+	flex-shrink: 10;
+}
+#player .expand.volume[data-expand=expand] > .expandable {
+	width: 125px;
+	right: 75px;
+	bottom: 250px;
+	top:initial;
+	height: 150px;
+	padding: 25px;
+	padding-right: 20px;
+}
+
+#player .expand[data-expand=expand] > .expandable {
+	display: flex;
+	z-index: 1000;
+	position: relative;
+}
+
+#player .infoButtons {
+	width: auto !important;
+	height: auto !important;
+	flex-grow: 100;
+	background:initial !important;
+	flex-shrink: 10;
+	flex-basis: 40%;
+	display: flex;
+	position: relative;
+}
+#player .infoButtons[data-expand=expand] > .expandable {
+	top:initial;
+	right:0;
+	bottom:50px;
+	display: flex;
+}
+#player .expand[data-expand=expand] #info > * {
+	opacity:1.0;
+}
+#player .expand #info > * {
+	opacity:0.9;
+}
+#player .expand #info {
+	flex-direction:row;
+	background: var(--info_background) !important;
+	color: var(--info_text) !important;
+	display: flex;
+	overflow: hidden;
+	flex-wrap: nowrap;
+	width: 100%;
+}
+#player .infoButtons .infoText {
+	flex-wrap:nowrap;
+	font-family: monospace;
+	flex-grow: 1e4;
+	flex-shrink: 100;
+	margin: 0 1ch;
+	justify-content: space-evenly;
+	display: flex;
+	flex-direction: column;
+	width: 0;
+}
+#player .infoButtons > .label {
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+}
+#player .infoButtons > .label {
+	z-index: 1000;
+	order: 100;
+	width: 100%;
+	background:initial;
+}
+#player .infoButtons > .label > * {
+	display:none;
+}
+#player #info {
+	margin: 4px 0.5ch !important;
+	justify-content: stretch !important;
+	height: 42px;
+}
+
+#player #progress {
 	display: flex;
 	justify-content: space-around;
 	overflow:hidden;
-	height: 46px;
-	padding: 2px 12px;
+	padding: 0 5%;
 	color: white;
 	flex-direction: column;
 	flex-shrink: 1;
-	max-width: 100%;
+	flex-grow: 100;
+	width: 300px !important;
+	position: relative;
+	display: block;
+	max-width: 90%;
+	background-image: initial !important;
 }
 #progress > * {
 	z-index: 100;
 }
+.volumeBar .bar,
 #progress .bar {
 	height: 100%;
 	width: 100%;
 	background-color: white;
-	transition: transform 1s;
-	transition-timing-function: linear;
+}
+.volumeBar .bar {
+	transform-origin: 0 100%;
+}
+#progress .bar {
 	transform-origin: 0 0;
 }
+.volumeBar .background {
+	width: 8px;
+	height: 100%;
+	margin: auto;
+}
 #progress .background {
-	height: 7px;
+	height: 8px;
 	width: 100%;
+	margin: 17px 0;
 }
-#progress .status {
-    align-self: stretch;
-    flex-shrink: 1e3;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 100%;
+#player .time,
+#player .status {
+	display: block;
 }
+#player .status {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 14px;
+	font-size: 12px;
+	width: 100%;
+	height: 28px;
+	text-align: justify;
+}
+#player .time,
 #progress .time {
-	flex-grow: 0;
 	align-self: flex-end;
+	text-align: right;
+	wrap: nowrap;
 }
-#progress .status,
+#player .time {
+	font-size:11px;
+	line-height: 12px;
+}
 #progress .time {
-    line-height: 16px;
-    height: 16px;
+	position: relative;
+	font-size: 10px;
+	line-height: 17px;
+	top: -17px;
+	padding: 0 0.5ch;
+	z-index: -10;
 }
 #nowPlaying {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
+
+#player .nowPlayingThumbnail {
+	height:42px !important;
+	width: auto !important;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+	background:initial !important;
+	flex-shrink: 0;
+	flex-grow: 0;
+}
+
+#player .nowPlayingThumbnail > img {
+	max-width:100%;
+	max-height:100%;
+	width: auto !important;
+	height: auto !important;
+}
+
 
 #player .buttons .info,
 #player .buttons .back,
@@ -273,15 +446,15 @@ body[data-status=playing] #player .playpause a { background-image:url('../img/bu
 	text-align:center;
 }
 
-#player .buttons .info         { top:0; left: 25px; }
-#player .buttons .back         { top:0;	right: 25px; }
-#player .buttons .previousmenu { top:100px; left: 25px; }
-#player .buttons .contextmenu  { top:100px; right: 25px; }
+#player .buttons .info         { top:25px; left: 50px; }
+#player .buttons .back         { top:25px;	right: 50px; }
+#player .buttons .previousmenu { top:125px; left: 50px; }
+#player .buttons .contextmenu  { top:125px; right: 50px; }
 
 #player .buttons .enter,
-#player .buttons .select    { top:50px; left: 50%;  }
+#player .buttons .select    { top:75px; left: 50%;  }
 
-#player .buttons .left      { top:50px; left: 50%; margin-left:-75px;  }
-#player .buttons .right     { top:50px; right:50%; margin-right:-75px; }
-#player .buttons .up        { top:0;	left: 50%;  }
-#player .buttons .down      { top:100px; left: 50%;  }
+#player .buttons .left      { top:75px; left: 50%; margin-left:-75px;  }
+#player .buttons .right     { top:75px; right:50%; margin-right:-75px; }
+#player .buttons .up        { top:25px;	left: 50%;  }
+#player .buttons .down      { top:125px;	left: 50%;  }

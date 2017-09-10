@@ -9,45 +9,40 @@
 	<ul class="player buttons">
 		{{#buttons}}
 
-			<li class="{{class}}">
-				<a href="{{link}}">
-					<span>{{label}}</span>
-				</a>
-			</li>
+		<li class="{{class}}">
+
+			{{#if link}}
+			<a href="{{link}}" class="label">
+				<span>{{label}}</span>
+			</a>
+			{{else}}
+			<div class="label">
+				<span>{{label}}</span>
+			</div>
+			{{/if}}
+
+			{{#if buttons}}
+			<div class="expandable">
+				<div class="close"></div>
+				<ul class="buttons">
+					{{#buttons}}
+					<li class="{{class}}" id="{{id}}">
+						{{#if link}}<a href="{{link}}" class="label">
+							<span>{{label}}</span>
+						</a>
+						{{else}}<div class="label">
+							<span>{{label}}</span>
+						</div>{{/if}}
+					</li>
+					{{/buttons}}
+				</ul>
+			</div>
+			{{/if}}
+
+		</li>
 
 		{{/buttons}}
 	</ul>
 
-	<div id="progress">
-		<div class="status"></div>
-		<div class="background"><div class="bar"></div></div>
-		<div class="time"></div>
-	</div>
-
 </div>
 
-<ul class="nav buttons">
-	{{#navbuttons}}
-
-		<li class="{{class}}">
-			<a href="{{link}}">
-				<span>{{label}}</span>
-			</a>
-		</li>
-
-	{{/navbuttons}}
-</ul>
-
-<ul class="right buttons">
-	{{#rightbuttons}}
-
-		<li class="{{class}}">
-			<a href="{{link}}">
-				<span>{{label}}</span>
-			</a>
-		</li>
-
-	{{/rightbuttons}}
-
-	<li class="show"><div>&nbsp;</div></li>
-</ul>

@@ -69,7 +69,6 @@
 	align-items: center;
 }
 .listItem .thumbnail img {
-	max-width: 100%;
 	max-height: 100%;
 }
 @media (max-width: 280px) {
@@ -85,8 +84,257 @@
 	justify-content: space-between;
 	flex-grow: 1;
 }
+.listItem .label,
 .listItem .line1,
+.listItem .line2,
+.listItem .line2 span {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: block;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	padding: 0 0.5ch;
+}
+.listItem .line2 span + span {
+}
+
+.listItem .number {
+	display: flex;
+	justify-content:flex-end;
+	align-items:center;
+	min-width: 2em;
+	padding-right: 1ch;
+}
+
+/* Actions */
+.listItem .listActions {
+	display: flex;
+	flex-wrap: nowrap;
+	flex-shrink: 0;
+}
+.listItem .listAction {
+	display: flex;
+	flex-shrink: 0;
+	text-align: center;
+	font-size: 32px;
+	z-index: 100;
+	align-items: center;
+}
+.listAction > .label {
+	text-align:center;
+	align-items:center;
+	justify-content: center;
+}
+
+/* progress */
+
+.listItem .progress > .bar,
+.listItem .progress,
+.icon-list .progress > .bar {
+	height: 0.75ch;
+}
+.listItem .progress {
+	width: 100%;
+	flex-grow: 1;
+}
+.icon-list .progress {
+	width: 100%;
+	height: 0.75ch;
+	top: -0.75ch;
+	position: relative;
+}
+
+/* icon view */
+.icon-list {
+	display: flex;
+	flex-wrap: nowrap;
+	flex-direction: row;
+	align-content: flex-start;
+	justify-content: flex-start;
+	width: 100%;
+	overflow-x: scroll;
+}
+
+.icon-list > li {
+	width:128px;
+	flex-grow: 0;
+	flex-shrink: 0;
+	align-items: center;
+}
+.icon-list .label > .line2 {
+	flex-direction:row;
+	width: 100%;
+	justify-content: space-between;
+}
+.icon-list .label,
+.icon-list .thumbnail {
+	width:100%;
+}
+.icon-list .thumbnail {
+	height: 128px;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.icon-list > li {
+	display: flex;
+	flex-direction: column;
+	margin: 16px;
+}
+
+.thumbnail img {max-width: 100%;max-height: 100%;}
+
+.icon-list > li > a {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	align-items: center;
+}
+
+.icon-list .label {
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+}
+.icon-list .label > span,
+.icon-list .label > .line2 span {
+	display: block;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+	width:100%;
+	overflow: hidden;
+}
+
+.icon-list.seasons {
+	flex-wrap: wrap !important;
+	overflow-x: auto;
+	justify-content: space-around;
+}
+
+.icon-list.seasons > li {
+    width: auto;
+}
+.icon-list.seasons .thumbnail span {
+	height: 128px;
+}
+.icon-list.seasons .thumbnail {
+	height: auto;
+	width: 128px;
+}
+.icon-list.seasons .thumbnail img {
+	width:100%;
+	height:auto;
+}
+
+
+.icon-list.cast {
+	width: 100% !important;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	overflow-x: scroll;
+}
+
+.icon-list.cast > li {
+	width: 96px;
+}
+
+
+.flags img {
+	height: 16px;
+}
+
+.recently-added .icon-list {
+	flex-wrap: nowrap;
+.items {
+	display: flex;
+	flex-direction: column !important;
+	width: 100%;
+	flex-shrink:0;
+}
+
+.items .listItem.leaf {
+	margin: 0.5ch 0;
+}
+.listItem, .listItem > a {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.listItem.leaf, .listItem.leaf > a {
+	flex-direction: row;
+	margin: 0;
+	display: flex;
+}
+.listItem.leaf > a {
+	flex-grow: 1;
+}
+
+/* Size */
+.listItem .listAction,
+.listItem .thumbnail {
+	max-width: 89px;
+	height: 50px;
+	line-height: 50px;
+	width: 14%;
+}
+.listItem .listAction {
+	width: 50px;
+}
+.listItem.leaf {
+	width: 100%;
+	flex-wrap: nowrap;
+}
+.listItem.leaf > .label,
+.listItem.leaf > a > .label {
+	height: 50px;
+	line-height: 50px;
+	padding: 0 0.5ch;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	justify-content: center;
+	margin-bottom: 0;
+}
+.listItem .line1 {
+	line-height: 22px;
+	height: 22px;
+}
+
 .listItem .line2 {
+	line-height: 15px;
+	height: 15px;
+}
+
+/* Thumbnail */
+.listItem .thumbnail {
+	display: flex;
+	flex-shrink: 0;
+	justify-content:center;
+	align-content:center;
+	flex-direction: column;
+	align-items: center;
+}
+.listItem .thumbnail img {
+	max-width: 100%;
+	max-height: 100%;
+}
+@media (max-width: 280px) {
+	.listItem .thumbnail {
+		display: none !important;
+	}
+}
+
+/* Label */
+.listItem .label {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	flex-grow: 1;
 }
 .listItem .label,
 .listItem .line1,
@@ -144,6 +392,9 @@
 }
 .icon-list .progress {
 	width: 100%;
+	height: 0.75ch;
+	top: -0.75ch;
+	position: relative;
 }
 
 /* icon view */
@@ -243,4 +494,4 @@
 
 .recently-added .icon-list {
 	flex-wrap: nowrap;
-}
+}}

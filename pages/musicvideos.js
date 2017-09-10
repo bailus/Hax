@@ -1,7 +1,7 @@
-import Page from '../js/page'
-import Filter from '../js/xbmcFilter'
-import { parseYear, makeJsLink, seconds2string } from '../js/util'
-import icons from './icons'
+import Page from '../js/page.js'
+import Filter from '../js/xbmcFilter.js'
+import { parseYear, makeJsLink, seconds2string } from '../js/util.js'
+import icons from './icons.js'
 
 export default (new Page({
 	'id': 'Music Videos',

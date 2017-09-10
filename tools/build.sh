@@ -5,6 +5,9 @@ git config --global user.name "Bitbucket Pipelines"
 
 VERSION=`python3 tools/getVersion.py`
 
+git submodule init
+git submodule update
+
 npm install
 ./node_modules/.bin/jspm install
 npm run build

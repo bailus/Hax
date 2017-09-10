@@ -127,3 +127,5 @@ export function state2uri (state={}) {
 			(encodeURIComponent(key) + '=' + encodeURIComponent(state[key]))
 		).join('&')
 }
+
+

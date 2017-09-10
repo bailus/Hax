@@ -1,7 +1,7 @@
-import Page from '../js/page'
-import { makeJsLink } from '../js/util'
+import Page from '../js/page.js'
+import { makeJsLink } from '../js/util.js'
 import moment from 'moment'
-import { getSlash, trimFilename, joinFilenameComponents, joinDirectoryComponents } from '../js/filename'
+import { getSlash, trimFilename, joinFilenameComponents, joinDirectoryComponents } from '../js/filename.js'
 
 export default (new Page({
 	'id': 'Directory',
@@ -35,14 +35,25 @@ export default (new Page({
 
 
 		const slash = getSlash([ root, path ])
+		const directory = joinDirectoryComponents([ root, path ], slash)
+
+		console.log({
+			method: 'Files.GetDirectory',
+			params: {
+				'properties': [ 'duration', 'thumbnail', 'file', 'size', 'mimetype', 'lastmodified', 'art' ],
+				'sort': { 'method': sortby, 'order': order },
+				'directory': directory,
+				'media': media
+			}
+		})
 
 		return xbmc.get({
 			method: 'Files.GetDirectory',
 			params: {
 				'properties': [ 'duration', 'thumbnail', 'file', 'size', 'mimetype', 'lastmodified', 'art' ],
 				'sort': { 'method': sortby, 'order': order },
-				'directory': joinDirectoryComponents([ root, path ], slash),
-				'media': media
+				'directory': directory,
+				'media': 'files'
 			}
 		})
 		.then(result => result.files || [])

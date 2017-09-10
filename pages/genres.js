@@ -1,4 +1,4 @@
-import Page from '../js/page'
+import Page from '../js/page.js'
 
 export default (new Page({
 	'id': 'Genres',
