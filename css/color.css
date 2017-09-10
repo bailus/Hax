@@ -134,6 +134,7 @@ header {
 
 /* Player */
 
+.volumeBar .background,
 #progress .background {
   background-color: var(--grey);
 }

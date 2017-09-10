@@ -113,6 +113,8 @@
 	background:url('../img/buttons/hover.png');
 	cursor:pointer;
 }
+#player .buttons > li.break-after:active,
+#player .buttons > li.break-after:hover,
 #player .buttons > li.expand:active,
 #player .buttons > li.expand:hover {
 	background:initial;
@@ -173,8 +175,22 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 
 #player .volume > .expandable > .buttons {
 	height: 150px;
+	width: 100px;
+	flex-direction: column;
+	align-content: space-between;
+}
+#player .volume > .expandable > .buttons > .volumeBar {
+	height: 150px;
 	width: 50px;
 	flex-direction: column;
+	background: initial;
+	padding: 20px 0;
+	display: flex;
+	margin: -20px 0;
+}
+#player .volumeBar .bar {
+	width: 8px;
+	margin:  auto;
 }
 
 #player .expand > .expandable > * {
@@ -240,12 +256,13 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 	flex-shrink: 10;
 }
 #player .expand.volume[data-expand=expand] > .expandable {
-	width: 50px;
-	right:25px;
+	width: 125px;
+	right: 75px;
 	bottom: 250px;
 	top:initial;
 	height: 150px;
 	padding: 25px;
+	padding-right: 20px;
 }
 
 #player .expand[data-expand=expand] > .expandable {
@@ -336,11 +353,22 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 #progress > * {
 	z-index: 100;
 }
+.volumeBar .bar,
 #progress .bar {
 	height: 100%;
 	width: 100%;
 	background-color: white;
+}
+.volumeBar .bar {
+	transform-origin: 0 100%;
+}
+#progress .bar {
 	transform-origin: 0 0;
+}
+.volumeBar .background {
+	width: 8px;
+	height: 100%;
+	margin: auto;
 }
 #progress .background {
 	height: 8px;

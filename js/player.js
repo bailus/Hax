@@ -53,7 +53,6 @@ export default (function () {
 					makeButton({ 'text': 'Next',			'action':'skipnext' }),
 					{ 'label': 'Progress', 'id': 'progress' },
 				]},
-				{ 'class': 'spacer' },
 				{ 'label': 'Volume', class: 'expand volume expandRight', 'buttons': [
 					makeButton({ 'text': 'Up', 'action': 'volumeup' }),
 					makeButton({ 'text': 'Down', 'action': 'volumedown' }),
@@ -96,6 +95,7 @@ export default (function () {
 				<div class="time"></div>`
 
 		const barElems = document.body.querySelectorAll('.bar')
+		const cacheBarElems = document.body.querySelectorAll('.cacheBar')
 		const backgroundElem = progressElem.querySelector('.background')
 		
 		const infoElem = document.createElement('div')
@@ -108,16 +108,36 @@ export default (function () {
 					<div class="time"></div>
 				</div>`
 
+		//make the volume control work
+		const volumeContainerElems = document.body.querySelectorAll('.volume > .expandable > .buttons')
+		Array.prototype.forEach.call(volumeContainerElems, elem => {
+			const volumeBar = document.createElement('li')
+			const background = document.createElement('div')
+			const bar = document.createElement('div')
+			volumeBar.classList.add('volumeBar')
+			background.classList.add('background')
+			bar.classList.add('bar')
+			background.append(bar)
+			volumeBar.append(background)
+			elem.append(volumeBar)
+		})
+		const volumeElems = document.body.querySelectorAll('.volumeBar')
+		const volumeBarElems = document.body.querySelectorAll('.volumeBar .bar')
+
+
 		const thumbnailContainerElems = document.body.querySelectorAll('.nowPlayingThumbnail')
 		Array.prototype.forEach.call(thumbnailContainerElems, elem => { elem.innerHTML = `<img>` })
 		const thumbnailElems = document.body.querySelectorAll('.nowPlayingThumbnail img')
 
+		const setBodyData = key => value => document.body.setAttribute(`data-${ key }`, value)
+
 		const elems = {
 			setBar: runIfChanged(string => { Array.prototype.forEach.call(barElems, elem => { elem.setAttribute('style', `transform: scaleX(${ string });`) }) })({}),
+			setVolume: runIfChanged(string => { Array.prototype.forEach.call(volumeBarElems, elem => { elem.setAttribute('style', `transform: scaleY(${ string });`) }) })({}),
 			setThumbnail: runIfChanged(string => { Array.prototype.forEach.call(thumbnailElems, elem => { elem.src = xbmc.vfs2uri(string) }) })({}),
 			setTime: setTextIfChanged(document.body.querySelectorAll('.time'))({}),
 			setStatus: setTextIfChanged(document.body.querySelectorAll('.status'))({}),
-			setStatusBody: runIfChanged(string => { document.body.setAttribute('data-status',string) })({})
+			setBodyStatus: runIfChanged(setBodyData('status'))({})
 		}
 
 		progress = Progress(function (position, time, duration) {
@@ -140,6 +160,21 @@ export default (function () {
 			//send the command to kodi
 			xbmc.Seek({ 'value': value })
 		})
+		Array.prototype.forEach.call(volumeElems, elem => elem.addEventListener('mouseup', function (e) { //enable volume control
+			let boundingRect = elem.querySelector('.background').getBoundingClientRect()
+			let value = 1 - ((e.pageY - boundingRect.top) / boundingRect.height)
+			if (value > 1) value = 1
+			if (value < 0) value = 0
+			value = Math.round(value*100)
+
+			//send the command to kodi
+			xbmc.get({
+				'method': 'Application.SetVolume',
+				'params': {
+					'volume': value
+				}
+			})
+		}))
 
 
 		//toggle the player.visible class when the player.show button is clicked
@@ -177,7 +212,7 @@ export default (function () {
 				progress.start(timeObjToSeconds(player.totaltime), timeObjToSeconds(player.time))
 			})
 		},
-		'Player.MOnPause': function (data) {
+		'Player.OnPause': function (data) {
 			document.body.setAttribute('data-status','paused')
 			progress.pause()
 		},
@@ -194,96 +229,97 @@ export default (function () {
 	let playerStatus = 'stopped'
 	
 	function tick(elems) {
-
 		let player = {}
 
-		new Promise((resolve, reject) => {
+		const promiseLog = x => { console.log(x); return x }
 
-			xbmc.get({ 'method': 'Player.GetActivePlayers' })
-			.then((players={}) => (!players.length ? undefined : players[0]))
-			.then(player => {
-				if (!player)
-					return Promise.resolve()
-				else
-					return xbmc.get({
-						'method': 'Player.GetProperties',
-						'params': {
-							'properties': [ 'time', 'totaltime', 'speed', 'playlistid', 'position', 'repeat', 'type', 'partymode', 'shuffled', 'live' ],
-							'playerid': player.playerid
-						}
-					})
-			})
-			.then(x =>  new Promise(resolve => window.requestAnimationFrame(() => resolve(x))))
-			.then(p => {
-				player = p
-				if (player) {
-					progress.update(timeObjToSeconds(player.totaltime), timeObjToSeconds(player.time))
-					if (player.speed > 0) {
-						if (playerStatus !== 'playing') {
-							progress.unpause()
-							playerStatus = 'playing'
-							elems.setStatusBody('playing')
-						}
-					} else {
-						if (playerStatus !== 'paused') {
-							progress.pause('paused')
-							playerStatus = 'paused'
-							elems.setStatusBody('paused')
-						}
-					}
-				} else {
-					if (playerStatus !== 'stopped') {
-						progress.stop()
-						playerStatus = 'stopped'
+		const waitSeconds = t => x => new Promise(resolve => { window.setTimeout(() => resolve(x), 1000*t) })
+		const waitAnimationFrame = x =>  new Promise(resolve => { window.requestAnimationFrame(() => resolve(x)) })
 
-						elems.setStatusBody('stopped')
-						elems.setStatus('')
-					}
-				}
-				window.setTimeout(resolve, 1e2)
-			})
-			window.setTimeout(resolve, 3e2)
-		})
-		.then(() => new Promise((resolve, reject) => {
-			if (player && player.playlistid !== undefined && player.position !== undefined) {
-				xbmc.get({
-					'method': 'Playlist.GetItems',
-					'params': {
-						'properties': [ 'channel', 'title', 'art', 'tagline', 'showtitle', 'album', 'year', 'artist', 'season', 'episode', 'file', 'thumbnail', 'runtime', 'duration' ],
-						'playlistid': player.playlistid
-					}
-				})
-				.then(x =>  new Promise(resolve => window.requestAnimationFrame(() => resolve(x))))
-				.then(function (playlist) {
+		const prefix = a => b => [ a, b ].join('')
+		const prefixPlayer = prefix('Player.')
 
-					if (!playlist.items) return
-
-					var item = playlist.items[player.position]
-					if (item) {
-						elems.setStatus([
-							(item.channel),
-							(item.showtitle),
-							(item.season>=0 && item.episode>=0 && `${item.season}x${item.episode}`),
-							(item.artist && item.artist.length && item.artist.join(', ')),
-							[
-								(item.year && `(${item.year})`),
-								(item.album)
-							].filter(x => !!x).join(' '),
-							(item.label||item.title||item.file)
-						].filter(x => !!x).join(' - '))
-						elems.setThumbnail(item.thumbnail)
-					}
-					else elems.setStatus('')
-
-					window.setTimeout(resolve, 1e2)
-				})
-			} else {
-				resolve()
+		const getLabels = () => xbmc.get({
+			'method': 'XBMC.GetInfoLabels',
+			'params': {
+				'labels': ([  //  http://kodi.wiki/view/InfoLabels
+					'Title',
+					'Folderpath', 'Filename',
+					'Duration(hh)', 'Duration(mm)', 'Duration(ss)', 
+					'Time(hh)', 'Time(mm)', 'Time(ss)',
+					'Time',
+					'FinishTime(hh)', 'FinishTime(mm)', 'FinishTime(ss)',
+					//'Progress', 'ProgressCache', //how much of the file is cached above current play percentage (doesn't work?)
+					'Art(thumb)',
+					'Volume' //the current player volume with the format '%2.1f dB'
+				]).map(prefixPlayer)
 			}
-			window.setTimeout(resolve, 3e2)
-		}))
-		.catch(x => tick(elems))
-		.then(x => tick(elems))
+		})
+
+		const formatLabels = labels => {
+			const toSeconds = (label) => {
+				const hh = parseInt(labels[`${ label }(hh)`])
+				const mm = 60*hh + parseInt(labels[`${ label }(mm)`])
+				const ss = 60*mm + parseInt(labels[`${ label }(ss)`])
+				return ss
+			};
+
+			([ 'Duration', 'Time' ]).forEach(x => { const y = prefixPlayer(x); labels[y] = toSeconds(y) });
+
+			([ 'Volume' ]).forEach(x => { const y = prefixPlayer(x); labels[y] = parseFloat(labels[y]) });
+
+			return labels;
+		}
+
+		const getBooleans = () => xbmc.get({
+			'method': 'XBMC.GetInfoBooleans',
+			'params': {
+				'booleans': ([  //  https://github.com/xbmc/xbmc/blob/master/xbmc/GUIInfoManager.cpp
+					'HasMedia',
+					'Playing', 'Paused', 'Rewinding', 'Forwarding',
+					'Muted',
+					'HasAudio', 'HasVideo', 
+					'IsInternetStream',
+					'CanRecord', 'Recording'
+				]).map(prefixPlayer)
+			}
+		})
+
+		const formatBooleans = booleans => {
+			booleans['Player.Status'] =
+					booleans['Player.Paused'] ? 'paused' :
+					booleans['Player.Playing'] ? 'playing' :
+					'stopped'
+			return booleans
+		}
+
+		const prefixImage = prefix('image://')
+		const update = ([ labels, booleans ]) => {
+			elems.setStatus(labels['Player.Title'])
+			elems.setBodyStatus(booleans['Player.Status'])
+			elems.setVolume((labels['Player.Volume'] + 60)/60)
+
+			progress.update(labels['Player.Duration'], labels['Player.Time'])
+
+			const thumb = labels['Player.Art(thumb)']
+			if (thumb)
+				elems.setThumbnail(prefixImage(encodeURIComponent(thumb)))
+			else
+				elems.setThumbnail()
+		}
+
+		const loop = () => {
+			Promise.all([
+				getLabels().then(formatLabels),
+				getBooleans().then(formatBooleans)
+			]).
+			then(waitAnimationFrame).
+			then(update).
+			catch(e => { console.error(e); waitSeconds(1).then(loop) }).
+			then(waitSeconds(0.1)).then(loop)
+		}
+		loop()
+
 	}
 	
 	function init() {
