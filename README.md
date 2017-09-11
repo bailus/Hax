@@ -78,8 +78,8 @@ To install the development version, use [Git](https://git-scm.com/) to clone thi
 Make sure you use the [`--recursive`](https://git-scm.com/book/en/v2/Git-Tools-Submodules) option. "Hax development version" will appear under the "My addons" menu and can be set up like any other web interface.
 
 This version takes a long time to load because the build process happens in the browser.
-This means it can be used without running the build command - a feature that lets us rapidly build and test a modern (es7 or Typescript) web application without modifying Kodi's basic built-in web server.
-To do this, the `index.html` file in the root directory loads SystemJS, which uses jspm and Babel to dynamically download, compile and load the modules and their dependencies from within the browser.
+This means it can be used without running the build command - a feature that lets us rapidly build and test a [http://kangax.github.io/compat-table/](modern) web application without modifying Kodi's basic built-in web server.
+To do this, the `index.html` file in the root directory loads [SystemJS](https://github.com/systemjs/systemjs), which uses [jspm](http://jspm.io/) and [Babel](https://babeljs.io/) to download, compile and load the [es7 modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import) and their dependencies from within the browser.
 
 Note that styles (CSS) can't be compiled in the browser using [PostCSS-cssnext](http://cssnext.io/) so this version requires a modern browser. Its also slower than the other versions and takes a *very* long time to load.
 A faster version can be built using the `npm run build` command (see below).
@@ -103,6 +103,7 @@ A self-contained build will be saved into the `./build` folder.
 #### Libraries
  * [handlebars](http://handlebarsjs.com/) - Templating
  * [Moment.js](http://momentjs.com/) - Date parsing and formatting
+ * [Lodash](https://lodash.com/) - Utility library
  
 #### Development tools
  * [Babel](https://babeljs.io/) - Latest JavaScript (ES7) syntax support
