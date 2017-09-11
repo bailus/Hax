@@ -1,4 +1,4 @@
-# Hax for Kodi
+# kodi.webinterface.hax
 
 A fast and simple remote control for mobile devices.
 
@@ -20,7 +20,7 @@ A fast and simple remote control for mobile devices.
 ### Installation (Stable version)
 The stable version is available from the official Kodi add-on repository. It can be downloaded and installed using Kodi's add-on manager.
 
-Install the stable version of Hax from within Kodi [(v16 or above)](https://kodi.tv/download/) by going to:
+Install the stable version of Hax from within [Kodi](https://kodi.tv/download/) (v16 or above) by going to:
 
  1. Settings
  2. Add-ons
@@ -49,24 +49,6 @@ Then install Hax from within [Kodi](https://kodi.tv/download/) (v18 or above) by
  7. Install
 
 
-### Installation (Development version)
-To install the development version, use [Git](https://git-scm.com/) to clone this repository into your [Kodi plugins directory](http://www.htpcbeginner.com/kodi-folder-location-and-structure/). "Hax development version" will appear under the "My addons" menu and can be set up like any other web interface.
-
-This version of Hax can be used without running the build command. It's useful for development but can be slow and takes a *very* long time to load, especially on mobile devices. A faster version can be built using the `npm run build` command (see below).
-
-The `index.html` file in the root directory uses SystemJS, jspm and Babel to dynamically download, compile and load the modules and their dependencies from within the browser. Note that styles (CSS) can't be compiled in the browser using [PostCSS-cssnext](http://cssnext.io/) so those features won't be available.
-
-
-#### Building
-```bash
-npm install
-jspm install
-npm run build
-```
-
-A self-contained build will be saved into the `./build` folder.
-
-
 ## Configuration
 See also: http://kodi.wiki/view/web_interface
 
@@ -90,7 +72,30 @@ To access Kodi from another device on your network you'll need to [find your com
 Then visit `http://<computer name>/` or `http://<ip address>/` in your web browser to use Hax.
 
 
-## Dependencies
+## Development
+### Installation (Development version)
+To install the development version, use [Git](https://git-scm.com/) to clone this repository into your [Kodi plugins directory](http://www.htpcbeginner.com/kodi-folder-location-and-structure/).
+Make sure you use the [`--recursive`](https://git-scm.com/book/en/v2/Git-Tools-Submodules) option. "Hax development version" will appear under the "My addons" menu and can be set up like any other web interface.
+
+This version takes a long time to load because the build process happens in the browser.
+This means it can be used without running the build command - a feature that lets us rapidly build and test a modern (es7 or Typescript) web application without modifying Kodi's basic built-in web server.
+To do this, the `index.html` file in the root directory loads SystemJS, which uses jspm and Babel to dynamically download, compile and load the modules and their dependencies from within the browser.
+
+Note that styles (CSS) can't be compiled in the browser using [PostCSS-cssnext](http://cssnext.io/) so this version requires a modern browser. Its also slower than the other versions and takes a *very* long time to load.
+A faster version can be built using the `npm run build` command (see below).
+
+
+#### Building
+```bash
+npm install
+jspm install
+npm run build
+```
+
+A self-contained build will be saved into the `./build` folder.
+
+
+### Dependencies
 #### Artwork
  * [Eminence (Kodi skin)](https://github.com/jurialmunkey/skin.eminence.2/)
  * [Estuary (Kodi skin)](https://github.com/xbmc/xbmc/tree/master/addons/skin.estuary)
