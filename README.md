@@ -111,3 +111,6 @@ A self-contained build will be saved into the `./build` folder.
  * [SystemJS](https://github.com/systemjs/systemjs) - Dynamic Module loader
  * [jspm](http://jspm.io/) - Browser package management
  * [npm](https://www.npmjs.com/) - Build tool
+ 
+#### DevOps tools
+ * [Bitbucket Pipelines](https://bitbucket.org/product/features/pipelines) - Automatic builds (see [Sam's Kodi addon repository](https://bitbucket.org/bailus/kodi-addons))
