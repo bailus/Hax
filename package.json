@@ -16,9 +16,9 @@
   "links": {
     "Kodi addon repository": "http://addons.kodi.tv/show/webinterface.hax/"
   },
-  "version": "0.9.2",
+  "version": "0.9.3",
   "description": "Hax is a web interface for the Kodi® media center. Designed to be fast and easy to use, it supports modern browsers including Android, Internet Explorer 9 and Edge.",
-  "homepage": "http://bailey.geek.nz/remote",
+  "homepage": "https://bitbucket.org/bailus/hax-for-kodi",
   "keywords": [
     "Kodi",
     "XBMC"
@@ -140,7 +140,7 @@
     }
   },
   "screenshot": {
-    "url": "https://bytebucket.org/bailus/hax-for-kodi/raw/master/screenshots/screenshot2-small.png"
+    "url": "https://bitbucket.org/bailus/hax-for-kodi/raw/master/screenshots/screenshot.png"
   },
   "license": "GPL-3.0",
   "id": "webinterface.hax",
