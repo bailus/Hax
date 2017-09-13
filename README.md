@@ -9,18 +9,17 @@ A fast and simple remote control for mobile devices.
 
 ## Links
 
- * [Homepage](http://bailey.geek.nz/remote)
- * [Source (main - bitbucket.org)](https://bitbucket.org/bailus/hax-for-kodi) [(backup - github.org)](https://github.com/bailus/Hax)
- * [Issues, Bugs and Feature Requests](https://github.com/bailus/Hax/issues)
- * [Sam's Kodi addon repository](http://bailey.geek.nz/) [(source)](https://bitbucket.org/bailus/kodi-addons)
+ * [My Kodi addon repository](http://kodi.bailey.geek.nz/) `http://kodi.bailey.geek.nz/` [(source)](https://bitbucket.org/bailus/kodi-addons)
  * [Official Kodi addon repository](http://addons.kodi.tv/show/webinterface.hax/)
+ * [Issues, Bugs and Feature Requests](https://github.com/bailus/Hax/issues)
+ * [Source (main - bitbucket.org)](https://bitbucket.org/bailus/hax-for-kodi) [(backup - github.com)](https://github.com/bailus/Hax)
 
 
 ## Installation
 ### Installation (Stable version)
 The stable version is available from the official Kodi add-on repository. It can be downloaded and installed using Kodi's add-on manager.
 
-Install the stable version of Hax from within [Kodi](https://kodi.tv/download/) (v16 or above) by going to:
+Using [Kodi](https://kodi.tv/download/) (v16 or above), go to:
 
  1. Settings
  2. Add-ons
@@ -29,6 +28,8 @@ Install the stable version of Hax from within [Kodi](https://kodi.tv/download/) 
  5. Web interface
  6. Hax
  7. Install
+ 
+Then configure Kodi using the settings below (see the *configuration* section).
 
 
 ### Installation (Latest version)
@@ -36,7 +37,9 @@ The latest version can be installed from within Kodi after installing [Sam's Kod
 
 [repository.samsaddons-1.0.1.zip](https://bitbucket.org/bailus/kodi-addons/raw/master/repository.samsaddons-1.0.1.zip)
 
-Download the zip file above then use "Install add-on from zip file" in Kodi to install. The repository will be added to the "Install from repository" menu in Kodi's Add-on browser.
+Download the zip file above then use "Install add-on from zip file" in Kodi to install. More detailed instructions are available [here](http://kodi.wiki/view/HOW-TO:Install_add-ons_from_zip_files) - note that you need to enable the "Unknown Source" option in Settings/System/Add-ons first.
+
+The repository will be added to the "Install from repository" menu in Kodi's Add-on browser.
 
 Then install Hax from within [Kodi](https://kodi.tv/download/) (v18 or above) by going to:
 
@@ -66,8 +69,10 @@ You need to turn on "Allow remote control via HTTP". I use the following setting
  - Password: ` `
  - Web interface: `Hax`
 
-You can then visit `http://localhost/` in your web browser to use Hax.
+You can then visit `http://localhost/` in your web browser to use Hax. (If this doesn't work, try `http://localhost:8080/`.)
 
+
+## Usage
 To access Kodi from another device on your network you'll need to [find your computer's name](http://its.yale.edu/how-to/article-how-find-your-computers-name) or [ip address](http://its.yale.edu/how-to/article-finding-your-ip-and-network-hardware-addresses).
 Then visit `http://<computer name>/` or `http://<ip address>/` in your web browser to use Hax.
 
