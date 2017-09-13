@@ -6,32 +6,36 @@ const eventListenerPreventDefault = f => e => {
 	return false // required by IE
 }
 
+//tell the browser that we *can* drop on this target
+const eventListenerEnableDrop = f => e => {
+	e.dataTransfer.dropEffect = 'copy'
+	return f(e)
+}
+
 const dropInit = dropElem => {
 	const listeners = {}
 
-	const runListeners = (e, eventName) => {
+	const runListeners = eventName => e => {
 		if (listeners[eventName] === undefined) return
-		listeners[eventName].some(({ func }) => func(e, eventName, dropElem))
+		listeners[eventName].some(({ func }) => func(e))
 	}
 
-	//tell the browser that we *can* drop on this target
-	const dragListener = f => eventListenerPreventDefault(e => {
-		e.dataTransfer.dropEffect = 'copy'
-		return f(e)
-	})
-	dropElem.addEventListener('dragover', dragListener(e => runListeners(e, 'dragover')))
-	dropElem.addEventListener('dragenter', dragListener(e => runListeners(e, 'dragenter')))
-
-	dropElem.addEventListener('drop', eventListenerPreventDefault(e => runListeners(e, 'drop')))
-
-	return {
-		'addListener': (eventName, func, priority=0) => {
-			if (listeners[eventName] === undefined) listeners[eventName] = []
-			listeners[eventName].push({ 'func':func, 'priority':priority })
-			listeners[eventName].sort((a, b) => b.priority - a.priority)
-		}
-
+	const addListener = (eventName, func, priority=0) => {
+		if (listeners[eventName] === undefined) listeners[eventName] = []
+		listeners[eventName].push({ 'func':func, 'priority':priority })
+		listeners[eventName].sort((a, b) => b.priority - a.priority)
 	}
+
+
+	const dragListener = f => eventListenerPreventDefault(eventListenerEnableDrop(f))
+	dropElem.addEventListener('dragover', dragListener(runListeners('dragover')))
+	dropElem.addEventListener('dragenter', dragListener(runListeners('dragenter')))
+
+	const dropListener = eventListenerPreventDefault
+	dropElem.addEventListener('drop', dropListener(runListeners('drop')))
+
+
+	return { 'addListener': addListener }
 }
 
 const dropTextListener = f => e => f(e.dataTransfer.getData('Text'))
