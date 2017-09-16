@@ -52,6 +52,7 @@ const addDropHandlers = () => {
 
 	const dropHandler = dropInit(document.body)
 
+	// Youtube Links
 	dropHandler.addListener('drop', dropUrlListener(url => {
 		// we need to turn the youtube url into a format that the kodi youtube plugin will understand
 		const pluginUrl = new URL('plugin://plugin.video.youtube/play/')
@@ -61,11 +62,11 @@ const addDropHandlers = () => {
 				return pluginUrl.searchParams.set(key, value)
 		}
 
-		if (url.hostname === 'www.youtube.com') {
+		if (url.hostname.endsWith('www.youtube.com')) {
 			if (url.searchParams.has('v')) pluginUrl.searchParams.set('video_id', url.searchParams.get('v'))
 			if (url.searchParams.has('list')) pluginUrl.searchParams.set('playlist_id', url.searchParams.get('list'))
 		}
-		else if (url.hostname === 'youtu.be') {
+		else if (url.hostname.endsWith('youtu.be')) {
 			pluginUrl.searchParams.set('video_id', url.pathname.slice(1))
 		}
 		else return false
@@ -80,12 +81,27 @@ const addDropHandlers = () => {
 		return true
 	}), 1)
 
+	// Vimeo Links    https://gist.github.com/dataolle/4207390
+	dropHandler.addListener('drop', dropUrlListener(url => {
+		if (url.hostname.endsWith('vimeo.com')) {
+
+			const pluginUrl = new URL('plugin://plugin.video.vimeo/play/')
+			pluginUrl.searchParams.set('video_id', url.pathname.slice(1))
+			xbmc.Open({ 'item': { 'file': pluginUrl.href } })
+
+			return true
+
+		}
+	}), 1)
+
+	// Other Links
 	dropHandler.addListener('drop', dropUrlListener(url => {
 		xbmc.Open({ 'item': { 'file': url.href } })
 
 		return true
 	}), 0)
 
+	// Text
 	dropHandler.addListener('drop', dropTextListener(text => {
 		console.log(text)
 
