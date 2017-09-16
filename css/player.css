@@ -291,7 +291,7 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 	opacity:1.0;
 }
 #player .expand #info > * {
-	opacity:0.9;
+	opacity: 0.75;
 }
 #player .expand #info {
 	flex-direction:row;
@@ -301,6 +301,7 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 	overflow: hidden;
 	flex-wrap: nowrap;
 	width: 100%;
+	border: 1px solid rgba(0,0,0,0.2);
 }
 #player .infoButtons .infoText {
 	flex-wrap:nowrap;
@@ -330,7 +331,7 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 	display:none;
 }
 #player #info {
-	margin: 4px 0.5ch !important;
+	margin: 3px 0.5ch !important;
 	justify-content: stretch !important;
 	height: 42px;
 }
@@ -412,7 +413,7 @@ body[data-status=playing] #player .playpause .label { background-image:url('../i
 }
 
 #player .nowPlayingThumbnail {
-	height:42px !important;
+	height: 100% !important;
 	width: auto !important;
 	display: flex;
 	justify-content: center;

@@ -106,7 +106,7 @@ header {
 .page[data-page="Broadcast"] .thumbnailWrapper,
 .page[data-page="Channel"] .thumbnailWrapper,
 .page[data-page="Channels"] .thumbnail {
-	background: radial-gradient(circle at bottom, rgba(200,200,200,0.9) 0%,rgba(128,128,128,0.9) 120%);
+	background: radial-gradient(circle at bottom, rgb(220,220,220) 0%,rgb(180,180,180) 112%);
 }
 
 /* Button background */
