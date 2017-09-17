@@ -306,6 +306,9 @@ export default (function () {
 				elems.setThumbnail(prefixImage(encodeURIComponent(thumb)))
 			else
 				elems.setThumbnail()
+
+			if (labels['Player.Status'] === 'paused') progress.pause()
+			if (labels['Player.Status'] === 'stopped') progress.stop()
 		}
 
 		const loop = () => {
