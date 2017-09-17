@@ -315,7 +315,7 @@ export default (function () {
 			]).
 			then(waitAnimationFrame).
 			then(update).
-			catch(e => { console.error(e); waitSeconds(1).then(loop) }).
+			catch(e => { console.error(e); waitSeconds(1)().then(loop) }).
 			then(waitSeconds(0.1)).then(loop)
 		}
 		loop()
