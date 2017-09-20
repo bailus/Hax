@@ -17,7 +17,10 @@ export default (new Page({
 			'params': {
 				'properties': [ //http://kodi.wiki/view/JSON-RPC_API/#Video.Fields.MovieSet
 					"thumbnail"
-				]
+				],
+				'sort': {
+					'method': 'title'
+				}
 			}
 		})
 		.then(({ sets=[] }) => (sets.map(({
