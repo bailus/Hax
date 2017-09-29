@@ -79,7 +79,7 @@ const addDropHandlers = () => {
 		xbmc.Open({ 'item': { 'file': pluginUrl.href } })
 
 		return true
-	}), 1)
+	}), 60)
 
 	// Vimeo Links    https://gist.github.com/dataolle/4207390
 	dropHandler.addListener('drop', dropUrlListener(url => {
@@ -92,7 +92,30 @@ const addDropHandlers = () => {
 			return true
 
 		}
-	}), 1)
+	}), 50)
+
+	// Torrent Links    https://github.com/khloke/play-to-xbmc-chrome/blob/master/js/modules.js
+	dropHandler.addListener('drop', dropUrlListener(url => {
+
+		const magnetAddOn = 'transmission'
+
+		if (url.protocol === 'magnet:' || url.pathname.endsWith('.torrent')) {
+
+			const magnetPath = ({
+				'pulsar': 'plugin://plugin.video.pulsar/play?uri=',
+				'quasar': 'plugin://plugin.video.quasar/play?uri=',
+				'kmediatorrent': 'plugin://plugin.video.kmediatorrent/play/',
+				'torrenter': 'plugin://plugin.video.torrenter/?action=playSTRM&url=',
+				'yatp': 'plugin://plugin.video.yatp/?action=play&torrent=',
+				'default': 'plugin://plugin.video.xbmctorrent/play/'
+			})[magnetAddOn] + encodeURIComponent(url)
+
+			xbmc.Open({ 'item': { 'file': magnetPath } })
+
+			return true
+
+		}
+	}), 10)
 
 	// Other Links
 	dropHandler.addListener('drop', dropUrlListener(url => {
@@ -106,7 +129,7 @@ const addDropHandlers = () => {
 		console.log(text)
 
 		return true
-	}), -1) //default drop listener
+	}), -100) //default drop listener
 
 }
 
