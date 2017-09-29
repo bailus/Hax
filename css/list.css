@@ -57,6 +57,7 @@
 .listItem .line2 {
 	line-height: 15px;
 	height: 15px;
+	display: flex !important;
 }
 
 /* Thumbnail */
@@ -96,7 +97,9 @@
 	flex-wrap: nowrap;
 	padding: 0 0.5ch;
 }
-.listItem .line2 span + span {
+.listItem .line2 span {
+	flex-shrink: 1;
+	width: auto;
 }
 
 .listItem .number {
@@ -166,6 +169,7 @@
 	flex-direction:row;
 	width: 100%;
 	justify-content: space-between;
+	text-align: center;
 }
 .icon-list .label,
 .icon-list .thumbnail {
