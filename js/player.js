@@ -45,7 +45,7 @@ export default (function () {
 					{ 'class': 'spacer' },
 					makeButton({ 'text': 'Aspect Ratio', 'action':'aspectratio' }),
 					makeButton({ 'text': 'Stereo Mode', 'action':'togglestereomode' }),
-					makeButton({ 'text': 'Subtitle', 'action':'cyclesubtitle' }),
+					makeButton({ 'text': 'Subtitle', 'action':'nextsubtitle' }),
 					{ 'class': 'break-after' },
 					makeButton({ 'text': 'Previous',		'action': 'skipprevious' }),
 					makeButton({ 'text': 'Play / Pause',	'action': 'playpause' }),
