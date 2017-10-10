@@ -18,11 +18,20 @@ export default (new Page({
 		})
 		.then(properties => ({
 			'items': ([
-				properties.canshutdown  && {
-					'label': 'Shut down',
+				{
+					'label': 'Exit',
 					'link': makeJsLink(`
 						xbmc.get({
-							'method': 'System.Shut down',
+							'method': 'Application.Quit',
+							'params': {}
+						})
+					`)
+				},
+				properties.canshutdown  && {
+					'label': 'Power off system',
+					'link': makeJsLink(`
+						xbmc.get({
+							'method': 'System.Shutdown',
 							'params': {}
 						})
 					`)
