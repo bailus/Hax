@@ -16,7 +16,7 @@
   "links": {
     "Kodi addon repository": "http://addons.kodi.tv/show/webinterface.hax/"
   },
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "Hax is a web interface for the Kodi® media center. Designed to be fast and easy to use, it supports modern browsers including Android, Internet Explorer 9 and Edge.",
   "homepage": "https://bitbucket.org/bailus/hax-for-kodi",
   "keywords": [
