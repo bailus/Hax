@@ -2,9 +2,9 @@
 
 A fast and simple remote control for mobile devices.
 
-![Screenshot 1](https://bytebucket.org/bailus/hax-for-kodi/raw/master/screenshots/screenshot1-small.png)
-![Screenshot 2](https://bytebucket.org/bailus/hax-for-kodi/raw/master/screenshots/screenshot2-small.png)
-![Screenshot 3](https://bytebucket.org/bailus/hax-for-kodi/raw/master/screenshots/screenshot3-small.png)
+![Screenshot 1](https://raw.githubusercontent.com/bailus/Hax/master/screenshots/screenshot1-small.png)
+![Screenshot 2](https://raw.githubusercontent.com/bailus/Hax/master/screenshots/screenshot2-small.png)
+![Screenshot 3](https://raw.githubusercontent.com/bailus/Hax/master/screenshots/screenshot3-small.png)
 
 
 ## Links
@@ -12,7 +12,7 @@ A fast and simple remote control for mobile devices.
  * [My Kodi addon repository](http://kodi.bailey.geek.nz/) `http://kodi.bailey.geek.nz/` [(source)](https://bitbucket.org/bailus/kodi-addons)
  * [Official Kodi addon repository](http://addons.kodi.tv/show/webinterface.hax/)
  * [Issues, Bugs and Feature Requests](https://github.com/bailus/Hax/issues)
- * [Source (main - bitbucket.org)](https://bitbucket.org/bailus/hax-for-kodi) [(backup - github.com)](https://github.com/bailus/Hax)
+ * [Source (github.com)](https://github.com/bailus/Hax)
 
 
 ## Installation
