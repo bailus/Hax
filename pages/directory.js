@@ -3,6 +3,76 @@ import { makeJsLink } from '../js/util.js'
 import moment from 'moment'
 import { getSlash, trimFilename, joinFilenameComponents, joinDirectoryComponents } from '../js/filename.js'
 
+window.playDirectory = function (directory, startfile) {
+    console.log('playDirectory')
+        var pos = 0
+
+	return xbmc.get({
+		method: 'Playlist.Clear',
+		params: {
+			'playlistid': 0
+		}
+	})
+	.then(result => {
+		return xbmc.get({
+			method: 'Files.GetDirectory',
+			params: {
+				'properties': [ 'duration', 'thumbnail', 'file', 'size', 'mimetype', 'lastmodified', 'art' ],
+				'sort': { 'method': 'file', 'order': 'ascending' },
+				'directory': directory,
+				'media': 'music'
+			}
+		})
+	})
+	.then(result => result.files || [])
+	.then(files => {
+	        var p = Promise.resolve()
+	        var i = 0
+
+		files.forEach(file => p = p.then(() => {
+                        console.log(file.file)
+                        console.log(file.mimetype)
+			if (file.filetype === 'file' && (
+                              /^audio\//.test(file.mimetype) ||
+                              /\.mpc$/.test(file.file))) {
+                                console.log('Adding file to playlist')
+                                console.log(file.file)
+			        if (file.file === startfile) {
+				    pos = i
+			        }
+			        i = i + 1
+				return xbmc.get({
+					method: 'Playlist.Add',
+					params: {
+						'playlistid': 0,
+						'item': {'file': file.file }
+					}
+				})
+			}
+			else {
+				return Promise.resolve(1)
+			}
+		}))
+
+		return p
+	})
+	.then(results => {
+                console.log('Open playlist 0')
+		return xbmc.get({
+			method: 'Player.Open',
+			params: {
+				'item': {
+					'playlistid': 0,
+					'position': pos
+				}
+			}
+		})
+		.then(opened => {
+			return opened.result
+		})
+	})
+};
+
 export default (new Page({
 	'id': 'Directory',
 	'view': 'list',
@@ -59,9 +129,15 @@ export default (new Page({
 		.then(result => result.files || [])
 		.then(files => files.map(file => {
 			let filename = trimFilename(decodeURIComponent(file.file)).split(slash).pop()
+			let escapedfile = file.file.replace(/'/g, "\\'")
 
 			if (file.filetype === 'directory') {
-
+				file.actions = [
+					{
+						label: '▶',
+						link: makeJsLink(`playDirectory('${escapedfile}', '')`)
+					}
+				]
 				file.link = '#page=Directory&media='+media+'&sortby='+sortby+'&order='+order+'&root='+encodeURIComponent(root)+'&path='+encodeURIComponent(joinDirectoryComponents([ path, filename ], slash))
 				file.thumbnail = file.thumbnail ? xbmc.vfs2uri(file.thumbnail) : 'img/icons/default/DefaultFolder.png'
 			}
@@ -70,7 +146,7 @@ export default (new Page({
 				file.actions = [
 					{
 						label: '▶',
-						link: makeJsLink(`xbmc.Open({ 'item': { 'file': '${file.file}'  } })`)
+						link: makeJsLink(`playDirectory('${directory}', '${escapedfile}')`)
 					}
 				]
 				file.link = `#page=File&media=${ media }&sortby=${ sortby }&order=${ order }&root=${ encodeURIComponent(root) }&path=${ encodeURIComponent(path || '') }&filename=${ encodeURIComponent(filename) }`
